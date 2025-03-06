@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 
 const tabRoutes = [
   {
@@ -7,7 +7,7 @@ const tabRoutes = [
   },
   {
     name: "Admin",
-    link: "/dashboard/settings/manage-admins",
+    link: "/dashboard/settings/manage-admin",
   },
   {
     name: "Add DRA",
@@ -19,7 +19,7 @@ const tabRoutes = [
   },
   {
     name: "Add Settlor",
-    link: "/dashboard/settings/settlors",
+    link: "/dashboard/settings/manage-settlors",
   },
 ];
 
@@ -29,20 +29,22 @@ const RoutedTabs = () => {
   return (
     <ul className="w-full lg:w-2/3 flex items-center  border-b border-gray-700">
       {tabRoutes?.map((route) => (
-        <li
-          className={`${
-            pathname === route.link
-              ? "border-b-2 border-primary-400 pl-0 pr-4 "
-              : "px-4"
-          } py-4 flex items-start`}
-        >
-          <span className="text-sm text-gray-600">{route.name}</span>
-          {route.name === "Add Settlor" && (
-            <span className=" text-[10px] text-white bg-primary-400 h-4 w-4 rounded-full flex items-center justify-center">
-              3
-            </span>
-          )}
-        </li>
+        <Link to={route.link} key={route.name}>
+          <li
+            className={`${
+              pathname === route.link
+                ? "border-b-2 border-primary-400 pl-0 pr-4 "
+                : "px-4"
+            } transition-all ease-in-out py-4 flex items-start`}
+          >
+            <span className="text-sm text-gray-600">{route.name}</span>
+            {route.name === "Add Settlor" && (
+              <span className=" text-[10px] text-white bg-primary-400 h-4 w-4 rounded-full flex items-center justify-center">
+                3
+              </span>
+            )}
+          </li>
+        </Link>
       ))}
     </ul>
   );

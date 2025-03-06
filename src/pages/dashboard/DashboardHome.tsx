@@ -28,7 +28,10 @@ const DashboardHome = () => {
             <Route path="settings/manage-admin" element={<ManageAdmin />} />
             <Route path="settings/manage-dra" element={<ManageDRA />} />
             <Route path="settings/manage-nuprc" element={<ManageNUPRC />} />
-            <Route path="settings/manage-settlor" element={<ManageSettlor />} />
+            <Route
+              path="settings/manage-settlors"
+              element={<ManageSettlor />}
+            />
           </Route>
         </Routes>
       </>
