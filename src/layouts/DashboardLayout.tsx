@@ -1,12 +1,15 @@
 import { Outlet } from "react-router-dom";
 
-// this is where the general layout of dashboard lies, the sidebar, header and body
+import { Sidebar, Header } from "../components/layouts";
 
 const DashboardLayout = () => {
   return (
-    <div>
-      Dashboard View
-      <Outlet />
+    <div className="flex h-screen bg-gray-100">
+      <Sidebar />
+      <main className="flex-1 h-full overflow-y-auto">
+        <Header />
+        <Outlet />
+      </main>
     </div>
   );
 };
