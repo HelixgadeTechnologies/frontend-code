@@ -5,6 +5,8 @@ import settingsIcon from "./settings.svg";
 import trustIcon from "./trust.svg";
 import bellIcon from "./bell.svg";
 import userIcon from "./user.svg";
+import photoIcon from "./photo.svg";
+import checkIcon from "./check.svg";
 
 export {
   eyeIcon,
@@ -14,4 +16,6 @@ export {
   trustIcon,
   bellIcon,
   userIcon,
+  photoIcon,
+  checkIcon,
 };

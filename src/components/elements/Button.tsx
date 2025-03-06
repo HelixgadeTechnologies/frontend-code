@@ -47,7 +47,7 @@ const Button = ({
             noBg
               ? "bg-transparent text-primary-700 hover:text-white transition-colors"
               : border
-              ? "border border-primary-700 bg-white text-primary-700"
+              ? "border-[1.5px] border-primary-200 bg-white text-primary-200"
               : ` ${
                   bg ? bg : "bg-primary-200 text-white hover:bg-primary-200"
                 }   `
@@ -74,7 +74,7 @@ const Button = ({
             noBg
               ? "bg-transparent text-primary-700  transition-colors"
               : border
-              ? "border border-primary-700 bg-white text-primary-700"
+              ? "border-[1.5px] border-primary-200 bg-white text-primary-200"
               : ` ${
                   bg ? bg : "bg-primary-200 text-white hover:bg-primary-200"
                 }   `

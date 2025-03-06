@@ -81,7 +81,7 @@ const FormInput = ({
           <input
             className={`text-sm p-3 rounded-md ${
               disabled
-                ? "border-transparent bg-gray-200 text-gray-600 placeholder:text-gray-600"
+                ? " bg-off-white-2 text-[#98A2B3] placeholder:text-[#98A2B3]"
                 : ""
             } border border-gray-100 text-black w-full  placeholder:text-primary-200 transition ${
               error ? "border border-red-400 focus:outline-0 bg-white" : ""
