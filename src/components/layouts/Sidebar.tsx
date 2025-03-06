@@ -7,7 +7,7 @@ const Sidebar = () => {
   const { pathname } = useLocation();
 
   return (
-    <div className="h-full bg-white flex flex-col w-[272px]  py-6 px-4">
+    <div className="h-full bg-white border-r border-gray-500 flex flex-col w-[272px]  py-6 px-4">
       <div className=" font-bold text-4xl text-primary-300">HCDT</div>
 
       <div className="flex-1 flex flex-col justify-between py-8">
