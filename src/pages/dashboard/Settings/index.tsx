@@ -1,10 +1,13 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { checkIcon, photoIcon } from "../../../assets/icons";
-import { Button, FormInput } from "../../../components/elements";
+import { Button, FormInput, Modal } from "../../../components/elements";
 import { PageHeader, RoutedTabs } from "../../../components/layouts";
 
 const ProfileSettings = () => {
+  const [openModal, setOpenModal] = useState(false);
+
   const {
     register,
     formState: { errors },
@@ -16,6 +19,7 @@ const ProfileSettings = () => {
         title="Settings"
         desc="Take a look at your policies and the new policy to see what is covered"
         ctaText="Change Password"
+        action={() => setOpenModal(true)}
       />
 
       <div className="mt-14">
@@ -101,7 +105,106 @@ const ProfileSettings = () => {
           </article>
         </section>
       </div>
+
+      {openModal && (
+        <Modal
+          body={<ChangePasswordForm close={() => setOpenModal(false)} />}
+          close={() => setOpenModal(false)}
+        />
+      )}
     </div>
+  );
+};
+
+const ChangePasswordForm = ({ close }: { close: () => void }) => {
+  const {
+    register,
+    formState: { errors },
+  } = useForm();
+
+  return (
+    <form className="p-4 bg-off-white-3 h-fit w-[410px]">
+      <h3 className="text-lg xl:text-3xl text-center mb-12 font-normal text-dark-2">
+        Change Password
+      </h3>
+
+      <div className="space-y-8">
+        <div>
+          <FormInput
+            label="Enter Old Password"
+            type="password"
+            name="oldpassword"
+            placeholder="Enter Old Password"
+            register={register}
+            registerOptions={{
+              required: "Password address is required",
+              minLength: {
+                value: 8,
+                message: "Password must be at least 8 characters",
+              },
+            }}
+            error={errors.oldpassword}
+            errorMessage={`Password is required`}
+            required
+            showEye
+          />
+        </div>
+
+        <div>
+          <FormInput
+            label="Enter New Password"
+            type="password"
+            name="newpassword"
+            placeholder="Enter New Password"
+            register={register}
+            registerOptions={{
+              required: "Password address is required",
+              minLength: {
+                value: 8,
+                message: "Password must be at least 8 characters",
+              },
+            }}
+            error={errors.newpassword}
+            errorMessage={`Password is required`}
+            required
+            showEye
+          />
+        </div>
+
+        <div>
+          <FormInput
+            label="Confirm New Password"
+            type="password"
+            name="confirmpassword"
+            placeholder="Confirm New Password"
+            register={register}
+            registerOptions={{
+              required: "Password address is required",
+              minLength: {
+                value: 8,
+                message: "Password must be at least 8 characters",
+              },
+            }}
+            error={errors.confirmpassword}
+            errorMessage={`Password is required`}
+            required
+            showEye
+          />
+        </div>
+
+        <div className="flex items-center gap-x-8 lg:gap-x-16 justify-between">
+          <Button
+            onClick={close}
+            border
+            padding="py-2 px-3"
+            buttonText="Back"
+            width="w-fit"
+          />
+
+          <Button padding="py-3" buttonText="Change" />
+        </div>
+      </div>
+    </form>
   );
 };
 

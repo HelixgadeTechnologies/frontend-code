@@ -7,6 +7,8 @@ import bellIcon from "./bell.svg";
 import userIcon from "./user.svg";
 import photoIcon from "./photo.svg";
 import checkIcon from "./check.svg";
+import editIcon from "./edit.svg";
+import trashGrayIcon from "./trash-gray.svg";
 
 export {
   eyeIcon,
@@ -18,4 +20,6 @@ export {
   userIcon,
   photoIcon,
   checkIcon,
+  editIcon,
+  trashGrayIcon,
 };
