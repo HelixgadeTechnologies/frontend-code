@@ -1,7 +1,8 @@
 import { useState } from "react";
 
 import { Modal } from "../../../components/elements";
-import { AddDRA, DRATable } from "../../../components/sections/settings/dra";
+
+import { AddDRA, DRATable } from "../../../components/sections/settings/DRA";
 
 import { addCircleIcon, chatBlueIcon, timerIcon } from "../../../assets/icons";
 import { PageHeader, RoutedTabs } from "../../../components/layouts";
