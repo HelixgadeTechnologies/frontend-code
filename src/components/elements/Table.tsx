@@ -51,7 +51,7 @@ const IndeterminateCheckbox = ({
     <input
       type="checkbox"
       ref={ref}
-      className={`h-4 w-4 rounded border-gray-300 cursor-pointer ${className}`}
+      className={`h-4 w-4 rounded border-gray-3 cursor-pointer ${className}`}
       {...rest}
     />
   );
@@ -165,7 +165,7 @@ const Table = <T extends BaseItem>({
       {totalPage && (
         <div className="flex w-full items-center justify-between bg-white px-6 pb-6 pt-8">
           {currentPage && (
-            <div className="text-gray-500 font-normal text-base">
+            <div className="text-gray-5 font-normal text-base">
               Showing {currentPage} to {totalPage} of {count} entries
             </div>
           )}
@@ -214,7 +214,7 @@ const Pagination = ({
   };
 
   return (
-    <div className="w-fit border border-light-blue-3 flex items-center text-sm font-normal text-gray-500">
+    <div className="w-fit border border-light-blue-3 flex items-center text-sm font-normal text-gray-5">
       <button
         onClick={handlePrevious}
         className="px-2.5 py-2"
@@ -232,7 +232,7 @@ const Pagination = ({
           key={num}
           className={`${
             num === currentPage ? "bg-light-blue" : "bg-white"
-          } px-2.5 py-2 border border-light-blue-3 hover:bg-blue-3 text-gray-600`}
+          } px-2.5 py-2 border border-light-blue-3 hover:bg-blue-3 text-gray-6`}
           onClick={() => setCurrentPage && setCurrentPage(num)}
         >
           {num}

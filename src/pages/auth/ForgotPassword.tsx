@@ -49,7 +49,7 @@ const ForgotPassword = () => {
               // buttonText={isSubmitting ? "Processing..." : "Sign in"}
             />
 
-            <span className="block text-center mt-6 text-gray-200 text-sm">
+            <span className="block text-center mt-6 text-gray-2 text-sm">
               Remember your password? {""}
               <Link className="text-primary-200 font-semibold" to="/">
                 Log in

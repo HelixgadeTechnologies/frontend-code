@@ -8,7 +8,7 @@ const Header = () => {
   const route = routes?.find((route) => route.link === pathname);
 
   return (
-    <header className="bg-white border-b border-gray-500 py-4 pl-4 pr-10 flex items-center justify-between">
+    <header className="bg-white border-b border-gray-5 py-4 pl-4 pr-10 flex items-center justify-between">
       <h1 className="font-semibold  text-black text-lg lg:text-3xl">
         {route?.title}
       </h1>

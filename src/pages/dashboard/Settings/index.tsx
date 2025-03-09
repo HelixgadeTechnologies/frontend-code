@@ -31,7 +31,7 @@ const ProfileSettings = () => {
               <h3 className="font-semibold text-base text-primary-100 mb-1">
                 Profile Photo
               </h3>
-              <p className="text-gray-400 text-sm mb-5">
+              <p className="text-gray-4 text-sm mb-5">
                 This image will be displayed on your profile
               </p>
 
@@ -57,7 +57,7 @@ const ProfileSettings = () => {
               <h3 className="font-semibold text-base text-primary-100 mb-1">
                 Personal Information
               </h3>
-              <p className="text-gray-400 text-sm mb-5">
+              <p className="text-gray-4 text-sm mb-5">
                 Update your personal details here.{" "}
               </p>
 

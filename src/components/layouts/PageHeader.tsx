@@ -14,7 +14,7 @@ const PageHeader = ({ title, desc, ctaText, action }: HeaderType) => {
         <h2 className="text-lg lg:text-2xl font-semibold text-primary-100">
           {title}
         </h2>
-        <p className="mt-1 text-xs text-gray-400">{desc}</p>
+        <p className="mt-1 text-xs text-gray-4">{desc}</p>
       </div>
 
       <div>
