@@ -14,7 +14,7 @@ interface FormValues {
 }
 
 interface FormItemProps {
-  label: string;
+  label?: string;
   name: string; // Add this to properly type the register prop
   containerClassName?: string;
   labelClassName?: string;
