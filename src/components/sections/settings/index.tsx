@@ -352,8 +352,7 @@ const AddAdmin = ({ close }: { close: () => void }) => {
         <div className="pt-4 flex items-center gap-x-8 lg:gap-x-16 justify-between">
           <Button
             onClick={close}
-            border
-            padding="py-2 px-3"
+            className="border text-black bg-white border-gray-7 rounded-lg py-2 px-7"
             buttonText="Back"
             width="w-fit"
           />
@@ -476,8 +475,7 @@ const EditAdmin = ({ close }: { close: () => void }) => {
         <div className="pt-4 flex items-center gap-x-8 lg:gap-x-16 justify-between">
           <Button
             onClick={close}
-            border
-            padding="py-2 px-3"
+            className="border text-black bg-white border-gray-7 rounded-lg py-2 px-7"
             buttonText="Back"
             width="w-fit"
           />

@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
-import { Button, FormInput, Table, CustomSelect, Modal } from "../../elements";
+import { Button, FormInput, Table, Modal } from "../../elements";
 
 import { RowSelectionState } from "@tanstack/react-table";
 import {
@@ -17,9 +17,7 @@ interface User {
   id: string;
   name: string;
   email: string;
-
   phone: string;
-  community: string;
 }
 
 const users: User[] = [
@@ -27,42 +25,23 @@ const users: User[] = [
     id: "1",
     name: "Amarachi Okafor",
     email: "amarachiokafor@gmail.com",
-
     phone: "08012345678",
-    community: "Oron",
   },
   {
     id: "2",
     name: "Alex Okocha",
     email: "alexokocha@gmail.com",
-
     phone: "08012345678",
-    community: "Rumukurshi",
   },
   {
     id: "3",
     name: "Mwenda Mugendi",
     email: "princewilliams@gmail.com",
-
     phone: "08012345678",
-    community: "Warri",
   },
 ];
 
-const adminRoles = [
-  {
-    id: 1,
-    label: "Admin",
-    value: "admin",
-  },
-  {
-    id: 2,
-    label: "Super Admin",
-    value: "super-admin",
-  },
-];
-
-const DRATable = () => {
+const SettlorsTable = () => {
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
@@ -153,13 +132,13 @@ const DRATable = () => {
         </div>
 
         {openEdit && (
-          <Modal close={handleEdit} body={<EditDRA close={handleEdit} />} />
+          <Modal close={handleEdit} body={<EditSettlor close={handleEdit} />} />
         )}
 
         {openDelete && (
           <Modal
             close={handleDelete}
-            body={<DeleteDRA close={handleDelete} />}
+            body={<DeleteSettlor close={handleDelete} />}
           />
         )}
       </div>
@@ -177,11 +156,6 @@ const DRATable = () => {
       id: "email",
       header: "Email",
       accessorKey: "email",
-    },
-    {
-      id: "community",
-      header: "Community",
-      accessorKey: "community",
     },
 
     {
@@ -255,60 +229,73 @@ const DRATable = () => {
   );
 };
 
-const AddDRA = ({ close }: { close: () => void }) => {
+const AddSettlor = ({ close }: { close: () => void }) => {
   const {
     register,
     formState: { errors },
-    control,
   } = useForm();
 
   return (
     <form className="p-4 bg-off-white-3 h-fit w-[410px]">
       <h3 className="text-lg xl:text-3xl text-center font-normal text-dark-2">
-        Add DRA
+        Add Settlor
       </h3>
 
-      <p className="text-base my-1 text-gray-6 text-center">Add DRA </p>
+      <p className="text-base my-1 text-gray-6 text-center">
+        Add a Settlor to this account{" "}
+      </p>
 
       <div className="space-y-2">
         <div>
           <FormInput
-            label="First Name"
-            name="fname"
+            name="settlorName"
             type="text"
-            placeholder="First Name"
+            placeholder="Enter Settlor Name"
             register={register}
             registerOptions={{
-              required: "First name field is required.",
+              required: "Settlor name field is required.",
             }}
-            error={errors.fname}
-            errorMessage={`First name  is required`}
+            error={errors.settlorName}
+            errorMessage={`"Settlor name field is required."`}
             required
           />
         </div>
 
         <div>
           <FormInput
-            label="Last Name"
-            name="lname"
+            name="omlCode"
             type="text"
-            placeholder="Last Name"
+            placeholder="Enter OML Code"
             register={register}
             registerOptions={{
-              required: "Last name field is required.",
+              required: "OML code field is required.",
             }}
-            error={errors.lname}
-            errorMessage={`Last name  is required`}
+            error={errors.omlCode}
+            errorMessage={`OML code is required`}
             required
           />
         </div>
 
         <div>
           <FormInput
-            label="Email Address"
+            name="contactName"
+            type="text"
+            placeholder="Enter Contact Name"
+            register={register}
+            registerOptions={{
+              required: "Contact name field is required.",
+            }}
+            error={errors.contactName}
+            errorMessage={`"Contact name field is required."`}
+            required
+          />
+        </div>
+
+        <div>
+          <FormInput
             name="email"
             type="email"
-            placeholder="Email Address"
+            placeholder="Enter Contact Email"
             register={register}
             registerOptions={{
               required: "Email field is required.",
@@ -324,12 +311,11 @@ const AddDRA = ({ close }: { close: () => void }) => {
           />
         </div>
 
-        <div>
+        <div className="pb-4">
           <FormInput
-            label="Phone Number"
             name="phone"
             type="tel"
-            placeholder="Phone Number"
+            placeholder="Enter Contact Phone Number"
             register={register}
             registerOptions={{
               required: "Phone Number is required.",
@@ -340,27 +326,7 @@ const AddDRA = ({ close }: { close: () => void }) => {
           />
         </div>
 
-        <div>
-          <Controller
-            control={control}
-            name="trust"
-            rules={{ required: true }}
-            render={({ field }) => (
-              <CustomSelect
-                id="trust-select"
-                {...field}
-                options={adminRoles}
-                label="Trust"
-                placeholder="Eleme-234-Trust"
-              />
-            )}
-          />
-          {errors.trust && (
-            <p className="mt-2 mb-4 text-xs  text-red-400 ">Select a Trust</p>
-          )}
-        </div>
-
-        <div className="pt-4 flex items-center gap-x-8 lg:gap-x-16 justify-between">
+        <div className=" border-t border-gray-7 pt-4 flex items-center gap-x-8 lg:gap-x-16 justify-between">
           <Button
             onClick={close}
             className="border text-black bg-white border-gray-7 rounded-lg py-2 px-7"
@@ -368,67 +334,80 @@ const AddDRA = ({ close }: { close: () => void }) => {
             width="w-fit"
           />
 
-          <Button padding="py-3" buttonText="Invite" />
+          <Button padding="py-3" buttonText="Add" />
         </div>
       </div>
     </form>
   );
 };
 
-const EditDRA = ({ close }: { close: () => void }) => {
+const EditSettlor = ({ close }: { close: () => void }) => {
   const {
     register,
     formState: { errors },
-    control,
   } = useForm();
 
   return (
     <form className="p-4 bg-off-white-3 h-fit w-[410px]">
       <h3 className="text-lg xl:text-3xl text-center font-normal text-dark-2">
-        Edit DRA
+        Edit Settlor
       </h3>
 
-      <p className="text-base my-1 text-gray-6 text-center">Edit DRA </p>
+      <p className="text-base my-1 text-gray-6 text-center">
+        Edit Settlor account{" "}
+      </p>
 
       <div className="space-y-2">
         <div>
           <FormInput
-            label="First Name"
-            name="fname"
+            name="settlorName"
             type="text"
-            placeholder="First Name"
+            placeholder="Enter Settlor Name"
             register={register}
             registerOptions={{
-              required: "First name field is required.",
+              required: "Settlor name field is required.",
             }}
-            error={errors.fname}
-            errorMessage={`First name  is required`}
+            error={errors.settlorName}
+            errorMessage={`"Settlor name field is required."`}
             required
           />
         </div>
 
         <div>
           <FormInput
-            label="Last Name"
-            name="lname"
+            name="omlCode"
             type="text"
-            placeholder="Last Name"
+            placeholder="Enter OML Code"
             register={register}
             registerOptions={{
-              required: "Last name field is required.",
+              required: "OML code field is required.",
             }}
-            error={errors.lname}
-            errorMessage={`Last name  is required`}
+            error={errors.omlCode}
+            errorMessage={`OML code is required`}
             required
           />
         </div>
 
         <div>
           <FormInput
-            label="Email Address"
+            name="contactName"
+            type="text"
+            placeholder="Enter Contact Name"
+            register={register}
+            registerOptions={{
+              required: "Contact name field is required.",
+            }}
+            error={errors.contactName}
+            errorMessage={`"Contact name field is required."`}
+            required
+          />
+        </div>
+
+        <div>
+          <FormInput
             name="email"
             type="email"
-            placeholder="Email Address"
+            placeholder="Enter Contact Email"
             register={register}
             registerOptions={{
               required: "Email field is required.",
@@ -444,12 +423,11 @@ const EditDRA = ({ close }: { close: () => void }) => {
           />
         </div>
 
-        <div>
+        <div className="pb-4">
           <FormInput
-            label="Phone Number"
             name="phone"
             type="tel"
-            placeholder="Phone Number"
+            placeholder="Enter Contact Phone Number"
             register={register}
             registerOptions={{
               required: "Phone Number is required.",
@@ -460,27 +438,7 @@ const EditDRA = ({ close }: { close: () => void }) => {
           />
         </div>
 
-        <div>
-          <Controller
-            control={control}
-            name="trust"
-            rules={{ required: true }}
-            render={({ field }) => (
-              <CustomSelect
-                id="trust-select"
-                {...field}
-                options={adminRoles}
-                label="Trust"
-                placeholder="Eleme-234-Trust"
-              />
-            )}
-          />
-          {errors.trust && (
-            <p className="mt-2 mb-4 text-xs  text-red-400 ">Select a Trust</p>
-          )}
-        </div>
-
-        <div className="pt-4 flex items-center gap-x-8 lg:gap-x-16 justify-between">
+        <div className=" border-t border-gray-7 pt-4 flex items-center gap-x-8 lg:gap-x-16 justify-between">
           <Button
             onClick={close}
             className="border text-black bg-white border-gray-7 rounded-lg py-2 px-7"
@@ -495,7 +453,7 @@ const EditDRA = ({ close }: { close: () => void }) => {
   );
 };
 
-const DeleteDRA = ({ close }: { close: () => void }) => {
+const DeleteSettlor = ({ close }: { close: () => void }) => {
   return (
     <div className="p-6 bg-white h-fit w-[430px] rounded-2xl">
       <div className=" border border-gray-300 bg-[#E4E5E77A]/40 mx-auto h-14 w-14 rounded-full flex items-center justify-center">
@@ -506,11 +464,11 @@ const DeleteDRA = ({ close }: { close: () => void }) => {
 
       <div className="mt-6 mb-12">
         <h3 className="text-lg xl:text-2xl text-center font-normal text-dark-2">
-          Delete DRA
+          Delete Settlor
         </h3>
 
         <p className="mt-4 whitespace-normal normal-case text-base my-1 text-gray-6 text-center">
-          You are about to delete a DRA{" "}
+          You are about to delete a Settlor{" "}
           <span className="font-medium">Are you sure about that? </span>
         </p>
       </div>
@@ -529,4 +487,4 @@ const DeleteDRA = ({ close }: { close: () => void }) => {
   );
 };
 
-export { DRATable, AddDRA };
+export { SettlorsTable, AddSettlor };

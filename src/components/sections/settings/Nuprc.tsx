@@ -17,9 +17,7 @@ interface User {
   id: string;
   name: string;
   email: string;
-
   phone: string;
-  community: string;
 }
 
 const users: User[] = [
@@ -27,25 +25,19 @@ const users: User[] = [
     id: "1",
     name: "Amarachi Okafor",
     email: "amarachiokafor@gmail.com",
-
     phone: "08012345678",
-    community: "Oron",
   },
   {
     id: "2",
     name: "Alex Okocha",
     email: "alexokocha@gmail.com",
-
     phone: "08012345678",
-    community: "Rumukurshi",
   },
   {
     id: "3",
     name: "Mwenda Mugendi",
     email: "princewilliams@gmail.com",
-
     phone: "08012345678",
-    community: "Warri",
   },
 ];
 
@@ -164,11 +156,6 @@ const NuprcTable = () => {
       id: "email",
       header: "Email",
       accessorKey: "email",
-    },
-    {
-      id: "community",
-      header: "Community",
-      accessorKey: "community",
     },
 
     {
@@ -325,8 +312,7 @@ const AddNuprc = ({ close }: { close: () => void }) => {
         <div className=" border-t border-gray-7 pt-4 flex items-center gap-x-8 lg:gap-x-16 justify-between">
           <Button
             onClick={close}
-            border
-            padding="py-2 px-3"
+            className="border text-black bg-white border-gray-7 rounded-lg py-2 px-7"
             buttonText="Back"
             width="w-fit"
           />
@@ -421,8 +407,7 @@ const EditNuprc = ({ close }: { close: () => void }) => {
         <div className=" border-t border-gray-7 pt-4 flex items-center gap-x-8 lg:gap-x-16 justify-between">
           <Button
             onClick={close}
-            border
-            padding="py-2 px-3"
+            className="border text-black bg-white border-gray-7 rounded-lg py-2 px-7"
             buttonText="Back"
             width="w-fit"
           />
