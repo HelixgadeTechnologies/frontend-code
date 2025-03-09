@@ -1,13 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 
-import {
-  Button,
-  FormInput,
-  Table,
-  CustomSelect,
-  Modal,
-} from "../../../components/elements";
+import { Button, FormInput, Table, CustomSelect, Modal } from "../../elements";
 
 import { RowSelectionState } from "@tanstack/react-table";
 import {
@@ -16,6 +10,7 @@ import {
   filterIcon,
   sortIcon,
   trashGrayIcon,
+  userDeleteIcon,
 } from "../../../assets/icons";
 
 interface User {
@@ -324,7 +319,7 @@ const AddAdmin = ({ close }: { close: () => void }) => {
                 id="role-select"
                 {...field}
                 options={adminRoles}
-                label="Nationality"
+                label="Role"
                 placeholder="Role"
               />
             )}
@@ -448,7 +443,7 @@ const EditAdmin = ({ close }: { close: () => void }) => {
                 id="role-select"
                 {...field}
                 options={adminRoles}
-                label="Nationality"
+                label="Role"
                 placeholder="Role"
               />
             )}
@@ -499,7 +494,7 @@ const DeleteAdmin = ({ close }: { close: () => void }) => {
     <div className="p-6 bg-white h-fit w-[430px] rounded-2xl">
       <div className=" border border-gray-300 bg-[#E4E5E77A]/40 mx-auto h-14 w-14 rounded-full flex items-center justify-center">
         <div className="shadow-md bg-white h-10 w-10 rounded-full flex items-center justify-center">
-          icon
+          <img src={userDeleteIcon} alt="delete" />
         </div>
       </div>
 

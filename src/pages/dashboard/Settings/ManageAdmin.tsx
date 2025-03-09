@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { Modal } from "../../../components/elements";
-import { AdminTable, AddAdmin } from "../../../components/sections/manageAdmin";
+import { AdminTable, AddAdmin } from "../../../components/sections/settings";
 import { PageHeader, RoutedTabs } from "../../../components/layouts";
 import { addCircleIcon, chatBlueIcon, timerIcon } from "../../../assets/icons";
 

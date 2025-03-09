@@ -67,7 +67,7 @@ const FormInput = ({
               disabled
                 ? "border-transparent bg-gray-2 text-gray-6 placeholder:text-gray-6"
                 : ""
-            } border border-gray-1 text-black w-full  placeholder:text-primary-200 transition ${
+            } border border-gray-1 text-black w-full  placeholder:text-[#98A2B3] transition ${
               error ? "border border-red-400 focus:outline-0 bg-white" : ""
             } `}
             placeholder={placeholder}
@@ -81,9 +81,9 @@ const FormInput = ({
           <input
             className={`text-sm p-3 rounded-md ${
               disabled
-                ? " bg-off-white-2 text-[#98A2B3] placeholder:text-[#98A2B3]"
+                ? " bg-off-white-2 text-[#98A2B3] placeholder:text-primary-200"
                 : ""
-            } border border-gray-1 text-black w-full  placeholder:text-primary-200 transition ${
+            } border border-gray-1 text-black w-full  placeholder:text-[#98A2B3] transition ${
               error ? "border border-red-400 focus:outline-0 bg-white" : ""
             } `}
             placeholder={placeholder}

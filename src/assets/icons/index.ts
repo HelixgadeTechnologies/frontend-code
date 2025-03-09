@@ -15,6 +15,7 @@ import addCircleIcon from "./add-circle.svg";
 import filterIcon from "./filter.svg";
 import sortIcon from "./sort.svg";
 import timerIcon from "./timer.svg";
+import userDeleteIcon from "./user-delete.svg";
 
 export {
   eyeIcon,
@@ -34,4 +35,5 @@ export {
   filterIcon,
   sortIcon,
   timerIcon,
+  userDeleteIcon,
 };
