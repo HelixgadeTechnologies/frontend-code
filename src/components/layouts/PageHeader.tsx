@@ -1,13 +1,15 @@
+import { ReactNode } from "react";
 import { Button } from "../elements";
 
 interface HeaderType {
   title: string;
   desc: string;
   ctaText: string;
+  iconLeft?: ReactNode;
   action?: () => void;
 }
 
-const PageHeader = ({ title, desc, ctaText, action }: HeaderType) => {
+const PageHeader = ({ title, desc, ctaText, action, iconLeft }: HeaderType) => {
   return (
     <div className="flex items-center justify-between">
       <div>
@@ -18,7 +20,12 @@ const PageHeader = ({ title, desc, ctaText, action }: HeaderType) => {
       </div>
 
       <div>
-        <Button onClick={action} padding="py-2 px-6" buttonText={ctaText} />
+        <Button
+          onClick={action}
+          iconLeft={iconLeft}
+          padding="py-2 px-6"
+          buttonText={ctaText}
+        />
       </div>
     </div>
   );

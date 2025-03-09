@@ -9,6 +9,12 @@ import photoIcon from "./photo.svg";
 import checkIcon from "./check.svg";
 import editIcon from "./edit.svg";
 import trashGrayIcon from "./trash-gray.svg";
+import chatBlueIcon from "./chat-blue.svg";
+import caretDownIcon from "./caret-down.svg";
+import addCircleIcon from "./add-circle.svg";
+import filterIcon from "./filter.svg";
+import sortIcon from "./sort.svg";
+import timerIcon from "./timer.svg";
 
 export {
   eyeIcon,
@@ -22,4 +28,10 @@ export {
   checkIcon,
   editIcon,
   trashGrayIcon,
+  addCircleIcon,
+  caretDownIcon,
+  chatBlueIcon,
+  filterIcon,
+  sortIcon,
+  timerIcon,
 };

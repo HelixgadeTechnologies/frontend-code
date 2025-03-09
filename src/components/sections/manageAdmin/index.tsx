@@ -10,7 +10,13 @@ import {
 } from "../../../components/elements";
 
 import { RowSelectionState } from "@tanstack/react-table";
-import { editIcon, trashGrayIcon } from "../../../assets/icons";
+import {
+  caretDownIcon,
+  editIcon,
+  filterIcon,
+  sortIcon,
+  trashGrayIcon,
+} from "../../../assets/icons";
 
 interface User {
   id: string;
@@ -216,7 +222,19 @@ const AdminTable = () => {
   ];
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="mt-10 bg-white p-4 rounded-2xl border border-gray-8 ">
+      <section className="mb-4 flex items-center justify-end gap-x-3">
+        <button className=" shadow-sm border border-gray-10 px-3 py-2  rounded-xl flex items-center gap-x-2">
+          <img src={filterIcon} alt="filter admin table" />
+          <span className="font-medium text-sm  text-[#525866]">Filter</span>
+        </button>
+
+        <button className="shadow-sm border border-gray-10 px-3 py-2  rounded-xl flex items-center gap-x-2">
+          <img src={sortIcon} alt="filter admin table" />
+          <span className="font-medium text-sm  text-[#525866]">Sort</span>
+          <img src={caretDownIcon} alt="filter admin table" />
+        </button>
+      </section>
       <Table
         columns={columns}
         data={users}
