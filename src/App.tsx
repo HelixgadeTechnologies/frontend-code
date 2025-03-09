@@ -13,6 +13,7 @@ function App() {
       <Routes>
         {/* <Route path="/404" element={<NotFoundPage />} /> */}
         <Route path="/dashboard/*" element={<DashboardHome />} />
+
         <Route path="/" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="*" element={<Login />} />
