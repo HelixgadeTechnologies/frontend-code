@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { authBg } from "../../assets/images";
 
@@ -6,17 +7,49 @@ import { useForm } from "react-hook-form";
 import { FormInput, Button } from "../../components/elements";
 import { Link } from "react-router-dom";
 
+import { axiosRequest } from "../../utils/serverRequest";
+import { useCookies } from "react-cookie";
+import { toast } from "react-toastify";
+
+import { baseUrl } from "../../utils/data";
+
 const Login = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [, setCookie] = useCookies(["hcdt_admin"]);
+
   const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const login = handleSubmit(async (data) => {
-    navigate(`/dashboard`);
-    console.log({ data });
+  const handleLogin = handleSubmit(async (data) => {
+    const payload = {
+      email: data.email,
+      password: data.password,
+    };
+    setIsSubmitting(true);
+    try {
+      const endpoint = `${baseUrl}/api/auth/signIn`;
+      const response = await axiosRequest().post(endpoint, payload);
+
+      if (response?.status === 200 || response?.status === 201) {
+        setCookie("hcdt_admin", {
+          token: response?.data,
+          // admin: response?.data?.user,
+        });
+        setIsSubmitting(false);
+        navigate(`/dashboard`);
+      }
+    } catch (error: unknown) {
+      setIsSubmitting(false);
+
+      const err = error as { response?: { data?: { error?: string } } };
+      toast.error(`Error: ${err?.response?.data?.error}`);
+    }
   });
 
   return (
@@ -25,7 +58,7 @@ const Login = () => {
         <img className="w-full h-full" src={authBg} alt="auth" />
       </section>
       <section className="px-4 lg:px-0  flex items-center justify-center">
-        <form onSubmit={login} className="w-full lg:w-2/3">
+        <form onSubmit={handleLogin} className="w-full lg:w-2/3">
           <h1 className="mb-8 font-semibold text-lg lg:text-4xl">
             Welcome back!
           </h1>
@@ -56,14 +89,9 @@ const Login = () => {
               name="password"
               register={register}
               registerOptions={{
-                required: "Password address is required",
-                minLength: {
-                  value: 8,
-                  message: "Password must be at least 8 characters",
-                },
+                required: "Password is required",
               }}
               error={errors.password}
-              errorMessage={`Password is required`}
               required
               showEye
             />
@@ -71,10 +99,9 @@ const Login = () => {
 
           <div className="mt-8">
             <Button
-              // disabled={isSubmitting}
+              disabled={isSubmitting}
               padding="py-3"
-              buttonText="Login"
-              // buttonText={isSubmitting ? "Processing..." : "Sign in"}
+              buttonText={isSubmitting ? "Processing..." : "Login"}
             />
 
             <span className="block text-center mt-6 text-gray-2 text-sm">
