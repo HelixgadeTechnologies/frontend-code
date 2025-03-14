@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { useForm, Controller } from "react-hook-form";
 
 import { Button, FormInput, Table, CustomSelect, Modal } from "../../elements";
@@ -12,6 +12,13 @@ import {
   trashGrayIcon,
   userDeleteIcon,
 } from "../../../assets/icons";
+
+import { toast } from "react-toastify";
+
+import { Admin } from "../../../utils/types";
+
+import { useAddAdmin, useGetRoles } from "../../../utils/hooks/useManageAdmin";
+import { useGetAllTrusts } from "../../../utils/hooks/useTrusts";
 
 interface User {
   id: string;
@@ -246,10 +253,70 @@ const AddAdmin = ({ close }: { close: () => void }) => {
     register,
     formState: { errors },
     control,
+    handleSubmit,
   } = useForm();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // fetch roles and trust
+  const { isLoading, data } = useGetRoles();
+
+  const { isLoading: trustLoading, data: trusts } = useGetAllTrusts();
+
+  const roles = useMemo(() => {
+    if (!data?.data?.data) return [];
+
+    return data?.data?.data?.map(
+      (role: { roleName: string; roleId: string }) => ({
+        label: role?.roleName,
+        value: role?.roleId,
+      }),
+    );
+  }, [data]);
+
+  const allTrusts = useMemo(() => {
+    if (!trusts?.data?.data) return [];
+
+    return trusts?.data?.data?.map(
+      (trust: { trustId: string; trustName: string }) => ({
+        label: trust?.trustName,
+        value: trust?.trustId,
+      }),
+    );
+  }, [trusts]);
+
+  //  add admin
+  const { mutate: mutateAddAdmin } = useAddAdmin();
+
+  const handleAddAdmin = handleSubmit(async (data) => {
+    setIsSubmitting(true);
+    const payload: Admin = {
+      isCreate: true,
+      data: {
+        ...data,
+        roleId: data?.roleId?.value,
+        trusts: data?.trusts.value,
+      },
+    };
+
+    mutateAddAdmin(payload, {
+      onSuccess: (res) => {
+        toast.success(res?.data?.message);
+        close();
+        setIsSubmitting(false);
+      },
+      onError: (error) => {
+        const err = error as { response?: { data?: { error?: string } } };
+        toast.error(`Error: ${err?.response?.data?.error}`);
+        setIsSubmitting(false);
+      },
+    });
+  });
 
   return (
-    <form className="p-4 bg-off-white-3 h-fit w-[410px]">
+    <form
+      onSubmit={handleAddAdmin}
+      className="p-4 bg-off-white-3 h-fit w-full lg:w-[410px]"
+    >
       <h3 className="text-lg xl:text-3xl text-center font-normal text-dark-2">
         Add Admin
       </h3>
@@ -262,13 +329,13 @@ const AddAdmin = ({ close }: { close: () => void }) => {
         <div>
           <FormInput
             label="First Name"
-            name="fname"
+            name="firstName"
             type="text"
             register={register}
             registerOptions={{
               required: "First name field is required.",
             }}
-            error={errors.fname}
+            error={errors.firstName}
             errorMessage={`First name  is required`}
             required
           />
@@ -277,13 +344,13 @@ const AddAdmin = ({ close }: { close: () => void }) => {
         <div>
           <FormInput
             label="Last Name"
-            name="lname"
+            name="lastName"
             type="text"
             register={register}
             registerOptions={{
               required: "Last name field is required.",
             }}
-            error={errors.lname}
+            error={errors.lastName}
             errorMessage={`Last name  is required`}
             required
           />
@@ -312,19 +379,20 @@ const AddAdmin = ({ close }: { close: () => void }) => {
         <div>
           <Controller
             control={control}
-            name="role"
+            name="roleId"
             rules={{ required: true }}
             render={({ field }) => (
               <CustomSelect
                 id="role-select"
                 {...field}
-                options={adminRoles}
+                isLoading={isLoading}
+                options={roles}
                 label="Role"
                 placeholder="Role"
               />
             )}
           />
-          {errors.role && (
+          {errors.roleId && (
             <p className="mt-2 mb-4 text-xs  text-red-400 ">Select a Role</p>
           )}
         </div>
@@ -332,19 +400,21 @@ const AddAdmin = ({ close }: { close: () => void }) => {
         <div>
           <Controller
             control={control}
-            name="trust"
+            name="trusts"
             rules={{ required: true }}
             render={({ field }) => (
               <CustomSelect
                 id="trust-select"
                 {...field}
-                options={adminRoles}
+                isLoading={trustLoading}
+                options={allTrusts}
                 label="Trust"
+                isMulti={false}
                 placeholder="Assign Trust"
               />
             )}
           />
-          {errors.trust && (
+          {errors.trusts && (
             <p className="mt-2 mb-4 text-xs  text-red-400 ">Assign a trust</p>
           )}
         </div>
@@ -357,7 +427,10 @@ const AddAdmin = ({ close }: { close: () => void }) => {
             width="w-fit"
           />
 
-          <Button padding="py-3" buttonText="Invite" />
+          <Button
+            padding="py-3"
+            buttonText={isSubmitting ? "Inviting.." : "Invite"}
+          />
         </div>
       </div>
     </form>
