@@ -2,6 +2,8 @@ import Select, {
   StylesConfig,
   Props as SelectProps,
   GroupBase,
+  OnChangeValue,
+  ActionMeta,
 } from "react-select";
 
 interface Option {
@@ -9,19 +11,26 @@ interface Option {
   value: string | number;
 }
 
-type CustomSelectProps = Omit<SelectProps<Option, false>, "onChange"> & {
+type CustomSelectProps<T extends boolean = false> = Omit<
+  SelectProps<Option, T>,
+  "onChange"
+> & {
   defaultValue?: Option;
   placeholder?: string;
   label: string;
-  onChange?: (selected: Option | null) => void;
-  styles?: StylesConfig<Option, false, GroupBase<Option>>;
+  onChange?: (
+    selected: OnChangeValue<Option, T>,
+    actionMeta: ActionMeta<Option>,
+  ) => void;
+  styles?: StylesConfig<Option, T, GroupBase<Option>>;
   options: Option[];
   isLoading?: boolean;
   required?: boolean;
   id: string;
+  isMulti?: T;
 };
 
-const CustomSelect = ({
+const CustomSelect = <T extends boolean = false>({
   defaultValue,
   placeholder,
   onChange,
@@ -30,10 +39,11 @@ const CustomSelect = ({
   options,
   isLoading,
   id,
+  isMulti,
   required,
   ...rest
-}: CustomSelectProps) => {
-  const selectStyle: StylesConfig<Option, false, GroupBase<Option>> = {
+}: CustomSelectProps<T>) => {
+  const selectStyle: StylesConfig<Option, T, GroupBase<Option>> = {
     control: (baseStyles) => ({
       ...baseStyles,
       backgroundColor: "white",
@@ -61,13 +71,13 @@ const CustomSelect = ({
         {label} {required && <span className="text-red-400">*</span>}
       </label>
 
-      <Select<Option, false, GroupBase<Option>>
+      <Select<Option, T, GroupBase<Option>>
         instanceId={id}
         defaultValue={defaultValue}
-        onChange={onChange}
+        onChange={(selected, actionMeta) => onChange?.(selected, actionMeta)}
         styles={styles || selectStyle}
         options={options}
-        isMulti={false}
+        isMulti={isMulti}
         components={{
           IndicatorSeparator: () => null,
         }}
