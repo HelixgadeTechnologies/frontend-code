@@ -27,7 +27,7 @@ const RoutedTabs = () => {
   const { pathname } = useLocation();
 
   return (
-    <ul className="w-full lg:w-2/3 flex items-center  border-b border-gray-7">
+    <ul className="w-full lg:w-2/3 overflow-x-auto whitespace-nowrap flex items-center  border-b border-gray-7">
       {tabRoutes?.map((route) => (
         <Link to={route.link} key={route.name}>
           <li
