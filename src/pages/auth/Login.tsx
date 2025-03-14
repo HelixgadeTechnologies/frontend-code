@@ -13,6 +13,9 @@ import { toast } from "react-toastify";
 
 import { baseUrl } from "../../utils/data";
 
+import { jwtDecode } from "jwt-decode";
+import { User } from "../../utils/types";
+
 const Login = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -33,14 +36,31 @@ const Login = () => {
     };
     setIsSubmitting(true);
     try {
-      const endpoint = `${baseUrl}/api/auth/signIn`;
+      const endpoint = `${baseUrl}/auth/signIn`;
       const response = await axiosRequest().post(endpoint, payload);
 
       if (response?.status === 200 || response?.status === 201) {
-        setCookie("hcdt_admin", {
-          token: response?.data,
-          // admin: response?.data?.user,
-        });
+        const token = response.data.data;
+        const user: User = jwtDecode(token);
+
+        setCookie(
+          "hcdt_admin",
+          JSON.stringify({
+            token: response?.data?.data,
+            userId: user?.userId,
+            email: user?.email,
+            role: user?.role,
+            firstName: user?.firstName,
+            lastName: user?.lastName,
+            phoneNumber: user?.phoneNumber,
+            state: user?.state,
+            community: user?.community,
+            localGovernmentArea: user?.localGovernmentArea,
+            profilePic: user?.profilePic,
+          }),
+          { path: "/" },
+        );
+
         setIsSubmitting(false);
         navigate(`/dashboard`);
       }
