@@ -1,7 +1,15 @@
 import { useState, useRef, useEffect, useMemo } from "react";
 import { useForm, Controller } from "react-hook-form";
 
-import { Button, FormInput, Table, CustomSelect, Modal } from "../../elements";
+import {
+  Button,
+  FormInput,
+  Table,
+  CustomSelect,
+  Modal,
+  EmptyTable,
+  LoadingTable,
+} from "../../elements";
 
 import { RowSelectionState } from "@tanstack/react-table";
 import {
@@ -15,74 +23,55 @@ import {
 
 import { toast } from "react-toastify";
 
-import { Admin } from "../../../utils/types";
+// Type props
+import {
+  AdminsArray,
+  AdminUser,
+  CreateAdmin,
+  ActiveMenuProps,
+  DeleteAdminType,
+} from "../../../utils/types";
 
-import { useAddAdmin, useGetRoles } from "../../../utils/hooks/useManageAdmin";
+import {
+  useAddUpdateAdmin,
+  useGetRoles,
+  useGetAdmins,
+  useDeleteAdmin,
+} from "../../../utils/hooks/useManageAdmin";
 import { useGetAllTrusts } from "../../../utils/hooks/useTrusts";
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-}
-
-const users: User[] = [
-  {
-    id: "1",
-    name: "Amarachi Okafor",
-    email: "amarachiokafor@gmail.com",
-    role: "Super Admin",
-  },
-  {
-    id: "2",
-    name: "Alex Okocha",
-    email: "alexokocha@gmail.com",
-    role: "Admin",
-  },
-  {
-    id: "3",
-    name: "Mwenda Mugendi",
-    email: "princewilliams@gmail.com",
-    role: "Admin",
-  },
-];
-
-const adminRoles = [
-  {
-    id: 1,
-    label: "Admin",
-    value: "admin",
-  },
-  {
-    id: 2,
-    label: "Super Admin",
-    value: "super-admin",
-  },
-];
-
 const AdminTable = () => {
-  const [openEdit, setOpenEdit] = useState(false);
-  const [openDelete, setOpenDelete] = useState(false);
+  const { isLoading, data } = useGetAdmins();
+
+  const admins: AdminsArray = useMemo(() => {
+    const adminData = data?.data?.data || [];
+    return adminData.map((admin: { userId: string }) => ({
+      ...admin,
+      id: admin.userId,
+    }));
+  }, [data]);
+
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
-  const actionButtonsRef = useRef<{ [key: string]: HTMLButtonElement | null }>(
-    {},
-  );
+
+  // State to track which user is being edited or deleted
+  const [editUser, setEditUser] = useState<AdminUser | null>(null);
+  const [deleteUserId, setDeleteUserId] = useState<string | null>(null);
+
   // Toggle action menu
   const toggleMenu = (userId: string) => {
     setActiveMenu(activeMenu === userId ? null : userId);
   };
 
   // Handle edit account
-  const handleEdit = () => {
-    setOpenEdit(!openEdit);
+  const handleEdit = (user: AdminUser | null = null) => {
+    setEditUser(user);
   };
 
   // Handle delete account
-  const handleDelete = () => {
-    setOpenDelete(!openDelete);
+  const handleDelete = (userId: string | null = null) => {
+    setDeleteUserId(userId);
   };
 
   useEffect(() => {
@@ -92,9 +81,8 @@ const AdminTable = () => {
         activeMenu &&
         menuRef.current &&
         !menuRef.current.contains(event.target as Node) &&
-        !(
-          actionButtonsRef.current[activeMenu] &&
-          actionButtonsRef.current[activeMenu]?.contains(event.target as Node)
+        !(event.target as Element).closest(
+          `[data-menu-trigger="${activeMenu}"]`,
         )
       ) {
         setActiveMenu(null);
@@ -105,72 +93,16 @@ const AdminTable = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [activeMenu]);
 
-  // Correctly position the dropdown based on available space
-  const ActionMenu = ({ userId }: { userId: string }) => {
-    const [menuPosition, setMenuPosition] = useState<{ top: boolean }>({
-      top: false,
-    });
-
-    useEffect(() => {
-      if (activeMenu === userId) {
-        const buttonElement = actionButtonsRef.current[userId];
-        const menuElement = menuRef.current;
-
-        if (buttonElement && menuElement) {
-          const buttonRect = buttonElement.getBoundingClientRect();
-          const spaceBelow = window.innerHeight - buttonRect.bottom;
-          const menuHeight = menuElement.offsetHeight;
-
-          // If there's not enough space below, position above
-          setMenuPosition({ top: spaceBelow < menuHeight });
-        }
-      }
-    }, [userId]);
-
-    return activeMenu === userId ? (
-      <div
-        ref={menuRef}
-        className={`absolute ${
-          menuPosition.top ? "bottom-0 mb-2" : "top-0 mt-2"
-        }  right-0 w-48 bg-white rounded-xl shadow-lg z-30 `}
-      >
-        <div className="py-1">
-          <button
-            onClick={handleEdit}
-            className="flex gap-x-2 items-center w-full px-4 py-3 text-sm text-gray-6 hover:bg-gray-1"
-          >
-            <img src={editIcon} alt="edit admin" />
-            Edit account
-          </button>
-          <button
-            onClick={handleDelete}
-            className="flex gap-x-2 items-center w-full px-4 py-3 text-sm text-gray-6 hover:bg-gray-1"
-          >
-            <img src={trashGrayIcon} alt="delete admin" />
-            Delete account
-          </button>
-        </div>
-
-        {openEdit && (
-          <Modal close={handleEdit} body={<EditAdmin close={handleEdit} />} />
-        )}
-
-        {openDelete && (
-          <Modal
-            close={handleDelete}
-            body={<DeleteAdmin close={handleDelete} />}
-          />
-        )}
-      </div>
-    ) : null;
-  };
-
   // Define columns
   const columns = [
     {
       id: "name",
       header: "Team member Name",
       accessorKey: "name",
+      cell: ({ row }: { row: { original: AdminUser } }) => {
+        const fullName = `${row.original.firstName} ${row.original.lastName}`;
+        return <span>{fullName}</span>;
+      },
     },
     {
       id: "email",
@@ -181,14 +113,14 @@ const AdminTable = () => {
       id: "role",
       header: "Account type",
       accessorKey: "role",
-      cell: ({ row }: { row: { original: User } }) => {
+      cell: ({ row }: { row: { original: AdminUser } }) => {
         const role = row.original.role;
         return (
           <span
             className={`
               px-3 py-1 rounded-full
               ${
-                role === "Super Admin"
+                role === "SUPER ADMIN"
                   ? "bg-light-green text-dark-green-1"
                   : "bg-light-orange text-dark-orange"
               }
@@ -202,26 +134,33 @@ const AdminTable = () => {
     {
       id: "actions",
       header: "",
-      cell: ({ row }: { row: { original: User } }) => {
-        const userId = row.original.id;
+      cell: ({ row }: { row: { original: AdminUser } }) => {
+        const user = row.original;
+
         return (
           <div className="relative">
             <button
-              ref={(el: HTMLButtonElement | null) => {
-                actionButtonsRef.current[userId] = el;
-              }}
+              data-menu-trigger={user?.id}
               className="px-3 text-gray-5 hover:text-gray-7 cursor-pointer"
-              onClick={() => toggleMenu(userId)}
+              onClick={() => toggleMenu(user?.id)}
               aria-label="More options"
             >
               •••
             </button>
-            <ActionMenu userId={userId} />
+            <ActiveMenu
+              userId={user?.id}
+              activeMenu={activeMenu}
+              menuRef={menuRef}
+              handleEdit={() => handleEdit(user)}
+              handleDelete={() => handleDelete(user?.id)}
+            />
           </div>
         );
       },
     },
   ];
+
+  const tableHead = ["Team Member Name", "Email", "Account Type", "action"];
 
   return (
     <div className="mt-10 bg-white p-4 rounded-2xl border border-gray-8 ">
@@ -237,13 +176,128 @@ const AdminTable = () => {
           <img src={caretDownIcon} alt="filter admin table" />
         </button>
       </section>
-      <Table
-        columns={columns}
-        data={users}
-        count={users.length}
-        rowSelection={rowSelection}
-        setRowSelection={setRowSelection}
-      />
+
+      <>
+        {isLoading ? (
+          <LoadingTable headArr={tableHead} />
+        ) : admins && admins?.length > 0 ? (
+          <Table
+            columns={columns}
+            data={admins}
+            count={admins?.length}
+            rowSelection={rowSelection}
+            setRowSelection={setRowSelection}
+          />
+        ) : (
+          <EmptyTable
+            headArr={tableHead}
+            heading="No Admin data available."
+            text="Create admin to get started!"
+          />
+        )}
+      </>
+
+      {/* Modals */}
+      {editUser && (
+        <Modal
+          body={<EditAdmin user={editUser} close={() => handleEdit(null)} />}
+        />
+      )}
+
+      {deleteUserId && (
+        <Modal
+          body={
+            <DeleteAdmin
+              userId={deleteUserId}
+              close={() => handleDelete(null)}
+            />
+          }
+        />
+      )}
+    </div>
+  );
+};
+
+const ActiveMenu: React.FC<ActiveMenuProps> = ({
+  userId,
+  activeMenu,
+  menuRef,
+  handleEdit,
+  handleDelete,
+}) => {
+  const [menuPosition, setMenuPosition] = useState<{
+    top: number;
+    right: number;
+  }>({
+    top: 0,
+    right: 0,
+  });
+
+  useEffect(() => {
+    if (activeMenu === userId) {
+      // Get the button that triggered this menu
+      const buttonElement = document.querySelector(
+        `[data-menu-trigger="${userId}"]`,
+      );
+
+      if (buttonElement && menuRef.current) {
+        const buttonRect = buttonElement.getBoundingClientRect();
+        const menuHeight = menuRef.current.offsetHeight;
+        const spaceBelow = window.innerHeight - buttonRect.bottom;
+
+        // Calculate position
+        let topPosition;
+        if (spaceBelow < menuHeight) {
+          // Position above the button if not enough space below
+          topPosition = -menuHeight;
+        } else {
+          // Position below the button
+          topPosition = buttonRect.height;
+        }
+
+        setMenuPosition({
+          top: topPosition,
+          right: 0,
+        });
+      }
+    }
+  }, [activeMenu, userId]);
+
+  if (activeMenu !== userId) {
+    return null;
+  }
+
+  return (
+    <div
+      ref={menuRef}
+      className="absolute bg-white rounded-xl shadow-lg w-48 z-10"
+      style={{
+        top: `${menuPosition.top}px`,
+        right: `${menuPosition.right}px`,
+      }}
+    >
+      <div className="py-1">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            handleEdit();
+          }}
+          className="flex gap-x-2 items-center w-full px-4 py-3 text-sm text-gray-6 hover:bg-gray-1"
+        >
+          <img src={editIcon} alt="edit admin" />
+          Edit account
+        </button>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            handleDelete();
+          }}
+          className="flex gap-x-2 items-center w-full px-4 py-3 text-sm text-gray-6 hover:bg-gray-1"
+        >
+          <img src={trashGrayIcon} alt="delete admin" />
+          Delete account
+        </button>
+      </div>
     </div>
   );
 };
@@ -285,16 +339,17 @@ const AddAdmin = ({ close }: { close: () => void }) => {
   }, [trusts]);
 
   //  add admin
-  const { mutate: mutateAddAdmin } = useAddAdmin();
+  const { mutate: mutateAddAdmin } = useAddUpdateAdmin();
 
   const handleAddAdmin = handleSubmit(async (data) => {
     setIsSubmitting(true);
-    const payload: Admin = {
+    const payload: CreateAdmin = {
       isCreate: true,
       data: {
-        ...data,
         roleId: data?.roleId?.value,
         trusts: data?.trusts.value,
+        firstName: data?.firstName,
+        email: data?.email,
       },
     };
 
@@ -437,35 +492,124 @@ const AddAdmin = ({ close }: { close: () => void }) => {
   );
 };
 
-const EditAdmin = ({ close }: { close: () => void }) => {
+const EditAdmin = ({ close, user }: { close: () => void; user: AdminUser }) => {
+  // Add this to see the user data being passed
+  console.log("EditAdmin received user:", user);
+
   const {
     register,
     formState: { errors },
     control,
+    handleSubmit,
+    reset,
   } = useForm();
 
+  const [editing, setEditing] = useState(false);
+
+  // fetch roles and trust
+  const { isLoading, data } = useGetRoles();
+
+  const { isLoading: trustLoading, data: trusts } = useGetAllTrusts();
+
+  const roles = useMemo(() => {
+    if (!data?.data?.data) return [];
+
+    return data?.data?.data?.map(
+      (role: { roleName: string; roleId: string }) => ({
+        label: role?.roleName,
+        value: role?.roleId,
+      }),
+    );
+  }, [data]);
+
+  const allTrusts = useMemo(() => {
+    if (!trusts?.data?.data) return [];
+
+    return trusts?.data?.data?.map(
+      (trust: { trustId: string; trustName: string }) => ({
+        label: trust?.trustName,
+        value: trust?.trustId,
+      }),
+    );
+  }, [trusts]);
+
+  //  edit admin
+  const { mutate: mutateAddAdmin } = useAddUpdateAdmin();
+
+  const handleUpdateAdmin = handleSubmit(async (data) => {
+    const payload: CreateAdmin = {
+      isCreate: false,
+      data: {
+        userId: user?.id,
+        roleId: data?.roleId?.value,
+        firstName: data?.firstName,
+        lastName: data?.lastName,
+        email: data?.email,
+        // Uncomment if trust functionality is required
+        // trusts: data?.trusts?.value || "",
+      },
+    };
+
+    setEditing(true);
+
+    mutateAddAdmin(payload, {
+      onSuccess: (res) => {
+        toast.success(res?.data?.message);
+        close();
+        setEditing(false);
+      },
+      onError: (error) => {
+        const err = error as { response?: { data?: { error?: string } } };
+        toast.error(`Error: ${err?.response?.data?.error}`);
+        setEditing(false);
+      },
+    });
+  });
+
+  // Reset form when user changes
+  useEffect(() => {
+    // Only reset the form when both user and role data are available
+    if (user && roles.length > 0) {
+      const userRole =
+        roles.find((role: { label: string }) => role.label === user.role) ||
+        null;
+
+      reset({
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
+        email: user.email || "",
+        roleId: userRole,
+        // Uncomment if trust functionality is required
+        // trusts: defaultTrust,
+      });
+    }
+  }, [user, roles, reset]);
+
   return (
-    <form className="p-4 bg-off-white-3 h-fit w-[410px]">
+    <form
+      onSubmit={handleUpdateAdmin}
+      className="p-4 bg-off-white-3 h-fit w-[410px]"
+    >
       <h3 className="text-lg xl:text-3xl text-center font-normal text-dark-2">
         Edit Admin
       </h3>
 
       <p className="text-base my-1 text-gray-6 text-center">
-        Make edits Admin to this account
+        Make edits to this admin account
       </p>
 
       <div className="space-y-2">
         <div>
           <FormInput
             label="First Name"
-            name="fname"
+            name="firstName"
             type="text"
             register={register}
             registerOptions={{
               required: "First name field is required.",
             }}
-            error={errors.fname}
-            errorMessage={`First name  is required`}
+            error={errors.firstName}
+            errorMessage={`First name is required`}
             required
           />
         </div>
@@ -473,14 +617,14 @@ const EditAdmin = ({ close }: { close: () => void }) => {
         <div>
           <FormInput
             label="Last Name"
-            name="lname"
+            name="lastName"
             type="text"
             register={register}
             registerOptions={{
               required: "Last name field is required.",
             }}
-            error={errors.lname}
-            errorMessage={`Last name  is required`}
+            error={errors.lastName}
+            errorMessage={`Last name is required`}
             required
           />
         </div>
@@ -508,41 +652,40 @@ const EditAdmin = ({ close }: { close: () => void }) => {
         <div>
           <Controller
             control={control}
-            name="role"
+            name="roleId"
             rules={{ required: true }}
             render={({ field }) => (
               <CustomSelect
                 id="role-select"
                 {...field}
-                options={adminRoles}
+                options={roles}
                 label="Role"
+                isLoading={isLoading}
                 placeholder="Role"
               />
             )}
           />
-          {errors.role && (
-            <p className="mt-2 mb-4 text-xs  text-red-400 ">Select a Role</p>
+          {errors.roleId && (
+            <p className="mt-2 mb-4 text-xs text-red-400">Select a Role</p>
           )}
         </div>
 
         <div>
           <Controller
             control={control}
-            name="trust"
-            rules={{ required: true }}
+            name="trusts"
+            rules={{}}
             render={({ field }) => (
               <CustomSelect
                 id="trust-select"
                 {...field}
-                options={adminRoles}
+                options={allTrusts}
+                isLoading={trustLoading}
                 label="Trust"
                 placeholder="Assign Trust"
               />
             )}
           />
-          {errors.trust && (
-            <p className="mt-2 mb-4 text-xs  text-red-400 ">Assign a trust</p>
-          )}
         </div>
 
         <div className="pt-4 flex items-center gap-x-8 lg:gap-x-16 justify-between">
@@ -553,14 +696,50 @@ const EditAdmin = ({ close }: { close: () => void }) => {
             width="w-fit"
           />
 
-          <Button padding="py-3" buttonText="Update" />
+          <Button
+            padding="py-3"
+            buttonText={editing ? "Updating..." : "Update"}
+            disabled={editing}
+          />
         </div>
       </div>
     </form>
   );
 };
 
-const DeleteAdmin = ({ close }: { close: () => void }) => {
+const DeleteAdmin = ({
+  close,
+  userId,
+}: {
+  close: () => void;
+  userId: string;
+}) => {
+  console.log({ userId });
+
+  const { mutate: mutateDeleteAdmin } = useDeleteAdmin();
+  const [deleting, setDeleting] = useState(false);
+
+  const handleRemoveAdmin = async () => {
+    const payload: DeleteAdminType = {
+      userId: userId,
+    };
+
+    setDeleting(true);
+
+    mutateDeleteAdmin(payload, {
+      onSuccess: (res) => {
+        toast.success(res?.data?.message);
+        close();
+        setDeleting(false);
+      },
+      onError: (error) => {
+        setDeleting(false);
+        const err = error as { response?: { data?: { error?: string } } };
+        toast.error(`Error: ${err?.response?.data?.error}`);
+      },
+    });
+  };
+
   return (
     <div className="p-6 bg-white h-fit w-[430px] rounded-2xl">
       <div className=" border border-gray-300 bg-[#E4E5E77A]/40 mx-auto h-14 w-14 rounded-full flex items-center justify-center">
@@ -588,7 +767,12 @@ const DeleteAdmin = ({ close }: { close: () => void }) => {
           width="w-fit"
         />
 
-        <Button width="w-fit" padding="py-3 px-14" buttonText="Remove" />
+        <Button
+          onClick={handleRemoveAdmin}
+          width="w-fit"
+          padding="py-3 px-14"
+          buttonText={deleting ? "Removing.." : "Remove"}
+        />
       </div>
     </div>
   );
