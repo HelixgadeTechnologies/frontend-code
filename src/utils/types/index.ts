@@ -51,6 +51,56 @@ export interface ActiveMenuProps {
   handleDelete: () => void;
 }
 
-export interface DeleteAdminType {
+export interface DeleteUserType {
   userId: string;
 }
+
+export interface CreateSettlor {
+  isCreate: boolean;
+  data: {
+    settlorId?: string;
+    settlorName: string;
+    omlCode: string;
+    contactName: string;
+    contactEmail: string;
+    contactPhoneNumber: string;
+  };
+}
+
+export interface DeleteSettlorType {
+  settlorId: string;
+}
+
+export interface SettlorType extends BaseItem {
+  settlorId: string;
+  length: number | undefined;
+  settlorName: string;
+  omlCode: string;
+  contactName: string;
+  contactEmail: string;
+  contactPhoneNumber: string;
+}
+
+export type SettlorsArray = SettlorType[];
+
+export interface DRAType extends BaseItem {
+  userId: string;
+  length: number | undefined;
+  firstName: string;
+  role: string;
+  lastName: string;
+  email: string;
+}
+
+export type DRAsArray = DRAType[];
+
+export interface NUPRCItem extends BaseItem {
+  userId: string;
+  length: number | undefined;
+  firstName: string;
+  role: string;
+  lastName: string;
+  email: string;
+}
+
+export type NUPRCsArray = NUPRCItem[];
