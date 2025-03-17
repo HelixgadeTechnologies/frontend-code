@@ -150,8 +150,8 @@ const Table = <T extends BaseItem>({
                   <td
                     key={cell.id}
                     className={`whitespace-nowrap text-gray-9 px-5 py-5 text-sm font-Poppins font-normal ${
-                      cell.column.id !== "select" ? "capitalize" : ""
-                    } text-black`}
+                      cell.column.id !== "select" ? "" : ""
+                    } text-black normal-case`}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
