@@ -1,4 +1,10 @@
-import { useState, useRef, useEffect, useMemo } from "react";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useMemo,
+  useCallback,
+} from "react";
 import { useForm, Controller } from "react-hook-form";
 
 import {
@@ -60,19 +66,22 @@ const AdminTable = () => {
   const [deleteUserId, setDeleteUserId] = useState<string | null>(null);
 
   // Toggle action menu
-  const toggleMenu = (userId: string) => {
-    setActiveMenu(activeMenu === userId ? null : userId);
-  };
+  const toggleMenu = useCallback(
+    (userId: string) => {
+      setActiveMenu(activeMenu === userId ? null : userId);
+    },
+    [activeMenu],
+  );
 
   // Handle edit account
-  const handleEdit = (user: AdminUser | null = null) => {
+  const handleEdit = useCallback((user: AdminUser | null = null) => {
     setEditUser(user);
-  };
+  }, []);
 
   // Handle delete account
-  const handleDelete = (userId: string | null = null) => {
+  const handleDelete = useCallback((userId: string | null = null) => {
     setDeleteUserId(userId);
-  };
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -93,31 +102,32 @@ const AdminTable = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [activeMenu]);
 
-  // Define columns
-  const columns = [
-    {
-      id: "name",
-      header: "Team member Name",
-      accessorKey: "name",
-      cell: ({ row }: { row: { original: AdminUser } }) => {
-        const fullName = `${row.original.firstName} ${row.original.lastName}`;
-        return <span>{fullName}</span>;
+  // Define columns with memoization
+  const columns = useMemo(
+    () => [
+      {
+        id: "name",
+        header: "Team member Name",
+        accessorKey: "name",
+        cell: ({ row }: { row: { original: AdminUser } }) => {
+          const fullName = `${row.original.firstName} ${row.original.lastName}`;
+          return <span>{fullName}</span>;
+        },
       },
-    },
-    {
-      id: "email",
-      header: "Email",
-      accessorKey: "email",
-    },
-    {
-      id: "role",
-      header: "Account type",
-      accessorKey: "role",
-      cell: ({ row }: { row: { original: AdminUser } }) => {
-        const role = row.original.role;
-        return (
-          <span
-            className={`
+      {
+        id: "email",
+        header: "Email",
+        accessorKey: "email",
+      },
+      {
+        id: "role",
+        header: "Account type",
+        accessorKey: "role",
+        cell: ({ row }: { row: { original: AdminUser } }) => {
+          const role = row.original.role;
+          return (
+            <span
+              className={`
               px-3 py-1 rounded-full
               ${
                 role === "SUPER ADMIN"
@@ -125,40 +135,42 @@ const AdminTable = () => {
                   : "bg-light-orange text-dark-orange"
               }
               `}
-          >
-            {role}
-          </span>
-        );
-      },
-    },
-    {
-      id: "actions",
-      header: "",
-      cell: ({ row }: { row: { original: AdminUser } }) => {
-        const user = row.original;
-
-        return (
-          <div className="relative">
-            <button
-              data-menu-trigger={user?.id}
-              className="px-3 text-gray-5 hover:text-gray-7 cursor-pointer"
-              onClick={() => toggleMenu(user?.id)}
-              aria-label="More options"
             >
-              •••
-            </button>
-            <ActiveMenu
-              userId={user?.id}
-              activeMenu={activeMenu}
-              menuRef={menuRef}
-              handleEdit={() => handleEdit(user)}
-              handleDelete={() => handleDelete(user?.id)}
-            />
-          </div>
-        );
+              {role}
+            </span>
+          );
+        },
       },
-    },
-  ];
+      {
+        id: "actions",
+        header: "",
+        cell: ({ row }: { row: { original: AdminUser } }) => {
+          const user = row.original;
+
+          return (
+            <div className="relative">
+              <button
+                data-menu-trigger={user?.id}
+                className="px-3 text-gray-5 hover:text-gray-7 cursor-pointer"
+                onClick={() => toggleMenu(user?.id)}
+                aria-label="More options"
+              >
+                •••
+              </button>
+              <ActiveMenu
+                userId={user?.id}
+                activeMenu={activeMenu}
+                menuRef={menuRef}
+                handleEdit={() => handleEdit(user)}
+                handleDelete={() => handleDelete(user?.id)}
+              />
+            </div>
+          );
+        },
+      },
+    ],
+    [activeMenu, toggleMenu, handleEdit, handleDelete],
+  );
 
   const tableHead = ["Team Member Name", "Email", "Account Type", "action"];
 
@@ -218,23 +230,20 @@ const AdminTable = () => {
   );
 };
 
-const ActiveMenu: React.FC<ActiveMenuProps> = ({
-  userId,
-  activeMenu,
-  menuRef,
-  handleEdit,
-  handleDelete,
-}) => {
-  const [menuPosition, setMenuPosition] = useState<{
-    top: number;
-    right: number;
-  }>({
-    top: 0,
-    right: 0,
-  });
+const ActiveMenu: React.FC<ActiveMenuProps> = React.memo(
+  ({ userId, activeMenu, menuRef, handleEdit, handleDelete }) => {
+    const [menuPosition, setMenuPosition] = useState<{
+      top: number;
+      right: number;
+    }>({
+      top: 0,
+      right: 0,
+    });
 
-  useEffect(() => {
-    if (activeMenu === userId) {
+    useEffect(() => {
+      // Only calculate position when menu is active for this user
+      if (activeMenu !== userId) return;
+
       // Get the button that triggered this menu
       const buttonElement = document.querySelector(
         `[data-menu-trigger="${userId}"]`,
@@ -260,48 +269,47 @@ const ActiveMenu: React.FC<ActiveMenuProps> = ({
           right: 0,
         });
       }
+    }, [activeMenu, userId, menuRef]);
+
+    if (activeMenu !== userId) {
+      return null;
     }
-  }, [activeMenu, userId]);
 
-  if (activeMenu !== userId) {
-    return null;
-  }
-
-  return (
-    <div
-      ref={menuRef}
-      className="absolute bg-white rounded-xl shadow-lg w-48 z-10"
-      style={{
-        top: `${menuPosition.top}px`,
-        right: `${menuPosition.right}px`,
-      }}
-    >
-      <div className="py-1">
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            handleEdit();
-          }}
-          className="flex gap-x-2 items-center w-full px-4 py-3 text-sm text-gray-6 hover:bg-gray-1"
-        >
-          <img src={editIcon} alt="edit admin" />
-          Edit account
-        </button>
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            handleDelete();
-          }}
-          className="flex gap-x-2 items-center w-full px-4 py-3 text-sm text-gray-6 hover:bg-gray-1"
-        >
-          <img src={trashGrayIcon} alt="delete admin" />
-          Delete account
-        </button>
+    return (
+      <div
+        ref={menuRef}
+        className="absolute bg-white rounded-xl shadow-lg w-48 z-10"
+        style={{
+          top: `${menuPosition.top}px`,
+          right: `${menuPosition.right}px`,
+        }}
+      >
+        <div className="py-1">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleEdit();
+            }}
+            className="flex gap-x-2 items-center w-full px-4 py-3 text-sm text-gray-6 hover:bg-gray-1"
+          >
+            <img src={editIcon} alt="edit admin" />
+            Edit account
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDelete();
+            }}
+            className="flex gap-x-2 items-center w-full px-4 py-3 text-sm text-gray-6 hover:bg-gray-1"
+          >
+            <img src={trashGrayIcon} alt="delete admin" />
+            Delete account
+          </button>
+        </div>
       </div>
-    </div>
-  );
-};
-
+    );
+  },
+);
 const AddAdmin = ({ close }: { close: () => void }) => {
   const {
     register,
@@ -493,9 +501,6 @@ const AddAdmin = ({ close }: { close: () => void }) => {
 };
 
 const EditAdmin = ({ close, user }: { close: () => void; user: AdminUser }) => {
-  // Add this to see the user data being passed
-  console.log("EditAdmin received user:", user);
-
   const {
     register,
     formState: { errors },
@@ -508,7 +513,6 @@ const EditAdmin = ({ close, user }: { close: () => void; user: AdminUser }) => {
 
   // fetch roles and trust
   const { isLoading, data } = useGetRoles();
-
   const { isLoading: trustLoading, data: trusts } = useGetAllTrusts();
 
   const roles = useMemo(() => {
@@ -536,43 +540,50 @@ const EditAdmin = ({ close, user }: { close: () => void; user: AdminUser }) => {
   //  edit admin
   const { mutate: mutateAddAdmin } = useAddUpdateAdmin();
 
-  const handleUpdateAdmin = handleSubmit(async (data) => {
-    const payload: CreateAdmin = {
-      isCreate: false,
-      data: {
-        userId: user?.id,
-        roleId: data?.roleId?.value,
-        firstName: data?.firstName,
-        lastName: data?.lastName,
-        email: data?.email,
-        // Uncomment if trust functionality is required
-        // trusts: data?.trusts?.value || "",
-      },
-    };
+  const handleUpdateAdmin = useCallback(
+    handleSubmit(async (data) => {
+      const payload: CreateAdmin = {
+        isCreate: false,
+        data: {
+          userId: user?.id,
+          roleId: data?.roleId?.value,
+          firstName: data?.firstName,
+          lastName: data?.lastName,
+          email: data?.email,
+          // Uncomment if trust functionality is required
+          // trusts: data?.trusts?.value || "",
+        },
+      };
 
-    setEditing(true);
+      setEditing(true);
 
-    mutateAddAdmin(payload, {
-      onSuccess: (res) => {
-        toast.success(res?.data?.message);
-        close();
-        setEditing(false);
-      },
-      onError: (error) => {
-        const err = error as { response?: { data?: { error?: string } } };
-        toast.error(`Error: ${err?.response?.data?.error}`);
-        setEditing(false);
-      },
-    });
-  });
+      mutateAddAdmin(payload, {
+        onSuccess: (res) => {
+          toast.success(res?.data?.message);
+          close();
+          setEditing(false);
+        },
+        onError: (error) => {
+          const err = error as { response?: { data?: { error?: string } } };
+          toast.error(`Error: ${err?.response?.data?.error}`);
+          setEditing(false);
+        },
+      });
+    }),
+    [user?.id, mutateAddAdmin, close],
+  );
 
   // Reset form when user changes
   useEffect(() => {
     // Only reset the form when both user and role data are available
     if (user && roles.length > 0) {
+      // Fix role matching by normalizing the comparison
+      const normalizedUserRole = user.role?.toUpperCase();
       const userRole =
-        roles.find((role: { label: string }) => role.label === user.role) ||
-        null;
+        roles.find(
+          (role: { label: string }) =>
+            role.label?.toUpperCase() === normalizedUserRole,
+        ) || null;
 
       reset({
         firstName: user.firstName || "",
