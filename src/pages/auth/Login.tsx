@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { authBg } from "../../assets/images";
 
 import { useForm } from "react-hook-form";
@@ -22,6 +22,11 @@ const Login = () => {
   const [, setCookie] = useCookies(["hcdt_admin"]);
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const redirectPath = queryParams.get("redirect");
+
+  const movePage = redirectPath ? redirectPath : "/dashboard";
 
   const {
     register,
@@ -62,7 +67,7 @@ const Login = () => {
         );
 
         setIsSubmitting(false);
-        navigate(`/dashboard`);
+        navigate(`${movePage}`);
       }
     } catch (error: unknown) {
       setIsSubmitting(false);

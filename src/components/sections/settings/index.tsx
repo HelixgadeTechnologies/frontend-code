@@ -35,16 +35,16 @@ import {
   AdminUser,
   CreateAdmin,
   ActiveMenuProps,
-  DeleteAdminType,
+  DeleteUserType,
 } from "../../../utils/types";
 
 import {
   useAddUpdateAdmin,
-  useGetRoles,
   useGetAdmins,
-  useDeleteAdmin,
 } from "../../../utils/hooks/useManageAdmin";
+import { useGetRoles } from "../../../utils/hooks";
 import { useGetAllTrusts } from "../../../utils/hooks/useTrusts";
+import { useDeleteAnyUser } from "../../../utils/hooks";
 
 const AdminTable = () => {
   const { isLoading, data } = useGetAdmins();
@@ -725,13 +725,11 @@ const DeleteAdmin = ({
   close: () => void;
   userId: string;
 }) => {
-  console.log({ userId });
-
-  const { mutate: mutateDeleteAdmin } = useDeleteAdmin();
+  const { mutate: mutateDeleteAdmin } = useDeleteAnyUser("admins");
   const [deleting, setDeleting] = useState(false);
 
   const handleRemoveAdmin = async () => {
-    const payload: DeleteAdminType = {
+    const payload: DeleteUserType = {
       userId: userId,
     };
 
