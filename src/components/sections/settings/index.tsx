@@ -257,9 +257,12 @@ const ActiveMenu: React.FC<ActiveMenuProps> = React.memo(
         // Calculate position
         let topPosition;
         if (spaceBelow < menuHeight) {
+          console.log({ spaceBelow, menuHeight }, "no space");
+
           // Position above the button if not enough space below
           topPosition = -menuHeight;
         } else {
+          console.log({ spaceBelow, menuHeight }, " space");
           // Position below the button
           topPosition = buttonRect.height;
         }

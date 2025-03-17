@@ -235,11 +235,7 @@ const ActiveMenu: React.FC<ActiveMenuProps> = React.memo(
 
       // Get the button that triggered this menu
       const buttonElement = document.querySelector(
-        `[
-        
-        
-        
-        ="${userId}"]`,
+        `[data-menu-trigger="${userId}"]`,
       );
 
       if (buttonElement && menuRef.current) {
@@ -250,9 +246,12 @@ const ActiveMenu: React.FC<ActiveMenuProps> = React.memo(
         // Calculate position
         let topPosition;
         if (spaceBelow < menuHeight) {
+          console.log({ spaceBelow, menuHeight }, "no space");
           // Position above the button if not enough space below
           topPosition = -menuHeight;
         } else {
+          console.log({ spaceBelow, menuHeight }, "plenty");
+          // console.log("plenty space", { spaceBelow, menuHeight });
           // Position below the button
           topPosition = buttonRect.height;
         }
