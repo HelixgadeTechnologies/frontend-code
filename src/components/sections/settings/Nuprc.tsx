@@ -118,7 +118,7 @@ const NuprcTable = () => {
       {
         id: "actions",
         header: "",
-        cell: ({ row }: { row: { original: AdminUser } }) => {
+        cell: ({ row }: { row: { original: NUPRCItem } }) => {
           const user = row.original;
 
           return (
