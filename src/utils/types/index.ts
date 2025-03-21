@@ -83,6 +83,18 @@ export interface SettlorType extends BaseItem {
 
 export type SettlorsArray = SettlorType[];
 
+export interface CreateDRA {
+  isCreate: boolean;
+  data: {
+    userId?: string;
+    firstName: string;
+    lastName: string;
+    trust: string;
+    email: string;
+    phoneNumber: string;
+  };
+}
+
 export interface DRAType extends BaseItem {
   userId: string;
   length: number | undefined;
@@ -90,6 +102,8 @@ export interface DRAType extends BaseItem {
   role: string;
   lastName: string;
   email: string;
+  trusts: string;
+  phoneNumber: string;
 }
 
 export type DRAsArray = DRAType[];
