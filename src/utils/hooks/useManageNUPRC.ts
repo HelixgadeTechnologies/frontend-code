@@ -2,7 +2,7 @@ import { useCookies } from "react-cookie";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { axiosRequest } from "../serverRequest";
 import { baseUrl } from "../data";
-import { CreateAdmin } from "../types";
+import { CreateNuprc } from "../types";
 
 export const useAddUpdateNUPRC = () => {
   const [cookie] = useCookies(["hcdt_admin"]);
@@ -11,7 +11,7 @@ export const useAddUpdateNUPRC = () => {
 
   const mutation = useMutation({
     mutationKey: ["NUPRCs"],
-    mutationFn: (payload: CreateAdmin) =>
+    mutationFn: (payload: CreateNuprc) =>
       axiosRequest(token).post(`${baseUrl}/setting/addnuprc`, payload),
   });
   return mutation;

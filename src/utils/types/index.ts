@@ -117,4 +117,15 @@ export interface NUPRCItem extends BaseItem {
   email: string;
 }
 
+export interface CreateNuprc {
+  isCreate: boolean;
+  data: {
+    userId?: string | null;
+    firstName: string;
+    lastName?: string;
+    email: string;
+    phoneNumber: string;
+  };
+}
+
 export type NUPRCsArray = NUPRCItem[];

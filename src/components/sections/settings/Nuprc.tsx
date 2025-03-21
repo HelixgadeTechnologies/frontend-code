@@ -1,69 +1,77 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { useForm } from "react-hook-form";
 
-import { Button, FormInput, Table, Modal } from "../../elements";
+import {
+  Button,
+  FormInput,
+  Table,
+  Modal,
+  ActiveMenu,
+  LoadingTable,
+  EmptyTable,
+} from "../../elements";
+
+import { useQueryClient } from "@tanstack/react-query";
 
 import { RowSelectionState } from "@tanstack/react-table";
+
 import {
   caretDownIcon,
-  editIcon,
   filterIcon,
   sortIcon,
-  trashGrayIcon,
   userDeleteIcon,
 } from "../../../assets/icons";
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-}
+import {
+  useGetNUPRC,
+  useAddUpdateNUPRC,
+} from "../../../utils/hooks/useManageNUPRC";
 
-const users: User[] = [
-  {
-    id: "1",
-    name: "Amarachi Okafor",
-    email: "amarachiokafor@gmail.com",
-    phone: "08012345678",
-  },
-  {
-    id: "2",
-    name: "Alex Okocha",
-    email: "alexokocha@gmail.com",
-    phone: "08012345678",
-  },
-  {
-    id: "3",
-    name: "Mwenda Mugendi",
-    email: "princewilliams@gmail.com",
-    phone: "08012345678",
-  },
-];
+import {
+  DeleteUserType,
+  NUPRCItem,
+  NUPRCsArray,
+  CreateNuprc,
+} from "../../../utils/types";
+import { toast } from "react-toastify";
+import { useDeleteAnyUser } from "../../../utils/hooks";
 
 const NuprcTable = () => {
-  const [openEdit, setOpenEdit] = useState(false);
-  const [openDelete, setOpenDelete] = useState(false);
+  const { isLoading, data } = useGetNUPRC();
+
+  const nuprcs: NUPRCsArray = useMemo(() => {
+    const _data = data?.data?.data || [];
+    return _data.map((nuprc: { userId: string }) => ({
+      ...nuprc,
+      id: nuprc.userId,
+    }));
+  }, [data]);
+
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
-  const actionButtonsRef = useRef<{ [key: string]: HTMLButtonElement | null }>(
-    {},
-  );
+
+  // State to track which user is being edited or deleted
+  const [editUser, setEditUser] = useState<NUPRCItem | null>(null);
+  const [deleteUserId, setDeleteUserId] = useState<string | null>(null);
+
   // Toggle action menu
-  const toggleMenu = (userId: string) => {
-    setActiveMenu(activeMenu === userId ? null : userId);
-  };
+  const toggleMenu = useCallback(
+    (userId: string) => {
+      setActiveMenu(activeMenu === userId ? null : userId);
+    },
+    [activeMenu],
+  );
 
   // Handle edit account
-  const handleEdit = () => {
-    setOpenEdit(!openEdit);
-  };
+  const handleEdit = useCallback((user: NUPRCItem | null = null) => {
+    setEditUser(user);
+  }, []);
 
   // Handle delete account
-  const handleDelete = () => {
-    setOpenDelete(!openDelete);
-  };
+  const handleDelete = useCallback((userId: string | null = null) => {
+    setDeleteUserId(userId);
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -72,9 +80,8 @@ const NuprcTable = () => {
         activeMenu &&
         menuRef.current &&
         !menuRef.current.contains(event.target as Node) &&
-        !(
-          actionButtonsRef.current[activeMenu] &&
-          actionButtonsRef.current[activeMenu]?.contains(event.target as Node)
+        !(event.target as Element).closest(
+          `[data-menu-trigger="${activeMenu}"]`,
         )
       ) {
         setActiveMenu(null);
@@ -85,124 +92,61 @@ const NuprcTable = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [activeMenu]);
 
-  // Correctly position the dropdown based on available space
-  const ActionMenu = ({ userId }: { userId: string }) => {
-    const [menuPosition, setMenuPosition] = useState<{ top: boolean }>({
-      top: false,
-    });
-
-    useEffect(() => {
-      if (activeMenu === userId) {
-        const buttonElement = actionButtonsRef.current[userId];
-        const menuElement = menuRef.current;
-
-        if (buttonElement && menuElement) {
-          const buttonRect = buttonElement.getBoundingClientRect();
-          const spaceBelow = window.innerHeight - buttonRect.bottom;
-          const menuHeight = menuElement.offsetHeight;
-
-          // If there's not enough space below, position above
-          setMenuPosition({ top: spaceBelow < menuHeight });
-        }
-      }
-    }, [userId]);
-
-    return activeMenu === userId ? (
-      <div
-        ref={menuRef}
-        className={`absolute ${
-          menuPosition.top ? "bottom-0 mb-2" : "top-0 mt-2"
-        }  right-0 w-48 bg-white rounded-xl shadow-lg z-30 `}
-      >
-        <div className="py-1">
-          <button
-            onClick={handleEdit}
-            className="flex gap-x-2 items-center w-full px-4 py-3 text-sm text-gray-6 hover:bg-gray-1"
-          >
-            <img src={editIcon} alt="edit admin" />
-            Edit account
-          </button>
-          <button
-            onClick={handleDelete}
-            className="flex gap-x-2 items-center w-full px-4 py-3 text-sm text-gray-6 hover:bg-gray-1"
-          >
-            <img src={trashGrayIcon} alt="delete admin" />
-            Delete account
-          </button>
-        </div>
-
-        {openEdit && (
-          <Modal close={handleEdit} body={<EditNuprc close={handleEdit} />} />
-        )}
-
-        {openDelete && (
-          <Modal
-            close={handleDelete}
-            body={<DeleteNuprc close={handleDelete} />}
-          />
-        )}
-      </div>
-    ) : null;
-  };
-
   // Define columns
-  const columns = [
-    {
-      id: "name",
-      header: "Contact Name",
-      accessorKey: "name",
-    },
-    {
-      id: "email",
-      header: "Email",
-      accessorKey: "email",
-    },
+  const columns = useMemo(
+    () => [
+      {
+        id: "name",
+        header: "Contact Name",
+        accessorKey: "name",
+        cell: ({ row }: { row: { original: NUPRCItem } }) => {
+          const fullName = `${row.original.firstName} ${row.original.lastName}`;
+          return <span>{fullName}</span>;
+        },
+      },
+      {
+        id: "email",
+        header: "Email",
+        accessorKey: "email",
+      },
 
-    {
-      id: "phone",
-      header: "Phone Number",
-      accessorKey: "phone",
-      cell: ({ row }: { row: { original: User } }) => {
-        const user = row.original;
-        return (
-          <span
-            className={`
-              px-3 py-1 rounded-full
-              ${
-                user?.id === "1"
-                  ? "bg-light-green text-dark-green-1"
-                  : "bg-light-orange text-dark-orange"
-              }
-              `}
-          >
-            {user?.phone}
-          </span>
-        );
+      {
+        id: "phone",
+        header: "Phone Number",
+        accessorKey: "phoneNumber",
       },
-    },
-    {
-      id: "actions",
-      header: "",
-      cell: ({ row }: { row: { original: User } }) => {
-        const userId = row.original.id;
-        return (
-          <div className="relative">
-            <button
-              ref={(el: HTMLButtonElement | null) => {
-                actionButtonsRef.current[userId] = el;
-              }}
-              className="px-3 text-gray-5 hover:text-gray-7 cursor-pointer"
-              onClick={() => toggleMenu(userId)}
-              aria-label="More options"
-            >
-              •••
-            </button>
-            <ActionMenu userId={userId} />
-          </div>
-        );
+      {
+        id: "actions",
+        header: "",
+        cell: ({ row }: { row: { original: AdminUser } }) => {
+          const user = row.original;
+
+          return (
+            <div className="relative">
+              <button
+                data-menu-trigger={user?.id}
+                className="px-3 text-gray-5 hover:text-gray-7 cursor-pointer"
+                onClick={() => toggleMenu(user?.id)}
+                aria-label="More options"
+              >
+                •••
+              </button>
+              <ActiveMenu
+                userId={user?.id}
+                activeMenu={activeMenu}
+                menuRef={menuRef}
+                handleEdit={() => handleEdit(user)}
+                handleDelete={() => handleDelete(user?.id)}
+              />
+            </div>
+          );
+        },
       },
-    },
-  ];
+    ],
+    [activeMenu, toggleMenu, handleEdit, handleDelete],
+  );
+
+  const tableHead = ["Contact Name", "Email", "Phone Number", "action"];
 
   return (
     <div className="mt-10 bg-white p-4 rounded-2xl border border-gray-8 ">
@@ -218,13 +162,44 @@ const NuprcTable = () => {
           <img src={caretDownIcon} alt="filter admin table" />
         </button>
       </section>
-      <Table
-        columns={columns}
-        data={users}
-        count={users.length}
-        rowSelection={rowSelection}
-        setRowSelection={setRowSelection}
-      />
+
+      <>
+        {isLoading ? (
+          <LoadingTable headArr={tableHead} />
+        ) : nuprcs && nuprcs?.length > 0 ? (
+          <Table
+            columns={columns}
+            data={nuprcs}
+            count={nuprcs.length}
+            rowSelection={rowSelection}
+            setRowSelection={setRowSelection}
+          />
+        ) : (
+          <EmptyTable
+            heading="No NUPRCS data available."
+            text="Create Nuprc to get started!"
+            headArr={tableHead}
+          />
+        )}
+      </>
+
+      {/* Modals */}
+      {editUser && (
+        <Modal
+          body={<EditNuprc user={editUser} close={() => handleEdit(null)} />}
+        />
+      )}
+
+      {deleteUserId && (
+        <Modal
+          body={
+            <DeleteNuprc
+              userId={deleteUserId}
+              close={() => handleDelete(null)}
+            />
+          }
+        />
+      )}
     </div>
   );
 };
@@ -233,10 +208,46 @@ const AddNuprc = ({ close }: { close: () => void }) => {
   const {
     register,
     formState: { errors },
+    handleSubmit,
   } = useForm();
 
+  const queryClient = useQueryClient();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { mutate: mutateAdd } = useAddUpdateNUPRC();
+
+  const handleAddNuprc = handleSubmit(async (data) => {
+    setIsSubmitting(true);
+    const payload: CreateNuprc = {
+      isCreate: true,
+      data: {
+        phoneNumber: data?.phoneNumber,
+        firstName: data?.firstName,
+        lastName: data?.lastName,
+        email: data?.email,
+      },
+    };
+
+    mutateAdd(payload, {
+      onSuccess: (res) => {
+        toast.success(res?.data?.message);
+        queryClient.invalidateQueries({ queryKey: ["NUPRCs"] });
+        close();
+        setIsSubmitting(false);
+      },
+      onError: (error) => {
+        const err = error as { response?: { data?: { error?: string } } };
+        toast.error(`Error: ${err?.response?.data?.error}`);
+        setIsSubmitting(false);
+      },
+    });
+  });
+
   return (
-    <form className="p-4 bg-off-white-3 h-fit w-[410px]">
+    <form
+      onSubmit={handleAddNuprc}
+      className="p-4 bg-off-white-3 h-fit w-[410px]"
+    >
       <h3 className="text-lg xl:text-3xl text-center font-normal text-dark-2">
         Add <span className="font-bold">NUPRC-ADR</span>
       </h3>
@@ -246,14 +257,14 @@ const AddNuprc = ({ close }: { close: () => void }) => {
       <div className="space-y-2">
         <div>
           <FormInput
-            name="fname"
+            name="firstName"
             type="text"
             placeholder="First Name"
             register={register}
             registerOptions={{
               required: "First name field is required.",
             }}
-            error={errors.fname}
+            error={errors.firstName}
             errorMessage={`First name  is required`}
             required
           />
@@ -261,14 +272,14 @@ const AddNuprc = ({ close }: { close: () => void }) => {
 
         <div>
           <FormInput
-            name="lname"
+            name="lastName"
             type="text"
             placeholder="Last Name"
             register={register}
             registerOptions={{
               required: "Last name field is required.",
             }}
-            error={errors.lname}
+            error={errors.lastName}
             errorMessage={`Last name  is required`}
             required
           />
@@ -296,14 +307,14 @@ const AddNuprc = ({ close }: { close: () => void }) => {
 
         <div className="pb-4">
           <FormInput
-            name="phone"
+            name="phoneNumber"
             type="tel"
             placeholder="Phone Number"
             register={register}
             registerOptions={{
               required: "Phone Number is required.",
             }}
-            error={errors.phone}
+            error={errors.phoneNumber}
             errorMessage={`Phone Number is required`}
             required
           />
@@ -317,21 +328,63 @@ const AddNuprc = ({ close }: { close: () => void }) => {
             width="w-fit"
           />
 
-          <Button padding="py-3" buttonText="Add" />
+          <Button
+            disabled={isSubmitting}
+            padding="py-3"
+            buttonText={isSubmitting ? "Adding.." : "Add"}
+          />
         </div>
       </div>
     </form>
   );
 };
 
-const EditNuprc = ({ close }: { close: () => void }) => {
+const EditNuprc = ({ close, user }: { close: () => void; user: NUPRCItem }) => {
   const {
     register,
     formState: { errors },
+    handleSubmit,
   } = useForm();
 
+  const [editing, setEditing] = useState(false);
+
+  const queryClient = useQueryClient();
+
+  const { mutate: mutateEdit } = useAddUpdateNUPRC();
+
+  const handleEditNuprc = handleSubmit(async (data) => {
+    setEditing(true);
+    const payload: CreateNuprc = {
+      isCreate: false,
+      data: {
+        userId: user?.id,
+        phoneNumber: data?.phoneNumber,
+        firstName: data?.firstName,
+        lastName: data?.lastName,
+        email: data?.email,
+      },
+    };
+
+    mutateEdit(payload, {
+      onSuccess: (res) => {
+        toast.success(res?.data?.message);
+        queryClient.invalidateQueries({ queryKey: ["NUPRCs"] });
+        close();
+        setEditing(false);
+      },
+      onError: (error) => {
+        const err = error as { response?: { data?: { error?: string } } };
+        toast.error(`Error: ${err?.response?.data?.error}`);
+        setEditing(false);
+      },
+    });
+  });
+
   return (
-    <form className="p-4 bg-off-white-3 h-fit w-[410px]">
+    <form
+      onSubmit={handleEditNuprc}
+      className="p-4 bg-off-white-3 h-fit w-[410px]"
+    >
       <h3 className="text-lg xl:text-3xl text-center font-normal text-dark-2">
         Edit <span className="font-bold">NUPRC-ADR</span>
       </h3>
@@ -341,14 +394,14 @@ const EditNuprc = ({ close }: { close: () => void }) => {
       <div className="space-y-2">
         <div>
           <FormInput
-            name="fname"
+            name="firstName"
             type="text"
             placeholder="First Name"
             register={register}
             registerOptions={{
               required: "First name field is required.",
             }}
-            error={errors.fname}
+            error={errors.firstName}
             errorMessage={`First name  is required`}
             required
           />
@@ -356,14 +409,14 @@ const EditNuprc = ({ close }: { close: () => void }) => {
 
         <div>
           <FormInput
-            name="lname"
+            name="lastName"
             type="text"
             placeholder="Last Name"
             register={register}
             registerOptions={{
               required: "Last name field is required.",
             }}
-            error={errors.lname}
+            error={errors.lastName}
             errorMessage={`Last name  is required`}
             required
           />
@@ -391,14 +444,14 @@ const EditNuprc = ({ close }: { close: () => void }) => {
 
         <div className="pb-4">
           <FormInput
-            name="phone"
+            name="phoneNumber"
             type="tel"
             placeholder="Phone Number"
             register={register}
             registerOptions={{
               required: "Phone Number is required.",
             }}
-            error={errors.phone}
+            error={errors.phoneNumber}
             errorMessage={`Phone Number is required`}
             required
           />
@@ -412,14 +465,51 @@ const EditNuprc = ({ close }: { close: () => void }) => {
             width="w-fit"
           />
 
-          <Button padding="py-3" buttonText="Update" />
+          <Button
+            disabled={editing}
+            padding="py-3"
+            buttonText={editing ? "Updating.." : "Update"}
+          />
         </div>
       </div>
     </form>
   );
 };
 
-const DeleteNuprc = ({ close }: { close: () => void }) => {
+const DeleteNuprc = ({
+  close,
+  userId,
+}: {
+  close: () => void;
+  userId: string;
+}) => {
+  const queryClient = useQueryClient();
+
+  const { mutate: mutateDelete } = useDeleteAnyUser("NUPRCs");
+  const [deleting, setDeleting] = useState(false);
+
+  const handleRemoveNuprc = async () => {
+    const payload: DeleteUserType = {
+      userId: userId,
+    };
+
+    setDeleting(true);
+
+    mutateDelete(payload, {
+      onSuccess: (res) => {
+        toast.success(res?.data?.message);
+        close();
+        setDeleting(false);
+        queryClient.invalidateQueries({ queryKey: ["NUPRCs"] });
+      },
+      onError: (error) => {
+        setDeleting(false);
+        const err = error as { response?: { data?: { error?: string } } };
+        toast.error(`Error: ${err?.response?.data?.error}`);
+      },
+    });
+  };
+
   return (
     <div className="p-6 bg-white h-fit w-[430px] rounded-2xl">
       <div className=" border border-gray-300 bg-[#E4E5E77A]/40 mx-auto h-14 w-14 rounded-full flex items-center justify-center">
@@ -447,7 +537,13 @@ const DeleteNuprc = ({ close }: { close: () => void }) => {
           width="w-fit"
         />
 
-        <Button width="w-fit" padding="py-3 px-14" buttonText="Remove" />
+        <Button
+          disabled={deleting}
+          onClick={handleRemoveNuprc}
+          width="w-fit"
+          padding="py-3 px-14"
+          buttonText={deleting ? "Removing.." : "Remove"}
+        />
       </div>
     </div>
   );

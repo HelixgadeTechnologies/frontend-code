@@ -113,11 +113,11 @@ const DRATable = () => {
         header: "Email",
         accessorKey: "email",
       },
-      // {
-      //   id: "community",
-      //   header: "Community",
-      //   accessorKey: "community",
-      // },
+      {
+        id: "community",
+        header: "Community",
+        accessorKey: "community",
+      },
 
       {
         id: "phone",
