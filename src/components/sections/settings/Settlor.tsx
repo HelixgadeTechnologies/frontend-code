@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useRef,
-  useEffect,
-  useMemo,
-  useCallback,
-} from "react";
+import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { useForm } from "react-hook-form";
 
 import { useQueryClient } from "@tanstack/react-query";
@@ -16,15 +10,14 @@ import {
   Modal,
   EmptyTable,
   LoadingTable,
+  ActiveMenu,
 } from "../../elements";
 
 import { RowSelectionState } from "@tanstack/react-table";
 import {
   caretDownIcon,
-  editIcon,
   filterIcon,
   sortIcon,
-  trashGrayIcon,
   userDeleteIcon,
 } from "../../../assets/icons";
 
@@ -35,7 +28,6 @@ import {
   SettlorsArray,
   SettlorType,
   CreateSettlor,
-  ActiveMenuProps,
   DeleteSettlorType,
 } from "../../../utils/types";
 
@@ -218,90 +210,6 @@ const SettlorsTable = () => {
     </div>
   );
 };
-
-const ActiveMenu: React.FC<ActiveMenuProps> = React.memo(
-  ({ userId, activeMenu, menuRef, handleEdit, handleDelete }) => {
-    const [menuPosition, setMenuPosition] = useState<{
-      top: number;
-      right: number;
-    }>({
-      top: 0,
-      right: 0,
-    });
-
-    useEffect(() => {
-      // Only calculate position when menu is active for this user
-      if (activeMenu !== userId) return;
-
-      // Get the button that triggered this menu
-      const buttonElement = document.querySelector(
-        `[data-menu-trigger="${userId}"]`,
-      );
-
-      if (buttonElement && menuRef.current) {
-        const buttonRect = buttonElement.getBoundingClientRect();
-        const menuHeight = menuRef.current.offsetHeight;
-        const spaceBelow = window.innerHeight - buttonRect.bottom;
-
-        // Calculate position
-        let topPosition;
-        if (spaceBelow < menuHeight) {
-          console.log({ spaceBelow, menuHeight }, "no space");
-          // Position above the button if not enough space below
-          topPosition = -menuHeight;
-        } else {
-          console.log({ spaceBelow, menuHeight }, "plenty");
-          // console.log("plenty space", { spaceBelow, menuHeight });
-          // Position below the button
-          topPosition = buttonRect.height;
-        }
-
-        setMenuPosition({
-          top: topPosition,
-          right: 0,
-        });
-      }
-    }, [activeMenu, userId, menuRef]);
-
-    if (activeMenu !== userId) {
-      return null;
-    }
-
-    return (
-      <div
-        ref={menuRef}
-        className="absolute bg-white rounded-xl shadow-lg w-48 z-10"
-        style={{
-          top: `${menuPosition.top}px`,
-          right: `${menuPosition.right}px`,
-        }}
-      >
-        <div className="py-1">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleEdit();
-            }}
-            className="flex gap-x-2 items-center w-full px-4 py-3 text-sm text-gray-6 hover:bg-gray-1"
-          >
-            <img src={editIcon} alt="edit admin" />
-            Edit account
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleDelete();
-            }}
-            className="flex gap-x-2 items-center w-full px-4 py-3 text-sm text-gray-6 hover:bg-gray-1"
-          >
-            <img src={trashGrayIcon} alt="delete admin" />
-            Delete account
-          </button>
-        </div>
-      </div>
-    );
-  },
-);
 
 const AddSettlor = ({ close }: { close: () => void }) => {
   const queryClient = useQueryClient();
