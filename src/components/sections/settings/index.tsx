@@ -3,6 +3,8 @@ import { useForm, Controller } from "react-hook-form";
 
 import { useQueryClient } from "@tanstack/react-query";
 
+import { useCookies } from "react-cookie";
+
 import {
   Button,
   FormInput,
@@ -42,6 +44,10 @@ import { useGetAllTrusts } from "../../../utils/hooks/useTrusts";
 import { useDeleteAnyUser } from "../../../utils/hooks";
 
 const AdminTable = () => {
+  const [cookie] = useCookies(["hcdt_admin"]);
+  const admin = cookie?.hcdt_admin;
+  const adminRole = admin?.role;
+
   const { isLoading, data } = useGetAdmins();
 
   const admins: AdminsArray = useMemo(() => {
@@ -145,6 +151,7 @@ const AdminTable = () => {
           return (
             <div className="relative">
               <button
+                disabled={adminRole !== "SUPER ADMIN"}
                 data-menu-trigger={user?.id}
                 className="px-3 text-gray-5 hover:text-gray-7 cursor-pointer"
                 onClick={() => toggleMenu(user?.id)}

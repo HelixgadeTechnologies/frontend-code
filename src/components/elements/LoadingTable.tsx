@@ -6,7 +6,7 @@ const LoadingTable = ({ headArr }: TableProps) => {
   return (
     <div className={` px-4`}>
       <div
-        className={` capitalize  flex justify-between bg-off-white-3  rounded-lg `}
+        className={`overflow-x-scroll capitalize  flex justify-between bg-off-white-3  rounded-lg `}
       >
         {headArr?.map((item, index) => (
           <li

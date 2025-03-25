@@ -3,10 +3,21 @@ import { useState } from "react";
 import { Modal } from "../../../components/elements";
 import { AdminTable, AddAdmin } from "../../../components/sections/settings";
 import { PageHeader, RoutedTabs } from "../../../components/layouts";
-import { addCircleIcon, chatBlueIcon, timerIcon } from "../../../assets/icons";
+import { addCircleIcon } from "../../../assets/icons";
+import { useCookies } from "react-cookie";
 
 const ManageAdmin = () => {
+  const [cookie] = useCookies(["hcdt_admin"]);
+  const admin = cookie?.hcdt_admin;
+  const adminRole = admin?.role;
+
   const [openModal, setOpenModal] = useState(false);
+
+  const handleOpenAdd = () => {
+    if (adminRole === "SUPER ADMIN") {
+      setOpenModal(true);
+    }
+  };
 
   return (
     <div className="px-10 py-11">
@@ -15,10 +26,10 @@ const ManageAdmin = () => {
         desc="All Admins added will be displayed here"
         ctaText="Add  Admin"
         iconLeft={<img src={addCircleIcon} alt="add admin" />}
-        action={() => setOpenModal(true)}
+        action={handleOpenAdd}
       />
 
-      <section className="mt-5 flex items-center gap-x-3">
+      {/* <section className="mt-5 flex items-center gap-x-3">
         <div className=" w-fit bg-primary-200/40 flex items-center gap-x-2 p-3 rounded-lg border border-primary-200">
           <img src={chatBlueIcon} alt="approved admin" />
           <span className="font-medium text-sm text-black">
@@ -36,7 +47,7 @@ const ManageAdmin = () => {
             0{" "}
           </span>
         </div>
-      </section>
+      </section> */}
 
       <div className="mt-14">
         <RoutedTabs />

@@ -1,3 +1,14 @@
+export interface PasswordType {
+  oldPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
+export interface ProfilePic {
+  hexImage: string;
+  mimeType: string;
+}
+
 export interface User {
   userId: string;
   firstName?: string | null;
@@ -115,6 +126,7 @@ export interface NUPRCItem extends BaseItem {
   role: string;
   lastName: string;
   email: string;
+  phoneNumber: string;
 }
 
 export interface CreateNuprc {

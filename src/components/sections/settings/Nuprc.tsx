@@ -344,6 +344,7 @@ const EditNuprc = ({ close, user }: { close: () => void; user: NUPRCItem }) => {
     register,
     formState: { errors },
     handleSubmit,
+    reset,
   } = useForm();
 
   const [editing, setEditing] = useState(false);
@@ -379,6 +380,19 @@ const EditNuprc = ({ close, user }: { close: () => void; user: NUPRCItem }) => {
       },
     });
   });
+
+  // Reset form when user changes
+  useEffect(() => {
+    // Only reset the form when both user and role data are available
+    if (user) {
+      reset({
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
+        email: user.email || "",
+        phoneNumber: user?.phoneNumber,
+      });
+    }
+  }, [user, reset]);
 
   return (
     <form
