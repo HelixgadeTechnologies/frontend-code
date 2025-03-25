@@ -4,8 +4,13 @@ import { useForm } from "react-hook-form";
 import { checkIcon, photoIcon } from "../../../assets/icons";
 import { Button, FormInput, Modal } from "../../../components/elements";
 import { PageHeader, RoutedTabs } from "../../../components/layouts";
+import { useCookies } from "react-cookie";
 
 const ProfileSettings = () => {
+  const [cookie] = useCookies(["hcdt_admin"]);
+
+  const admin = cookie?.hcdt_admin;
+
   const [openModal, setOpenModal] = useState(false);
 
   const {
@@ -76,7 +81,7 @@ const ProfileSettings = () => {
                   type="email"
                   disabled
                   register={register}
-                  placeholder="thegabriellamcpherson@email.com"
+                  placeholder={admin?.email}
                 />
               </div>
 
@@ -85,7 +90,7 @@ const ProfileSettings = () => {
                   label="Phone Number"
                   type="tel"
                   name="phone"
-                  placeholder="+2348023145123"
+                  placeholder={admin?.phoneNumber}
                   register={register}
                   error={errors.phone}
                 />
@@ -98,7 +103,7 @@ const ProfileSettings = () => {
                   type="text"
                   disabled
                   register={register}
-                  placeholder="Super Admin"
+                  placeholder={admin?.role}
                 />
               </div>
             </form>

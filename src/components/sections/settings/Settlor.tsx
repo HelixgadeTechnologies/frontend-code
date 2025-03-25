@@ -1,7 +1,22 @@
-import { useState, useRef, useEffect } from "react";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useMemo,
+  useCallback,
+} from "react";
 import { useForm } from "react-hook-form";
 
-import { Button, FormInput, Table, Modal } from "../../elements";
+import { useQueryClient } from "@tanstack/react-query";
+
+import {
+  Button,
+  FormInput,
+  Table,
+  Modal,
+  EmptyTable,
+  LoadingTable,
+} from "../../elements";
 
 import { RowSelectionState } from "@tanstack/react-table";
 import {
@@ -13,57 +28,59 @@ import {
   userDeleteIcon,
 } from "../../../assets/icons";
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-}
+import { toast } from "react-toastify";
 
-const users: User[] = [
-  {
-    id: "1",
-    name: "Amarachi Okafor",
-    email: "amarachiokafor@gmail.com",
-    phone: "08012345678",
-  },
-  {
-    id: "2",
-    name: "Alex Okocha",
-    email: "alexokocha@gmail.com",
-    phone: "08012345678",
-  },
-  {
-    id: "3",
-    name: "Mwenda Mugendi",
-    email: "princewilliams@gmail.com",
-    phone: "08012345678",
-  },
-];
+// Type props
+import {
+  SettlorsArray,
+  SettlorType,
+  CreateSettlor,
+  ActiveMenuProps,
+  DeleteSettlorType,
+} from "../../../utils/types";
+
+import {
+  useAddUpdateSettlor,
+  useDeleteSettlor,
+  useGetSettlors,
+} from "../../../utils/hooks/useManageSettlors";
 
 const SettlorsTable = () => {
-  const [openEdit, setOpenEdit] = useState(false);
-  const [openDelete, setOpenDelete] = useState(false);
+  const { isLoading, data } = useGetSettlors();
+
+  const settlors: SettlorsArray = useMemo(() => {
+    const settlorData = data?.data?.data || [];
+    return settlorData.map((settlor: { settlorId: string }) => ({
+      ...settlor,
+      id: settlor.settlorId,
+    }));
+  }, [data]);
+
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
-  const actionButtonsRef = useRef<{ [key: string]: HTMLButtonElement | null }>(
-    {},
-  );
+
+  // State to track which user is being edited or deleted
+  const [editUser, setEditUser] = useState<SettlorType | null>(null);
+  const [deleteUserId, setDeleteUserId] = useState<string | null>(null);
+
   // Toggle action menu
-  const toggleMenu = (userId: string) => {
-    setActiveMenu(activeMenu === userId ? null : userId);
-  };
+  const toggleMenu = useCallback(
+    (userId: string) => {
+      setActiveMenu(activeMenu === userId ? null : userId);
+    },
+    [activeMenu],
+  );
 
   // Handle edit account
-  const handleEdit = () => {
-    setOpenEdit(!openEdit);
-  };
+  const handleEdit = useCallback((user: SettlorType | null = null) => {
+    setEditUser(user);
+  }, []);
 
   // Handle delete account
-  const handleDelete = () => {
-    setOpenDelete(!openDelete);
-  };
+  const handleDelete = useCallback((userId: string | null = null) => {
+    setDeleteUserId(userId);
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -72,9 +89,8 @@ const SettlorsTable = () => {
         activeMenu &&
         menuRef.current &&
         !menuRef.current.contains(event.target as Node) &&
-        !(
-          actionButtonsRef.current[activeMenu] &&
-          actionButtonsRef.current[activeMenu]?.contains(event.target as Node)
+        !(event.target as Element).closest(
+          `[data-menu-trigger="${activeMenu}"]`,
         )
       ) {
         setActiveMenu(null);
@@ -85,123 +101,67 @@ const SettlorsTable = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [activeMenu]);
 
-  // Correctly position the dropdown based on available space
-  const ActionMenu = ({ userId }: { userId: string }) => {
-    const [menuPosition, setMenuPosition] = useState<{ top: boolean }>({
-      top: false,
-    });
-
-    useEffect(() => {
-      if (activeMenu === userId) {
-        const buttonElement = actionButtonsRef.current[userId];
-        const menuElement = menuRef.current;
-
-        if (buttonElement && menuElement) {
-          const buttonRect = buttonElement.getBoundingClientRect();
-          const spaceBelow = window.innerHeight - buttonRect.bottom;
-          const menuHeight = menuElement.offsetHeight;
-
-          // If there's not enough space below, position above
-          setMenuPosition({ top: spaceBelow < menuHeight });
-        }
-      }
-    }, [userId]);
-
-    return activeMenu === userId ? (
-      <div
-        ref={menuRef}
-        className={`absolute ${
-          menuPosition.top ? "bottom-0 mb-2" : "top-0 mt-2"
-        }  right-0 w-48 bg-white rounded-xl shadow-lg z-30 `}
-      >
-        <div className="py-1">
-          <button
-            onClick={handleEdit}
-            className="flex gap-x-2 items-center w-full px-4 py-3 text-sm text-gray-6 hover:bg-gray-1"
-          >
-            <img src={editIcon} alt="edit admin" />
-            Edit account
-          </button>
-          <button
-            onClick={handleDelete}
-            className="flex gap-x-2 items-center w-full px-4 py-3 text-sm text-gray-6 hover:bg-gray-1"
-          >
-            <img src={trashGrayIcon} alt="delete admin" />
-            Delete account
-          </button>
-        </div>
-
-        {openEdit && (
-          <Modal close={handleEdit} body={<EditSettlor close={handleEdit} />} />
-        )}
-
-        {openDelete && (
-          <Modal
-            close={handleDelete}
-            body={<DeleteSettlor close={handleDelete} />}
-          />
-        )}
-      </div>
-    ) : null;
-  };
-
   // Define columns
-  const columns = [
-    {
-      id: "name",
-      header: "Contact Name",
-      accessorKey: "name",
-    },
-    {
-      id: "email",
-      header: "Email",
-      accessorKey: "email",
-    },
+  const columns = useMemo(
+    () => [
+      {
+        id: "name",
+        header: "Contact Name",
+        accessorKey: "contactName",
+      },
+      {
+        id: "settlor-name",
+        header: "Settlor Name",
+        accessorKey: "settlorName",
+      },
+      {
+        id: "email",
+        header: "Email",
+        accessorKey: "contactEmail",
+      },
 
-    {
-      id: "phone",
-      header: "Phone Number",
-      accessorKey: "phone",
-      cell: ({ row }: { row: { original: User } }) => {
-        const user = row.original;
-        return (
-          <span
-            className={`
-              px-3 py-1 rounded-full
-              ${
-                user?.id === "1"
-                  ? "bg-light-green text-dark-green-1"
-                  : "bg-light-orange text-dark-orange"
-              }
-              `}
-          >
-            {user?.phone}
-          </span>
-        );
+      {
+        id: "Phone",
+        header: "Phone Number",
+        accessorKey: "contactPhoneNumber",
       },
-    },
-    {
-      id: "actions",
-      header: "",
-      cell: ({ row }: { row: { original: User } }) => {
-        const userId = row.original.id;
-        return (
-          <div className="relative">
-            <button
-              ref={(el: HTMLButtonElement | null) => {
-                actionButtonsRef.current[userId] = el;
-              }}
-              className="px-3 text-gray-5 hover:text-gray-7 cursor-pointer"
-              onClick={() => toggleMenu(userId)}
-              aria-label="More options"
-            >
-              •••
-            </button>
-            <ActionMenu userId={userId} />
-          </div>
-        );
+
+      {
+        id: "actions",
+        header: "",
+        cell: ({ row }: { row: { original: SettlorType } }) => {
+          const user = row.original;
+          return (
+            <div className="relative">
+              <button
+                data-menu-trigger={user?.id}
+                className="px-3 text-gray-5 hover:text-gray-7 cursor-pointer"
+                onClick={() => toggleMenu(user?.id)}
+                aria-label="More options"
+              >
+                •••
+              </button>
+              <ActiveMenu
+                userId={user?.id}
+                activeMenu={activeMenu}
+                menuRef={menuRef}
+                handleEdit={() => handleEdit(user)}
+                handleDelete={() => handleDelete(user?.id)}
+              />
+            </div>
+          );
+        },
       },
-    },
+    ],
+    [activeMenu, toggleMenu, handleEdit, handleDelete],
+  );
+
+  const tableHead = [
+    "Contact Name",
+    "Settlor Name",
+    "Email",
+    "Phone Number",
+    "action",
   ];
 
   return (
@@ -218,25 +178,178 @@ const SettlorsTable = () => {
           <img src={caretDownIcon} alt="filter admin table" />
         </button>
       </section>
-      <Table
-        columns={columns}
-        data={users}
-        count={users.length}
-        rowSelection={rowSelection}
-        setRowSelection={setRowSelection}
-      />
+      <>
+        {isLoading ? (
+          <LoadingTable headArr={tableHead} />
+        ) : settlors && settlors?.length > 0 ? (
+          <Table
+            columns={columns}
+            data={settlors}
+            count={settlors.length}
+            rowSelection={rowSelection}
+            setRowSelection={setRowSelection}
+          />
+        ) : (
+          <EmptyTable
+            headArr={tableHead}
+            heading="No Settlors data available."
+            text="Create Settlor to get started!"
+          />
+        )}
+      </>
+
+      {/* Modals */}
+      {editUser && (
+        <Modal
+          body={<EditSettlor user={editUser} close={() => handleEdit(null)} />}
+        />
+      )}
+
+      {deleteUserId && (
+        <Modal
+          body={
+            <DeleteSettlor
+              userId={deleteUserId}
+              close={() => handleDelete(null)}
+            />
+          }
+        />
+      )}
     </div>
   );
 };
 
+const ActiveMenu: React.FC<ActiveMenuProps> = React.memo(
+  ({ userId, activeMenu, menuRef, handleEdit, handleDelete }) => {
+    const [menuPosition, setMenuPosition] = useState<{
+      top: number;
+      right: number;
+    }>({
+      top: 0,
+      right: 0,
+    });
+
+    useEffect(() => {
+      // Only calculate position when menu is active for this user
+      if (activeMenu !== userId) return;
+
+      // Get the button that triggered this menu
+      const buttonElement = document.querySelector(
+        `[data-menu-trigger="${userId}"]`,
+      );
+
+      if (buttonElement && menuRef.current) {
+        const buttonRect = buttonElement.getBoundingClientRect();
+        const menuHeight = menuRef.current.offsetHeight;
+        const spaceBelow = window.innerHeight - buttonRect.bottom;
+
+        // Calculate position
+        let topPosition;
+        if (spaceBelow < menuHeight) {
+          console.log({ spaceBelow, menuHeight }, "no space");
+          // Position above the button if not enough space below
+          topPosition = -menuHeight;
+        } else {
+          console.log({ spaceBelow, menuHeight }, "plenty");
+          // console.log("plenty space", { spaceBelow, menuHeight });
+          // Position below the button
+          topPosition = buttonRect.height;
+        }
+
+        setMenuPosition({
+          top: topPosition,
+          right: 0,
+        });
+      }
+    }, [activeMenu, userId, menuRef]);
+
+    if (activeMenu !== userId) {
+      return null;
+    }
+
+    return (
+      <div
+        ref={menuRef}
+        className="absolute bg-white rounded-xl shadow-lg w-48 z-10"
+        style={{
+          top: `${menuPosition.top}px`,
+          right: `${menuPosition.right}px`,
+        }}
+      >
+        <div className="py-1">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleEdit();
+            }}
+            className="flex gap-x-2 items-center w-full px-4 py-3 text-sm text-gray-6 hover:bg-gray-1"
+          >
+            <img src={editIcon} alt="edit admin" />
+            Edit account
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDelete();
+            }}
+            className="flex gap-x-2 items-center w-full px-4 py-3 text-sm text-gray-6 hover:bg-gray-1"
+          >
+            <img src={trashGrayIcon} alt="delete admin" />
+            Delete account
+          </button>
+        </div>
+      </div>
+    );
+  },
+);
+
 const AddSettlor = ({ close }: { close: () => void }) => {
+  const queryClient = useQueryClient();
   const {
     register,
     formState: { errors },
+    handleSubmit,
   } = useForm();
 
+  const [submitting, setIsSubmitting] = useState(false);
+
+  //  edit settlor
+  const { mutate: mutateAdd } = useAddUpdateSettlor();
+
+  const handleAddSettlor = handleSubmit(async (data) => {
+    const payload: CreateSettlor = {
+      isCreate: true,
+      data: {
+        settlorName: data?.settlorName,
+        contactName: data?.contactName,
+        contactEmail: data?.contactEmail,
+        contactPhoneNumber: data?.contactPhoneNumber,
+        omlCode: data?.omlCode,
+      },
+    };
+
+    setIsSubmitting(true);
+
+    mutateAdd(payload, {
+      onSuccess: (res) => {
+        setIsSubmitting(false);
+        toast.success(res?.data?.message);
+        queryClient.invalidateQueries({ queryKey: ["settlors"] });
+        close();
+      },
+      onError: (error) => {
+        const err = error as { response?: { data?: { error?: string } } };
+        toast.error(`Error: ${err?.response?.data?.error}`);
+        setIsSubmitting(false);
+      },
+    });
+  });
+
   return (
-    <form className="p-4 bg-off-white-3 h-fit w-[410px]">
+    <form
+      onSubmit={handleAddSettlor}
+      className="p-4 bg-off-white-3 h-fit w-[410px]"
+    >
       <h3 className="text-lg xl:text-3xl text-center font-normal text-dark-2">
         Add Settlor
       </h3>
@@ -293,7 +406,7 @@ const AddSettlor = ({ close }: { close: () => void }) => {
 
         <div>
           <FormInput
-            name="email"
+            name="contactEmail"
             type="email"
             placeholder="Enter Contact Email"
             register={register}
@@ -305,7 +418,7 @@ const AddSettlor = ({ close }: { close: () => void }) => {
                 message: "Please enter a valid email.",
               },
             }}
-            error={errors.email}
+            error={errors.contactEmail}
             errorMessage={`Email address is required`}
             required
           />
@@ -313,14 +426,14 @@ const AddSettlor = ({ close }: { close: () => void }) => {
 
         <div className="pb-4">
           <FormInput
-            name="phone"
+            name="contactPhoneNumber"
             type="tel"
             placeholder="Enter Contact Phone Number"
             register={register}
             registerOptions={{
               required: "Phone Number is required.",
             }}
-            error={errors.phone}
+            error={errors.contactPhoneNumber}
             errorMessage={`Phone Number is required`}
             required
           />
@@ -334,21 +447,89 @@ const AddSettlor = ({ close }: { close: () => void }) => {
             width="w-fit"
           />
 
-          <Button padding="py-3" buttonText="Add" />
+          <Button
+            disabled={submitting}
+            padding="py-3"
+            buttonText={submitting ? "Adding.." : "Add"}
+          />
         </div>
       </div>
     </form>
   );
 };
 
-const EditSettlor = ({ close }: { close: () => void }) => {
+const EditSettlor = ({
+  close,
+  user,
+}: {
+  close: () => void;
+  user: SettlorType;
+}) => {
+  const queryClient = useQueryClient();
   const {
     register,
     formState: { errors },
+    handleSubmit,
+    reset,
   } = useForm();
 
+  const [editing, setEditing] = useState(false);
+
+  //  edit settlor
+  const { mutate: mutateEdit } = useAddUpdateSettlor();
+
+  const handleUpdateSettlor = useCallback(
+    handleSubmit(async (data) => {
+      const payload: CreateSettlor = {
+        isCreate: false,
+        data: {
+          settlorId: user?.id,
+          settlorName: data?.settlorName,
+          contactName: data?.contactName,
+          contactEmail: data?.contactEmail,
+          contactPhoneNumber: data?.contactPhoneNumber,
+          omlCode: data?.omlCode,
+        },
+      };
+
+      setEditing(true);
+
+      mutateEdit(payload, {
+        onSuccess: (res) => {
+          toast.success(res?.data?.message);
+          setEditing(false);
+          queryClient.invalidateQueries({ queryKey: ["settlors"] });
+          close();
+        },
+        onError: (error) => {
+          const err = error as { response?: { data?: { error?: string } } };
+          toast.error(`Error: ${err?.response?.data?.error}`);
+          setEditing(false);
+        },
+      });
+    }),
+    [user?.id, mutateEdit, close],
+  );
+
+  // Reset form when user changes
+  useEffect(() => {
+    // Only reset the form when both user and role data are available
+    if (user) {
+      reset({
+        settlorName: user.settlorName || "",
+        contactName: user.contactName || "",
+        contactEmail: user.contactEmail || "",
+        contactPhoneNumber: user?.contactPhoneNumber || "",
+        omlCode: user?.omlCode || "",
+      });
+    }
+  }, [user, reset]);
+
   return (
-    <form className="p-4 bg-off-white-3 h-fit w-[410px]">
+    <form
+      onSubmit={handleUpdateSettlor}
+      className="p-4 bg-off-white-3 h-fit w-[410px]"
+    >
       <h3 className="text-lg xl:text-3xl text-center font-normal text-dark-2">
         Edit Settlor
       </h3>
@@ -405,7 +586,7 @@ const EditSettlor = ({ close }: { close: () => void }) => {
 
         <div>
           <FormInput
-            name="email"
+            name="contactEmail"
             type="email"
             placeholder="Enter Contact Email"
             register={register}
@@ -417,7 +598,7 @@ const EditSettlor = ({ close }: { close: () => void }) => {
                 message: "Please enter a valid email.",
               },
             }}
-            error={errors.email}
+            error={errors.contactEmail}
             errorMessage={`Email address is required`}
             required
           />
@@ -425,14 +606,14 @@ const EditSettlor = ({ close }: { close: () => void }) => {
 
         <div className="pb-4">
           <FormInput
-            name="phone"
+            name="contactPhoneNumber"
             type="tel"
             placeholder="Enter Contact Phone Number"
             register={register}
             registerOptions={{
               required: "Phone Number is required.",
             }}
-            error={errors.phone}
+            error={errors.contactPhoneNumber}
             errorMessage={`Phone Number is required`}
             required
           />
@@ -446,14 +627,48 @@ const EditSettlor = ({ close }: { close: () => void }) => {
             width="w-fit"
           />
 
-          <Button padding="py-3" buttonText="Update" />
+          <Button
+            padding="py-3"
+            buttonText={editing ? "Updating..." : "Update"}
+            disabled={editing}
+          />
         </div>
       </div>
     </form>
   );
 };
 
-const DeleteSettlor = ({ close }: { close: () => void }) => {
+const DeleteSettlor = ({
+  close,
+  userId,
+}: {
+  close: () => void;
+  userId: string;
+}) => {
+  const { mutate: mutateDelete } = useDeleteSettlor();
+  const [deleting, setDeleting] = useState(false);
+
+  const handleRemoveSettlor = async () => {
+    const payload: DeleteSettlorType = {
+      settlorId: userId,
+    };
+
+    setDeleting(true);
+
+    mutateDelete(payload, {
+      onSuccess: (res) => {
+        toast.success(res?.data?.message);
+        close();
+        setDeleting(false);
+      },
+      onError: (error) => {
+        setDeleting(false);
+        const err = error as { response?: { data?: { error?: string } } };
+        toast.error(`Error: ${err?.response?.data?.error}`);
+      },
+    });
+  };
+
   return (
     <div className="p-6 bg-white h-fit w-[430px] rounded-2xl">
       <div className=" border border-gray-300 bg-[#E4E5E77A]/40 mx-auto h-14 w-14 rounded-full flex items-center justify-center">
@@ -481,7 +696,12 @@ const DeleteSettlor = ({ close }: { close: () => void }) => {
           width="w-fit"
         />
 
-        <Button width="w-fit" padding="py-3 px-14" buttonText="Remove" />
+        <Button
+          onClick={handleRemoveSettlor}
+          width="w-fit"
+          padding="py-3 px-14"
+          buttonText={deleting ? "Removing.." : "Remove"}
+        />
       </div>
     </div>
   );
