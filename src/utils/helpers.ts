@@ -19,7 +19,7 @@ export const hexToBase64 = (hex: string, mimeType: string) => {
   for (let i = 0; i < bytes.length; i += CHUNK_SIZE) {
     const chunk = bytes.slice(i, i + CHUNK_SIZE);
 
-    binary += String.fromCharCode.apply(null, chunk);
+    binary += String.fromCharCode.apply(null, Array.from(chunk));
   }
 
   return `data:${mimeType};base64,${btoa(binary)}`;
