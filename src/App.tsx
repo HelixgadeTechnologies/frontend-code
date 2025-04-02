@@ -6,6 +6,7 @@ import Login from "./pages/auth/Login";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 
 import DashboardHome from "./pages/dashboard/DashboardHome";
+import TrustDashboard from "./pages/trust/TrustHome";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <Routes>
         {/* <Route path="/404" element={<NotFoundPage />} /> */}
         <Route path="/dashboard/*" element={<DashboardHome />} />
+        <Route path="/trust/:name/:id/*" element={<TrustDashboard />} />
 
         <Route path="/" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />

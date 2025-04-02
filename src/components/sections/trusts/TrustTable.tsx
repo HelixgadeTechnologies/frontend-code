@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useMemo, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+
+import { useNavigate, Link } from "react-router-dom";
 import {
   Table,
   Modal,
@@ -66,8 +67,6 @@ const TrustTable = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [activeMenu]);
 
-  console.log({ trusts });
-
   // Define columns with memoization
   const columns = useMemo(
     () => [
@@ -76,8 +75,18 @@ const TrustTable = () => {
         header: "Trust",
         accessorKey: "trustName",
         cell: ({ row }: { row: { original: TrustItem } }) => {
-          const trust = `${row.original.trustName}`;
-          return <span>{trust}</span>;
+          const trustName = `${row.original.trustName}`;
+          const id = row.original.id;
+          const formattedName = trustName.toLowerCase().replace(/\s+/g, "-");
+
+          return (
+            <Link
+              className="hover:underline"
+              to={`/trust/${formattedName}/${id}`}
+            >
+              {trustName}
+            </Link>
+          );
         },
       },
       {
