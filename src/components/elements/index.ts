@@ -6,3 +6,4 @@ export { default as CustomSelect } from "./CustomSelect";
 export { default as EmptyTable } from "./EmptyTable";
 export { default as LoadingTable } from "./LoadingTable";
 export { default as ActiveMenu } from "./ActiveMenu";
+export { default as TagInput } from "./TagInput";

@@ -141,3 +141,77 @@ export interface CreateNuprc {
 }
 
 export type NUPRCsArray = NUPRCItem[];
+
+export interface TrustItem extends BaseItem {
+  trustId: string;
+  trustName: string;
+  trustCommunities: string[];
+  ratings: number;
+}
+
+export type TrustArray = TrustItem[];
+
+interface BotDetails {
+  botDetailsId?: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  trustId?: string;
+}
+
+interface SelectProps {
+  label: string;
+  value: string;
+}
+
+export interface TrustInputFields {
+  trustId?: string;
+  trustName: string;
+  settlorId: SelectProps[];
+  nameOfOmls: string[];
+  userId: string;
+  country: string;
+  state: SelectProps;
+  omls?: string[];
+  localGovernmentArea: SelectProps;
+  trustCommunities: string[];
+  botDetails: BotDetails[];
+  totalMaleBotMembers: number;
+  totalFemaleBotMembers: number;
+  totalPwdBotMembers: number;
+  totalMaleAdvisoryCommitteeMembers: number;
+  totalFemaleAdvisoryCommitteeMembers: number;
+  totalPwdAdvisoryCommitteeMembers: number;
+  totalMaleManagementCommitteeMembers: number;
+  totalFemaleManagementCommitteeMembers: number;
+  totalPwdManagementCommitteeMembers: number;
+}
+
+export interface TrustFields {
+  trustId?: string;
+  trustName: string;
+  settlorId: string[];
+  nameOfOmls: string[];
+  userId: string;
+  country: string;
+  state: string;
+  omls?: string[];
+  localGovernmentArea: string;
+  trustCommunities: string[];
+  botDetails: BotDetails[];
+  totalMaleBotMembers: number;
+  totalFemaleBotMembers: number;
+  totalPwdBotMembers: number;
+  totalMaleAdvisoryCommitteeMembers: number;
+  totalFemaleAdvisoryCommitteeMembers: number;
+  totalPwdAdvisoryCommitteeMembers: number;
+  totalMaleManagementCommitteeMembers: number;
+  totalFemaleManagementCommitteeMembers: number;
+  totalPwdManagementCommitteeMembers: number;
+}
+
+export interface CreateTrustProps {
+  isCreate: boolean;
+  data: TrustFields;
+}

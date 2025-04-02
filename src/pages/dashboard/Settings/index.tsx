@@ -66,6 +66,7 @@ const ProfileSettings = () => {
 
     mutateUpload(payload, {
       onSuccess: (res) => {
+        console.log({ res });
         toast.success(res?.data?.message);
         setIsUploading(false);
       },
