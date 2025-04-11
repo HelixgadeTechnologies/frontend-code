@@ -42,7 +42,7 @@ const Login = () => {
     setIsSubmitting(true);
     try {
       const endpoint = `${baseUrl}/auth/signIn`;
-      const ePoint = "https://hcdt-api-09b9ed32e39a.herokuapp.com/api/auth/signIn"
+      const ePoint = "https://hcdt-api-09b9ed32e39a.herokuapp.com/signIn"
       const response = await axiosRequest().post(ePoint, payload);
 
       if (response?.status === 200 || response?.status === 201) {
