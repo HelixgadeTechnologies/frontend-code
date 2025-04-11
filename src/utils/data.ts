@@ -1,6 +1,7 @@
 import { dashboardIcon, trustIcon, settingsIcon } from "../assets/icons";
 
-export const baseUrl = import.meta.env.VITE_BASE_URL;
+const baseUrl_1 = import.meta.env.VITE_BASE_URL;
+export const baseUrl = `${baseUrl_1}/api`;
 
 export const routes = [
   {
