@@ -18,7 +18,7 @@ const TrustSidebar = () => {
     {
       id: 1,
       name: "Trust Establishment and Governance Structure",
-      link: `/trust/${name}/${id}`,
+      link: `/trust/${name}/${id}/trust-establishment/update`,
     },
     {
       id: 2,

@@ -215,3 +215,40 @@ export interface CreateTrustProps {
   isCreate: boolean;
   data: TrustFields;
 }
+
+// Example usage component that demonstrates both components
+export type EstablishmentFormValues = {
+  trustRegisteredWithCAC: string;
+  cac: File | null;
+  trustEstablishmentStatusId: string;
+  trustId: string;
+  cscDocument: string;
+  cscDocumentMimeType: string;
+  yearIncorporated: SelectProps;
+  botConstitutedAndInaugurated: 0;
+  managementCommitteeConstitutedAndInaugurated: 0;
+  advisoryCommitteeConstitutedAndInaugurated: 0;
+  isTrustDevelopmentPlanReadilyAvailable: 0;
+  isTrustDevelopmentPlanBudgetReadilyAvailable: 0;
+  yearDeveloped: 0;
+  yearExpired: 0;
+  developmentPlanDocument: string;
+  developmentPlanDocumentMimeType: string;
+  developmentPlanBudgetDocument: string;
+  developmentPlanBudgetDocumentMimeType: string;
+  yearOfFundsReceivedByTrust: SelectProps;
+  totalFundsReceivedByTrust: 0;
+  capitalExpenditure: 0;
+  reserve: 0;
+  admin: SelectProps;
+  yearOfNeedsAssessment: 0;
+  statusOfNeedAssessment: 0;
+  communityWomenConsulted: 0;
+  pwDsConsulted: 0;
+  communityYouthsConsulted: 0;
+  communityLeadershipConsulted: 0;
+  attendanceSheet: 0;
+  distributionMatrixDevelopedBySettlor: boolean;
+  trustDistributionMatrixDocument: string;
+  trustDistributionMatrixDocumentMimeType: string;
+};
