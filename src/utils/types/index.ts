@@ -216,8 +216,14 @@ export interface CreateTrustProps {
   data: TrustFields;
 }
 
+interface Currency {
+  reserveCurrency: string;
+  totalFundsCurrency: string;
+  capitalExpenditureCurrency: string;
+}
+
 // Example usage component that demonstrates both components
-export type EstablishmentFormValues = {
+export interface EstablishmentFormValues extends Currency {
   trustRegisteredWithCAC: string;
   cac: File | null;
   trustEstablishmentStatusId: string;
@@ -251,4 +257,4 @@ export type EstablishmentFormValues = {
   distributionMatrixDevelopedBySettlor: boolean;
   trustDistributionMatrixDocument: string;
   trustDistributionMatrixDocumentMimeType: string;
-};
+}

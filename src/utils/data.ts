@@ -73,3 +73,9 @@ export const year = [
     value: "2031",
   },
 ];
+
+export const currencyOptions = [
+  { value: "USD", label: "USD" },
+  { value: "EUR", label: "EUR" },
+  { value: "GBP", label: "GBP" },
+];

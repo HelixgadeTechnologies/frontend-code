@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import {
   GoBack,
@@ -10,13 +10,12 @@ import {
 import { useForm, Controller } from "react-hook-form";
 
 import { EstablishmentFormValues } from "../../utils/types";
-import { year } from "../../utils/data";
+import { year, currencyOptions } from "../../utils/data";
 
 import { useGetAdmins } from "../../utils/hooks/useManageAdmin";
 
 const UpdateTrustEstablishment = () => {
   const { name, id } = useParams();
-  const [yearSelected, setYearSelected] = useState(false);
 
   const { isLoading, data } = useGetAdmins();
 
@@ -30,15 +29,11 @@ const UpdateTrustEstablishment = () => {
     );
   }, [data]);
 
-  const { control, register } = useForm<EstablishmentFormValues>();
-
-  const handleYearChange = (selected: any) => {
-    if (selected && selected.value) {
-      setYearSelected(true);
-    } else {
-      setYearSelected(false);
-    }
-  };
+  const {
+    control,
+    register,
+    formState: { errors },
+  } = useForm<EstablishmentFormValues>();
 
   return (
     <div className="py-4 px-7">
@@ -262,7 +257,7 @@ const UpdateTrustEstablishment = () => {
                 <div className="flex">
                   <div className="w-1/4 mr-2">
                     <Controller
-                      name="totalFunds.currency"
+                      name="totalFundsCurrency"
                       control={control}
                       render={({ field }) => (
                         <CustomSelect
@@ -280,7 +275,7 @@ const UpdateTrustEstablishment = () => {
                   <div className="w-3/4">
                     <FormInput
                       label=""
-                      name="totalFunds.amount"
+                      name="totalFundsReceivedByTrust"
                       register={register}
                       registerOptions={{
                         required: "Amount is required",
@@ -289,7 +284,6 @@ const UpdateTrustEstablishment = () => {
                           message: "Please enter a valid amount",
                         },
                       }}
-                      error={errors.totalFunds?.amount}
                       placeholder="Total funds"
                       type="text"
                     />
@@ -305,7 +299,7 @@ const UpdateTrustEstablishment = () => {
                 <div className="flex">
                   <div className="w-1/4 mr-2">
                     <Controller
-                      name="capitalExpenditure.currency"
+                      name="capitalExpenditureCurrency"
                       control={control}
                       render={({ field }) => (
                         <CustomSelect
@@ -323,7 +317,7 @@ const UpdateTrustEstablishment = () => {
                   <div className="w-3/4">
                     <FormInput
                       label=""
-                      name="capitalExpenditure.amount"
+                      name="capitalExpenditure"
                       register={register}
                       registerOptions={{
                         required: "Amount is required",
@@ -332,7 +326,7 @@ const UpdateTrustEstablishment = () => {
                           message: "Please enter a valid amount",
                         },
                       }}
-                      error={errors.capitalExpenditure?.amount}
+                      error={errors.capitalExpenditure}
                       placeholder="Capital expenditure"
                       type="text"
                     />
@@ -346,7 +340,7 @@ const UpdateTrustEstablishment = () => {
                 <div className="flex">
                   <div className="w-1/4 mr-2">
                     <Controller
-                      name="reserve.currency"
+                      name="reserveCurrency"
                       control={control}
                       render={({ field }) => (
                         <CustomSelect
@@ -364,7 +358,7 @@ const UpdateTrustEstablishment = () => {
                   <div className="w-3/4">
                     <FormInput
                       label=""
-                      name="reserve.amount"
+                      name="reserve"
                       register={register}
                       registerOptions={{
                         required: "Amount is required",
@@ -373,7 +367,7 @@ const UpdateTrustEstablishment = () => {
                           message: "Please enter a valid amount",
                         },
                       }}
-                      error={errors.reserve?.amount}
+                      error={errors.reserve}
                       placeholder="Reserve"
                       type="text"
                     />
