@@ -2,7 +2,7 @@ import { useCookies } from "react-cookie";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { axiosRequest } from "../serverRequest";
 import { baseUrl } from "../data";
-import { CreateAdmin } from "../types";
+import { CreateDRA } from "../types";
 
 export const useAddUpdateDRA = () => {
   const [cookie] = useCookies(["hcdt_admin"]);
@@ -11,7 +11,7 @@ export const useAddUpdateDRA = () => {
 
   const mutation = useMutation({
     mutationKey: ["DRAs"],
-    mutationFn: (payload: CreateAdmin) =>
+    mutationFn: (payload: CreateDRA) =>
       axiosRequest(token).post(`${baseUrl}/setting/addDRA`, payload),
   });
   return mutation;

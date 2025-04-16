@@ -9,15 +9,18 @@ const EmptyTable = ({ headArr, heading, text, img }: TableProps) => {
   return (
     <div className={` px-4`}>
       <div
-        className={` uppercase flex justify-between bg-primary-50  py-4 px-6 rounded-lg text-sm font-bold text-primary-500 `}
+        className={` overflow-x-scroll capitalize  flex justify-between bg-off-white-3  rounded-lg `}
       >
         {headArr?.map((item, index) => (
-          <li className="list-none" key={index}>
+          <li
+            className="list-none  capitalize whitespace-nowrap px-5 py-4 text-left text-sm font-semibold text-gray-9"
+            key={index}
+          >
             {item}
           </li>
         ))}
       </div>
-      <div className="mt-12 h-[50vh] text-center flex items-center justify-center border border-grey-500 rounded-lg">
+      <div className="mt-8 h-[40vh] text-center flex items-center justify-center border border-grey-500 rounded-lg">
         <div>
           {img && <img className="mx-auto" src={img} alt="No data available" />}
           <div className="mt-2">

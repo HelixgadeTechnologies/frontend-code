@@ -1,24 +1,20 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 
-import {
-  UseFormRegister,
-  FieldError,
-  RegisterOptions,
-  FieldErrors,
-} from "react-hook-form";
+import { FieldError, RegisterOptions, FieldErrors } from "react-hook-form";
 
 import { eyeIcon } from "../../assets/icons";
 
-interface FormValues {
-  [key: string]: string | undefined;
-}
-
+// interface FormValues {
+//   [key: string]: string | undefined;
+// }
 interface FormItemProps {
   label?: string;
   name: string; // Add this to properly type the register prop
   containerClassName?: string;
   labelClassName?: string;
-  register: UseFormRegister<FormValues>;
+  register: any;
+  // register: UseFormRegister<FormValues>;
   error?: FieldError | FieldErrors | null; // Updated error type
   errorMessage?: string;
   placeholder?: string;

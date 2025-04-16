@@ -29,18 +29,3 @@ export const useGetAdmins = () => {
 
   return query;
 };
-
-// export const useGetPlayerHighlights = (id: any) => {
-//   const cookies = getCookie("dsa_user");
-//   const user = cookies && JSON.parse(cookies);
-//   const token = user?.token;
-
-//   const query = useQuery({
-//     queryKey: ["player-highlights"],
-//     enabled: !!id,
-//     queryFn: () =>
-//       axiosRequest(token).get(`${baseURL}/players/${id}/highlights`),
-//   });
-
-//   return query;
-// };

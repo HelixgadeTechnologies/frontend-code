@@ -1,11 +1,9 @@
-import React, {
-  useState,
-  useRef,
-  useEffect,
-  useMemo,
-  useCallback,
-} from "react";
+import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { useForm, Controller } from "react-hook-form";
+
+import { useQueryClient } from "@tanstack/react-query";
+
+import { useCookies } from "react-cookie";
 
 import {
   Button,
@@ -15,15 +13,14 @@ import {
   Modal,
   EmptyTable,
   LoadingTable,
+  ActiveMenu,
 } from "../../elements";
 
 import { RowSelectionState } from "@tanstack/react-table";
 import {
   caretDownIcon,
-  editIcon,
   filterIcon,
   sortIcon,
-  trashGrayIcon,
   userDeleteIcon,
 } from "../../../assets/icons";
 
@@ -34,7 +31,6 @@ import {
   AdminsArray,
   AdminUser,
   CreateAdmin,
-  ActiveMenuProps,
   DeleteUserType,
 } from "../../../utils/types";
 
@@ -42,11 +38,16 @@ import {
   useAddUpdateAdmin,
   useGetAdmins,
 } from "../../../utils/hooks/useManageAdmin";
+
 import { useGetRoles } from "../../../utils/hooks";
 import { useGetAllTrusts } from "../../../utils/hooks/useTrusts";
 import { useDeleteAnyUser } from "../../../utils/hooks";
 
 const AdminTable = () => {
+  const [cookie] = useCookies(["hcdt_admin"]);
+  const admin = cookie?.hcdt_admin;
+  const adminRole = admin?.role;
+
   const { isLoading, data } = useGetAdmins();
 
   const admins: AdminsArray = useMemo(() => {
@@ -150,6 +151,7 @@ const AdminTable = () => {
           return (
             <div className="relative">
               <button
+                disabled={adminRole !== "SUPER ADMIN"}
                 data-menu-trigger={user?.id}
                 className="px-3 text-gray-5 hover:text-gray-7 cursor-pointer"
                 onClick={() => toggleMenu(user?.id)}
@@ -230,89 +232,6 @@ const AdminTable = () => {
   );
 };
 
-const ActiveMenu: React.FC<ActiveMenuProps> = React.memo(
-  ({ userId, activeMenu, menuRef, handleEdit, handleDelete }) => {
-    const [menuPosition, setMenuPosition] = useState<{
-      top: number;
-      right: number;
-    }>({
-      top: 0,
-      right: 0,
-    });
-
-    useEffect(() => {
-      // Only calculate position when menu is active for this user
-      if (activeMenu !== userId) return;
-
-      // Get the button that triggered this menu
-      const buttonElement = document.querySelector(
-        `[data-menu-trigger="${userId}"]`,
-      );
-
-      if (buttonElement && menuRef.current) {
-        const buttonRect = buttonElement.getBoundingClientRect();
-        const menuHeight = menuRef.current.offsetHeight;
-        const spaceBelow = window.innerHeight - buttonRect.bottom;
-
-        // Calculate position
-        let topPosition;
-        if (spaceBelow < menuHeight) {
-          console.log({ spaceBelow, menuHeight }, "no space");
-
-          // Position above the button if not enough space below
-          topPosition = -menuHeight;
-        } else {
-          console.log({ spaceBelow, menuHeight }, " space");
-          // Position below the button
-          topPosition = buttonRect.height;
-        }
-
-        setMenuPosition({
-          top: topPosition,
-          right: 0,
-        });
-      }
-    }, [activeMenu, userId, menuRef]);
-
-    if (activeMenu !== userId) {
-      return null;
-    }
-
-    return (
-      <div
-        ref={menuRef}
-        className="absolute bg-white rounded-xl shadow-lg w-48 z-10"
-        style={{
-          top: `${menuPosition.top}px`,
-          right: `${menuPosition.right}px`,
-        }}
-      >
-        <div className="py-1">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleEdit();
-            }}
-            className="flex gap-x-2 items-center w-full px-4 py-3 text-sm text-gray-6 hover:bg-gray-1"
-          >
-            <img src={editIcon} alt="edit admin" />
-            Edit account
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleDelete();
-            }}
-            className="flex gap-x-2 items-center w-full px-4 py-3 text-sm text-gray-6 hover:bg-gray-1"
-          >
-            <img src={trashGrayIcon} alt="delete admin" />
-            Delete account
-          </button>
-        </div>
-      </div>
-    );
-  },
-);
 const AddAdmin = ({ close }: { close: () => void }) => {
   const {
     register,
@@ -320,6 +239,9 @@ const AddAdmin = ({ close }: { close: () => void }) => {
     control,
     handleSubmit,
   } = useForm();
+
+  const queryClient = useQueryClient();
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // fetch roles and trust
@@ -360,6 +282,7 @@ const AddAdmin = ({ close }: { close: () => void }) => {
         roleId: data?.roleId?.value,
         trusts: data?.trusts.value,
         firstName: data?.firstName,
+        lastName: data?.lastName,
         email: data?.email,
       },
     };
@@ -367,6 +290,7 @@ const AddAdmin = ({ close }: { close: () => void }) => {
     mutateAddAdmin(payload, {
       onSuccess: (res) => {
         toast.success(res?.data?.message);
+        queryClient.invalidateQueries({ queryKey: ["admins"] });
         close();
         setIsSubmitting(false);
       },
@@ -504,6 +428,8 @@ const AddAdmin = ({ close }: { close: () => void }) => {
 };
 
 const EditAdmin = ({ close, user }: { close: () => void; user: AdminUser }) => {
+  const queryClient = useQueryClient();
+
   const {
     register,
     formState: { errors },
@@ -553,8 +479,7 @@ const EditAdmin = ({ close, user }: { close: () => void; user: AdminUser }) => {
           firstName: data?.firstName,
           lastName: data?.lastName,
           email: data?.email,
-          // Uncomment if trust functionality is required
-          // trusts: data?.trusts?.value || "",
+          trusts: data?.trusts?.value || "",
         },
       };
 
@@ -563,6 +488,9 @@ const EditAdmin = ({ close, user }: { close: () => void; user: AdminUser }) => {
       mutateAddAdmin(payload, {
         onSuccess: (res) => {
           toast.success(res?.data?.message);
+          queryClient.invalidateQueries({
+            queryKey: ["admins"],
+          });
           close();
           setEditing(false);
         },
@@ -588,16 +516,21 @@ const EditAdmin = ({ close, user }: { close: () => void; user: AdminUser }) => {
             role.label?.toUpperCase() === normalizedUserRole,
         ) || null;
 
+      const userTrust =
+        allTrusts.find(
+          (trust: { value: string }) => trust.value === user?.trusts,
+        ) || null;
+
       reset({
         firstName: user.firstName || "",
         lastName: user.lastName || "",
         email: user.email || "",
         roleId: userRole,
-        // Uncomment if trust functionality is required
-        // trusts: defaultTrust,
+
+        trusts: userTrust,
       });
     }
-  }, [user, roles, reset]);
+  }, [user, roles, reset, allTrusts]);
 
   return (
     <form
@@ -728,6 +661,8 @@ const DeleteAdmin = ({
   close: () => void;
   userId: string;
 }) => {
+  const queryClient = useQueryClient();
+
   const { mutate: mutateDeleteAdmin } = useDeleteAnyUser("admins");
   const [deleting, setDeleting] = useState(false);
 
@@ -743,6 +678,7 @@ const DeleteAdmin = ({
         toast.success(res?.data?.message);
         close();
         setDeleting(false);
+        queryClient.invalidateQueries({ queryKey: ["admins"] });
       },
       onError: (error) => {
         setDeleting(false);

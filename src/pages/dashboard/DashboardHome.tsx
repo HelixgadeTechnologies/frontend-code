@@ -12,6 +12,7 @@ import ManageNUPRC from "./Settings/ManageNUPRC";
 import ManageSettlor from "./Settings/ManageSettlor";
 
 import Trusts from "./Trusts";
+import CreateTrust from "./Trusts/CreateTrust";
 
 const DashboardHome = () => {
   const location = useLocation();
@@ -27,6 +28,7 @@ const DashboardHome = () => {
           <Route element={<DashboardLayout />}>
             <Route path="/" element={<DashboardPage />} />
             <Route path="/trusts" element={<Trusts />} />
+            <Route path="/trusts/create-trust" element={<CreateTrust />} />
             <Route path="settings" element={<ProfileSettings />} />
             <Route path="settings/manage-admin" element={<ManageAdmin />} />
             <Route path="settings/manage-dra" element={<ManageDRA />} />
