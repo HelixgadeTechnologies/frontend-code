@@ -16,7 +16,7 @@ import filterIcon from "./filter.svg";
 import sortIcon from "./sort.svg";
 import timerIcon from "./timer.svg";
 import userDeleteIcon from "./user-delete.svg";
-
+import crossIcon from "./cross.svg";
 export {
   eyeIcon,
   dashboardIcon,
@@ -36,4 +36,5 @@ export {
   sortIcon,
   timerIcon,
   userDeleteIcon,
+  crossIcon,
 };

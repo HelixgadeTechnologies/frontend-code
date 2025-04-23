@@ -1,9 +1,9 @@
 import { useState } from "react";
 
-import BasicDetails from "../../../components/sections/trusts/BasicDetails";
-import BotDetails from "../../../components/sections/trusts/BotDetails";
-import Bot_AC from "../../../components/sections/trusts/Bot_AC";
-import PreviewTrust from "../../../components/sections/trusts/PreviewTrust";
+import BasicDetails from "../../trust/components/forms/BasicDetails";
+import BotDetails from "../../trust/components/forms/BotDetails";
+import Bot_AC from "../../trust/components/forms/Bot_AC";
+import PreviewTrust from "../../trust/components/forms/PreviewTrust";
 
 import { CreateTrustProps, TrustInputFields } from "../../../utils/types";
 
@@ -63,7 +63,7 @@ const CreateTrust = () => {
         state: fields?.state?.value ?? "",
         localGovernmentArea: fields?.localGovernmentArea?.value,
       },
-    };
+    } as CreateTrustProps;
 
     mutateAddTrust(payload, {
       onSuccess: (res) => {
@@ -123,37 +123,33 @@ const CreateTrust = () => {
             return (
               <li
                 onClick={() => isAccessible && handleTabChange(item.id)}
-                className={`${
-                  activeTab === item.id
+                className={`${activeTab === item.id
                     ? "bg-blue-0 "
                     : isAccessible
-                    ? " hover:bg-blue-0/50"
-                    : " cursor-not-allowed"
-                } flex items-center justify-between list-none p-2 text-sm font-medium ${
-                  isAccessible ? "cursor-pointer" : ""
-                }`}
+                      ? " hover:bg-blue-0/50"
+                      : " cursor-not-allowed"
+                  } flex items-center justify-between list-none p-2 text-sm font-medium ${isAccessible ? "cursor-pointer" : ""
+                  }`}
                 key={item.id}
               >
                 <span className=" flex items-center gap-x-2">
                   <span
-                    className={` h-10 w-10 rounded-full flex items-center justify-center font-bold text-base lg:text-xl ${
-                      isCompleted
+                    className={` h-10 w-10 rounded-full flex items-center justify-center font-bold text-base lg:text-xl ${isCompleted
                         ? "bg-primary-200 text-white"
                         : activeTab === item.id
-                        ? "bg-primary-200 text-white"
-                        : "bg-white border border-[#98A2B3] text-[#98A2B3]"
-                    } `}
+                          ? "bg-primary-200 text-white"
+                          : "bg-white border border-[#98A2B3] text-[#98A2B3]"
+                      } `}
                   >
                     {item.id}
                   </span>
                   <span
-                    className={` ${
-                      isCompleted
+                    className={` ${isCompleted
                         ? "text-primary-100 font-bold"
                         : activeTab === item.id
-                        ? "text-primary-100"
-                        : "text-primary-100"
-                    } `}
+                          ? "text-primary-100"
+                          : "text-primary-100"
+                      } `}
                   >
                     {item.name}
                   </span>

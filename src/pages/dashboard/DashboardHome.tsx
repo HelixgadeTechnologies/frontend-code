@@ -5,14 +5,13 @@ import { Navigate, useLocation, Route, Routes } from "react-router-dom";
 import DashboardLayout from "../../layouts/DashboardLayout";
 import DashboardPage from "./DashboardPage";
 
-import ProfileSettings from "./Settings";
-import ManageAdmin from "./Settings/ManageAdmin";
-import ManageDRA from "./Settings/ManageDRA";
-import ManageNUPRC from "./Settings/ManageNUPRC";
-import ManageSettlor from "./Settings/ManageSettlor";
-
 import Trusts from "./Trusts";
 import CreateTrust from "./Trusts/CreateTrust";
+import ProfileSettings from "../Settings/components";
+import ManageAdmin from "../Settings/components/ManageAdmin";
+import ManageDRA from "../Settings/components/ManageDRA";
+import ManageNUPRC from "../Settings/components/ManageNUPRC";
+import ManageSettlor from "../Settings/components/ManageSettlor";
 
 const DashboardHome = () => {
   const location = useLocation();

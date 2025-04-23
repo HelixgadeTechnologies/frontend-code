@@ -1,5 +1,5 @@
 import { Button } from "../../../components/elements";
-import TrustTable from "../../../components/sections/trusts/TrustTable";
+import TrustTable from "../../trust/components/forms/TrustTable";
 
 const Trusts = () => {
   return (

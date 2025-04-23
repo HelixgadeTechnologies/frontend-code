@@ -2,11 +2,17 @@ import "./App.css";
 
 import { Route, Routes } from "react-router-dom";
 
-import Login from "./pages/auth/Login";
-import ForgotPassword from "./pages/auth/ForgotPassword";
 
 import DashboardHome from "./pages/dashboard/DashboardHome";
-import TrustDashboard from "./pages/trust/TrustHome";
+import TrustDashboard from "./pages/trust/components/TrustHome";
+import { configure } from "mobx";
+import Login from "./pages/auth/component/Login";
+import ForgotPassword from "./pages/auth/component/ForgotPassword";
+
+// Disable strict mode globally
+configure({
+  enforceActions: "never", // or "observed", or "always"
+});
 
 function App() {
   return (
