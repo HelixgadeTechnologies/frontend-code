@@ -1,4 +1,4 @@
 export const ENV = {
-  API_ROOT: "http://localhost:8000/api",//"https://hcdt-api-09b9ed32e39a.herokuapp.com/api",
+  API_ROOT: "https://hcdt-backend-code-1.onrender.com/api",//"http://localhost:8000/api",//,
   APP_NAME: "HCDT"
 };
