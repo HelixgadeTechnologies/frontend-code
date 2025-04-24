@@ -24,7 +24,8 @@
     "react-select": "^5.10.1",
     "react-toastify": "^11.0.5",
     "superagent": "^7.1.6",
-    "superagent-promise": "^1.1.0"
+    "superagent-promise": "^1.1.0",
+    "yup": "^1.6.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",

@@ -7,7 +7,7 @@ import { settingStore as SettingStore } from "../../store/settingStore"
 import { trustStore as TrustStore } from "../../../trust/store/trustStore";
 import { CreateAdminPayload, IAdmin, IAdminPayloadData } from "../../types/interface";
 import { DeleteAdmin } from "../form/DeleteAdmin";
-import { EditAdmin } from "../form/EditAdmin";
+// import { EditAdmin } from "../form/EditAdmin";
 import Tag from "../../../../components/elements/Tag";
 import { toast } from "react-toastify";
 

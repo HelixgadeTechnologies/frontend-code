@@ -2,7 +2,7 @@ import { Controller, useForm } from "react-hook-form";
 import { Button, CustomSelect, FormInput } from "../../../../components/elements";
 import { toast } from "react-toastify";
 import { CreateAdminPayload, IAdminPayloadData, IDropdownProp, IRole, ISettingStore } from "../../types/interface";
-import { ITrustList, ITrustStore } from "../../../Trusts/types/interface";
+import { ITrustList, ITrustStore } from "../../../trust/types/interface";
 import { observer } from "mobx-react-lite";
 
 export const AddAdmin = observer(({ close, settingStore, trustStore }: { close: () => void, settingStore: ISettingStore, trustStore: ITrustStore }) => {

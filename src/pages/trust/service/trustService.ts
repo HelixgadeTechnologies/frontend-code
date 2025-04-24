@@ -1,5 +1,5 @@
 import { client } from "../../../infrastructure/agent"
-import { HCDTRequestResponse } from "../../../utils/shared/HCDTRequestResponse"
+import { HCDTRequestResponse } from "../../../infrastructure/HCDTRequestResponse"
 import { ITrustEstablishmentPayload, ITrustPayload } from "../types/interface"
 export const trustService = {
     // Create And Update Trust

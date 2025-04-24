@@ -172,8 +172,8 @@ const TrustTable = () => {
         <Modal
           body={
             <DeleteTrust
-              userId={deleteTrustId}
-              close={() => handleDelete(null)}
+              // userId={deleteTrustId}
+              // close={() => handleDelete(null)}
             />
           }
         />

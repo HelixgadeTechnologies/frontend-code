@@ -1,12 +1,13 @@
-import { HCDTRequestResponse } from "../../../utils/shared/HCDTRequestResponse";
+import { HCDTRequestResponse } from "../../../infrastructure/HCDTRequestResponse";
 import { AuthService } from "../service/authService";
 import { IAuthStore, ILoginCredentials, IUser } from "../types/interface";
-import { makeAutoObservable, observable, ObservableMap, remove, set, toJS } from "mobx"
+import { makeAutoObservable } from "mobx"
+// import { makeAutoObservable, observable, ObservableMap, remove, set, toJS } from "mobx"
 class AuthStore implements IAuthStore {
     isLoading = false;
     isSubmitting = false;
     user: IUser = {} as IUser;
-    
+
 
     constructor() {
         makeAutoObservable(this);

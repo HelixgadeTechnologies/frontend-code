@@ -1,5 +1,4 @@
-import { ObservableMap } from "mobx";
-import { HCDTRequestResponse } from "../../../utils/shared/HCDTRequestResponse"
+import { HCDTRequestResponse } from "../../../infrastructure/HCDTRequestResponse";
 
 
 export interface IAuthStore {

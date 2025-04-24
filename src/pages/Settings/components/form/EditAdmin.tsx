@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { CreateAdminPayload, IAdmin, IAdminPayloadData, IDropdownProp, IRole, ISettingStore } from "../../types/interface";
 
 import { observer } from "mobx-react-lite";
-import { ITrustList, ITrustStore } from "../../../Trusts/types/interface";
+import { ITrustList, ITrustStore } from "../../../trust/types/interface";
 import { useEffect } from "react";
 
 export const EditAdmin = observer(({ close, user, settingStore, trustStore }: { close: () => void; user: IAdmin, settingStore: ISettingStore, trustStore: ITrustStore }) => {

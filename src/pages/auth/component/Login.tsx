@@ -11,7 +11,6 @@ import { useCookies } from "react-cookie";
 import { toast } from "react-toastify";
 
 import { jwtDecode } from "jwt-decode";
-import { User } from "../../../utils/types";
 import { authStore as AthStore } from "../store/authStore"
 import { Observer, observer } from "mobx-react-lite";
 import { ILoginCredentials, IUser } from "../types/interface";

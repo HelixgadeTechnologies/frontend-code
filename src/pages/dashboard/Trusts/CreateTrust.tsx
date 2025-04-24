@@ -7,14 +7,14 @@ import PreviewTrust from "../../trust/components/forms/PreviewTrust";
 
 import { CreateTrustProps, TrustInputFields } from "../../../utils/types";
 
-import { useAddUpdateTrust } from "../../../utils/hooks/useTrusts";
+// import { useAddUpdateTrust } from "../../../utils/hooks/useTrusts";
 
-import { toast } from "react-toastify";
-import { useQueryClient } from "@tanstack/react-query";
+// import { toast } from "react-toastify";
+// import { useQueryClient } from "@tanstack/react-query";
 
 const CreateTrust = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
 
   const [activeTab, setActiveTab] = useState<number>(tabs[0].id);
   const [completedTabs, setCompletedTabs] = useState<number[]>([]);
@@ -48,35 +48,35 @@ const CreateTrust = () => {
   };
 
   //  add admin
-  const { mutate: mutateAddTrust } = useAddUpdateTrust();
+  // const { mutate: mutateAddTrust } = useAddUpdateTrust();
 
   const submitForm = async () => {
     setIsSubmitting(true);
 
-    const payload = {
-      isCreate: true,
-      data: {
-        ...fields,
-        settlorId: fields?.settlorId?.map((i) => i.value),
-        trustCommunities: fields?.trustCommunities?.join(","),
-        country: "Nigeria",
-        state: fields?.state?.value ?? "",
-        localGovernmentArea: fields?.localGovernmentArea?.value,
-      },
-    } as CreateTrustProps;
+    // const payload = {
+    //   isCreate: true,
+    //   data: {
+    //     ...fields,
+    //     settlorId: fields?.settlorId?.map((i) => i.value),
+    //     trustCommunities: fields?.trustCommunities?.join(","),
+    //     country: "Nigeria",
+    //     state: fields?.state?.value ?? "",
+    //     localGovernmentArea: fields?.localGovernmentArea?.value,
+    //   },
+    // } as CreateTrustProps;
 
-    mutateAddTrust(payload, {
-      onSuccess: (res) => {
-        toast.success(res?.data?.message);
-        queryClient.invalidateQueries({ queryKey: ["trusts"] });
-        setIsSubmitting(false);
-      },
-      onError: (error) => {
-        const err = error as { response?: { data?: { error?: string } } };
-        toast.error(`Error: ${err?.response?.data?.error}`);
-        setIsSubmitting(false);
-      },
-    });
+    // mutateAddTrust(payload, {
+    //   onSuccess: (res) => {
+    //     toast.success(res?.data?.message);
+    //     queryClient.invalidateQueries({ queryKey: ["trusts"] });
+    //     setIsSubmitting(false);
+    //   },
+    //   onError: (error) => {
+    //     const err = error as { response?: { data?: { error?: string } } };
+    //     toast.error(`Error: ${err?.response?.data?.error}`);
+    //     setIsSubmitting(false);
+    //   },
+    // });
   };
 
   return (

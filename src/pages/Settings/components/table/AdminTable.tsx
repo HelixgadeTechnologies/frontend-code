@@ -5,7 +5,7 @@ import ActiveMenu from "../../../../components/elements/ActiveMenu";
 import { caretDownIcon, filterIcon, sortIcon } from "../../../../assets/icons";
 import { EmptyTable, LoadingTable, Modal, Table } from "../../../../components/elements";
 import { settingStore as SettingStore } from "../../store/settingStore"
-import { authStore as AuthStore } from "../../../auth/store/authStore"
+// import { authStore as AuthStore } from "../../../auth/store/authStore"
 import { trustStore as TrustStore } from "../../../trust/store/trustStore";
 import { IAdmin } from "../../types/interface";
 import { DeleteAdmin } from "../form/DeleteAdmin";
@@ -13,12 +13,12 @@ import { EditAdmin } from "../form/EditAdmin";
 
 
 const SettingsStoreCtx = createContext(SettingStore);
-const AuthStoreCtx = createContext(AuthStore);
+// const AuthStoreCtx = createContext(AuthStore);
 const TrustStoreCtx = createContext(TrustStore);
 
 export const AdminTable = observer(() => {
 
-    const authStore = useContext(AuthStoreCtx);
+    // const authStore = useContext(AuthStoreCtx);
     const settingStore = useContext(SettingsStoreCtx);
     const trustStore = useContext(TrustStoreCtx);
 

@@ -1,7 +1,7 @@
 import { Controller, useForm } from "react-hook-form";
 import { Button, CustomSelect, FormInput } from "../../../../components/elements";
-import { createDraPayload, IDraPayloadData, IDropdownProp, IRole, ISettingStore } from "../../types/interface";
-import { ITrustList, ITrustStore } from "../../../Trusts/types/interface";
+import { createDraPayload, IDraPayloadData, IDropdownProp, ISettingStore } from "../../types/interface";
+import { ITrustList, ITrustStore } from "../../../trust/types/interface";
 import { toast } from "react-toastify";
 
 export const AddDRA = ({ close, settingStore, trustStore }: { close: () => void, settingStore: ISettingStore, trustStore: ITrustStore }) => {

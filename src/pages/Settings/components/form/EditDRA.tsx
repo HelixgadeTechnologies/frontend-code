@@ -1,6 +1,6 @@
 import { Controller, useForm } from "react-hook-form";
 import { Button, CustomSelect, FormInput } from "../../../../components/elements";
-import { ITrustList, ITrustStore } from "../../../Trusts/types/interface";
+import { ITrustList, ITrustStore } from "../../../trust/types/interface";
 import { useEffect } from "react";
 import { createDraPayload, IAdmin, IDraPayloadData, IDropdownProp, ISettingStore } from "../../types/interface";
 import { observer } from "mobx-react-lite";
