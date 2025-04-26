@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo, useCallback } from "react";
+import { useState, useRef, useEffect, useMemo, useCallback, createContext, useContext } from "react";
 
 import { useNavigate, Link } from "react-router-dom";
 import {
@@ -8,15 +8,21 @@ import {
   LoadingTable,
   ActiveMenu,
 } from "../../../../components/elements";
-import DeleteTrust from "./DeleteTrust";
+import DeleteTrust from "../forms/DeleteTrust";
 
 import { TrustArray, TrustItem } from "../../../../utils/types";
 
 import { RowSelectionState } from "@tanstack/react-table";
 
 import { useGetAllTrusts } from "../../../../utils/hooks/useTrusts";
-
-const TrustTable = () => {
+import { observer } from "mobx-react-lite";
+import { trustStore as TrustStore } from "../../../trust/store/trustStore";
+// import { economicImpactStore as EconomicImpactStore } from "../../../EconomicImpact/store/economicImpactStore";
+const TrustStoreCtx = createContext(TrustStore);
+// const EconomicImpactStoreCtx = createContext(EconomicImpactStore);
+const TrustTable = observer(() => {
+  const trustStore = useContext(TrustStoreCtx);
+  // const economicImpactStore = useContext(EconomicImpactStoreCtx);
   const navigate = useNavigate();
   const { isLoading, data } = useGetAllTrusts();
 
@@ -83,6 +89,12 @@ const TrustTable = () => {
             <Link
               className="hover:underline"
               to={`/trust/${formattedName}/${id}`}
+              onClick={(e) => {
+                e.stopPropagation(); // Prevent row click event
+                trustStore.selectedTrustId = id; // Set selected trust ID in the store
+                sessionStorage.setItem("selectedTrustId", id)
+
+              }}
             >
               {trustName}
             </Link>
@@ -172,14 +184,14 @@ const TrustTable = () => {
         <Modal
           body={
             <DeleteTrust
-              // userId={deleteTrustId}
-              // close={() => handleDelete(null)}
+            // userId={deleteTrustId}
+            // close={() => handleDelete(null)}
             />
           }
         />
       )}
     </div>
   );
-};
+});
 
 export default TrustTable;

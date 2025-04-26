@@ -3,10 +3,10 @@ export interface ITrustStore {
     isLoading: boolean,
     isSubmitting: boolean,
     isDeleting: boolean,
-    selectedTrust: ITrustList,
+    selectedTrust: ITrustList | null,
+    selectedTrustId: string | undefined,
     trust: ITrust,
     trustEstablishmentStatus: ITrustEstablishmentStatus,
-    selectedTrustId: string,
     allTrust: ObservableMap<string, ITrustList>;
     getAllTrust(): Promise<boolean>,
     createTrust(payload: ITrustPayload): Promise<boolean>,

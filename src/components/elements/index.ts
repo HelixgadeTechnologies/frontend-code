@@ -11,3 +11,5 @@ export { default as GoBack } from "./GoBack";
 export { default as CustomRadio } from "./Radio";
 export { default as FileUpload } from "./Upload";
 export { default as Tag } from "./Tag";
+// export { default as CustomRadio } from "./CustomRadio";
+export {default as DashboardSkeleton} from "./DashboardSkeleton";

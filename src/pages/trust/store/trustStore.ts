@@ -5,11 +5,11 @@ class TrustStore implements ITrustStore {
     isLoading = false;
     isSubmitting = false;
     isDeleting = false;
-    selectedTrust: ITrustList = {} as ITrustList;
+    selectedTrust: ITrustList | null = {} as ITrustList;
     trust: ITrust = {} as ITrust;
     trustEstablishmentStatus: ITrustEstablishmentStatus = {} as ITrustEstablishmentStatus;
     allTrust = new ObservableMap<string, ITrustList>();
-    selectedTrustId: string = ""
+    selectedTrustId: string |undefined = undefined
 
     constructor() {
         makeAutoObservable(this);

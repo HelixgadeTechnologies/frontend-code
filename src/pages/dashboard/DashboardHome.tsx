@@ -1,21 +1,42 @@
-import { useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 import { Navigate, useLocation, Route, Routes } from "react-router-dom";
 
 import DashboardLayout from "../../layouts/DashboardLayout";
 import DashboardPage from "./DashboardPage";
 
-import Trusts from "./Trusts";
-import CreateTrust from "./Trusts/CreateTrust";
+import Trusts from "../trust/components";
+import CreateTrust from "../trust/components/forms/CreateTrust";
 import ProfileSettings from "../Settings/components";
 import ManageAdmin from "../Settings/components/ManageAdmin";
 import ManageDRA from "../Settings/components/ManageDRA";
 import ManageNUPRC from "../Settings/components/ManageNUPRC";
 import ManageSettlor from "../Settings/components/ManageSettlor";
-
-const DashboardHome = () => {
+import { useCookies } from "react-cookie";
+import { authStore as AuthStore } from "../auth/store/authStore";
+import { IUser } from "../auth/types/interface";
+import { observer } from "mobx-react-lite";
+import { trustStore as TrustStore } from "../trust/store/trustStore";
+const TrustStoreCTX = createContext(TrustStore);
+const AuthStoreCTX = createContext(AuthStore);
+const DashboardHome = observer(() => {
+  const authStore = useContext(AuthStoreCTX);
+  const trustStore = useContext(TrustStoreCTX);
   const location = useLocation();
   const [isValid] = useState(true);
+
+  const [cookie] = useCookies(["hcdt_admin"]);
+  const admin = cookie?.hcdt_admin;
+
+  useEffect(() => {
+    async function getLoginUsers() {
+      authStore.user = admin as IUser
+      let selectedTrustId = window.sessionStorage.getItem("selectedTrustId")
+      trustStore.selectedTrustId = selectedTrustId as string
+    }
+    getLoginUsers();
+    return () => { };
+  }, []);
   return (
     <div>
       {!isValid && (
@@ -41,6 +62,6 @@ const DashboardHome = () => {
       </>
     </div>
   );
-};
+});
 
 export default DashboardHome;
