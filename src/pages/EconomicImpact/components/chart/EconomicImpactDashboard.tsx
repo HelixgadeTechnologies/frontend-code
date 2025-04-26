@@ -14,7 +14,7 @@ import {
     LineElement,
 } from "chart.js";
 import { IEconomicImpactStore } from "../../types/interface";
-
+import ChartDataLabels from "chartjs-plugin-datalabels"; // Import the plugin
 
 // Register the required components
 ChartJS.register(
@@ -24,7 +24,8 @@ ChartJS.register(
     CategoryScale,
     LinearScale,
     PointElement,
-    LineElement
+    LineElement,
+    ChartDataLabels
 );
 
 const EconomicImpactDashboard = observer(({ economicImpactStore }: { economicImpactStore: IEconomicImpactStore }) => {
