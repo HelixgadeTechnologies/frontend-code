@@ -46,7 +46,7 @@ const EconomicImpactDashboard = observer(({ economicImpactStore }: { economicImp
         labels: ["Very True", "Slightly", "Not True"],
         datasets: [
             {
-                data: economicImpactStore?.dashboardData?.incomeIncrease.length! > 0 ? [...economicImpactStore?.dashboardData?.incomeIncrease as Array<number>] : [0, 0, 0],
+                data: economicImpactStore?.dashboardData?.incomeIncrease.length! > 0 ? [...economicImpactStore?.dashboardData?.businessGrowth as Array<number>] : [0, 0, 0],
                 backgroundColor: ["#22C55E", "#FACC15", "#EF4444"],
                 hoverBackgroundColor: ["#16A34A", "#EAB308", "#DC2626"],
             },
