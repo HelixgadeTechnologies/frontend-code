@@ -1,11 +1,12 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { GoBack } from "../../../components/elements";
 
 const TrustEstablishment = () => {
   const { name, id } = useParams();
+  const navigate = useNavigate();
   return (
     <div className="py-4 px-7">
-      <GoBack trustName={name || ""} />
+      <GoBack action={() => navigate(-1)} trustName={name || ""} />
 
       <div className="my-7 flex items-center justify-between">
         <h2 className="font-semibold text-xl text-black capitalize">{name}</h2>
