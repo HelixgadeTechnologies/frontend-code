@@ -6,19 +6,21 @@ const CommunitySatisfactionView = observer(
         const getStatusClass = (option: string): string => {
             switch (option) {
                 case "STRONGLY DISAGREE":
-                    return "px-4 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium";
+                    return "px-4 py-1 bg-red-700 text-white rounded-full text-sm font-medium";
                 case "AGREE":
+                    return "px-4 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium";
+                case "SLIGHTLY AGREE":
                     return "px-4 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium";
-                case "SLIGHTLY Agree":
-                    return "px-4 py-1 bg-yellow-100 text-yellow-700 rounded-full text-sm font-medium";
                 case "DISAGREE":
                     return "px-4 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium";
                 case "TRUE":
-                    return "px-4 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium";
+                    return "px-4 py-1 bg-green-700 text-white rounded-full text-sm font-medium";
                 case "IN PROGRESS":
-                    return "px-4 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium";
+                    return "px-4 py-1 bg-yellow-100 text-yellow-700 rounded-full text-sm font-medium";
                 case "NOT TRUE":
                     return "px-4 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium";
+                case "STRONGLY AGREE":
+                    return "px-4 py-1 bg-green-700 text-white rounded-full text-sm font-medium";
                 default:
                     return "px-4 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium";
             }
@@ -48,8 +50,8 @@ const CommunitySatisfactionView = observer(
                             <p className="text-gray-700">
                                 (i). We feel well-informed about the implemented projects by the Trust governing structure.
                             </p>
-                            <span className={getStatusClass(satisfactionStore.selectedSatisfaction?.incomeProjectStatus!)}>
-                                {satisfactionStore.selectedSatisfaction?.incomeProjectStatus}
+                            <span className={getStatusClass(satisfactionStore.selectedSatisfaction?.infoProjectsStatus!)}>
+                                {satisfactionStore.selectedSatisfaction?.infoProjectsStatus}
                             </span>
                         </div>
 
