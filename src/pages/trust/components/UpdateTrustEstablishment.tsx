@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import {
   GoBack,
   CustomRadio,
@@ -16,7 +16,7 @@ import { useGetAdmins } from "../../../utils/hooks/useManageAdmin";
 
 const UpdateTrustEstablishment = () => {
   const { name, id } = useParams();
-
+  const navigate = useNavigate();
   const { isLoading, data } = useGetAdmins();
 
   const admins = useMemo(() => {
@@ -37,7 +37,7 @@ const UpdateTrustEstablishment = () => {
 
   return (
     <div className="py-4 px-7">
-      <GoBack page="Trust Establishment" trustName={name || ""} />
+      <GoBack action={() => navigate(-1)} page="Trust Establishment" trustName={name || ""} />
 
       <div className="my-7 flex items-center justify-between">
         <h2 className="font-semibold text-2xl text-black capitalize">
