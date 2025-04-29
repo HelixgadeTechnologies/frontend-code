@@ -6,7 +6,7 @@ import { economicImpactStore as EconomicImpactStore } from "../store/economicImp
 import { trustStore as TrustStore } from "../../trust/store/trustStore";
 import EconomicImpactForm from "./form/EconomicImpactForm";
 import { observer } from "mobx-react-lite";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 const EconomicImpactStoreCtx = createContext(EconomicImpactStore);
 const TrustStoreCtx = createContext(TrustStore);
 const EconomicImpact = observer(() => {
@@ -14,7 +14,7 @@ const EconomicImpact = observer(() => {
   const trustStore = useContext(TrustStoreCtx);
   const [isTableView, setIsTableView] = useState(true);
   const { name } = useParams();
-
+  const navigate = useNavigate();
   const openModal = useCallback(() => {
     economicImpactStore.isAddModelOpen = true;
   }, [economicImpactStore]);
@@ -22,7 +22,7 @@ const EconomicImpact = observer(() => {
   return (
     // <div className="p-6 bg-gray-100 min-h-screen">
     <div className=" mx-auto p-8">
-      <GoBack trustName={name || ""} />
+      <GoBack action={() => navigate(-1)} trustName={name || ""} page="Economic Impact" />
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-800">
           Economic Impact of HCDT in Host Communities

@@ -1,20 +1,21 @@
 type BackProps = {
+  action: () => void;
   page?: string;
   trustName: string;
 };
 
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
-const GoBack = ({ trustName, page }: BackProps) => {
-  const navigate = useNavigate();
+const GoBack = ({ action, trustName, page }: BackProps) => {
+  // const navigate = useNavigate();
 
-  const moveback = () => {
-    navigate(-1);
-  };
+  // const moveback = () => {
+  //   navigate(-1);
+  // };
 
   return (
     <section className="flex items-center gap-4">
-      <button onClick={moveback} className=" flex items-center gap-x-2">
+      <button onClick={action} className=" flex items-center gap-x-2">
         <span className="w-fit bg-white flex items-center justify-center p-3 rounded-md border border-gray-200">
           <svg
             width="10"

@@ -5,13 +5,15 @@ import TrustBoardLayout from "../../../layouts/TrustBoardLayout";
 
 import EconomicImpact from "../../EconomicImpact/components/EconomicImpact";
 import HCDTProjects from "./HCDTProjects";
-import ConflictResloution from "./ConflictResloution";
+// import ConflictResloution from "./ConflictResloution";
 import TrustEstablishment from "./TrustEstablishment";
-import CommunitySatisfaction from "./CommunitySatisfaction";
+// import CommunitySatisfaction from "./CommunitySatisfaction";
 import UpdateTrustEstablishment from "./UpdateTrustEstablishment";
 import { observer } from "mobx-react-lite";
 
 import { trustStore as TrustStore } from "../store/trustStore";
+import ConflictResloution from "./ConflictResloution";
+import CommunitySatisfaction from "../../communitySatisfaction/components/CommunitySatisfaction";
 const TrustStoreCtx = createContext(TrustStore);
 const TrustDashboard = observer(() => {
   const trustStore = useContext(TrustStoreCtx);
