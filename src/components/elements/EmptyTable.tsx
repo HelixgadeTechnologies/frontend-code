@@ -1,7 +1,9 @@
+import { JSX } from "react";
+
 interface TableProps {
   headArr: string[];
   heading: string;
-  text?: string;
+  text?: string | JSX.Element;
   img?: string;
 }
 
@@ -22,7 +24,7 @@ const EmptyTable = ({ headArr, heading, text, img }: TableProps) => {
       </div>
       <div className="mt-8 h-[40vh] text-center flex items-center justify-center border border-grey-500 rounded-lg">
         <div>
-          {img && <img className="mx-auto" src={img} alt="No data available" />}
+          {img && <img className="mx-auto" src={img} alt="No data available" style={{width:"200px"}} />}
           <div className="mt-2">
             <h3 className="text-base lg:text-lg font-semibold text-grey-500">
               {heading}

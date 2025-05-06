@@ -41,9 +41,11 @@ class SatisfactionStore implements ISatisfactionStore {
     async createSatisfaction(payload: ISatisfactionPayload): Promise<boolean> {
         try {
             this.isSubmitting = true;
+            this.isDashboardLoading = false
+            this.dashboardData = null;
             await satisfactionService.createAndUpdateSatisfaction(payload);
-            await this.getSatisfactionByTrustId(payload.data.trustId || "");
             await this.getSatisfactionDashboardByTrustId(payload.data.trustId || "ALL");
+            await this.getSatisfactionByTrustId(payload.data.trustId || "");
             return true;
         } catch (error) {
             throw error;

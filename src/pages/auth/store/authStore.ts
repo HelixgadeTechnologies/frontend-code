@@ -36,6 +36,9 @@ class AuthStore implements IAuthStore {
             throw error
         }
     }
+    updateProfilePic(res: any): void {
+        this.user = { ...this.user, profilePic: res.profilePic }
+    }
 
 }
 

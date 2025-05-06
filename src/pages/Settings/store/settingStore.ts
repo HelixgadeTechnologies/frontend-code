@@ -1,11 +1,12 @@
 import { makeAutoObservable, ObservableMap, remove } from "mobx"
-import { CreateAdminPayload, createDraPayload, createNuprcPayload, CreateSettlorPayload, IAdmin, IChangePassword, IDra, INuprc, IRole, ISettingStore, ISettlor } from "../types/interface";
+import { CreateAdminPayload, createDraPayload, createNuprcPayload, CreateSettlorPayload, IAdmin, IChangePassword, IDra, INuprc, IProfilePicsPayload, IRole, ISettingStore, ISettlor } from "../types/interface";
 import { SettingService } from "../service/settingService";
 
 class SettingStore implements ISettingStore {
     isLoading = false;
     isSubmitting = false;
     isDeleting = false;
+    isUploading = false;
     selectedAdmin: IAdmin = {} as IAdmin;
     isPasswordModelClose: boolean = false;
     allAdmin = new ObservableMap<string, IAdmin>();
@@ -375,6 +376,17 @@ class SettingStore implements ISettingStore {
             throw error
         } finally {
             this.isSubmitting = false;
+        }
+    }
+    async uploadProfilePic(credentials: IProfilePicsPayload): Promise<string> {
+        try {
+            this.isUploading = true;
+            let data = await SettingService.changeProfilePicture(credentials)
+            return data.data 
+        } catch (error) {
+            throw error
+        } finally {
+            this.isUploading = false;
         }
     }
 

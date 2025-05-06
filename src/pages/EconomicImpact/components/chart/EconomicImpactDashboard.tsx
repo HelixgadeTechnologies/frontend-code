@@ -1,7 +1,7 @@
 import { Pie, Line } from "react-chartjs-2";
 // import { economicImpactStore as EconomicImpactStore } from "../../store/economicImpactStore";
 import { useEffect } from "react";
-import { observer } from "mobx-react-lite";
+import { Observer, observer } from "mobx-react-lite";
 
 import {
     Chart as ChartJS,
@@ -102,46 +102,55 @@ const EconomicImpactDashboard = observer(({ economicImpactStore }: { economicImp
         <div className="p-6 bg-gray-100">
             <div className=" mx-auto space-y-8">
                 {/* Pie Charts */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
-                        <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
-                            My business is generating more money since they implemented some
-                            of the HCDT projects in my community.
-                        </h3>
-                        <div className="h-48 sm:h-56">
-                            <Pie data={pieData1} options={{ maintainAspectRatio: false }} />
+                <Observer>
+                    {() => (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
+                                <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
+                                    My business is generating more money since they implemented some
+                                    of the HCDT projects in my community.
+                                </h3>
+                                <div className="h-48 sm:h-56">
+                                    <Pie data={pieData1} options={{ maintainAspectRatio: false }} />
+                                </div>
+                            </div>
+                            <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
+                                <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
+                                    My income has increased since the implementation of some of the
+                                    HCDT projects in my community.
+                                </h3>
+                                <div className="h-48 sm:h-56">
+                                    <Pie data={pieData2} options={{ maintainAspectRatio: false }} />
+                                </div>
+                            </div>
+                            <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
+                                <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
+                                    The implemented HCDT projects have bettered my livelihood and
+                                    quality of lives.
+                                </h3>
+                                <div className="h-48 sm:h-56">
+                                    <Pie data={pieData3} options={{ maintainAspectRatio: false }} />
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
-                        <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
-                            My income has increased since the implementation of some of the
-                            HCDT projects in my community.
-                        </h3>
-                        <div className="h-48 sm:h-56">
-                            <Pie data={pieData2} options={{ maintainAspectRatio: false }} />
-                        </div>
-                    </div>
-                    <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
-                        <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
-                            The implemented HCDT projects have bettered my livelihood and
-                            quality of lives.
-                        </h3>
-                        <div className="h-48 sm:h-56">
-                            <Pie data={pieData3} options={{ maintainAspectRatio: false }} />
-                        </div>
-                    </div>
-                </div>
+                    )}
+                </Observer>
 
                 {/* Line Chart */}
-                <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
-                    <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
-                        As a result of the HCDT projects, my household/I now have access to
-                        these basic amenities than before.
-                    </h3>
-                    <div className="h-64 sm:h-80">
-                        <Line data={lineData} options={{ maintainAspectRatio: false }} />
-                    </div>
-                </div>
+
+                <Observer>
+                    {() => (
+                        <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
+                            <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
+                                As a result of the HCDT projects, my household/I now have access to
+                                these basic amenities than before.
+                            </h3>
+                            <div className="h-64 sm:h-80">
+                                <Line data={lineData} options={{ maintainAspectRatio: false }} />
+                            </div>
+                        </div>
+                    )}
+                </Observer>
             </div>
         </div>
     );

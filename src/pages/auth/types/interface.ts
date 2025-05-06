@@ -8,6 +8,7 @@ export interface IAuthStore {
 
     login(credentials: ILoginCredentials): Promise<HCDTRequestResponse>,
     saveLoginUser(user: IUser): void;
+    updateProfilePic(url: string): void;
 }
 
 export interface IUser {

@@ -1,18 +1,19 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext, useRef } from "react";
 import { useForm } from "react-hook-form";
 
 import { checkIcon, photoIcon } from "../../../assets/icons";
 import { Button, FormInput, Modal } from "../../../components/elements";
 import { PageHeader, RoutedTabs } from "../../../components/layouts";
-import { observer } from "mobx-react-lite";
+import { Observer, observer } from "mobx-react-lite";
 import { settingStore as SettingStore } from "../store/settingStore"
 import { authStore as AuthStore } from "../../auth/store/authStore"
 import { ChangePassword } from "./form/ChangePassword";
 import { toast } from "react-toastify";
-import { CreateAdminPayload, IAdminPayloadData } from "../types/interface";
+import { CreateAdminPayload, IAdminPayloadData, IProfilePicsPayload } from "../types/interface";
 import { IUser } from "../../auth/types/interface";
 import { toJS } from "mobx";
 import { UpdateSuccess } from "./modal/UpdateSuccess";
+import { useCookies } from "react-cookie";
 
 const SettingsStoreCtx = createContext(SettingStore);
 const AuthStoreCtx = createContext(AuthStore);
@@ -20,6 +21,9 @@ const AuthStoreCtx = createContext(AuthStore);
 const ProfileSettings = observer(() => {
   const authStore = useContext(AuthStoreCtx);
   const settingStore = useContext(SettingsStoreCtx);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [cookie,setCookie] = useCookies(["hcdt_admin"]);
+  const admin = cookie?.hcdt_admin;
 
   const {
     register,
@@ -70,6 +74,84 @@ const ProfileSettings = observer(() => {
     }
   };
 
+  // const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   async function loadRequests() {
+  //     const file = event.target.files?.[0];
+
+  //     if (file) {
+  //       // Handle the selected file (e.g., upload it to the server)
+  //       console.log("Selected file:", file);
+  //       const payload: IProfilePicsPayload = {
+  //         base64String: "",
+  //         mimeType: ""
+  //       }
+  //       await settingStore.uploadProfilePic(payload)
+  //     }
+
+  //   }
+  //   loadRequests();
+  // };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    async function loadRequests() {
+      try {
+        const file = event.target.files?.[0];
+
+        if (file) {
+          // Validate file type
+          const validImageTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+          if (!validImageTypes.includes(file.type)) {
+            toast.error("Only image files (JPEG, PNG, GIF, WEBP) are allowed.");
+            return;
+          }
+
+          // Get MIME type
+          const mimeType = file.type;
+
+          // Convert file to base64 string
+          const reader = new FileReader();
+          reader.onload = async () => {
+            const base64String = reader.result?.toString().split(",")[1]; // Extract base64 string
+
+            if (base64String) {
+              const payload: IProfilePicsPayload = {
+                base64String,
+                mimeType,
+              };
+
+
+              // Upload the profile picture
+              const res:any = await settingStore.uploadProfilePic(payload);
+              authStore.updateProfilePic(res)
+              let myAdmin:IUser = admin
+              let update = {...myAdmin,profilePic:res.profilePic} as IUser
+              setCookie("hcdt_admin",JSON.stringify(update),{ path: "/" });
+              toast.success("Profile picture uploaded successfully.");
+            }
+          };
+
+          reader.readAsDataURL(file); // Read the file as a data URL
+
+        }
+      } catch (error: any) {
+        const message = error?.response?.body?.message;
+        const message2 = error?.response?.body?.error;
+        if (message?.includes("Please try again. Database connection failed.")) {
+          toast.info(message);
+        } else {
+          toast.error(message2);
+        }
+      }
+    }
+
+    loadRequests();
+  };
+  const handleButtonClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
   return (
     <div className="px-10 py-11">
       <PageHeader
@@ -92,23 +174,36 @@ const ProfileSettings = observer(() => {
                 This image will be displayed on your profile
               </p>
 
+              {/* Change Photo Button */}
               <Button
                 border
                 padding="py-2 px-3"
-                buttonText="Change Photo"
+                buttonText={settingStore.isUploading?"Uploading...":"Change Photo"}
                 width="w-fit"
                 iconLeft={<img src={photoIcon} alt="change photo" />}
+                onClick={handleButtonClick}
+              />
+              {/* Hidden File Input */}
+              <input
+                type="file"
+                ref={fileInputRef}
+                className="hidden"
+                accept="image/*"
+                onChange={handleFileChange}
               />
             </div>
-
-            <div className="w-fit relative">
-              <div className="w-28 h-28 rounded-full overflow-hidden bg-off-white-2">
-                <img src={authStore.user.profilePic != null ? authStore.user.profilePic : photoIcon} alt="verified" />
-              </div>
-              <div className="absolute bottom-0 right-0 bg-primary-500 h-9 w-9 rounded-full flex items-center justify-center ">
-                <img src={checkIcon} alt="verified" />
-              </div>
-            </div>
+            <Observer>
+              {() => (
+                <div className="w-fit relative">
+                  <div className="w-28 h-28 rounded-full overflow-hidden bg-off-white-2">
+                    <img src={authStore.user.profilePic != null ? authStore.user.profilePic : photoIcon} alt="verified" />
+                  </div>
+                  <div className="absolute bottom-0 right-0 bg-primary-500 h-9 w-9 rounded-full flex items-center justify-center ">
+                    <img src={checkIcon} alt="verified" />
+                  </div>
+                </div>
+              )}
+            </Observer>
           </article>
 
           <article className=" flex items-start gap-x-40  pt-10 ">

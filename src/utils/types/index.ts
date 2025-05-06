@@ -61,6 +61,12 @@ export interface ActiveMenuProps {
   handleEdit: () => void;
   handleDelete: () => void;
 }
+export interface ActiveViewMenuProps {
+  conflictId: string;
+  activeMenu: string | null;
+  menuRef: React.RefObject<HTMLDivElement | null>;
+  handleView: () => void;
+}
 
 export interface DeleteUserType {
   userId: string;

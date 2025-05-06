@@ -158,7 +158,7 @@ const CommunitySatisfactionDashboard = observer(
                             <div className="h-48 sm:h-56">
                                 <Bar
                                     data={generateBarData(
-                                        satisfactionStore.dashboardData?.conflictMinimization || [10, 30, 20, 40, 20]
+                                        satisfactionStore.dashboardData?.conflictMinimization || [0, 0, 0, 0, 0]
                                     )}
                                     options={barOptions}
                                 />

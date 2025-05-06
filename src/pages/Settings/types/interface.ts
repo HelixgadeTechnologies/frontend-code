@@ -14,13 +14,15 @@ export interface ISettingStore {
     isUpdated: boolean,
     isDraUpdated: boolean,
     isApproving: boolean,
+    isUploading: boolean,
     getAllAdmin(): Promise<boolean>,
     createAdmin(payload: CreateAdminPayload): Promise<boolean>,
     editAdmin(payload: CreateAdminPayload): Promise<boolean>,
     removeAdmin(userId: string): Promise<boolean>,
     declinePendingAdmin(userId: string): Promise<boolean>,
-    approvePendingAdmin(payload: CreateAdminPayload): Promise<boolean>
-    changePassword(credentials: IChangePassword): Promise<boolean>
+    approvePendingAdmin(payload: CreateAdminPayload): Promise<boolean>,
+    changePassword(credentials: IChangePassword): Promise<boolean>,
+    uploadProfilePic(credentials: IProfilePicsPayload): Promise<string>,
     getAllDra(): Promise<boolean>,
     createDra(payload: createDraPayload): Promise<boolean>,
     editDra(payload: createDraPayload): Promise<boolean>,
@@ -36,6 +38,11 @@ export interface ISettingStore {
     editSettlor(payload: CreateSettlorPayload): Promise<boolean>,
     removeSettlor(settlorId: string): Promise<boolean>,
     getRole(): Promise<void>,
+}
+
+export interface IProfilePicsPayload{
+    base64String:string;
+    mimeType:string;
 }
 interface BaseItem {
     id: string;

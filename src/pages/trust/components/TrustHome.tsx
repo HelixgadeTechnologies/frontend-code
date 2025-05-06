@@ -12,7 +12,7 @@ import UpdateTrustEstablishment from "./UpdateTrustEstablishment";
 import { observer } from "mobx-react-lite";
 
 import { trustStore as TrustStore } from "../store/trustStore";
-import ConflictResloution from "./ConflictResloution";
+import ConflictResloution from "../../conflict/components/ConflictResolution";
 import CommunitySatisfaction from "../../communitySatisfaction/components/CommunitySatisfaction";
 const TrustStoreCtx = createContext(TrustStore);
 const TrustDashboard = observer(() => {

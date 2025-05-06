@@ -40,7 +40,10 @@ class EconomicImpactStore implements IEconomicImpactStore {
     async createEconomicImpact(payload: IEconomicImpactPayload): Promise<boolean> {
         try {
             this.isSubmitting = true;
+            this.isDashboardLoading = false;
+            this.dashboardData= null;
             await economicImpactService.createAndUpdateEconomicImpact(payload);
+            await this.getEconomicImpactDashboardByTrustId(payload.data.trustId || "ALL");
             await this.getEconomicImpactByTrustId(payload.data.trustId || "");
             return true;
         } catch (error) {
@@ -134,6 +137,7 @@ class EconomicImpactStore implements IEconomicImpactStore {
             this.isDashboardLoading = true;
             let data = await economicImpactService.getEconomicImpactDashboardByTrustId(trustId);
             if (data.success) {
+                this.dashboardData = {} as IEconomicImpactDashboardData;
                 const processedData = this.extractDashboardData(data.data);
                 this.dashboardData = processedData;
             }
