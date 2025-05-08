@@ -85,7 +85,7 @@ export interface ITrustList {
 }
 
 export interface ITrustPayloadData {
-    trustId: string,
+    trustId?: string,
     trustName: string,
     settlorId: string,
     nameOfOmls: string,
