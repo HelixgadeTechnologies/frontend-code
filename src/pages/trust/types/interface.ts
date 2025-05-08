@@ -29,7 +29,16 @@ export interface ITrust {
     state: string;
     localGovernmentArea: string;
     trustCommunities: string;
-    botDetails: Array<IBotDetails>;
+    botDetailsOneFirstName: string;
+    botDetailsOneLastName: string;
+    botDetailsOneEmail: string;
+    botDetailsOnePhoneNumber: string;
+    botDetailsTwoFirstName: string;
+    botDetailsTwoLastName: string;
+    botDetailsTwoEmail: string;
+    botDetailsTwoPhoneNumber: string;
+
+
     totalMaleBotMembers: number;
     totalFemaleBotMembers: number;
     totalPwdBotMembers: number;
@@ -63,41 +72,53 @@ export interface ITrustList {
     totalMaleManagementCommitteeMembers: number;
     totalFemaleManagementCommitteeMembers: number;
     totalPwdManagementCommitteeMembers: number;
+    botDetailsOneFirstName: string;
+    botDetailsOneLastName: string;
+    botDetailsOneEmail: string;
+    botDetailsOnePhoneNumber: string;
+    botDetailsTwoFirstName: string;
+    botDetailsTwoLastName: string;
+    botDetailsTwoEmail: string;
+    botDetailsTwoPhoneNumber: string;
+
     createAt: string;
 }
 
-export interface IBotDetails {
-    botDetailsId: string;
-    firstName?: string;
-    lastName?: string;
-    email?: string;
-    phoneNumber?: string;
-    trustId?: string;
+export interface ITrustPayloadData {
+    trustId: string,
+    trustName: string,
+    settlorId: string,
+    nameOfOmls: string,
+    userId: string,
+    country: string,
+    state: string,
+    localGovernmentArea: string,
+    trustCommunities: string,
+
+    botDetailsOneFirstName: string;
+    botDetailsOneLastName: string;
+    botDetailsOneEmail: string;
+    botDetailsOnePhoneNumber: string;
+    botDetailsTwoFirstName: string;
+    botDetailsTwoLastName: string;
+    botDetailsTwoEmail: string;
+    botDetailsTwoPhoneNumber: string;
+
+    totalMaleBotMembers: number,
+    totalFemaleBotMembers: number,
+    totalPwdBotMembers: number,
+    totalMaleAdvisoryCommitteeMembers: number,
+    totalFemaleAdvisoryCommitteeMembers: number,
+    totalPwdAdvisoryCommitteeMembers: number,
+    totalMaleManagementCommitteeMembers: number,
+    totalFemaleManagementCommitteeMembers: number,
+    totalPwdManagementCommitteeMembers: number
 }
+
 
 export interface ITrustPayload {
     isCreate: boolean,
-    data: {
-        trustId: string,
-        trustName: string,
-        settlorId: string,
-        nameOfOmls: string,
-        userId: string,
-        country: string,
-        state: string,
-        localGovernmentArea: string,
-        trustCommunities: string,
-        botDetails: Array<IBotDetails>,
-        totalMaleBotMembers: number,
-        totalFemaleBotMembers: number,
-        totalPwdBotMembers: number,
-        totalMaleAdvisoryCommitteeMembers: number,
-        totalFemaleAdvisoryCommitteeMembers: number,
-        totalPwdAdvisoryCommitteeMembers: number,
-        totalMaleManagementCommitteeMembers: number,
-        totalFemaleManagementCommitteeMembers: number,
-        totalPwdManagementCommitteeMembers: number
-    }
+    data: ITrustPayloadData
 }
 
 export interface ITrustEstablishmentPayload {
