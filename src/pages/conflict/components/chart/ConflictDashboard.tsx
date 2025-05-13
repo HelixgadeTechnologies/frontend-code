@@ -95,7 +95,7 @@ const ConflictDashboard = observer(() => {
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-xl font-bold text-gray-800">Conflict Resolution Dashboard</h1>
                 <div className="flex gap-4">
-                    {/* <button className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md">Resolve a Conflict</button> */}
+                    <button className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md" onClick={toTable}>Conflict Table</button>
                     <button className="px-4 py-2 bg-blue-600 text-white rounded-md" onClick={toForm}>Report a Conflict</button>
                 </div>
             </div>
