@@ -8,7 +8,7 @@ import { trustStore as TrustStore } from "../../../trust/store/trustStore"
 import { IConflictView } from "../../types/interface";
 import Tag from "../../../../components/elements/Tag";
 import ConflictTableHeader from "./ConflictTableHeader";
-import ConflictView from "../modal/ConflictView";
+// import ConflictView from "../modal/ConflictView";
 import EditConflict from "../form/EditConflict";
 import IMG from "../../../../assets/svgs/dashboardConflictNotFound.svg"
 import ConflictForm from "../form/ConflictForm";
@@ -41,6 +41,7 @@ export const ConflictTable = observer(() => {
     const handleView = useCallback(async (conflict: IConflictView) => {
         // console.log(`Approved user : ${conflict}`);
         conflictStore.selectedConflict = conflict
+        conflictStore.conflictBaseView = 3
     }, [conflictStore]);
 
     const handleEdit = useCallback(async (conflict: IConflictView) => {
@@ -140,7 +141,7 @@ export const ConflictTable = observer(() => {
                     )}
                 </>
                 {/* Modals */}
-                {conflictStore.selectedConflict && !conflictStore.isEditDialogVisible && (
+                {/* {conflictStore.selectedConflict && !conflictStore.isEditDialogVisible && (
                     <Modal
                         body={
                             <ConflictView
@@ -150,7 +151,7 @@ export const ConflictTable = observer(() => {
                         }
                         close={() => conflictStore.selectedConflict = null}
                     />
-                )}
+                )} */}
                 {conflictStore.isEditDialogVisible && conflictStore.isEditDialogVisible && (
                     <Modal
                         body={

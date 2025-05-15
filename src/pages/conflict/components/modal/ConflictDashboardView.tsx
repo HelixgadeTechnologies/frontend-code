@@ -1,93 +1,107 @@
 import { observer } from "mobx-react-lite";
 import { IConflictView } from "../../types/interface";
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
-
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import { conflictStore as ConflictStore } from "../../store/conflictStore"
+import { createContext, useCallback, useContext } from "react";
+import IMG from "../../../../assets/images/download.jpeg"
+import { useParams } from "react-router-dom";
+import { GoBack } from "../../../../components/elements";
 // Enable the plugin
 dayjs.extend(relativeTime);
+const ConflictStoreCTX = createContext(ConflictStore)
+const ConflictDashboardView = observer(() => {
+    const { name } = useParams();
+    const conflictStore = useContext(ConflictStoreCTX)
+    const conflictData: IConflictView | null = conflictStore.selectedConflict;
 
-const ConflictDashboardView = observer(({ close, conflict }: { close: () => void, conflict: IConflictView }) => {
-    const conflictData: IConflictView | null = conflict;
+    const closeTable = useCallback(() => {
+        conflictStore.conflictBaseView = 1;
+    }, [conflictStore]);
 
     return (
-        <div className="p-4 bg-gray-100">
+        <div className="p-6 bg-gray-100 min-h-screen">
             {/* Header Section */}
-            <div className="relative bg-white p-4 rounded-lg shadow-md mb-4">
-                <button
-                    onClick={close}
-                    className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
-                    aria-label="Close"
-                >
-                    ✕
-                </button>
-                <div className="flex justify-between items-center">
-                    <div>
-                        <h1 className="text-base font-bold text-gray-800">
-                            {conflictData?.userLastName + " " + conflictData?.userFirstName}
-                        </h1>
-                        {/* <p className="text-xs text-gray-600">
-                            Project ID: {"CF-" + conflictData?.conflictId}
-                        </p> */}
-                    </div>
-                    <span className="px-3 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">
-                        Active
-                    </span>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
-                    <p className="text-xs text-gray-600">
+            <GoBack action={closeTable} trustName={name || ""} page="conflict" />
+            <h1 className="text-xl font-bold text-gray-800">
+                HCDT Development Projects
+            </h1>
+            <br />
+            <div className="bg-white p-6 rounded-lg shadow-md mb-6 mt-4">
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
+                    <p className="text-sm text-gray-600">
                         <strong>Email:</strong> {conflictData?.userEmail}
                     </p>
-                    <p className="text-xs text-gray-600">
-                        <strong>Project Age:</strong>{" "}
-                        {dayjs(conflictData?.projectCreateAt).fromNow()}
+                    <p className="text-sm text-gray-600">
+                        <strong>Project Age:</strong> {dayjs(conflictData?.projectCreateAt).fromNow()}
                     </p>
-                    <p className="text-xs text-gray-600">
-                        <strong>Report Date:</strong>{" "}
-                        {dayjs(conflictData?.createAt).format("MMM DD, YYYY hh:mmA")}
+                    <p className="text-sm text-gray-600">
+                        <strong>Report Date:</strong> {dayjs(conflictData?.createAt).format("DD-MM-YYYY")}
                     </p>
-                    <p className="text-xs text-gray-600">
+                    <p className="text-sm text-gray-600">
                         <strong>Phone Number:</strong> {conflictData?.userPhoneNumber}
                     </p>
+                    {/* <p className="text-sm text-gray-600">
+                        <strong>Community:</strong> community
+                    </p>
+                    <p className="text-sm text-gray-600">
+                        <strong>No. of Reports made:</strong> 557
+                    </p> */}
                 </div>
+                {/* <div className="mt-4">
+                    <button className="text-blue-600 text-sm font-medium hover:underline">View Project Report</button>
+                </div> */}
             </div>
 
             {/* Conflict Details Section */}
-            <div className="bg-white p-4 rounded-lg shadow-md">
-                <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-base font-bold text-gray-800">Conflict Details</h2>
-                    <span className="px-3 py-1 bg-yellow-100 text-yellow-700 text-xs font-medium rounded-full">
+            <div className="bg-white p-6 rounded-lg shadow-md">
+                <div className="flex justify-between items-center mb-6">
+                    <h2 className="text-lg font-bold text-gray-800">Conflict Details</h2>
+                    <span className="px-4 py-2 bg-yellow-100 text-yellow-700 text-sm font-medium rounded-full">
                         {conflictData?.conflictStatusName}
                     </span>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     {/* Left Column */}
-                    <div className="space-y-2">
-                        <p className="text-xs text-gray-600">
+                    <div className="space-y-4">
+                        <p className="text-sm text-gray-600">
                             <strong>Cause of conflict:</strong> {conflictData?.causeOfConflictName}
                         </p>
-                        <p className="text-xs text-gray-600">
+                        <p className="text-sm text-gray-600">
                             <strong>Parties Involved:</strong> {conflictData?.partiesInvolveName}
                         </p>
-                        <p className="text-xs text-gray-600">
+                        <p className="text-sm text-gray-600">
                             <strong>Issues Addressed by:</strong> {conflictData?.issuesAddressByName}
                         </p>
-                        <p className="text-xs text-gray-600">
-                            <strong>State of the court litigation:</strong>{" "}
-                            {conflictData?.courtLitigationStatusName}
+                        <p className="text-sm text-gray-600">
+                            <strong>State of the court litigation:</strong> {conflictData?.courtLitigationStatusName}
                         </p>
-                        <p className="text-xs text-gray-600">
+                        <p className="text-sm text-gray-600">
                             <strong>Status of the Conflict:</strong> {conflictData?.conflictStatusName}
                         </p>
                     </div>
 
                     {/* Right Column */}
-                    <div className="space-y-2">
-                        <p className="text-xs text-gray-600">
+                    <div className="space-y-4">
+                        <div className="w-full h-40 bg-gray-200 rounded-lg overflow-hidden">
+                            <img
+                                src={IMG || "/default-project.png"}
+                                alt="Project"
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
+                        <p className="text-sm text-gray-600">
                             <strong>Narrate Issues:</strong> {conflictData?.narrateIssues}
                         </p>
-                        <p className="text-xs text-gray-600">
-                            <strong>Project Name:</strong> {conflictData?.projectTitle}
-                        </p>
+                        <div className="grid grid-cols-2 gap-4">
+                            <p className="text-sm text-gray-600">
+                                {/* <strong>Trust Name:</strong> {conflictData?.trustName} */}
+                            </p>
+                            <p className="text-sm text-gray-600">
+                                {/* <strong>Project Name:</strong> {conflictData?.projectTitle} */}
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -7,6 +7,8 @@ import { trustStore as TrustStore } from "../../trust/store/trustStore"
 import { ConflictTable } from "./table/ConflictTable";
 import ConflictForm from "./form/ConflictForm";
 import { DashboardSkeleton, Modal } from "../../../components/elements";
+import ConflictView from "./modal/ConflictView";
+import ConflictDashboardView from "./modal/ConflictDashboardView";
 
 const conflictStoreCtx = createContext(ConflictStore);
 const projectStoreCtx = createContext(ProjectStore);
@@ -45,11 +47,19 @@ const ConflictResolution = observer(() => {
       {conflictStore.conflictBaseView == 2 && (
         <ConflictTable />
       )}
-    
+
+      {conflictStore.conflictBaseView == 3 && (
+        <ConflictView />
+      )}
+
+      {conflictStore.conflictBaseView == 4 && (
+        <ConflictDashboardView />
+      )}
+
       {/* Modals */}
       {conflictStore.isReportDialogVisible && (
         <Modal
-        body={
+          body={
             <ConflictForm
               conflictStore={conflictStore}
               projectStore={projectStore}

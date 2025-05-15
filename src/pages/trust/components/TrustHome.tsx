@@ -4,7 +4,7 @@ import { Navigate, useLocation, Route, Routes, } from "react-router-dom";
 import TrustBoardLayout from "../../../layouts/TrustBoardLayout";
 
 import EconomicImpact from "../../EconomicImpact/components/EconomicImpact";
-import HCDTProjects from "./HCDTProjects";
+import HCDTProjects from "../../project/components/HCDTProjects";
 // import ConflictResloution from "./ConflictResloution";
 import TrustEstablishment from "./TrustEstablishment";
 // import CommunitySatisfaction from "./CommunitySatisfaction";

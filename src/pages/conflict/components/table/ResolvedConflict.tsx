@@ -1,11 +1,11 @@
 import { RowSelectionState } from "@tanstack/react-table";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { EmptyTable, LoadingTable, Modal, Table } from "../../../../components/elements";
+import { EmptyTable, LoadingTable, Table } from "../../../../components/elements";
 import { observer } from "mobx-react-lite";
 import { IConflictStore, IConflictView } from "../../types/interface";
 import ActiveViewMenu from "../../../../components/elements/ActivationViewMenu";
 
-import ConflictDashboardView from "../modal/ConflictDashboardView";
+// import ConflictDashboardView from "../modal/ConflictDashboardView";
 import dayjs from 'dayjs';
 import IMG from "../../../../assets/svgs/dashboardConflictNotFound.svg"
 
@@ -25,7 +25,8 @@ export const ResolvedConflict = observer(({ conflictStore }: { conflictStore: IC
 
     // Handle edit account
     const handleView = useCallback((conflict: IConflictView | null = null) => {
-        conflictStore.resolvedConflict = conflict
+        conflictStore.selectedConflict = conflict
+        conflictStore.conflictBaseView = 4
     }, []);
 
 
@@ -123,7 +124,7 @@ export const ResolvedConflict = observer(({ conflictStore }: { conflictStore: IC
             </>
 
             {/* Modals */}
-            {conflictStore.resolvedConflict && (
+            {/* {conflictStore.resolvedConflict && (
                 <Modal
                     body={
                         <ConflictDashboardView
@@ -132,7 +133,7 @@ export const ResolvedConflict = observer(({ conflictStore }: { conflictStore: IC
                         />
                     }
                 />
-            )}
+            )} */}
         </div>
     );
 });

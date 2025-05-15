@@ -5,12 +5,16 @@ export interface IProjectStore {
     isSubmitting: boolean;
     isDashboardLoading: boolean;
     selectedProject: IProjectView | null;
+    selectedProjectScreen: number | null;
     projects: ObservableMap<string, IProjectView>;
     projectCategories: ObservableMap<number, IProjectCategory>;
     qualityRating: ObservableMap<number, IQualityRating>;
     statusReport: ObservableMap<number, IStatusReport>;
     typeOfWork: ObservableMap<number, ITypeOfWork>;
-
+    formTab: ObservableMap<number, TabType>;
+    activeTap: TabType | null;
+    getFormSteps(): void;
+    getUpdateFormSteps(n: number, id: number): void;
     getProjects(trustId: string): Promise<boolean>;
     createProject(payload: IProjectPayload): Promise<boolean>;
     getCategory(): Promise<boolean>;
@@ -96,4 +100,13 @@ export interface IProjectPayloadData {
 export interface IProjectPayload {
     isCreate: boolean,
     data: IProjectPayloadData
+}
+
+export interface TabType {
+    id: number;
+    name: string;
+    desc: string;
+    isCompleted: boolean;
+    isVisible: boolean;
+    isActive: boolean;
 }
