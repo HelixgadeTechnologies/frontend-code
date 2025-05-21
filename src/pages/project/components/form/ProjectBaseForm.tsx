@@ -2,27 +2,67 @@ import { createContext, useCallback, useContext, useEffect } from "react";
 import { projectStore as ProjectStore } from "../../store/projectStore";
 import { Observer, observer } from "mobx-react-lite";
 import ProjectFirstForm from "./ProjectFirstForm";
-import { TabType } from "../../types/interface";
+import { IProjectPayload, TabType } from "../../types/interface";
 import { GoBack } from "../../../../components/elements";
 import { useParams } from "react-router-dom";
+import ProjectSecondForm from "./ProjectSecondForm";
+import ProjectThirdForm from "./ProjectThirdForm";
+import ProjectFormPreview from "./ProjectFormPreview";
+import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 const ProjectStoreCTX = createContext(ProjectStore)
 const ProjectBaseForm = observer(() => {
   const projectStore = useContext(ProjectStoreCTX)
+  const method = useForm({
+    defaultValues: projectStore.projectFormData,
+    shouldUnregister: false,
+  })
   const { name } = useParams();
   useEffect(() => {
     async function loadRequests() {
       projectStore.getFormSteps()
+      await projectStore.getCategory()
+      await projectStore.getTypeOfWork()
+      await projectStore.getStatusReport()
+      await projectStore.getQualityRatting()
     }
     loadRequests();
   }, []);
 
   const handleTabChange = useCallback((tab: TabType) => {
-    projectStore.activeTap = tab;
+    projectStore.setActiveTab(tab)
   }, [projectStore]);
 
   const closeTable = useCallback(() => {
     projectStore.selectedProjectScreen = 1;
+  }, [projectStore]);
+
+  const saveProjectData = useCallback(() => {
+    async function loadRequests() {
+      try {
+        const payload: IProjectPayload = {
+          isCreate: true,
+          data: projectStore.projectFormData
+        }
+        const response = await projectStore.createProject(payload)
+        if (response) {
+          toast.success("Project Successfully Submitted");
+          projectStore.projectFormData = {}
+          method.reset()
+          projectStore.getFormSteps()
+        }
+      } catch (error: any) {
+        const message = error?.response?.body?.message;
+        const message2 = error?.response?.body?.error;
+        if (message?.includes("Please try again. Database connection failed.")) {
+          toast.info(message);
+        } else {
+          toast.error(message2);
+        }
+      }
+    }
+    loadRequests()
   }, [projectStore]);
 
   return (
@@ -38,7 +78,16 @@ const ProjectBaseForm = observer(() => {
           {() => (
             <section className="lg:col-span-8 ">
               {projectStore.activeTap?.id == 1 && (
-                <ProjectFirstForm />
+                <ProjectFirstForm method={method} />
+              )}
+              {projectStore.activeTap?.id == 2 && (
+                <ProjectSecondForm method={method} />
+              )}
+              {projectStore.activeTap?.id == 3 && (
+                <ProjectThirdForm method={method} />
+              )}
+              {projectStore.activeTap?.id == 4 && (
+                <ProjectFormPreview onSave={saveProjectData} projectStore={projectStore} />
               )}
             </section>
           )}

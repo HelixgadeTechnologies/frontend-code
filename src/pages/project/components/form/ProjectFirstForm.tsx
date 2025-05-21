@@ -1,7 +1,7 @@
-import { createContext, useCallback, useContext } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { createContext, useContext } from "react";
+import { Controller } from "react-hook-form";
 import { CustomSelect, FormInput, Button } from "../../../../components/elements";
-import { IProjectCategory } from "../../types/interface";
+import { IProjectCategory, IProjectPayloadData } from "../../types/interface";
 import { projectStore as ProjectStore } from "../../store/projectStore";
 import { observer } from "mobx-react-lite";
 import DatePicker from "react-datepicker";
@@ -9,17 +9,35 @@ import "react-datepicker/dist/react-datepicker.css";
 
 
 const ProjectStoreCTX = createContext(ProjectStore);
-const ProjectFirstForm = observer(() => {
+const ProjectFirstForm = observer(({ method }: { method: any }) => {
     const projectStore = useContext(ProjectStoreCTX);
-    const { control, register, handleSubmit, formState: { errors } } = useForm();
+    const { control, register, handleSubmit, formState: { errors } } = method;
 
     const onSubmit = (data: any) => {
-        console.log("Form Data:", data);
+        projectStore.isSaving = true
+        // console.log("Form Data:", data, );
+        const date = new Date(data.awardDate);
+        const isoUTC = date.toISOString();
+
+        const projectFormData: IProjectPayloadData = {
+            projectTitle: data.projectTitle,
+            projectCategoryId: data.projectCategoryId.value,
+            totalBudget: Number(data.totalBudget),
+            community: data.community,
+            awardDate: isoUTC,
+            nameOfContractor: data.nameOfContractor,
+            annualApprovedBudget: data.annualApprovedBudget,
+        }
+
+
+        //save to store
+        projectStore.projectFormData = projectFormData
+        projectStore.isSaving = false
+        //move to the next form
+        projectStore.setCompletedTab();
     };
 
-    const nextFom = useCallback(() => {
-        projectStore.getUpdateFormSteps(1, 1)
-    }, [projectStore]);
+
 
     return (
         <div>
@@ -46,7 +64,7 @@ const ProjectFirstForm = observer(() => {
                     <div>
                         <Controller
                             control={control}
-                            name="projectCategory"
+                            name="projectCategoryId"
                             rules={{ required: true }}
                             render={({ field }) => (
                                 <CustomSelect
@@ -58,13 +76,13 @@ const ProjectFirstForm = observer(() => {
                                             value: v?.projectCategoryId
                                         }
                                     })}
-                                    isLoading={projectStore.isLoading}
+                                    // isLoading={projectStore.isLoading}
                                     label="Project Category"
                                     placeholder="projectCategory"
                                 />
                             )}
                         />
-                        {errors.projectCategory && (
+                        {errors.projectCategoryId && (
                             <p className="mt-2 mb-4 text-xs  text-red-400 ">Select a Project Category</p>
                         )}
                     </div>
@@ -125,31 +143,31 @@ const ProjectFirstForm = observer(() => {
                     {/* Name of Contractor */}
                     <FormInput
                         label="Name of Contractor"
-                        name="contractorName"
+                        name="nameOfContractor"
                         type="text"
                         placeholder="Enter contractor name"
                         register={register}
                         registerOptions={{ required: "Contractor Name is required." }}
-                        error={errors.contractorName}
+                        error={errors.nameOfContractor}
                     />
 
                     {/* Annual Approved Budget */}
                     <FormInput
                         label="Annual Approved Budget"
-                        name="approvedBudget"
+                        name="annualApprovedBudget"
                         type="text"
                         placeholder="Enter approved budget"
                         register={register}
                         registerOptions={{ required: "Approved Budget is required." }}
-                        error={errors.approvedBudget}
+                        error={errors.annualApprovedBudget}
                     />
 
                     {/* Submit Button */}
                     <Button
                         type="submit"
-                        buttonText="Next"
+                        buttonText={projectStore.isSaving ? "Saving data..." : "Next"}
                         className="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-                        onClick={nextFom}
+
                     />
                 </form>
             </div>

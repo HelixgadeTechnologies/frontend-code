@@ -1,6 +1,6 @@
 import { client } from "../../../infrastructure/agent"
 import { HCDTRequestResponse } from "../../../infrastructure/HCDTRequestResponse"
-import { IProjectPayload } from "../types/interface"
+import { IProjectPayload, IUploadPayload } from "../types/interface"
 export const projectService = {
     // Create And Update Trust
     getProjects: (): Promise<HCDTRequestResponse> => client.get('/project/projects'),
@@ -18,4 +18,8 @@ export const projectService = {
     getProjectStatusReport: (): Promise<HCDTRequestResponse> => client.get('/project/status-reports'),
 
     getProjectTypeOfWork: (): Promise<HCDTRequestResponse> => client.get('/project/type-of-work'),
+
+    upload: (payload:IUploadPayload): Promise<HCDTRequestResponse> => client.post('/upload/file-upload',{...payload}),
+
+    getDashboard: (trustId:string): Promise<HCDTRequestResponse> => client.get(`/project/dashboard/${trustId}`)
 }

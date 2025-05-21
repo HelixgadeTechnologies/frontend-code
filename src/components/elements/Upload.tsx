@@ -24,7 +24,7 @@ const FileUpload = <T extends FieldValues>({
   rules,
   label,
   helperText,
-  accept,
+  // accept,
   maxSize,
   className = "",
   buttonText = "Upload",
@@ -109,11 +109,10 @@ const FileUpload = <T extends FieldValues>({
               onClick={handleButtonClick}
               className={`
               px-4 py-2 text-sm font-medium rounded-md
-              ${
-                disabled
+              ${disabled
                   ? "bg-gray-200 text-gray-500 cursor-not-allowed"
                   : "bg-primary-200 text-white hover:bg-primary-100"
-              }
+                }
             `}
               disabled={disabled}
             >
@@ -166,7 +165,7 @@ const FileUpload = <T extends FieldValues>({
         }}
         className="hidden"
         onChange={handleFileChange}
-        accept={accept}
+        // accept={accept}
         disabled={disabled}
         onBlur={field.onBlur}
       />

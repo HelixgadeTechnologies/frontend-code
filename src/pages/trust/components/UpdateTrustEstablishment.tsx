@@ -74,15 +74,15 @@ const UpdateTrustEstablishment = () => {
                 ]}
               />
 
-              <FileUpload<EstablishmentFormValues>
+              {/* <FileUpload<EstablishmentFormValues>
                 name="cscDocument"
                 control={control}
                 label="Upload your document"
                 helperText="PDF format • Max. 5MB"
-                accept="application/pdf"
+                // accept="application/pdf"
                 maxSize={5 * 1024 * 1024} // 5MB
                 buttonText="Upload"
-              />
+              /> */}
             </div>
           </section>
 
