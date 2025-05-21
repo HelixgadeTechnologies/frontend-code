@@ -1,7 +1,7 @@
 import { dashboardIcon, trustIcon, settingsIcon } from "../assets/icons";
 
 // const baseUrl_1 = import.meta.env.VITE_BASE_URL;
-export const baseUrl ="https://hcdt-backend-code.onrender.com/api";//"http://localhost:8000/api";
+export const baseUrl = "http://localhost:8000/api"//"https://hcdt-backend-code.onrender.com/api"//"https://hcdt-api-09b9ed32e39a.herokuapp.com/api";
 
 export const routes = [
   {
