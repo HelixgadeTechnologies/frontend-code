@@ -18,7 +18,7 @@ const TrustSidebar = () => {
     {
       id: 1,
       name: "Trust Establishment and Governance Structure",
-      link: `/trust/${name}/${id}/trust-establishment/update`,
+      link: `/trust/${name}/${id}`,
     },
     {
       id: 2,
@@ -61,9 +61,8 @@ const TrustSidebar = () => {
             {subRoutes.map((route) => (
               <Link key={route.link} to={route.link}>
                 <li
-                  className={`${
-                    pathname === route.link ? "bg-primary-200/20" : "bg-white"
-                  } hover:bg-primary-200/20  rounded transition-all px-4 py-3 flex items-center gap-x-2`}
+                  className={`${pathname === route.link ? "bg-primary-200/20" : "bg-white"
+                    } hover:bg-primary-200/20  rounded transition-all px-4 py-3 flex items-center gap-x-2`}
                 >
                   <span className="text-sm font-medium text-gray-3">
                     {route.name}
@@ -77,11 +76,10 @@ const TrustSidebar = () => {
         <div>
           <Link to={`/dashboard/settings`}>
             <li
-              className={`${
-                pathname === "/dashboard/settings"
+              className={`${pathname === "/dashboard/settings"
                   ? "bg-primary-200/20"
                   : "bg-white"
-              } hover:bg-primary-200/20  rounded transition-all px-4 py-3 flex items-center gap-x-2`}
+                } hover:bg-primary-200/20  rounded transition-all px-4 py-3 flex items-center gap-x-2`}
             >
               <img src={settingsIcon} alt={"settings"} />
               <span className="text-sm font-medium text-gray-3">Settings</span>

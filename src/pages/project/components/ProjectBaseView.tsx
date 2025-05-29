@@ -1,13 +1,16 @@
 import { createContext, useCallback, useContext } from "react";
-import { Button, DashboardSkeleton } from "../../../components/elements";
+import { Button, DashboardSkeleton, GoBack } from "../../../components/elements";
 import { observer } from "mobx-react-lite";
 import { projectStore as ProjectStore } from "../store/projectStore";
 import ProjectDashboard from "./chat/ProjectDashboard";
 import ProjectTable from "./table/ProjectTable";
+import { useNavigate, useParams } from "react-router-dom";
 
 const ProjectStoreCTX = createContext(ProjectStore)
 const ProjectBaseView = observer(() => {
     const projectStore = useContext(ProjectStoreCTX)
+    const { name } = useParams();
+      const navigate = useNavigate();
     const toForm = useCallback(() => {
         async function loadRequests() {
             // await projectStore.getCategory()
@@ -23,6 +26,7 @@ const ProjectBaseView = observer(() => {
     return (
         <>
             <div className="p-6 bg-gray-100">
+                 <GoBack action={() => navigate(-1)} trustName={name || ""} page="Project"/>
                 <div className="flex items-center justify-between mb-6">
                     {/* Title */}
                     <h1 className="text-xl font-bold text-gray-800">

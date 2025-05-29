@@ -6,9 +6,8 @@ import TrustBoardLayout from "../../../layouts/TrustBoardLayout";
 import EconomicImpact from "../../EconomicImpact/components/EconomicImpact";
 import HCDTProjects from "../../project/components/HCDTProjects";
 // import ConflictResloution from "./ConflictResloution";
-import TrustEstablishment from "./TrustEstablishment";
-// import CommunitySatisfaction from "./CommunitySatisfaction";
-import UpdateTrustEstablishment from "./UpdateTrustEstablishment";
+import TrustEstablishment from "../../trustEstablishment/component/TrustEstablishment";
+
 import { observer } from "mobx-react-lite";
 
 import { trustStore as TrustStore } from "../store/trustStore";
@@ -39,10 +38,10 @@ const TrustDashboard = observer(() => {
         <Routes>
           <Route element={<TrustBoardLayout />}>
             <Route path="/" element={<TrustEstablishment />} />
-            <Route
+            {/* <Route
               path="trust-establishment/update"
-              element={<UpdateTrustEstablishment />}
-            />
+              element={<TrustEstablishment />}
+            /> */}
             <Route path="hdct-projects" element={<HCDTProjects />} />
             <Route
               path="conflict-resolution"

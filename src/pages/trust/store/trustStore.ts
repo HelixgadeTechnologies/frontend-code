@@ -1,5 +1,5 @@
 import { makeAutoObservable, ObservableMap } from "mobx"
-import { ITrust, ITrustEstablishmentPayload, ITrustEstablishmentStatus, ITrustList, ITrustPayload, ITrustStore } from "../types/interface";
+import { ITrust, ITrustList, ITrustPayload, ITrustStore } from "../types/interface";
 import { trustService } from "../service/trustService";
 class TrustStore implements ITrustStore {
     isLoading = false;
@@ -7,7 +7,6 @@ class TrustStore implements ITrustStore {
     isDeleting = false;
     selectedTrust: ITrustList | null = {} as ITrustList;
     trust: ITrust = {} as ITrust;
-    trustEstablishmentStatus: ITrustEstablishmentStatus = {} as ITrustEstablishmentStatus;
     allTrust = new ObservableMap<string, ITrustList>();
     selectedTrustId: string |undefined = undefined
 
@@ -93,32 +92,6 @@ class TrustStore implements ITrustStore {
             throw error
         } finally {
             this.isDeleting = false;
-        }
-    }
-    async createTrustEstablishment(payload: ITrustEstablishmentPayload): Promise<boolean> {
-        try {
-            this.isSubmitting = true;
-            let data = await trustService.createAndUpdateTrustEstablishment(payload)
-            return data.success?true:false
-        } catch (error) {
-            throw error
-        } finally {
-            this.isSubmitting = false;
-        }
-    }
-
-    async getSingleTrustEstablishmentStatus(trustId: string): Promise<void> {
-        try {
-            this.isLoading = true;
-            let data = await trustService.getTrustEstablishmentById(trustId)
-            if (data.success) {
-                this.trustEstablishmentStatus = {} as ITrustEstablishmentStatus
-                this.trustEstablishmentStatus = data.data as ITrustEstablishmentStatus
-            }
-        } catch (error) {
-            throw error
-        } finally {
-            this.isLoading = false;
         }
     }
 }

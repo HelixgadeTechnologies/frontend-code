@@ -17,6 +17,8 @@ import { conflictStore as ConflictStore } from "../../store/conflictStore"
 import { createContext, useCallback, useContext, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import IMG from "../../../../assets/svgs/dashboardCauseOfConflictNotFound.svg"
+import { useNavigate, useParams } from "react-router-dom";
+import { GoBack } from "../../../../components/elements";
 
 ChartJS.register(
     ArcElement,
@@ -31,7 +33,8 @@ ChartJS.register(
 const ConflictStoreCtx = createContext(ConflictStore)
 const ConflictDashboard = observer(() => {
     const conflictStore = useContext(ConflictStoreCtx)
-
+    const { name } = useParams();
+    const navigate = useNavigate();
     useEffect(() => {
         async function fetchData() {
             let selectedTrustId = window.sessionStorage.getItem("selectedTrustId");
@@ -91,6 +94,7 @@ const ConflictDashboard = observer(() => {
     }
     return (
         <div className="p-6 bg-gray-100 min-h-screen">
+            <GoBack action={() => navigate(-1)} trustName={name || ""} page="Conflict Resolution" />
             {/* Header Section */}
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-xl font-bold text-gray-800">Conflict Resolution Dashboard</h1>

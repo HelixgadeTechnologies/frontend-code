@@ -1,5 +1,7 @@
 //Convert Hex to Uint8Array (Raw Binary Data)
 
+import { IUploadPayload } from "../pages/project/types/interface";
+
 const hexToUint8Array = (hex: string) => {
   const bytes = new Uint8Array(hex.length / 2);
   for (let i = 0; i < hex.length; i += 2) {
@@ -64,3 +66,23 @@ export const fileToHex = (file: File): Promise<string> => {
     reader.readAsArrayBuffer(file);
   });
 };
+
+
+export const convertFileToBase64 = (file: File): Promise<IUploadPayload> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+
+            reader.onload = () => {
+                const result = reader.result as string;
+                const base64String = result.split(',')[1]; // remove data:<mime>;base64, part
+                const mimeType = result.split(';')[0].split(':')[1];
+                resolve({ base64String, mimeType });
+            };
+
+            reader.onerror = (error) => {
+                reject(error);
+            };
+
+            reader.readAsDataURL(file);
+        });
+    }
