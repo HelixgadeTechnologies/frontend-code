@@ -1,67 +1,37 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-import { CreateTrustProps } from "../../../../utils/types";
 import { FormInput, Button } from "../../../../components/elements";
-import { useForm } from "react-hook-form";
-import { useEffect } from "react";
+import { observer } from "mobx-react-lite";
+import { ITrustPayloadData } from "../../types/interface";
+import { trustStore as TrustStore } from "../../store/trustStore";
+import { createContext, useContext } from "react";
 
-type BotContact = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phoneNumber: string;
-};
+const trustStoreCTX = createContext(TrustStore);
+const BotDetails = observer(({ method }: { method: any })  => {
+  const trustStore = useContext(trustStoreCTX);
+  const { register, handleSubmit, formState: { errors } } = method;
 
-type FormValues = {
-  botDetails: BotContact[];
-};
-
-type BotDetailsProps = {
-  fields: any;
-  updateFields: (data: CreateTrustProps) => void;
-  changeTab: React.Dispatch<React.SetStateAction<number>>;
-};
-
-const BotDetails = ({ fields, updateFields, changeTab }: BotDetailsProps) => {
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-    reset,
-  } = useForm<FormValues>({
-    defaultValues: {
-      botDetails: fields?.botDetails || [
-        {
-          firstName: "",
-          lastName: "",
-          email: "",
-          phoneNumber: "",
-        },
-        {
-          firstName: "",
-          lastName: "",
-          email: "",
-          phoneNumber: "",
-        },
-      ],
-    },
-  });
-
-  // Reset form when fields prop changes
-  useEffect(() => {
-    if (fields?.botDetails) {
-      reset({ botDetails: fields.botDetails });
+  const onSubmit = (data: any) => {
+    trustStore.isSaving = true
+    // console.log("Form Data:", data, );
+ 
+    const trustFormData: ITrustPayloadData = {
+      ...trustStore.trustFormData,
+      botDetailsOneFirstName: data.botDetailsOneFirstName,
+      botDetailsOneLastName: data.botDetailsOneLastName,
+      botDetailsOneEmail: data.botDetailsOneEmail,
+      botDetailsOnePhoneNumber: data.botDetailsOnePhoneNumber,
+      botDetailsTwoFirstName: data.botDetailsTwoFirstName,
+      botDetailsTwoLastName: data.botDetailsTwoLastName,
+      botDetailsTwoEmail: data.botDetailsTwoEmail,
+      botDetailsTwoPhoneNumber: data.botDetailsTwoPhoneNumber,
     }
-  }, [fields, reset]);
-
-  const updateData = handleSubmit(async (data: FormValues) => {
-    console.log({ data });
-    updateFields(data as unknown as CreateTrustProps);
-    changeTab(3);
-  });
-
+     //save to store
+     trustStore.trustFormData = trustFormData
+     trustStore.isSaving = false
+     //move to the next form
+     trustStore.setCompletedTab();
+  }
   return (
-    <form onSubmit={updateData} className="py-8 px-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="py-8 px-4">
       <div className="text-center">
         <h2 className="text-lg lg:text-2xl font-semibold text-primary-100">
           Create New Trust
@@ -72,16 +42,13 @@ const BotDetails = ({ fields, updateFields, changeTab }: BotDetailsProps) => {
       </div>
 
       <div className="space-y-6 mt-6">
-        {[0, 1].map((index) => (
-          <div
-            key={index}
-            className="pb-4 border-b border-gray-200 grid grid-cols lg:grid-cols-2 gap-6"
-          >
+       
+          <div className="pb-4 border-b border-gray-200 grid grid-cols lg:grid-cols-2 gap-6">
             <div>
               <FormInput
                 label={`BoT Contact  First Name`}
-                error={errors?.botDetails?.[index]?.firstName}
-                name={`botDetails.${index}.firstName`}
+                error={errors?.botDetailsOneFirstName}
+                name={`botDetailsOneFirstName`}
                 type="text"
                 register={register}
                 registerOptions={{
@@ -94,8 +61,8 @@ const BotDetails = ({ fields, updateFields, changeTab }: BotDetailsProps) => {
             <div>
               <FormInput
                 label={`BoT Contact Last Name`}
-                error={errors?.botDetails?.[index]?.lastName}
-                name={`botDetails.${index}.lastName`}
+                error={errors?.botDetailsOneLastName}
+                name={`botDetailsOneLastName`}
                 type="text"
                 register={register}
                 registerOptions={{
@@ -107,10 +74,10 @@ const BotDetails = ({ fields, updateFields, changeTab }: BotDetailsProps) => {
 
             <div className="lg:col-span-2">
               <FormInput
-                label={`BoT Contact  Person's mobile number`}
-                error={errors?.botDetails?.[index]?.phoneNumber}
-                name={`botDetails.${index}.phoneNumber`}
-                type="tel"
+                label={`BoT Contact  Person's email address`}
+                error={errors?.botDetailsOneEmail}
+                name={`botDetailsOneEmail`}
+                type="email"
                 register={register}
                 registerOptions={{
                   required: "This field is required.",
@@ -121,10 +88,10 @@ const BotDetails = ({ fields, updateFields, changeTab }: BotDetailsProps) => {
 
             <div className="lg:col-span-2">
               <FormInput
-                label={`BoT Contact  Person's email address`}
-                error={errors?.botDetails?.[index]?.email}
-                name={`botDetails.${index}.email`}
-                type="email"
+                label={`BoT Contact  Person's mobile number`}
+                error={errors?.botDetailsOnePhoneNumber}
+                name={`botDetailsOnePhoneNumber`}
+                type="tel"
                 register={register}
                 registerOptions={{
                   required: "This field is required.",
@@ -133,22 +100,71 @@ const BotDetails = ({ fields, updateFields, changeTab }: BotDetailsProps) => {
               />
             </div>
           </div>
-        ))}
+          <div className="pb-4 border-b border-gray-200 grid grid-cols lg:grid-cols-2 gap-6">
+            <div>
+              <FormInput
+                label={`BoT Contact Two First Name`}
+                error={errors?.botDetailsTwoFirstName}
+                name={`botDetailsTwoFirstName`}
+                type="text"
+                register={register}
+                registerOptions={{
+                  required: "This field is required.",
+                }}
+                errorMessage="This field is required"
+              />
+            </div>
+
+            <div>
+              <FormInput
+                label={`BoT Contact Two Last Name`}
+                error={errors?.botDetailsTwoLastName}
+                name={`botDetailsTwoLastName`}
+                type="text"
+                register={register}
+                registerOptions={{
+                  required: "This field is required.",
+                }}
+                errorMessage="This field is required"
+              />
+            </div>
+
+            <div className="lg:col-span-2">
+              <FormInput
+                label={`BoT Contact Two Person's email address`}
+                error={errors?.botDetailsTwoEmail}
+                name={`botDetailsTwoEmail`}
+                type="email"
+                register={register}
+                registerOptions={{
+                  required: "This field is required.",
+                }}
+                errorMessage="This field is required"
+              />
+            </div>
+
+            <div className="lg:col-span-2">
+              <FormInput
+                label={`BoT Contact Two Person's mobile number`}
+                error={errors?.botDetailsTwoPhoneNumber}
+                name={`botDetailsTwoPhoneNumber`}
+                type="tel"
+                register={register}
+                registerOptions={{
+                  required: "This field is required.",
+                }}
+                errorMessage="This field is required"
+              />
+            </div>
+          </div>
       </div>
 
       <div className="mt-8 flex flex-col lg:flex-row items-center gap-8 justify-between">
-        <Button
-          onClick={() => changeTab(1)}
-          className="border text-black bg-white border-gray-7 rounded-lg py-2 px-4 lg:px-10"
-          buttonText="Back"
-          width="w-fit"
-          type="button"
-        />
-
-        <Button padding="py-3" buttonText="Next" type="submit" />
+     
+        <Button padding="py-3" buttonText="Next" />
       </div>
     </form>
   );
-};
+});
 
 export default BotDetails;

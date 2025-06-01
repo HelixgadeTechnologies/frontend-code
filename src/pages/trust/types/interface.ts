@@ -1,22 +1,40 @@
 import { ObservableMap } from "mobx";
+import { TabType } from "../../project/types/interface";
 export interface ITrustStore {
-    isLoading: boolean,
-    isSubmitting: boolean,
-    isDeleting: boolean,
-    selectedTrust: ITrustList | null,
-    selectedTrustId: string | undefined,
-    trust: ITrust,
+    isLoading: boolean;
+    isSubmitting: boolean;
+    isSaving: boolean;
+    isDeleting: boolean;
+    pageSwitched: number;
+    selectedTrust: ITrustList | null;
+    selectedTrustId: string | undefined;
+    trust: ITrust;
     allTrust: ObservableMap<string, ITrustList>;
-    getAllTrust(): Promise<boolean>,
-    createTrust(payload: ITrustPayload): Promise<boolean>,
-    updateTrust(payload: ITrustPayload): Promise<boolean>,
-    getSingleTrust(trustId: string): Promise<void>,
-    removeTrust(trustId: string): Promise<boolean>,
+    allTrustList: ObservableMap<string, ITrustList>;
+    formTab: ObservableMap<number, TabType>;
+    activeTap: TabType | null;
+    trustFormData: ITrustPayloadData;
+    selectedState: string;
+    selectedLGA: string;
+    allStates: ObservableMap<string, string>;
+    allLGA: ObservableMap<string, string>;
+    getFormSteps(): void;
+    setActiveTab(active: TabType): void;
+    setCompletedTab(): void;
+    getUpdateFormSteps(n: number, id: number): void;
+    searchTrust(keyword: string): void;
+    getAllTrust(): Promise<void>;
+    getAllStates(): void;
+    getLG(state: string): Array<string>;
+    createTrust(payload: ITrustPayload): Promise<boolean>;
+    updateTrust(payload: ITrustPayload): Promise<boolean>;
+    getSingleTrust(trustId: string): Promise<void>;
+    removeTrust(trustId: string): Promise<boolean>;
 }
-export interface ITrust {
+export interface ITrust extends BaseItem {
     trustId: string;
     trustName: string;
-    settlorId: string;
+    settlor: string;
     settlorName: string;
     nameOfOmls: string;
     userId: string;
@@ -47,11 +65,13 @@ export interface ITrust {
     totalPwdManagementCommitteeMembers: number;
     createAt: string;
 }
-export interface ITrustList {
+interface BaseItem {
+    id: string;
+}
+export interface ITrustList extends BaseItem {
     trustId: string;
     trustName: string;
-    settlorId: string;
-    settlorName: string;
+    settlor: string;
     nameOfOmls: string;
     userId: string;
     userFirstName: string;
@@ -84,7 +104,7 @@ export interface ITrustList {
 export interface ITrustPayloadData {
     trustId?: string,
     trustName: string,
-    settlorId: string,
+    settlor: string,
     nameOfOmls: string,
     userId: string,
     country: string,
@@ -118,3 +138,8 @@ export interface ITrustPayload {
     data: ITrustPayloadData
 }
 
+export interface IStateAndLGA {
+    state: string,
+    senatorial_districts: Array<string>,
+    lgas: Array<string>,
+}

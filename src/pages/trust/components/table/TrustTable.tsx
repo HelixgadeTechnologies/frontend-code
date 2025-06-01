@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect, useMemo, useCallback, createContext, useContext } from "react";
-
-import { useNavigate, Link } from "react-router-dom";
+import {Link } from "react-router-dom";
 import {
   Table,
   Modal,
@@ -8,38 +7,34 @@ import {
   LoadingTable,
   ActiveMenu,
 } from "../../../../components/elements";
-import DeleteTrust from "../forms/DeleteTrust";
-
-import { TrustArray, TrustItem } from "../../../../utils/types";
-
 import { RowSelectionState } from "@tanstack/react-table";
-
-import { useGetAllTrusts } from "../../../../utils/hooks/useTrusts";
 import { observer } from "mobx-react-lite";
 import { trustStore as TrustStore } from "../../../trust/store/trustStore";
-// import { economicImpactStore as EconomicImpactStore } from "../../../EconomicImpact/store/economicImpactStore";
+import { ITrustList } from "../../types/interface";
+import { settingStore as SettingStore } from "../../../Settings/store/settingStore";
+import { DeleteTrust } from "../forms/DeleteTrust";
+
+const settingStoreCTX = createContext(SettingStore);
 const TrustStoreCtx = createContext(TrustStore);
-// const EconomicImpactStoreCtx = createContext(EconomicImpactStore);
 const TrustTable = observer(() => {
   const trustStore = useContext(TrustStoreCtx);
-  // const economicImpactStore = useContext(EconomicImpactStoreCtx);
-  const navigate = useNavigate();
-  const { isLoading, data } = useGetAllTrusts();
-
-  const trusts: TrustArray = useMemo(() => {
-    const trustData = data?.data?.data || [];
-    return trustData.map((trust: { trustId: string }) => ({
-      ...trust,
-      id: trust.trustId,
-    }));
-  }, [data]);
-
+  const settingStore = useContext(settingStoreCTX);
+  // State to manage row selection and active menu
+  // Using useState to manage row selection state
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
   // State to track which user is being edited or deleted
   const [deleteTrustId, setDeleteTrustId] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function loadRequests() {
+      await trustStore.getAllTrust();
+      await settingStore.getAllSettlor()
+    }
+    loadRequests();
+  }, []);
 
   // Toggle action menu
   const toggleMenu = useCallback(
@@ -73,6 +68,14 @@ const TrustTable = observer(() => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [activeMenu]);
 
+  const switchPage = useCallback((trustId: string) => {
+    async function loadRequests() {
+      await trustStore.getSingleTrust(trustId)
+      trustStore.pageSwitched = 3;
+    }
+    loadRequests();
+  }, [trustStore]);
+
   // Define columns with memoization
   const columns = useMemo(
     () => [
@@ -80,19 +83,18 @@ const TrustTable = observer(() => {
         id: "trustName",
         header: "Trust",
         accessorKey: "trustName",
-        cell: ({ row }: { row: { original: TrustItem } }) => {
-          const trustName = `${row.original.trustName}`;
-          const id = row.original.id;
+        cell: ({ row }: { row: { original: ITrustList } }) => {
+          const trust = row.original;
+          const trustName = `${trust.trustName}`;
           const formattedName = trustName.toLowerCase().replace(/\s+/g, "-");
-
           return (
             <Link
               className="hover:underline"
-              to={`/trust/${formattedName}/${id}`}
+              to={`/trust/${formattedName}/${trust.trustId}`}
               onClick={(e) => {
                 e.stopPropagation(); // Prevent row click event
-                trustStore.selectedTrustId = id; // Set selected trust ID in the store
-                sessionStorage.setItem("selectedTrustId", id)
+                trustStore.selectedTrustId = trust.trustId; // Set selected trust ID in the store
+                sessionStorage.setItem("selectedTrustId", trust.trustId); // Store selected trust ID in sessionStorage
 
               }}
             >
@@ -102,22 +104,19 @@ const TrustTable = observer(() => {
         },
       },
       {
-        id: "funds",
-        header: "Total Funds",
-        accessorKey: "funds",
+        id: "country",
+        header: "Country",
+        accessorKey: "country",
       },
       {
         id: "communities",
         header: "Community",
         accessorKey: "trustCommunities",
-        cell: ({ row }: { row: { original: TrustItem } }) => {
+        cell: ({ row }: { row: { original: ITrustList } }) => {
           const communities = row.original.trustCommunities;
           return (
             <span>
               {communities}
-              {/* {communities?.map((i, index) => (
-                  <span key={index}>{i}</span>
-                ))} */}
             </span>
           );
         },
@@ -125,27 +124,25 @@ const TrustTable = observer(() => {
       {
         id: "actions",
         header: "",
-        cell: ({ row }: { row: { original: TrustItem } }) => {
+        cell: ({ row }: { row: { original: ITrustList } }) => {
           const trust = row.original;
 
           return (
             <div className="relative">
               <button
-                data-menu-trigger={trust?.id}
+                data-menu-trigger={trust?.trustId}
                 className="px-3 text-gray-5 hover:text-gray-7 cursor-pointer"
-                onClick={() => toggleMenu(trust?.id)}
+                onClick={() => toggleMenu(trust?.trustId)}
                 aria-label="More options"
               >
                 •••
               </button>
               <ActiveMenu
-                userId={trust?.id}
+                userId={trust?.trustId}
                 activeMenu={activeMenu}
                 menuRef={menuRef}
-                handleEdit={() =>
-                  navigate(`/dashboard/trusts/edit/${trust?.id}`)
-                }
-                handleDelete={() => handleDelete(trust?.id)}
+                handleEdit={() => switchPage(trust?.trustId)}
+                handleDelete={() => handleDelete(trust?.trustId)}
               />
             </div>
           );
@@ -155,18 +152,21 @@ const TrustTable = observer(() => {
     [activeMenu, toggleMenu, handleDelete],
   );
 
-  const tableHead = ["Trust", "Total Funds", "Communities", "action"];
+  const tableHead = ["Trust", "country", "Communities", "action"];
 
   return (
     <div className="mt-10 bg-white p-4 rounded-2xl border border-gray-8 ">
       <>
-        {isLoading ? (
+        {trustStore.isLoading ? (
           <LoadingTable headArr={tableHead} />
-        ) : trusts && trusts?.length > 0 ? (
+        ) : trustStore.allTrust.size > 0 ? (
           <Table
             columns={columns}
-            data={trusts}
-            count={trusts?.length}
+            data={[...trustStore.allTrust.values()].map((trust: ITrustList, i: number) => ({
+              ...trust, id: i.toString()
+            } as ITrustList))
+            }
+            count={trustStore.allTrust.size}
             rowSelection={rowSelection}
             setRowSelection={setRowSelection}
           />
@@ -184,8 +184,9 @@ const TrustTable = observer(() => {
         <Modal
           body={
             <DeleteTrust
-            // userId={deleteTrustId}
-            // close={() => handleDelete(null)}
+              close={() => handleDelete(null)}
+              trustId={deleteTrustId}
+              store={trustStore}
             />
           }
         />

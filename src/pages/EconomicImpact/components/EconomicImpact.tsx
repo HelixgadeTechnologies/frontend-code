@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { Button, DashboardSkeleton, GoBack, Modal } from "../../../components/elements";
 import { EconomicImpactTable } from "./table/EconomicImpactTable";
 import EconomicImpactDashboard from "./chart/EconomicImpactDashboard";
@@ -9,15 +9,26 @@ import { observer } from "mobx-react-lite";
 import { useNavigate, useParams } from "react-router-dom";
 const EconomicImpactStoreCtx = createContext(EconomicImpactStore);
 const TrustStoreCtx = createContext(TrustStore);
+
 const EconomicImpact = observer(() => {
   const economicImpactStore = useContext(EconomicImpactStoreCtx);
   const trustStore = useContext(TrustStoreCtx);
   const [isTableView, setIsTableView] = useState(true);
   const { name } = useParams();
   const navigate = useNavigate();
+
   const openModal = useCallback(() => {
     economicImpactStore.isAddModelOpen = true;
   }, [economicImpactStore]);
+
+   useEffect(() => {
+          async function loadRequests() {
+              let selectedTrustId = window.sessionStorage.getItem("selectedTrustId")
+              economicImpactStore.dashboardData = null;
+              await economicImpactStore.getEconomicImpactDashboardByTrustId(selectedTrustId as string);
+          }
+          loadRequests();
+      }, []);
 
   return (
     // <div className="p-6 bg-gray-100 min-h-screen">

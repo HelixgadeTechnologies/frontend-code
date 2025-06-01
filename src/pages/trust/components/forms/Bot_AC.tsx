@@ -1,52 +1,39 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { CreateTrustProps } from "../../../../utils/types";
-
 import { FormInput, Button } from "../../../../components/elements";
+import { observer } from "mobx-react-lite";
+import { trustStore as TrustStore } from "../../store/trustStore";
+import { createContext, useContext } from "react";
+import { ITrustPayloadData } from "../../types/interface";
 
-type BotFormType = {
-  fields: any;
-  updateFields: (data: CreateTrustProps) => void;
-  changeTab: React.Dispatch<React.SetStateAction<number>>;
-};
+const trustStoreCTX = createContext(TrustStore);
+const Bot_AC = observer(({ method }: { method: any }) => {
+const trustStore = useContext(trustStoreCTX);
+const { register, handleSubmit, formState: { errors } } = method;
+  const onSubmit = (data: any) => {
+    trustStore.isSaving = true
+    // console.log("Form Data:", data, );
+ 
+    const trustFormData: ITrustPayloadData = {
+      ...trustStore.trustFormData,
+      totalMaleBotMembers: Number(data.totalMaleBotMembers),
+      totalFemaleBotMembers: Number(data.totalFemaleBotMembers),
+      totalPwdBotMembers: Number(data.totalPwdBotMembers),
+      totalMaleAdvisoryCommitteeMembers: Number(data.totalMaleAdvisoryCommitteeMembers),
+      totalFemaleAdvisoryCommitteeMembers: Number(data.totalFemaleAdvisoryCommitteeMembers),
+      totalPwdAdvisoryCommitteeMembers: Number(data.totalPwdAdvisoryCommitteeMembers),
+      totalMaleManagementCommitteeMembers: Number(data.totalMaleManagementCommitteeMembers),
+      totalFemaleManagementCommitteeMembers: Number(data.totalFemaleManagementCommitteeMembers),
+      totalPwdManagementCommitteeMembers: Number(data.totalPwdManagementCommitteeMembers)
+    }
 
-import { useForm } from "react-hook-form";
 
-const Bot_AC = ({ fields, updateFields, changeTab }: BotFormType) => {
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-  } = useForm({
-    defaultValues: {
-      totalMaleBotMembers: fields?.totalMaleBotMembers || "",
-      totalFemaleBotMembers: fields?.totalFemaleBotMembers || "",
-      totalPwdBotMembers: fields?.totalPwdBotMembers || "",
-
-      totalMaleAdvisoryCommitteeMembers:
-        fields?.totalMaleAdvisoryCommitteeMembers || "",
-      totalFemaleAdvisoryCommitteeMembers:
-        fields?.totalFemaleAdvisoryCommitteeMembers || "",
-      totalPwdAdvisoryCommitteeMembers:
-        fields?.totalPwdAdvisoryCommitteeMembers || "",
-
-      totalMaleManagementCommitteeMembers:
-        fields?.totalMaleManagementCommitteeMembers || "",
-      totalFemaleManagementCommitteeMembers:
-        fields?.totalFemaleManagementCommitteeMembers || "",
-      totalPwdManagementCommitteeMembers:
-        fields?.totalPwdManagementCommitteeMembers || "",
-    },
-  });
-
-  const updateData = handleSubmit(async (data) => {
-    updateFields(data as unknown as CreateTrustProps);
-    changeTab(4);
-  });
-
-  console.log({ fields });
-
+    //save to store
+    trustStore.trustFormData = trustFormData
+    trustStore.isSaving = false
+    //move to the next form
+    trustStore.setCompletedTab();
+  };
   return (
-    <form onSubmit={updateData} className="py-8 px-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="py-8 px-4">
       <div className="text-center">
         <h2 className="text-lg lg:text-2xl font-semibold text-primary-100">
           Create New Trust
@@ -216,17 +203,11 @@ const Bot_AC = ({ fields, updateFields, changeTab }: BotFormType) => {
       </div>
 
       <div className="mt-8 flex flex-col lg:flex-row items-center gap-8 justify-between">
-        <Button
-          onClick={() => changeTab(2)}
-          className="border text-black bg-white border-gray-7 rounded-lg py-2 px-4 lg:px-10"
-          buttonText="Back"
-          width="w-fit"
-        />
 
-        <Button padding="py-3" buttonText="Next" />
+        <Button padding="py-3" buttonText={trustStore.isSaving?"Saving...":"Next"} />
       </div>
     </form>
   );
-};
+});
 
 export default Bot_AC;

@@ -261,7 +261,7 @@ class ProjectStore implements IProjectStore {
             if (data.success) {
                 const processedData = this.transformProjectDashboard(data.data);
                 this.dashboardData = processedData;
-                console.log(toJS(processedData))
+                // console.log(toJS(processedData))
             }
         } catch (error) {
             throw error;

@@ -7,31 +7,36 @@ import { trustStore as TrustStore } from "../../store/trustStore";
 import { createContext, useCallback, useContext, useEffect } from "react";
 import { TabType } from "../../../project/types/interface";
 import { useForm } from "react-hook-form";
-import { settingStore as SettingStore } from "../../../Settings/store/settingStore";
 import { toast } from "react-toastify";
-import { ITrustPayload, ITrustPayloadData } from "../../types/interface";
+import { ITrustPayload } from "../../types/interface";
 import { GoBack } from "../../../../components/elements";
 import { useParams } from "react-router-dom";
-
-const settingStoreCTX = createContext(SettingStore);
 const trustStoreCTX = createContext(TrustStore)
-const CreateTrust = observer(() => {
+const EditTrust = observer(() => {
   const trustStore = useContext(trustStoreCTX);
-  const settingStore = useContext(settingStoreCTX);
   const { name } = useParams();
 
-  const method = useForm({
-    defaultValues: trustStore.trustFormData,
-    shouldUnregister: false,
-  })
   useEffect(() => {
     async function loadRequests() {
-      trustStore.getFormSteps();
-      trustStore.getAllStates();
-      await settingStore.getAllSettlor();
+      trustStore.getFormSteps()
+      trustStore.getAllStates()
+      await trustStore.getSingleTrust(trustStore.selectedTrustId as string);
+      
     }
     loadRequests();
   }, []);
+  
+  // console.log("Trust Form Data:", toJS(trustStore.trustFormData.settlor.split(",").map((e: string) => { return { label: e, value: e } })), );
+  const method = useForm({
+    defaultValues: {
+      ...trustStore.trustFormData,
+      country: trustStore.trustFormData.country ? { label: trustStore.trustFormData.country, value: trustStore.trustFormData.country } : null,
+      state: trustStore.trustFormData.state ? { label: trustStore.trustFormData.state, value: trustStore.trustFormData.state } : null,
+      localGovernmentArea: trustStore.trustFormData.localGovernmentArea ? { label: trustStore.trustFormData.localGovernmentArea, value: trustStore.trustFormData.localGovernmentArea } : null,
+      settlor: trustStore.trustFormData.settlor.split(",").map((e: string) => { return { label: e, value: e } }),
+    },
+    shouldUnregister: false,
+  })
   const handleTabChange = useCallback((tab: TabType) => {
     trustStore.setActiveTab(tab)
   }, [trustStore]);
@@ -41,14 +46,13 @@ const CreateTrust = observer(() => {
     async function loadRequests() {
       try {
         const payload: ITrustPayload = {
-          isCreate: true,
+          isCreate: false,
           data: trustStore.trustFormData
         }
         const response = await trustStore.createTrust(payload)
         if (response) {
-          toast.success("Trust Successfully Created");
-          trustStore.trustFormData = {} as ITrustPayloadData;
-          method.reset()
+          toast.success("Trust Update Successful");
+          
           trustStore.getFormSteps()
         }
       } catch (error: any) {
@@ -139,5 +143,5 @@ const CreateTrust = observer(() => {
   );
 });
 
-export default CreateTrust;
+export default EditTrust;
 

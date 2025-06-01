@@ -20,6 +20,7 @@ const ProjectFirstForm = observer(({ method }: { method: any }) => {
         const isoUTC = date.toISOString();
 
         const projectFormData: IProjectPayloadData = {
+            ...projectStore.projectFormData,
             projectTitle: data.projectTitle,
             projectCategoryId: data.projectCategoryId.value,
             totalBudget: Number(data.totalBudget),

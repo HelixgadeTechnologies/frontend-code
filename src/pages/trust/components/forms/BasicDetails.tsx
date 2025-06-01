@@ -1,60 +1,59 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useMemo } from "react";
-import { useGetSettlors } from "../../../../utils/hooks/useManageSettlors";
-import { CreateTrustProps } from "../../../../utils/types";
-import { FormInput, CustomSelect, TagInput, Button } from "../../../../components/elements";
+import { FormInput, CustomSelect, Button } from "../../../../components/elements";
+import { Controller } from "react-hook-form";
+import { Observer, observer } from "mobx-react-lite";
+import { trustStore as TrustStore } from "../../store/trustStore"
+import { createContext,useCallback, useContext, useState } from "react";
+import { ITrustPayloadData } from "../../types/interface";
+import { settingStore as SettingStore } from "../../../Settings/store/settingStore";
+import { IDropdownProp, ISettlor } from "../../../Settings/types/interface";
+import { authStore as AuthStore } from "../../../auth/store/authStore";
 
-import { useForm, Controller, FieldError } from "react-hook-form";
+const AuthStoreCTX = createContext(AuthStore);
+const settingStoreCTX = createContext(SettingStore);
+const trustStoreCTX = createContext(TrustStore);
+const BasicDetails = observer(({ method }: { method: any }) => {
+  const authStore = useContext(AuthStoreCTX);
+  const trustStore = useContext(trustStoreCTX);
+  const settingStore = useContext(settingStoreCTX);
+  const { control, register, handleSubmit, formState: { errors } } = method;
+  const [lg, setSetLg] = useState<Array<string>>([]);
+  const onSubmit = (data: any) => {
+    trustStore.isSaving = true
+    // console.log("Form Data:", data,);
 
-type BasicDetailsProps = {
-  fields: any;
-  updateFields: (data: CreateTrustProps) => void;
-  changeTab: React.Dispatch<React.SetStateAction<number>>;
-};
+    const trustFormData: ITrustPayloadData = {
+      ...trustStore.trustFormData,
+      trustName: data.trustName,
+      settlor: data.settlor.map((e: IDropdownProp) => e.value).join(", "),
+      nameOfOmls: data.nameOfOmls,
+      userId: authStore.user.userId,
+      country: data.country.value,
+      state: data.state.value,
+      localGovernmentArea: data.localGovernmentArea.value,
+      trustCommunities: data.trustCommunities,
+    }
 
-const BasicDetails = ({
-  fields,
-  updateFields,
-  changeTab,
-}: BasicDetailsProps) => {
-  const {
-    register,
-    formState: { errors },
-    control,
-    setValue,
-    clearErrors,
-    handleSubmit,
-  } = useForm({
-    defaultValues: {
-      trustName: fields?.trustName || "",
-      country: fields.country || "",
-      localGovernmentArea: fields.localGovernmentArea || "",
-      settlorId: fields.settlorId || "",
-      state: fields.state || "",
-      trustCommunities: fields.trustCommunities || [],
-    },
-  });
 
-  const updateData = handleSubmit(async (data: any) => {
-    console.log({ data });
-    updateFields(data);
-    changeTab(2);
-  });
+    //save to store
+    trustStore.trustFormData = trustFormData
+    trustStore.isSaving = false
+    //move to the next form
+    trustStore.setCompletedTab();
+  };
 
-  const { isLoading, data } = useGetSettlors();
-
-  const settlors = useMemo(() => {
-    const settlorData = data?.data?.data || [];
-    return settlorData.map(
-      (settlor: { settlorId: string; settlorName: string }) => ({
-        label: settlor?.settlorName,
-        value: settlor?.settlorId,
-      }),
-    );
-  }, [data]);
+  const selectState = useCallback((v: IDropdownProp) => {
+    trustStore.allLGA.clear();
+    let localGov = trustStore.getLG(String(v?.value));
+    if (localGov.length > 0) {
+      setSetLg(localGov);
+    }
+    trustStore.selectedState = String(v?.value);
+    method.setValue("state", v); //set state field
+    method.setValue("localGovernmentArea", null); // Reset LGA field
+  }, [trustStore, method]);
 
   return (
-    <form onSubmit={updateData} className="py-8 px-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="py-8 px-4">
       <div className="text-center">
         <h2 className="text-lg lg:text-2xl font-semibold text-primary-100">
           Create New Trust
@@ -65,33 +64,56 @@ const BasicDetails = ({
       </div>
 
       <div className="space-y-6 mt-6">
-        <div>
-          <FormInput
-            label="Name of Trust *"
-            name="trustName"
-            type="text"
-            register={register}
-            registerOptions={{
-              required: "This field is required.",
-            }}
-            placeholder="Enter trust name"
-            error={errors.trustName}
-            errorMessage={`This field  is required`}
-            required
-          />
+        <div className="lg:flex-row flex flex-col  lg:items-center gap-x-4 gap-y-6">
+          <div className="flex-1">
+            <FormInput
+              label="Name of Trust *"
+              name="trustName"
+              type="text"
+              register={register}
+              registerOptions={{
+                required: "This field is required.",
+              }}
+              placeholder="Enter trust name"
+              error={errors.trustName}
+              errorMessage={`This field  is required`}
+              required
+            />
+          </div>
+          <div className="flex-1">
+            <FormInput
+              label="Name of OMLs *"
+              name="nameOfOmls"
+              type="text"
+              register={register}
+              registerOptions={{
+                required: "This field is required.",
+              }}
+              placeholder="Enter oml name"
+              error={errors.trustName}
+              errorMessage={`This field  is required`}
+              required
+            />
+
+          </div>
         </div>
 
         <div>
           <Controller
             control={control}
-            name="settlorId"
+            name="settlor"
             rules={{ required: true }}
             render={({ field }) => (
               <CustomSelect
                 id="settlor-select"
                 {...field}
-                isLoading={isLoading}
-                options={settlors}
+                isLoading={settingStore.isLoading}
+                options={[...settingStore.allSettlor.values()].map((v: ISettlor) => {
+                  return {
+                    label: String(v?.settlorName),
+                    value: v?.settlorName
+                  }
+                })}
                 label="Name of Settlor"
                 isMulti={true}
                 placeholder="Select Settlor"
@@ -130,16 +152,22 @@ const BasicDetails = ({
             <Controller
               control={control}
               name="state"
-              rules={{}}
+              // rules={{}}
               render={({ field }) => (
                 <CustomSelect
                   id="state-select"
                   {...field}
                   // isLoading={trustLoading}
-                  options={state}
+                  options={[...trustStore.allStates.values()].map((s: string) => {
+                    return {
+                      label: s,
+                      value: s
+                    }
+                  })}
                   label="State"
                   isMulti={false}
                   placeholder="Select state"
+                  onChange={(v) => selectState(v as IDropdownProp)}
                 />
               )}
             />
@@ -147,66 +175,64 @@ const BasicDetails = ({
               <p className="mt-2 mb-4 text-xs  text-red-400 ">Assign a trust</p>
             )}
           </div>
+          <Observer>
+            {() => (
+              <div className="flex-1">
+                <Controller
+                  control={control}
+                  name="localGovernmentArea"
+                  // rules={{}}
 
-          <div className="flex-1">
-            <Controller
-              control={control}
-              name="localGovernmentArea"
-              rules={{}}
-              render={({ field }) => (
-                <CustomSelect
-                  id="lga-select"
-                  {...field}
-                  // isLoading={trustLoading}
-                  options={lga}
-                  label="Local Government Area"
-                  isMulti={false}
-                  placeholder="Select"
+                  render={({ field }) => (
+                    <CustomSelect
+                      id="lga-select"
+                      {...field}
+                      // isLoading={trustLoading}
+                      options={lg.map((s: string) => {
+                        return {
+                          label: s,
+                          value: s
+                        }
+                      })}
+                      label="Local Government Area"
+                      isMulti={false}
+                      // isDisabled={true}
+                      isDisabled={trustStore.selectedState ? false : true}
+                      placeholder="Select"
+                    />
+                  )}
                 />
-              )}
-            />
-            {errors.localGovernmentArea && (
-              <p className="mt-2 mb-4 text-xs  text-red-400 ">Assign a trust</p>
+                {errors.localGovernmentArea && (
+                  <p className="mt-2 mb-4 text-xs  text-red-400 ">Assign a trust</p>
+                )}
+              </div>
             )}
-          </div>
+          </Observer>
         </div>
 
         <div>
-          <TagInput
+          <FormInput
+            label="Trust Communities"
             name="trustCommunities"
+            type="text"
             register={register}
-            setValue={setValue}
-            defaultValue={fields?.trustCommunities || []}
             registerOptions={{
-              required: "Fields are required",
-              validate: (value: string) =>
-                value.length > 0 || "At least one community is required",
+              required: "This field is required.",
             }}
-            clearErrors={clearErrors}
-            placeholder="Onne, Eleme"
-            errors={errors as Record<string, FieldError | undefined>}
-            withCustomLabel={
-              <label className={`block text-base text-primary-100 font-medium`}>
-                Trust Communities
-              </label>
-            }
+            placeholder="Enter trust name"
+            error={errors.trustCommunities}
+            errorMessage={`This field  is required`}
+            required
           />
         </div>
       </div>
 
       <div className="mt-8 flex flex-col lg:flex-row items-center gap-8 justify-between">
-        <Button
-          onClick={close}
-          className="border text-black bg-white border-gray-7 rounded-lg py-2 px-4 lg:px-10"
-          buttonText="Cancel"
-          width="w-fit"
-        />
-
-        <Button padding="py-3" buttonText="Next" />
+        <Button padding="py-3" buttonText={trustStore.isSaving ? "Saving..." : "Next"} />
       </div>
     </form>
   );
-};
+});
 
 export default BasicDetails;
 
@@ -217,16 +243,3 @@ const arr = [
   },
 ];
 
-const state = [
-  {
-    label: "Rivers",
-    value: "Rivers",
-  },
-];
-
-const lga = [
-  {
-    label: "Obio-kpor",
-    value: "Obio-kpor",
-  },
-];

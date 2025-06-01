@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { Button, DashboardSkeleton, GoBack } from "../../../components/elements";
 // import { EconomicImpactTable } from "./table/EconomicImpactTable";
 // import EconomicImpactDashboard from "./chart/EconomicImpactDashboard";
@@ -12,6 +12,7 @@ import { CommunitySatisfactionTable } from "./table/CommunitySatisfactionTable";
 import CommunitySatisfactionDashboard from "./chart/CommunitySatisfactionDasboard";
 const SatisfactionStoreCtx = createContext(SatisfactionStore);
 const TrustStoreCtx = createContext(TrustStore);
+
 const CommunitySatisfaction = observer(() => {
     const satisfactionStore = useContext(SatisfactionStoreCtx);
     const trustStore = useContext(TrustStoreCtx);
@@ -22,6 +23,15 @@ const CommunitySatisfaction = observer(() => {
     const openAddForm = useCallback(() => {
         satisfactionStore.isAddFunctionalityNeeded = true;
     }, [satisfactionStore]);
+
+    useEffect(() => {
+        async function loadRequests() {
+            let selectedTrustId = window.sessionStorage.getItem("selectedTrustId")
+            satisfactionStore.dashboardData = null;
+            await satisfactionStore.getSatisfactionDashboardByTrustId(selectedTrustId as string);
+        }
+        loadRequests();
+    }, []);
 
     return (
 

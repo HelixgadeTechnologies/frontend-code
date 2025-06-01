@@ -21,6 +21,7 @@ const TrustEstablishment = observer(() => {
   useEffect(() => {
     async function getInfo() {
       let selectedTrustId = window.sessionStorage.getItem("selectedTrustId")
+      trustEstablishmentStore.dashboardData = null;
       await trustEstablishmentStore.getSingleTrustEstablishmentStatus(selectedTrustId as string)
       await trustEstablishmentStore.getEstablishmentDashboardByTrustId(selectedTrustId as string)
       await settingStore.getAllAdmin();

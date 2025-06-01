@@ -11,6 +11,7 @@ const HCDTProjects = observer(() => {
   const projectStore = useContext(ProjectStoreCTX)
   useEffect(() => {
     async function loadRequests() {
+      projectStore.dashboardData =  null;
       let selectedTrustId = window.sessionStorage.getItem("selectedTrustId")
       projectStore.selectedProjectScreen = 1
       await projectStore.getProjectDashboardByTrustId(selectedTrustId as string)
