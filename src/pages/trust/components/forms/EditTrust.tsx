@@ -52,8 +52,8 @@ const EditTrust = observer(() => {
         const response = await trustStore.createTrust(payload)
         if (response) {
           toast.success("Trust Update Successful");
-          
           trustStore.getFormSteps()
+          trustStore.pageSwitched = 1;
         }
       } catch (error: any) {
         const message = error?.response?.body?.message;

@@ -50,6 +50,7 @@ const CreateTrust = observer(() => {
           trustStore.trustFormData = {} as ITrustPayloadData;
           method.reset()
           trustStore.getFormSteps()
+          trustStore.pageSwitched = 1
         }
       } catch (error: any) {
         const message = error?.response?.body?.message;

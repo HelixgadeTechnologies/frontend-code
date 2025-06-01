@@ -110,15 +110,15 @@ const EstablishmentDashboard = observer(() => {
         <ul className="space-y-3">
           <li className="flex justify-between items-center">
             <span className="text-gray-600">Total Funds</span>
-            <span className="font-semibold text-black">NGN {trustEstablishmentStore.dashboardData?.TOTAL_FUNDS.toLocaleString()}</span>
+            <span className="font-semibold text-black">NGN {trustEstablishmentStore.dashboardData?.TOTAL_FUNDS?.toLocaleString()}</span>
           </li>
           <li className="flex justify-between items-center">
             <span className="text-gray-600">Capital Expenditure</span>
-            <span className="font-semibold text-black">NGN {trustEstablishmentStore.dashboardData?.CAPITAL_EXPENDITURE.toLocaleString()}</span>
+            <span className="font-semibold text-black">NGN {trustEstablishmentStore.dashboardData?.CAPITAL_EXPENDITURE?.toLocaleString()}</span>
           </li>
           <li className="flex justify-between items-center">
             <span className="text-gray-600">Reserve</span>
-            <span className="font-semibold text-black">NGN {trustEstablishmentStore.dashboardData?.RESERVE.toLocaleString()}</span>
+            <span className="font-semibold text-black">NGN {trustEstablishmentStore.dashboardData?.RESERVE?.toLocaleString()}</span>
           </li>
         </ul>
       </div>
