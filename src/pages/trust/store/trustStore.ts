@@ -1,4 +1,4 @@
-import { makeAutoObservable, ObservableMap, toJS } from "mobx"
+import { makeAutoObservable, ObservableMap } from "mobx"
 import { IStateAndLGA, ITrust, ITrustList, ITrustPayload, ITrustPayloadData, ITrustStore } from "../types/interface";
 import { trustService } from "../service/trustService";
 import { TabType } from "../../project/types/interface";

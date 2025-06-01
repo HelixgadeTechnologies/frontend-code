@@ -6,7 +6,6 @@ import DashboardLayout from "../../layouts/DashboardLayout";
 import DashboardPage from "./DashboardPage";
 
 import Trusts from "../trust/components";
-import CreateTrust from "../trust/components/forms/CreateTrust";
 import ProfileSettings from "../Settings/components";
 import ManageAdmin from "../Settings/components/ManageAdmin";
 import ManageDRA from "../Settings/components/ManageDRA";
