@@ -7,17 +7,23 @@ export interface ITrustEstablishmentStore {
     isSubmitting: boolean;
     pageSwitch: number;
     isDashboardLoading: boolean;
+    isDeleting: boolean;
     operationCount: ObservableMap<string, number>;
     trustEstablishmentStatus: ITrustEstablishmentStatus | null;
     dashboardData: IFinishedDashboard | null;
     createTrustEstablishment(payload: ITrustEstablishmentPayload): Promise<boolean>;
+    calculateTrustEstablishmentCompletion(data: ITrustEstablishmentPayload): number;
     getSingleTrustEstablishmentStatus(trustId: string): Promise<void>;
     uploadFile(payload: IUploadPayload): Promise<HCDTRequestResponse>;
+    destroyCACDocument(url: string, trustEstablishmentId: string): Promise<void>;
+    destroyMatrixDocument(url: string, trustEstablishmentId: string): Promise<void>;
     transformDashboard(data: IEstablishmentDashboard): IFinishedDashboard;
     getEstablishmentDashboardByTrustId(trustId: string): Promise<void>;
 }
-
-export interface ITrustEstablishmentPayload {
+interface BaseCompletionItem {
+    completionStatus?: number;
+}
+export interface ITrustEstablishmentPayload extends BaseCompletionItem {
     trustEstablishmentStatusId: string,
     trustId: string,
     trustRegisteredWithCAC: number,
@@ -111,14 +117,16 @@ export interface ISubFields {
     pwDsConsulted: number,
     yearOfNeedsAssessment: number,
     trustDistributionMatrixDocument: string,
+    completionStatus: number,
+    updateAt: string,
 }
 
-export interface  ITrends{
+export interface ITrends {
     settlorOperationalExpenditureYear: number,
     settlorOperationalExpenditure: number
 }
 
-export interface  IOperationYear{
+export interface IOperationYear {
     trustDevPlanProgress: number
 }
 export interface IEstablishmentDashboard {
@@ -144,6 +152,7 @@ export interface IFinishedDashboard {
     DEVELOP_PLAN_AND_BUDGET_PERCENTAGE: number,
     TRENDS_YEAR: Array<string>,
     TRENDS_AMOUNT: Array<string>,
-
+    COMPLETION_STATUS: number,
+    DATE_UPDATED?: String,
 }
 

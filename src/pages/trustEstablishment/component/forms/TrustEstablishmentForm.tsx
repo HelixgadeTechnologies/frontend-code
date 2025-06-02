@@ -96,9 +96,11 @@ const TrustEstablishmentForm = observer(() => {
         developmentPlanDocument:uploadResDevelopmentPlanDocument.success?uploadResDevelopmentPlanDocument.data:"",
         developmentPlanDocumentMimeType:developmentPlanDocument == undefined?"":developmentPlanDocument.mimeType,
         trustDistributionMatrixDocument: uploadResTrustDistributionMatrixDocument.success?uploadResTrustDistributionMatrixDocument.data:"",
-        trustDistributionMatrixDocumentMimeType:trustDistributionMatrixDocument == undefined?"":trustDistributionMatrixDocument.mimeType,
+        trustDistributionMatrixDocumentMimeType:trustDistributionMatrixDocument == undefined?"":trustDistributionMatrixDocument.mimeType
       };
-      
+      const completion = trustEstablishmentStore.calculateTrustEstablishmentCompletion(establishmentData);
+      establishmentData.completionStatus = completion;
+
       const response = await trustEstablishmentStore.createTrustEstablishment(establishmentData)
       if (response) {
         toast.success("Trust Establishment Successfully Submitted");

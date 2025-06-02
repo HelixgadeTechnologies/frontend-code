@@ -104,7 +104,7 @@ const EditTrustEstablishmentForm = observer(() => {
       let trustDistributionMatrixDocument = data.trustDistributionMatrixDocument == undefined ? undefined : await convertFileToBase64(data.trustDistributionMatrixDocument)
       const uploadResTrustDistributionMatrixDocument = trustDistributionMatrixDocument == undefined ? { success: false, message: "", data: "" } : await trustEstablishmentStore.uploadFile(trustDistributionMatrixDocument)
       const establishmentData: ITrustEstablishmentPayload = {
-        trustEstablishmentStatusId: "",
+        trustEstablishmentStatusId: "hello",
         trustId: trustStore.selectedTrustId as string,
         admin: data.admin.value as string,
         advisoryCommitteeConstitutedAndInaugurated: Number(data.advisoryCommitteeConstitutedAndInaugurated),
@@ -138,6 +138,8 @@ const EditTrustEstablishmentForm = observer(() => {
         trustDistributionMatrixDocument: uploadResTrustDistributionMatrixDocument.success ? uploadResTrustDistributionMatrixDocument.data : trustEstablishmentStore.trustEstablishmentStatus?.trustDistributionMatrixDocument,
         trustDistributionMatrixDocumentMimeType: trustDistributionMatrixDocument == undefined ? trustEstablishmentStore.trustEstablishmentStatus?.trustDistributionMatrixDocumentMimeType! : trustDistributionMatrixDocument.mimeType,
       };
+      const completion = trustEstablishmentStore.calculateTrustEstablishmentCompletion(establishmentData);
+      establishmentData.completionStatus = completion;
 
       const response = await trustEstablishmentStore.createTrustEstablishment(establishmentData)
       if (response) {

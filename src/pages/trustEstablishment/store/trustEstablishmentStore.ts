@@ -8,6 +8,7 @@ class TrustEstablishmentStore implements ITrustEstablishmentStore {
     isSubmitting = false;
     isDashboardLoading = false;
     isEstablishmentCreated = false;
+    isDeleting = false
     pageSwitch: number = 1;
     dashboardData: IFinishedDashboard | null = null;
     operationCount = new ObservableMap<string, number>();
@@ -28,6 +29,35 @@ class TrustEstablishmentStore implements ITrustEstablishmentStore {
         } finally {
             this.isSubmitting = false;
         }
+    }
+
+
+    calculateTrustEstablishmentCompletion(data: ITrustEstablishmentPayload): number {
+        const keys = Object.keys(data) as (keyof ITrustEstablishmentPayload)[];
+
+        // Filter out keys you want to skip
+        const relevantKeys = keys.filter(key => key !== 'completionStatus');
+
+        const totalFields = relevantKeys.length;
+
+        const filledFields = relevantKeys.reduce((count, key) => {
+            const value = data[key];
+
+            const isFilled =
+                value !== null &&
+                value !== undefined &&
+                (
+                    (typeof value === 'string' && value.trim() !== '') ||
+                    (typeof value === 'number') || // include 0 as valid
+                    (typeof value === 'boolean') ||
+                    (Array.isArray(value) && value.length > 0)
+                );
+
+            return count + (isFilled ? 1 : 0);
+        }, 0);
+
+        const percentage = (filledFields / totalFields) * 100;
+        return Math.round(percentage);
     }
 
     async getSingleTrustEstablishmentStatus(trustId: string): Promise<void> {
@@ -61,10 +91,40 @@ class TrustEstablishmentStore implements ITrustEstablishmentStore {
             throw error;
         }
     }
+    async destroyCACDocument(url: string, trustEstablishmentId: string): Promise<void> {
+        try {
+            this.isDeleting = true
+            this.dashboardData = null; // Reset dashboard data on new submission
+            await trustEstablishmentService.removeCACFile(trustEstablishmentId);
+            await trustEstablishmentService.destroyCloudFile(url);
+            await this.getSingleTrustEstablishmentStatus(this.trustEstablishmentStatus?.trustId as string);
+            await this.getEstablishmentDashboardByTrustId(this.trustEstablishmentStatus?.trustId as string);
+        } catch (error) {
+            throw error;
+        } finally {
+            this.isDeleting = false
+        }
+    }
+    async destroyMatrixDocument(url: string, trustEstablishmentId: string): Promise<void> {
+        try {
+            this.isDeleting = true
+            this.dashboardData = null; // Reset dashboard data on new submission
+            await trustEstablishmentService.destroyCloudFile(url);
+            await trustEstablishmentService.removeMatrixFile(trustEstablishmentId);
+            await this.getSingleTrustEstablishmentStatus(this.trustEstablishmentStatus?.trustId as string);
+            await this.getEstablishmentDashboardByTrustId(this.trustEstablishmentStatus?.trustId as string);
+        } catch (error) {
+            throw error;
+        } finally {
+            this.isDeleting = false
+        }
+    }
 
     transformDashboard(data: IEstablishmentDashboard): IFinishedDashboard {
         return {
             TOTAL_FUNDS: data.SUB_FIELDS[0]?.totalFundsReceivedByTrust,
+            COMPLETION_STATUS: data.SUB_FIELDS[0]?.completionStatus,
+            DATE_UPDATED: data.SUB_FIELDS[0]?.updateAt,
             CAPITAL_EXPENDITURE: data.SUB_FIELDS[0]?.capitalExpenditure,
             RESERVE: data.SUB_FIELDS[0]?.reserve,
             CAC_STATUS: data.SUB_FIELDS[0]?.trustRegisteredWithCAC,

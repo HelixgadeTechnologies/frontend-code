@@ -1,4 +1,4 @@
-import { createContext, useContext } from "react";
+import { createContext, useCallback, useContext, useState } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -11,9 +11,13 @@ import {
   ChartOptions,
   ArcElement,
 } from "chart.js";
-import { Doughnut, Line } from "react-chartjs-2";
+import { Doughnut, Line, Pie } from "react-chartjs-2";
 import { trustEstablishmentStore as TrustEstablishmentStore } from "../../store/trustEstablishmentStore"
 import { observer } from "mobx-react-lite";
+import FileCard from "./FileCard";
+import dayjs from "dayjs";
+import { Modal } from "../../../../components/elements";
+import { DeleteFile } from "../modal/DeleteFile";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -28,6 +32,9 @@ ChartJS.register(
 const TrustEstablishmentStoreCTX = createContext(TrustEstablishmentStore);
 const EstablishmentDashboard = observer(() => {
   const trustEstablishmentStore = useContext(TrustEstablishmentStoreCTX);
+
+  const [type, setType] = useState<string | null>(null);
+  const [url, setUrl] = useState<string | null>(null);
   const chartOptions: ChartOptions<"line"> = {
     responsive: true,
     maintainAspectRatio: false,
@@ -84,7 +91,7 @@ const EstablishmentDashboard = observer(() => {
       tooltip: { enabled: false },
     },
   };
-  const classColors = (data: number): string => {
+  const classColors = (data: number | undefined): string => {
     if (data == 1) return "bg-green-100 text-green-700 px-3 py-1 rounded text-xs font-medium";
     if (data == 2) return "bg-blue-100 text-blue-700 px-3 py-1 rounded text-xs font-medium";
     if (data == 3) return "bg-red-100 text-red-700 px-3 py-1 rounded text-xs font-medium";
@@ -100,59 +107,107 @@ const EstablishmentDashboard = observer(() => {
     if (data == 1) return "UPLOADED";
     if (data == 2) return "IN PROGRESS";
     if (data == 3) return "NO UPLOAD";
-    return "";
+    return "NO UPLOAD";
   }
+
+  const handelFileDelete = useCallback((url: string, type: string) => {
+    setUrl(url);
+    setType(type);
+  }, [url, type]);
+  const handelClose = useCallback(() => {
+    setUrl(null);
+    setType(null);
+  }, [url, type]);
+
   return (
     <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
       {/* Financial Summary */}
-      <div className="bg-white rounded-lg p-5 flex flex-col gap-4 shadow min-h-[180px]">
+      <div className="bg-white rounded-xl p-5 flex flex-col gap-4 shadow min-h-[320px]">
         <h3 className="font-semibold text-lg mb-2">Financial Summary</h3>
-        <ul className="space-y-3">
-          <li className="flex justify-between items-center">
-            <span className="text-gray-600">Total Funds</span>
-            <span className="font-semibold text-black">NGN {trustEstablishmentStore.dashboardData?.TOTAL_FUNDS?.toLocaleString()}</span>
-          </li>
-          <li className="flex justify-between items-center">
-            <span className="text-gray-600">Capital Expenditure</span>
-            <span className="font-semibold text-black">NGN {trustEstablishmentStore.dashboardData?.CAPITAL_EXPENDITURE?.toLocaleString()}</span>
-          </li>
-          <li className="flex justify-between items-center">
-            <span className="text-gray-600">Reserve</span>
-            <span className="font-semibold text-black">NGN {trustEstablishmentStore.dashboardData?.RESERVE?.toLocaleString()}</span>
-          </li>
-        </ul>
+        <div className="flex flex-col items-center">
+          <div className="w-40 h-40 mb-4">
+            <Pie
+              data={{
+                labels: ["Reserve", "Capital expenditure"],
+                datasets: [
+                  {
+                    data: [
+                      // trustEstablishmentStore.dashboardData?.ADMIN || 0,
+                      trustEstablishmentStore.dashboardData?.RESERVE || 0,
+                      trustEstablishmentStore.dashboardData?.CAPITAL_EXPENDITURE || 0,
+                      // trustEstablishmentStore.dashboardData?.TOTAL_FUNDS || 0,
+                    ],
+                    backgroundColor: [
+                      // "#3366CC", // Admin - blue
+                      "#34C759", // Reserve - green
+                      "#FF3B30", // Capital expenditure - red
+                      // "#FFCC00", // Total Funds - yellow
+                    ],
+                    borderWidth: 0,
+                  },
+                ],
+              }}
+              options={{
+                plugins: {
+                  legend: { display: false },
+                  tooltip: { enabled: false },
+                },
+                cutout: "70%",
+              }}
+            />
+          </div>
+          <ul className="space-y-2 w-full">
+            {/* <li className="flex items-center gap-2 text-sm">
+        <span className="inline-block w-3 h-3 rounded-full" style={{ background: "#3366CC" }}></span>
+        <span className="text-gray-600 flex-1">Admin</span>
+        <span className="font-medium text-gray-900">USD {trustEstablishmentStore.dashboardData?.ADMIN?.toLocaleString() || 0}</span>
+      </li> */}
+            <li className="flex items-center gap-2 text-sm">
+              <span className="inline-block w-3 h-3 rounded-full" style={{ background: "#34C759" }}></span>
+              <span className="text-gray-600 flex-1">Reserve</span>
+              <span className="font-medium text-gray-900">USD {trustEstablishmentStore.dashboardData?.RESERVE?.toLocaleString() || 0}</span>
+            </li>
+            <li className="flex items-center gap-2 text-sm">
+              <span className="inline-block w-3 h-3 rounded-full" style={{ background: "#FF3B30" }}></span>
+              <span className="text-gray-600 flex-1">Capital expenditure</span>
+              <span className="font-medium text-gray-900">USD {trustEstablishmentStore.dashboardData?.CAPITAL_EXPENDITURE?.toLocaleString() || 0}</span>
+            </li>
+            <li className="flex items-center gap-2 text-sm">
+              <span className="inline-block w-3 h-3 rounded-full" style={{ background: "#FFCC00" }}></span>
+              <span className="text-gray-600 flex-1">Total Funds</span>
+              <span className="font-medium text-gray-900">USD {trustEstablishmentStore.dashboardData?.TOTAL_FUNDS?.toLocaleString() || 0}</span>
+            </li>
+          </ul>
+        </div>
       </div>
 
       {/* Trust Establishment and Governance */}
       <div className="bg-white rounded-lg p-5 flex flex-col gap-4 shadow col-span-2">
         <h3 className="font-semibold text-lg mb-2">Trust Establishment and Governance</h3>
-
+        <div>
+          <div className="flex justify-between items-center mb-1">
+            <span className="text-gray-600">Trust Setup</span>
+            <span className="text-gray-600">{trustEstablishmentStore.dashboardData?.COMPLETION_STATUS ? trustEstablishmentStore.dashboardData?.COMPLETION_STATUS : 0}%</span>
+          </div>
+          <div className="w-full bg-gray-200 rounded-full h-2">
+            <div className="bg-green-500 h-2 rounded-full" style={{ width: `${trustEstablishmentStore.dashboardData?.COMPLETION_STATUS ? trustEstablishmentStore.dashboardData?.COMPLETION_STATUS : 0}%` }} />
+          </div>
+        </div>
         <div>
           <div className="flex justify-between items-center">
             <span className="text-gray-600">CAC Registration</span>
             <span className={classColors(trustEstablishmentStore.dashboardData?.CAC_STATUS!)}>{translator2(trustEstablishmentStore.dashboardData?.CAC_STATUS!)}</span>
           </div>
         </div>
-        <div className="flex items-center gap-2 bg-gray-50 p-2 rounded">
+        <div className="flex items-center gap-2  p-2 rounded">
           {trustEstablishmentStore.dashboardData?.CAC_DOCUMENT ? (
-            <>
-              <span className="text-green-600 font-bold">✔</span>
-              <a
-                href={trustEstablishmentStore.dashboardData?.CAC_DOCUMENT ? trustEstablishmentStore.dashboardData?.CAC_DOCUMENT : "#"}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-700 text-sm hover:underline"
-                download
-              >
-                CAC Registration
-              </a>
-              <span className="text-xs text-gray-400">
-                {/* 11 Sep, 2023 • 11:44am • 1.5MB */}
-              </span>
-              <button className="ml-2 text-red-500 hover:text-red-700 font-bold text-lg" title="Delete">
-                .
-              </button>
-            </>
+            <FileCard
+              fileName="CAC Registration Document"
+              fileUrl={trustEstablishmentStore.dashboardData?.CAC_DOCUMENT ? trustEstablishmentStore.dashboardData?.CAC_DOCUMENT : "#"}
+              uploadedAt={dayjs(trustEstablishmentStore.dashboardData?.DATE_UPDATED as string).format("DD MMM, YYYY  h:mmA")}
+              fileSize="1.3MB"
+              onDelete={() => handelFileDelete(trustEstablishmentStore.dashboardData?.CAC_DOCUMENT!, "CAC")}
+            />
           ) : "No CAC Registration Uploaded"}
         </div>
       </div>
@@ -180,77 +235,116 @@ const EstablishmentDashboard = observer(() => {
         </div>
       </div>
 
-      {/* Status of Needs Assessment */}
-      <div className="bg-white rounded-lg p-5 shadow mt-6 col-span-2">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="font-semibold text-lg">Status of Needs Assessment</h3>
-          <div className="w-32">
-            <div className="border rounded px-2 py-1 text-sm">
-              {trustEstablishmentStore.dashboardData?.YEAR_NEEDS}
-            </div>
+
+      <div className="rounded-xl mt-6 col-span-2 overflow-hidden">
+        {/* Top gray header */}
+        <div className="bg-[#F3F5F7] flex items-center justify-between px-6 py-4">
+          <div>
+            <h3 className="font-semibold text-lg text-gray-900">Status of Needs Assessment</h3>
+            <p className="text-gray-500 text-sm mt-1">Status needs assessment for the trust</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <label htmlFor="year-select" className="text-gray-500 text-sm mr-2">Select Year</label>
+            <select
+              id="year-select"
+              className="border rounded px-3 py-1 text-sm bg-white focus:outline-none"
+              value={trustEstablishmentStore.dashboardData?.YEAR_NEEDS}
+              disabled
+            >
+              <option>{trustEstablishmentStore.dashboardData?.YEAR_NEEDS}</option>
+            </select>
           </div>
         </div>
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <span>Were the Leaders consulted?</span>
-            <span className={classColors(trustEstablishmentStore.dashboardData?.LEADER_CONSULTED!)}>{translator(trustEstablishmentStore.dashboardData?.LEADER_CONSULTED!)}</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span>Were the Youth consulted?</span>
-            <span className={classColors(trustEstablishmentStore.dashboardData?.YOUTH_CONSULTED!)}>{translator(trustEstablishmentStore.dashboardData?.YOUTH_CONSULTED!)}</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span>Were the Women consulted?</span>
-            <span className={classColors(trustEstablishmentStore.dashboardData?.WOMEN_CONSULTED!)}>{translator(trustEstablishmentStore.dashboardData?.WOMEN_CONSULTED!)}</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span>Were the PwDs consulted?</span>
-            <span className={classColors(trustEstablishmentStore.dashboardData?.PWD_CONSULTED!)}>{translator(trustEstablishmentStore.dashboardData?.PWD_CONSULTED!)}</span>
+        {/* White info section */}
+        <div className="bg-white px-6 py-4">
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <span>Were the Leaders consulted?</span>
+              <span className={classColors(trustEstablishmentStore.dashboardData?.LEADER_CONSULTED!)}>{translator(trustEstablishmentStore.dashboardData?.LEADER_CONSULTED!)}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span>Were the Youth consulted?</span>
+              <span className={classColors(trustEstablishmentStore.dashboardData?.YOUTH_CONSULTED!)}>{translator(trustEstablishmentStore.dashboardData?.YOUTH_CONSULTED!)}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span>Were the Women consulted?</span>
+              <span className={classColors(trustEstablishmentStore.dashboardData?.WOMEN_CONSULTED!)}>{translator(trustEstablishmentStore.dashboardData?.WOMEN_CONSULTED!)}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span>Were the PwDs consulted?</span>
+              <span className={classColors(trustEstablishmentStore.dashboardData?.PWD_CONSULTED!)}>{translator(trustEstablishmentStore.dashboardData?.PWD_CONSULTED!)}</span>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Trust Compliance & Distribution Matrix */}
-      <div className="bg-white rounded-lg p-5 shadow mt-6 flex-1">
+      {/* <div className="bg-white rounded-lg p-5 shadow mt-6 flex-1">
         <div className="flex items-center justify-between mb-3">
           <h3 className="font-semibold text-lg">Trust Compliance</h3>
-          {/* <div className="w-32">
-            <select className="border rounded px-2 py-1 text-sm">
-              <option>2024</option>
-            </select>
-          </div> */}
         </div>
         <div>
           <div className="flex items-center justify-between mb-2">
             <span>Trust Distribution Matrix Upload</span>
-            <span className={classColors(trustEstablishmentStore.dashboardData?.DISTRIBUTION_MATRIX! ? 1 : 3)}>{translator2(trustEstablishmentStore.dashboardData?.DISTRIBUTION_MATRIX! ? 1 : 3)}</span>
+            <span className={classColors(trustEstablishmentStore.dashboardData?.DISTRIBUTION_MATRIX! ? 1 : undefined)}>{translator2(trustEstablishmentStore.dashboardData?.DISTRIBUTION_MATRIX! ? 1 : 3)}</span>
           </div>
-          <div className="flex items-center gap-2 bg-gray-50 p-2 rounded">
+          <div className="flex items-center gap-2 p-2 rounded">
             {trustEstablishmentStore.dashboardData?.DISTRIBUTION_MATRIX ? (
-              <>
-                <span className="text-green-600 font-bold">✔</span>
-                <a
-                  href={trustEstablishmentStore.dashboardData?.DISTRIBUTION_MATRIX || "#"}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-700 text-sm hover:underline"
-                  download
-                >
-                  Distribution Matrix
-                </a>
-                <span className="text-xs text-gray-400">
-                  {/* 11 Sep, 2023 • 11:44am • 1.5MB */}
-                </span>
-                <button className="ml-2 text-red-500 hover:text-red-700 font-bold text-lg" title="Delete">
-                  .
-                </button>
 
-              </>
+              <FileCard
+                fileName={`${trustEstablishmentStore.dashboardData?.YEAR_NEEDS} Distribution Matrix`}
+                fileUrl={trustEstablishmentStore.dashboardData?.DISTRIBUTION_MATRIX || "#"}
+                uploadedAt={dayjs(trustEstablishmentStore.dashboardData?.DATE_UPDATED as string).format("DD MMM, YYYY  h:mmA")}
+                fileSize="1.3MB"
+                onDelete={() => handelFileDelete(trustEstablishmentStore.dashboardData?.DISTRIBUTION_MATRIX!, "Matrix")}
+              />
 
             ) : "No Distribution Matrix Uploaded"}
           </div>
         </div>
+      </div> */}
+      <div className="bg-white rounded-xl p-6 shadow mt-6 flex-1">
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="font-semibold text-lg">Trust Compliance</h3>
+        </div>
+        <div>
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-gray-700">Trust Distribution Matrix Upload</span>
+            <span className={classColors(trustEstablishmentStore.dashboardData?.DISTRIBUTION_MATRIX! ? 1 : undefined)}>
+              {translator2(trustEstablishmentStore.dashboardData?.DISTRIBUTION_MATRIX! ? 1 : 3)}
+            </span>
+          </div>
+          <div className="flex items-center">
+            {trustEstablishmentStore.dashboardData?.DISTRIBUTION_MATRIX ? (
+              <div className="w-full">
+                <div className="bg-[#F8FAFB] rounded-lg p-4">
+                  <FileCard
+                    fileName={`${trustEstablishmentStore.dashboardData?.YEAR_NEEDS} Distribution Matrix`}
+                    fileUrl={trustEstablishmentStore.dashboardData?.DISTRIBUTION_MATRIX || "#"}
+                    uploadedAt={dayjs(trustEstablishmentStore.dashboardData?.DATE_UPDATED as string).format("DD MMM, YYYY  h:mmA")}
+                    fileSize="1.3MB"
+                    onDelete={() => handelFileDelete(trustEstablishmentStore.dashboardData?.DISTRIBUTION_MATRIX!, "Matrix")}
+                  />
+                </div>
+              </div>
+            ) : (
+              <span className="text-gray-400">No Distribution Matrix Uploaded</span>
+            )}
+          </div>
+        </div>
       </div>
+      {url && (
+        <Modal
+          body={
+            <DeleteFile
+              close={handelClose}
+              type={type as string}
+              url={url}
+              store={trustEstablishmentStore}
+            />
+          }
+        />
+      )}
     </div>
   );
 });

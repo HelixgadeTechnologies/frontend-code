@@ -9,5 +9,11 @@ export const trustEstablishmentService = {
 
     upload: (payload: IUploadPayload): Promise<HCDTRequestResponse> => client.post('/upload/file-upload', { ...payload }),
 
-    getDashboard: (trustId:string): Promise<HCDTRequestResponse> => client.get(`/trust/dashboard/${trustId}`)
+    destroyCloudFile: (url: string): Promise<HCDTRequestResponse> => client.post('/upload/file-destroy', { url }),
+
+    getDashboard: (trustId: string): Promise<HCDTRequestResponse> => client.get(`/trust/dashboard/${trustId}`),
+
+    removeCACFile: (trustEstablishmentId: string): Promise<HCDTRequestResponse> => client.del(`/trust/remove-cac-file/${trustEstablishmentId}`),
+
+    removeMatrixFile: (trustEstablishmentId: string): Promise<HCDTRequestResponse> => client.del(`/trust/remove-matrix-file/${trustEstablishmentId}`)
 }
