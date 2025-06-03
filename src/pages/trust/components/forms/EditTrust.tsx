@@ -21,11 +21,11 @@ const EditTrust = observer(() => {
       trustStore.getFormSteps()
       trustStore.getAllStates()
       await trustStore.getSingleTrust(trustStore.selectedTrustId as string);
-      
+
     }
     loadRequests();
   }, []);
-  
+
   // console.log("Trust Form Data:", toJS(trustStore.trustFormData.settlor.split(",").map((e: string) => { return { label: e, value: e } })), );
   const method = useForm({
     defaultValues: {
@@ -45,6 +45,9 @@ const EditTrust = observer(() => {
   const saveProjectData = useCallback(() => {
     async function loadRequests() {
       try {
+        const completion = trustStore.calculateTrustCompletion(trustStore.trustFormData);
+        trustStore.trustFormData.completionStatus = completion;
+
         const payload: ITrustPayload = {
           isCreate: false,
           data: trustStore.trustFormData

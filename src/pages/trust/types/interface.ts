@@ -18,6 +18,7 @@ export interface ITrustStore {
     selectedLGA: string;
     allStates: ObservableMap<string, string>;
     allLGA: ObservableMap<string, string>;
+    calculateTrustCompletion(data: ITrustPayloadData): number;
     getFormSteps(): void;
     setActiveTab(active: TabType): void;
     setCompletedTab(): void;
@@ -129,7 +130,8 @@ export interface ITrustPayloadData {
     totalPwdAdvisoryCommitteeMembers: number,
     totalMaleManagementCommitteeMembers: number,
     totalFemaleManagementCommitteeMembers: number,
-    totalPwdManagementCommitteeMembers: number
+    totalPwdManagementCommitteeMembers: number,
+    completionStatus?: number,
 }
 
 

@@ -65,7 +65,7 @@ const CommunitySatisfaction = observer(() => {
                         <Button
                             onClick={openAddForm}
                             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                            buttonText="Add Component"
+                            buttonText="Add Report"
                             width="w-fit"
                             type="button"
                         />

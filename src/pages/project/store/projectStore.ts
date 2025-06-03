@@ -122,11 +122,11 @@ class ProjectStore implements IProjectStore {
     async createProject(payload: IProjectPayload): Promise<boolean> {
         try {
             this.isSubmitting = true;
-            // this.isDashboardLoading = false;
-            // this.dashboardData = null;
+            this.isDashboardLoading = false;
+            this.dashboardData = null;
             await projectService.createAndUpdateProject(payload);
             await this.getProjects(payload.data.trustId || "");
-            // await this.getConflictDashboardByTrustId(trustId || "")
+            await this.getProjectDashboardByTrustId(payload.data.trustId || "")
             return true;
         } catch (error) {
             throw error;

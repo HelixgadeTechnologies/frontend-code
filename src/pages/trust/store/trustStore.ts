@@ -24,7 +24,33 @@ class TrustStore implements ITrustStore {
     constructor() {
         makeAutoObservable(this);
     }
+    calculateTrustCompletion(data: ITrustPayloadData): number {
+        const keys = Object.keys(data) as (keyof ITrustPayloadData)[];
 
+        // Filter out keys you want to skip
+        const relevantKeys = keys.filter(key => key !== 'completionStatus');
+
+        const totalFields = relevantKeys.length;
+
+        const filledFields = relevantKeys.reduce((count, key) => {
+            const value = data[key];
+
+            const isFilled =
+                value !== null &&
+                value !== undefined &&
+                (
+                    (typeof value === 'string' && value.trim() !== '') ||
+                    (typeof value === 'number') || // include 0 as valid
+                    (typeof value === 'boolean') ||
+                    (Array.isArray(value) && value.length > 0)
+                );
+
+            return count + (isFilled ? 1 : 0);
+        }, 0);
+
+        const percentage = (filledFields / totalFields) * 100;
+        return Math.round(percentage);
+    }
     getFormSteps(): void {
         const tabs: TabType[] = [
             {

@@ -67,7 +67,7 @@ const ProjectDashboard = observer(() => {
                 align: "end" as const, // Align legend to the end
             },
             title: {
-                display: true,
+                display: false,
                 text: "Number of Trust Project by Category",
             },
         },
@@ -156,7 +156,7 @@ const ProjectDashboard = observer(() => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Line Chart 1 */}
                 <div className="bg-white p-3 rounded-md shadow-sm">
-                    <h3 className="text-xs font-medium text-gray-600 mb-2">Number of community members benefitting from livelihood/ human capacity development initiatives</h3>
+                    <h3 className="font-semibold text-lg text-gray-600 mb-2">Number of community members benefitting from livelihood/ human capacity development initiatives</h3>
                     <div className="h-80 flex items-center justify-center">
                         <Line options={chartOptions} data={data1} />
                     </div>
@@ -164,7 +164,7 @@ const ProjectDashboard = observer(() => {
 
                 {/* Pie Chart 1 */}
                 <div className="bg-white p-3 rounded-md shadow-sm">
-                    <h3 className="text-xs font-medium text-gray-600 mb-2"> Number of Trust Project by Category</h3>
+                    <h3 className="font-semibold  text-lg text-gray-600 mb-2"> Number of Trust Project by Category</h3>
                     <div className="h-80 flex items-center justify-center">
                         <Pie options={pieChartOptions} data={pieChartData1} />
                     </div>
@@ -172,7 +172,7 @@ const ProjectDashboard = observer(() => {
 
                 {/* Line Chart 2 */}
                 <div className="bg-white p-3 rounded-md shadow-sm">
-                    <h3 className="text-xs font-medium text-gray-600 mb-2"> Number of Trust community members who were locally employed by HCDT project contractors</h3>
+                    <h3 className="font-semibold text-lg text-gray-600 mb-2"> Number of Trust community members who were locally employed by HCDT project contractors</h3>
                     <div className="h-80 flex items-center justify-center">
                         <Line options={chartOptions} data={data2} />
                     </div>
@@ -181,7 +181,7 @@ const ProjectDashboard = observer(() => {
 
                 {/* Pie Chart 2 */}
                 <div className="bg-white p-3 rounded-md shadow-sm">
-                    <h3 className="text-xs font-medium text-gray-600 mb-2">Number of Trust Project by Status</h3>
+                    <h3 className="font-semibold text-lg text-gray-600 mb-2">Number of Trust Project by Status</h3>
                     <div className="h-80 flex items-center justify-center">
                         <Pie options={pieChartOptions} data={pieChartData2} />
                     </div>

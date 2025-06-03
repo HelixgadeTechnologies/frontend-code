@@ -40,6 +40,9 @@ const CreateTrust = observer(() => {
   const saveProjectData = useCallback(() => {
     async function loadRequests() {
       try {
+        const completion = trustStore.calculateTrustCompletion(trustStore.trustFormData);
+        trustStore.trustFormData.completionStatus = completion;
+  
         const payload: ITrustPayload = {
           isCreate: true,
           data: trustStore.trustFormData

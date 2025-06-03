@@ -1,4 +1,4 @@
-import { makeAutoObservable, ObservableMap, toJS } from "mobx";
+import { makeAutoObservable, ObservableMap } from "mobx";
 import { ICauseOfConflict, ICauseOfConflictDashboard, IConflictDashboard, IConflictDashboardOutput, IConflictPayload, IConflictStatus, IConflictStore, IConflictView, ICourtLitigationStatus, IIssuesAddressBy, IPartiesInvolve } from "../types/interface";
 import { conflictService } from "../service/conflictServices";
 import { IDropdownProp } from "../../Settings/types/interface";
@@ -186,7 +186,7 @@ class ConflictStore implements IConflictStore {
                         this.courtLitigationStatus.set(litigation.courtLitigationStatusId, litigation);
                     });
                 }
-            } 
+            }
             return true;
 
         } catch (error) {
@@ -264,7 +264,7 @@ class ConflictStore implements IConflictStore {
             if (data.success) {
                 const processedData = this.transformConflictDashboard(data.data);
                 this.dashboardData = processedData;
-                console.log(toJS(processedData))
+                // console.log(toJS(processedData))
             }
         } catch (error) {
             throw error;

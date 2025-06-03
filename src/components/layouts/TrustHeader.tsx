@@ -8,9 +8,9 @@ const TrustHeader = () => {
       <div className="flex items-center  gap-x-7">
         <button className="relative">
           <img src={bellIcon} alt="notification" />
-          <span className="absolute top-0 -right-1 h-4 w-4 rounded-full flex items-center justify-center bg-primary-200 text-white text-[10px] font-semibold ">
+          {/* <span className="absolute top-0 -right-1 h-4 w-4 rounded-full flex items-center justify-center bg-primary-200 text-white text-[10px] font-semibold ">
             4
-          </span>
+          </span> */}
         </button>
 
         <button className="h-9 w-9 rounded-full bg-primary-200/20 flex items-center justify-center">

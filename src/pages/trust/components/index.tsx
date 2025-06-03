@@ -14,6 +14,7 @@ const Trusts = observer(() => {
   }, [trustStore]);
 
   const switchPage = useCallback(() => {
+    trustStore.trustFormData = {} as any;
     trustStore.pageSwitched = 2;
   }, [trustStore]);
   return (
