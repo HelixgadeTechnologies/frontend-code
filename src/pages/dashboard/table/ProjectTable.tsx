@@ -1,5 +1,5 @@
 import { RowSelectionState } from "@tanstack/react-table";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 // import { EmptyTable, LoadingTable, Table } from "../../../../components/elements";
 import { observer } from "mobx-react-lite";
 // import { IConflictStore, IConflictView } from "../../types/interface";
@@ -53,7 +53,7 @@ export const ProjectTable = observer(({ conflictStore }: { conflictStore: any })
                     return <span>{formatted}</span>;
                 },
             },
-            
+
         ],
         [],
     );
