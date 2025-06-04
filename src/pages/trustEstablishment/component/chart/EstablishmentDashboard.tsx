@@ -152,16 +152,11 @@ const EstablishmentDashboard = observer(() => {
                   legend: { display: false },
                   tooltip: { enabled: false },
                 },
-                cutout: "70%",
+                cutout: "40%",
               }}
             />
           </div>
           <ul className="space-y-2 w-full">
-            {/* <li className="flex items-center gap-2 text-sm">
-        <span className="inline-block w-3 h-3 rounded-full" style={{ background: "#3366CC" }}></span>
-        <span className="text-gray-600 flex-1">Admin</span>
-        <span className="font-medium text-gray-900">USD {trustEstablishmentStore.dashboardData?.ADMIN?.toLocaleString() || 0}</span>
-      </li> */}
             <li className="flex items-center gap-2 text-sm">
               <span className="inline-block w-3 h-3 rounded-full" style={{ background: "#34C759" }}></span>
               <span className="text-gray-600 flex-1">Reserve</span>
@@ -224,11 +219,15 @@ const EstablishmentDashboard = observer(() => {
       <div className="bg-white rounded-lg p-5 shadow mt-6 flex flex-col items-center justify-center">
         <h3 className="font-semibold text-lg mb-2">Trust Development Plan & Budget</h3>
         {/* Replace this with your actual progress component */}
-        <div className="relative flex items-center justify-center my-4">
+          <div className="relative flex items-center justify-center w-44 h-44 my-4">
+            <Doughnut data={data} options={options} />
+            <span className="absolute text-3xl font-bold text-gray-900">{trustEstablishmentStore.dashboardData?.DEVELOP_PLAN_AND_BUDGET_PERCENTAGE!}%</span>
+          </div>
+        {/* <div className="relative flex items-center justify-center my-4">
           <div className="w-40 h-40 ">
             <Doughnut data={data} options={options} />
           </div>
-        </div>
+        </div> */}
         <div className="flex justify-between w-full px-4 text-gray-500 text-sm">
           <span>{trustEstablishmentStore.dashboardData?.YEAR_START}<br /><span className="text-xs">Year Started</span></span>
           <span>{trustEstablishmentStore.dashboardData?.YEAR_EXPIRED}<br /><span className="text-xs">End Year</span></span>

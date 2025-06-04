@@ -5,6 +5,7 @@ import ProjectBaseForm from "./form/ProjectBaseForm";
 import ProjectBaseView from "./ProjectBaseView";
 import ProjectView from "./modal/ProjectView";
 import { IProjectView } from "../types/interface";
+import EditProject from "./form/EditProject";
 
 const ProjectStoreCTX = createContext(ProjectStore)
 const HCDTProjects = observer(() => {
@@ -31,6 +32,7 @@ const HCDTProjects = observer(() => {
           {projectStore.selectedProjectScreen === 1 && (<ProjectBaseView />)}
           {projectStore.selectedProjectScreen === 2 && (<ProjectBaseForm />)}
           {projectStore.selectedProjectScreen === 3 && (<ProjectView projectData={projectStore.selectedProject as IProjectView} projectStore={projectStore} />)}
+          {projectStore.selectedProjectScreen === 4 && (<EditProject />)}
         </div>
       )}
     </Observer>

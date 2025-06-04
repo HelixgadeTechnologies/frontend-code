@@ -12,10 +12,16 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
 const ProjectStoreCTX = createContext(ProjectStore)
-const ProjectBaseForm = observer(() => {
+const EditProject = observer(() => {
   const projectStore = useContext(ProjectStoreCTX)
   const method = useForm({
-    defaultValues: projectStore.projectFormData,
+    defaultValues: {
+      ...projectStore.projectFormData,
+      projectCategoryId: { value: projectStore.projectFormData.projectCategoryId!, label: projectStore.selectedProject?.projectCategory },
+      typeOfWork: projectStore.projectFormData.typeOfWork?.split(",").map((item: string) => ({ value: item, label: item })),
+      projectStatus: { value: projectStore.projectFormData.projectStatus!, label: projectStore.selectedProject?.projectStatusName },
+      qualityRatingId: { value: projectStore.projectFormData.qualityRatingId!, label: projectStore.selectedProject?.qualityRatingName },
+    },
     shouldUnregister: false,
   })
   const { name } = useParams();
@@ -42,17 +48,17 @@ const ProjectBaseForm = observer(() => {
     async function loadRequests() {
       try {
         const payload: IProjectPayload = {
-          isCreate: true,
+          isCreate: false,
           data: projectStore.projectFormData
         }
         const response = await projectStore.createProject(payload)
         if (response) {
-          toast.success("Project Successfully Submitted");
-          projectStore.isDashboardSwitch = false;
+          toast.success("Project Update Successfully Submitted");
+          projectStore.isDashboardSwitch= false
           projectStore.selectedProjectScreen = 1;
-          projectStore.projectFormData = {};
-          method.reset();
-          projectStore.getFormSteps();
+          projectStore.projectFormData = {}
+          method.reset()
+          projectStore.getFormSteps()
         }
       } catch (error: any) {
         const message = error?.response?.body?.message;
@@ -146,4 +152,4 @@ const ProjectBaseForm = observer(() => {
   );
 });
 
-export default ProjectBaseForm;
+export default EditProject;

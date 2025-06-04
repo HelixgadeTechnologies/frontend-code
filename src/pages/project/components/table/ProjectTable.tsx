@@ -6,7 +6,7 @@ import { IProjectView } from "../../types/interface";
 import { EmptyTable, LoadingTable, Table, Tag } from "../../../../components/elements";
 import { caretDownIcon, checkIcon, filterIcon, sortIcon } from "../../../../assets/icons";
 import IMG from "../../../../assets/svgs/dashboardConflictNotFound.svg";
-
+import { FaEdit } from "react-icons/fa";
 const ProjectStoreCTX = createContext(ProjectStore)
 const ProjectTable = observer(() => {
     const projectStore = useContext(ProjectStoreCTX)
@@ -27,6 +27,35 @@ const ProjectTable = observer(() => {
         projectStore.selectedProject = project
         projectStore.selectedProjectScreen = 3
         // Add your logic here
+    }, []);
+    const handleEdit = useCallback(async (project: IProjectView) => {
+        const pCategory = [...projectStore.projectCategories.values()].find((category) => category.categoryName?.toLowerCase() === project.projectCategory?.toLowerCase());
+        projectStore.projectFormData = {
+            projectId: project.projectId,
+            projectTitle: project.projectTitle as string,
+            projectCategoryId: pCategory?.projectCategoryId,
+            totalBudget: project.totalBudget as number,
+            community: project.community as string,
+            awardDate: project.awardDate as string,
+            nameOfContractor: project.nameOfContractor as string,
+            annualApprovedBudget: project.annualApprovedBudget as string,
+            projectStatus: project.projectStatus as number,
+            qualityRatingId: project.qualityRatingId as number,
+            projectVideo: project.projectVideo as string,
+            projectVideoMimeType: project.projectVideoMimeType as string,
+            numberOfMaleEmployedByContractor: project.numberOfMaleEmployedByContractor as number,
+            numberOfFemaleEmployedByContractor: project.numberOfFemaleEmployedByContractor as number,
+            numberOfPwDsEmployedByContractor: project.numberOfPwDsEmployedByContractor as number,
+            typeOfWork: project.typeOfWork as string,
+            numberOfHostCommunityMemberContracted: project.numberOfHostCommunityMemberContracted as number,
+            numberOfMaleBenefited: project.numberOfMaleBenefited as number,
+            numberOfFemaleBenefited: project.numberOfFemaleBenefited as number,
+            numberOfPwDsBenefited: project.numberOfPwDsBenefited as number,
+            trustId: project.trustId as string,
+        };
+        projectStore.selectedProject = project
+        projectStore.selectedProjectScreen = 4
+
     }, []);
 
 
@@ -79,6 +108,12 @@ const ProjectTable = observer(() => {
                                         type="default"
                                         icon={checkIcon}
                                         onClick={() => handleView(economicImpact)} // Add your view handler
+                                    />
+                                    <Tag
+                                        label="Edit"
+                                        type="default"
+                                        icon={<FaEdit />}
+                                        onClick={() => handleEdit(economicImpact)} // Add your Edit handler
                                     />
                                 </div>
                             )}

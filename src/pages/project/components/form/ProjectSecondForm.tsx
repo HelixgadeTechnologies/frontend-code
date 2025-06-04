@@ -30,21 +30,31 @@ const ProjectSecondForm = observer(({ method }: { method: any }) => {
     const onSubmit = (data: any) => {
         projectStore.isSaving = true
         async function loadRequests() {
-           
-            let uploadPayload = data.projectVideo == undefined?undefined:await convertFileToBase64(data.projectVideo)
+            let uploadRes: string | undefined = undefined;
+            let mimetype: string | undefined = undefined;
+            if (projectStore.projectFormData.projectVideo) {
+                uploadRes = projectStore.projectFormData.projectVideo;
+                mimetype = projectStore.selectedProject?.projectVideoMimeType!;
+            } else if (data.projectVideo && data.projectVideo.size > 0) {
+                const uploadPayload = await convertFileToBase64(data.projectVideo)
+                uploadRes = (await projectStore.uploadFile(uploadPayload)).data
+                mimetype = uploadPayload.mimeType;
+            } else {
+                uploadRes = undefined;
+                mimetype = undefined;
+            }
 
-            const uploadRes =uploadPayload == undefined?{success:false,message:"",data:""}: await projectStore.uploadFile(uploadPayload)
 
             const projectFormData: IProjectPayloadData = {
                 ...projectStore.projectFormData,
-                numberOfMaleEmployedByContractor:Number(data.numberOfMaleEmployedByContractor),
+                numberOfMaleEmployedByContractor: Number(data.numberOfMaleEmployedByContractor),
                 numberOfFemaleEmployedByContractor: Number(data.numberOfFemaleEmployedByContractor),
                 numberOfPwDsEmployedByContractor: Number(data.numberOfPwDsEmployedByContractor),
                 projectStatus: data.projectStatus.value,
                 qualityRatingId: data.qualityRatingId.value,
                 typeOfWork: data.typeOfWork.map((d: any) => d.label).join(", "),
-                projectVideo: uploadRes.success ? uploadRes.data : "",
-                projectVideoMimeType:uploadPayload == undefined?"":uploadPayload.mimeType
+                projectVideo: uploadRes,
+                projectVideoMimeType: mimetype
 
             }
 
@@ -135,6 +145,19 @@ const ProjectSecondForm = observer(({ method }: { method: any }) => {
                         maxSize={5 * 1024 * 1024} // 5MB
                         buttonText="Upload"
                     />
+                    {projectStore.selectedProject?.projectVideo && (
+                        <div className="flex items-center gap-2 bg-gray-50 p-2 rounded">
+                            <span className="text-green-600 font-bold">✔</span>
+                            <a
+                                href={projectStore.selectedProject?.projectVideo}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-red-500 text-gray-700 text-sm hover:underline"
+                            >
+                                Click here to preview the already uploaded file
+                            </a>
+                        </div>
+                    )}
 
                     {/* Number of Trust Community Members */}
                     <p className="text-sm text-gray-600">Number of Trust community members who were locally employed/contracted to project.</p>
