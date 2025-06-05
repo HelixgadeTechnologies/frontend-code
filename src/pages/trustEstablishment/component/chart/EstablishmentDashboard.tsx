@@ -85,7 +85,7 @@ const EstablishmentDashboard = observer(() => {
   };
 
   const options: ChartOptions<"doughnut"> = {
-    // cutout: "50%",
+    cutout: "70%",
     plugins: {
       legend: { display: false },
       tooltip: { enabled: false },
@@ -152,7 +152,7 @@ const EstablishmentDashboard = observer(() => {
                   legend: { display: false },
                   tooltip: { enabled: false },
                 },
-                cutout: "40%",
+                cutout: "70%",
               }}
             />
           </div>
