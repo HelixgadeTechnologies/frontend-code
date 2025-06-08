@@ -1,16 +1,45 @@
 import { FaStar, FaRegStar } from "react-icons/fa";
 import { Doughnut, Bar, Line } from "react-chartjs-2";
-import DashboardTable, { DashboardTableColumn } from "./table/DashboardTable";
+import DashboardTable, { DashboardTableColumn } from "../table/DashboardTable";
+import { observer } from "mobx-react-lite";
+import { dashboardStore as DashboardStore } from "../store/dashboardStore";
+import { useContext, createContext, useEffect } from "react";
+import dayjs from "dayjs";
 
-const DashboardPage: React.FC = () => {
+const dashboardStoreCTX = createContext(DashboardStore);
+const DashboardPage: React.FC = observer(() => {
+  const dashboardStore = useContext(dashboardStoreCTX);
 
+  useEffect(() => {
+    async function getInfo() {
+      await dashboardStore.getDashboard()
+    }
+    getInfo();
+    return () => { };
+  }, []);
+
+
+  const renderStars = (rating: number, max = 5) => {
+    return (
+      <span className="flex items-center gap-1">
+        {Array.from({ length: max }, (_, i) =>
+          i < rating ? (
+            <FaStar key={i} className="text-[#FFB800] text-base" />
+          ) : (
+            <FaRegStar key={i} className="text-[#FFB800] text-base" />
+          )
+        )}
+      </span>
+    );
+  };
   // Bar chart data
   const barData = {
-    labels: ["Rivers", "Edo", "Cross Rivers", "Delta", "Bayelsa", "Akwa Ibom"],
+    // labels: ["Rivers", "Edo", "Cross Rivers", "Delta", "Bayelsa", "Akwa Ibom"],
+    labels: dashboardStore.dashboardData?.COMMUNITY_BENEFIT.state,
     datasets: [
       {
         label: "Communities",
-        data: [35, 20, 50, 45, 48, 35],
+        data: dashboardStore.dashboardData?.COMMUNITY_BENEFIT.total,
         backgroundColor: "#3366CC",
         borderRadius: 6,
         barThickness: 24,
@@ -32,7 +61,7 @@ const DashboardPage: React.FC = () => {
     labels: ["Completed", "Not Completed"],
     datasets: [
       {
-        data: [75, 25],
+        data: [dashboardStore.dashboardData?.COMPLETION_STATUS.percentFullyEstablished, 100 - dashboardStore.dashboardData?.COMPLETION_STATUS.percentFullyEstablished!],
         backgroundColor: ["#3366CC", "#F3F5F7"],
         borderWidth: 0,
       },
@@ -53,25 +82,25 @@ const DashboardPage: React.FC = () => {
 
   // Add this before your return statement
   const localEmploymentBarData = {
-    labels: ["Project 1", "Project 2", "Project 3", "Project 4", "Project 5", "Project 6", "Project 7", "Project 8", "Project 9", "Project 10", "Project 11", "Project 12"],
+    labels:dashboardStore.dashboardData?.EMPLOYEE_PER_PROJECT.map(e=>e.projectTitle),
     datasets: [
       {
         label: "Male",
-        data: [180, 60, 120, 160, 210, 50, 20, 150, 110, 180, 170, 60],
+        data: dashboardStore.dashboardData?.EMPLOYEE_PER_PROJECT.map(e=>e.numberOfMaleEmployedByContractor),
         backgroundColor: "#22C55E",
         borderRadius: 4,
         stack: "Stack 0",
       },
       {
         label: "Female",
-        data: [60, 180, 120, 70, 30, 180, 210, 80, 120, 60, 70, 180],
+        data: dashboardStore.dashboardData?.EMPLOYEE_PER_PROJECT.map(e=>e.numberOfFemaleEmployedByContractor),
         backgroundColor: "#EF4444",
         borderRadius: 4,
         stack: "Stack 0",
       },
       {
         label: "Pwds",
-        data: [60, 180, 120, 70, 30, 180, 210, 80, 120, 60, 70, 180],
+        data: dashboardStore.dashboardData?.EMPLOYEE_PER_PROJECT.map(e=>e.numberOfPwDsEmployedByContractor),
         backgroundColor: "#EF8",
         borderRadius: 4,
         stack: "Stack 0",
@@ -79,18 +108,18 @@ const DashboardPage: React.FC = () => {
     ],
   };
   const conflictBarData = {
-    labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
+    labels: dashboardStore.dashboardData?.CONFLICT_RESOLUTION_OVER_TIME.map(e => String(e.month)),
     datasets: [
       {
         label: "Not in court",
-        data: [180, 60, 120, 160, 210, 50, 20, 150, 110, 180, 170, 60],
+        data: dashboardStore.dashboardData?.CONFLICT_RESOLUTION_OVER_TIME.map(e => e.notInCourt),
         backgroundColor: "#22C55E",
         borderRadius: 4,
         stack: "Stack 0",
       },
       {
         label: "In court",
-        data: [60, 180, 120, 70, 30, 180, 210, 80, 120, 60, 70, 180],
+        data: dashboardStore.dashboardData?.CONFLICT_RESOLUTION_OVER_TIME.map(e => e.inCourt),
         backgroundColor: "#EF4444",
         borderRadius: 4,
         stack: "Stack 0",
@@ -134,7 +163,7 @@ const DashboardPage: React.FC = () => {
     labels: ["Resolved", "Unresolved"],
     datasets: [
       {
-        data: [60, 40],
+        data: [dashboardStore.dashboardData?.CONFLICT_RESOLUTION_PERCENTAGE.resolvedPercentage, dashboardStore.dashboardData?.CONFLICT_RESOLUTION_PERCENTAGE.unresolvedPercentage],
         backgroundColor: ["#22C55E", "#EA580C"],
         borderWidth: 0,
         cutout: "75%",
@@ -153,26 +182,21 @@ const DashboardPage: React.FC = () => {
 
   // community table data
 
-  const communityData = [
-    { project: "Communities A and B", community: "Oron", workers: 45 },
-    { project: "Management Committee", community: "Rumukurshi", workers: 23 },
-    { project: "Advisory Committee", community: "Warri", workers: 75 },
-  ];
   const communityColumns: DashboardTableColumn[] = [
-    { key: "project", label: "Projects" },
+    { key: "projectTitle", label: "Projects" },
     { key: "community", label: "Community" },
     {
-      key: "workers",
+      key: "totalEmployed",
       label: "Number of workers",
       render: (row: any) => (
         <span
           className={
-            row.workers > 40
+            row.totalEmployed > 40
               ? "bg-[#E6F7F0] text-[#3BB77E] rounded px-2 py-1 text-xs font-medium"
               : "bg-[#FFF3ED] text-[#FF9C66] rounded px-2 py-1 text-xs font-medium"
           }
         >
-          {row.workers}
+          {row.totalEmployed}
         </span>
       ),
     },
@@ -182,36 +206,16 @@ const DashboardPage: React.FC = () => {
   // Conflict table Data 
   // Example data and columns for the "Conflict Details" table
 
-  const conflictDetailsData = [
-    {
-      cause: "Land dispute",
-      parties: "Communities A and B",
-      community: "Oron",
-      status: "Resolved",
-    },
-    {
-      cause: "Resource Allocation",
-      parties: "Management Committee",
-      community: "Rumukurshi",
-      status: "Ongoing",
-    },
-    {
-      cause: "Pipe line vandalism /Oil Spill",
-      parties: "Advisory Committee",
-      community: "Warri",
-      status: "Ongoing",
-    },
-  ];
-
+  
   const conflictDetailsColumns: DashboardTableColumn[] = [
-    { key: "cause", label: "Cause" },
-    { key: "parties", label: "Parties Involved" },
+    { key: "causeOfConflictName", label: "Cause" },
+    { key: "partiesInvolveName", label: "Parties Involved" },
     { key: "community", label: "Community" },
     {
-      key: "status",
+      key: "conflictStatusName",
       label: "Resolved Status",
       render: (row) =>
-        row.status === "Resolved" ? (
+        row.status === "THE ISSUE HAS BEEN EFFECTIVELY ADDRESSED" ? (
           <span className="bg-[#E6F7F0] text-[#3BB77E] rounded px-3 py-1 text-xs font-medium">
             Resolved
           </span>
@@ -225,54 +229,20 @@ const DashboardPage: React.FC = () => {
 
   // Usage example in your component:
   // Project Details Table Data
-  const projectDetailsData = [
-    {
-      trust: "Trust-123-Ng",
-      project: "Classroom Renovation",
-      community: "Oron",
-      date: "Apr 12, 2023",
-      time: "09:32AM",
-      rating: 3,
-    },
-    {
-      trust: "Trust-323-Ng",
-      project: "Health Center Painting",
-      community: "Rumukurshi",
-      date: "Apr 12, 2023",
-      time: "09:32AM",
-      rating: 4,
-    },
-    {
-      trust: "Trust-223-Ng",
-      project: "Road one street light",
-      community: "Warri",
-      date: "Apr 12, 2023",
-      time: "09:32AM",
-      rating: 5,
-    },
-  ];
+ 
 
   // Project Details Table Columns
 
   const projectDetailsColumns = [
-    { key: "trust", label: "Trust" },
-    { key: "project", label: "Project" },
+    { key: "trustName", label: "Trust" },
+    { key: "projectTitle", label: "Project" },
     { key: "community", label: "Community" },
     {
-      key: "date",
+      key: "completeAt",
       label: "Completion date",
       render: (row: any) => (
         <span className="bg-[#E6F7F0] text-[#3BB77E] rounded px-3 py-1 text-xs font-medium mr-2">
-          {row.date}
-        </span>
-      ),
-    },
-    {
-      key: "time",
-      label: "",
-      render: (row: any) => (
-        <span className="bg-[#E6F7F0] text-[#3BB77E] rounded px-3 py-1 text-xs font-medium">
-          {row.time}
+          {dayjs(row.completeAt).format("DD-MM-YYYY hh:mm A")}
         </span>
       ),
     },
@@ -280,15 +250,7 @@ const DashboardPage: React.FC = () => {
       key: "rating",
       label: "Rating",
       render: (row: any) => (
-        <span className="flex items-center gap-1">
-          {[1, 2, 3, 4, 5].map((i) =>
-            i <= row.rating ? (
-              <FaStar key={i} className="text-[#FFB800] text-base" />
-            ) : (
-              <FaRegStar key={i} className="text-[#FFB800] text-base" />
-            )
-          )}
-        </span>
+        renderStars(row.rating)
       ),
     },
   ];
@@ -311,17 +273,17 @@ const DashboardPage: React.FC = () => {
             <div className="text-xs text-gray-700 mb-1">HCDT Establishment and Governance</div>
             <div className="flex items-center gap-2">
               <div className="flex-1 h-2 bg-[#E5E7EB] rounded-full overflow-hidden">
-                <div className="h-full bg-[#22C55E]" style={{ width: "70%" }}></div>
+                <div className="h-full bg-[#22C55E]" style={{ width: `${dashboardStore.dashboardData?.FIELDS_COMPLETION}%` }}></div>
               </div>
-              <span className="text-xs text-gray-700 font-semibold">70%</span>
+              <span className="text-xs text-gray-700 font-semibold">{dashboardStore.dashboardData?.FIELDS_COMPLETION}%</span>
             </div>
-            <div className="text-xs text-gray-500 mt-1">70 out of 100 Trusts is fully Established</div>
+            <div className="text-xs text-gray-500 mt-1">{dashboardStore.dashboardData?.FIELDS_COMPLETION} out of 100 Trusts is fully Established</div>
           </div>
           {/* Communities benefiting by state */}
           <div className="bg-white rounded-xl p-6 shadow flex flex-col gap-4 flex-1 justify-between">
             <div className="flex items-center justify-between mb-4">
               <span className="text-sm text-gray-700 font-medium">Communities benefiting by state</span>
-              <span className="text-xs text-gray-500 font-medium">Total Number of all Benefiting Communities | 590</span>
+              <span className="text-xs text-gray-500 font-medium">Total Number of all Benefiting Communities | {dashboardStore.dashboardData?.COMMUNITY_BENEFIT.total.reduce((sum: any, num: any) => sum + num, 0)}</span>
             </div>
             <div className="w-full h-56 flex items-end">
               <Bar data={barData} options={barOptions} />
@@ -335,15 +297,15 @@ const DashboardPage: React.FC = () => {
             <div className="font-semibold text-base text-gray-900 mb-2">Number of Trust with Compliance</div>
             <div className="relative flex items-center justify-center w-44 h-44 my-4">
               <Doughnut data={doughnutData} options={doughnutOptions} />
-              <span className="absolute text-3xl font-bold text-gray-900">75%</span>
+              <span className="absolute text-3xl font-bold text-gray-900">{dashboardStore.dashboardData?.COMPLETION_STATUS.percentFullyEstablished}%</span>
             </div>
             <div className="flex justify-between w-full mt-2 text-xs text-gray-500">
               <div className="flex flex-col items-center flex-1">
-                <span className="font-semibold text-lg text-gray-900">879</span>
+                <span className="font-semibold text-lg text-gray-900">{dashboardStore.dashboardData?.COMPLETION_STATUS.totalCompleteTrust}</span>
                 <span>Completed Development plan</span>
               </div>
               <div className="flex flex-col items-center flex-1">
-                <span className="font-semibold text-lg text-gray-900">1028</span>
+                <span className="font-semibold text-lg text-gray-900">{dashboardStore.dashboardData?.COMPLETION_STATUS.totalTrust}</span>
                 <span>Total number of Trust</span>
               </div>
             </div>
@@ -368,7 +330,7 @@ const DashboardPage: React.FC = () => {
           </div>
           {/* <div className="text-base text-gray-700 mb-3 ml-1">reported to have received their approved funds</div> */}
           <div>
-            <span className="font-bold text-3xl text-gray-900 align-middle">373</span>
+            <span className="font-bold text-3xl text-gray-900 align-middle">{dashboardStore.dashboardData?.STATISTICS.community_count}</span>
             <span className="text-base text-gray-700 ml-2 align-middle">host communities are benefiting from the trust</span>
           </div>
           {/* <div className="text-base text-gray-700 ml-1">are benefiting from the trust</div> */}
@@ -377,7 +339,7 @@ const DashboardPage: React.FC = () => {
         <div className="bg-white rounded-xl p-8 shadow flex flex-col justify-center min-h-[220px]">
           <span className="font-semibold text-base text-gray-900 mb-4">Settlors Operational Expenditure</span>
           <div className="flex flex-col items-center justify-center mb-2">
-            <span className="font-bold text-4xl text-gray-900">$8,305,224.76</span>
+            <span className="font-bold text-4xl text-gray-900">NGN{dashboardStore.dashboardData?.OPERATIONAL_EXPENDITURE.totalExpenditure.toLocaleString()}</span>
           </div>
           <span className="text-base text-gray-700 mt-2">
             The total amount of OPEX provided by all the OMLs under a Trust
@@ -400,17 +362,12 @@ const DashboardPage: React.FC = () => {
               <div className="w-40 h-40">
                 <Doughnut
                   data={{
-                    labels: ["Worse", "Good", "Fair", "Excellent", "Bad"],
+                    // labels: ["Worse", "Good", "Fair", "Excellent", "Bad"],
+                    labels: dashboardStore.dashboardData?.QUALITY_RATINGS.map(e => e.qualityRating),
                     datasets: [
                       {
-                        data: [2, 33, 7, 61, 1],
-                        backgroundColor: [
-                          "#3366CC", // Worse - blue
-                          "#34C759", // Good - green
-                          "#FF3B30", // Fair - red
-                          "#FFCC00", // Excellent - yellow
-                          "#8C94A6", // Bad - gray
-                        ],
+                        data: dashboardStore.dashboardData?.QUALITY_RATINGS.map(e => e.percentage),
+                        backgroundColor: dashboardStore.dashboardData?.QUALITY_RATINGS.map(e => e.color),
                         borderWidth: 0,
                       },
                     ],
@@ -422,31 +379,15 @@ const DashboardPage: React.FC = () => {
                 />
               </div>
               <div className="ml-6 flex flex-col gap-2">
-                <div className="flex items-center text-sm text-gray-700 gap-2">
-                  <span className="inline-block w-3 h-3 rounded-full" style={{ background: "#3366CC" }}></span>
-                  Worse
-                  <span className="ml-2 text-gray-500">2%</span>
-                </div>
-                <div className="flex items-center text-sm text-gray-700 gap-2">
-                  <span className="inline-block w-3 h-3 rounded-full" style={{ background: "#34C759" }}></span>
-                  Good
-                  <span className="ml-2 text-gray-500">33%</span>
-                </div>
-                <div className="flex items-center text-sm text-gray-700 gap-2">
-                  <span className="inline-block w-3 h-3 rounded-full" style={{ background: "#FF3B30" }}></span>
-                  Fair
-                  <span className="ml-2 text-gray-500">7%</span>
-                </div>
-                <div className="flex items-center text-sm text-gray-700 gap-2">
-                  <span className="inline-block w-3 h-3 rounded-full" style={{ background: "#FFCC00" }}></span>
-                  Excellent
-                  <span className="ml-2 text-gray-500">61%</span>
-                </div>
-                <div className="flex items-center text-sm text-gray-700 gap-2">
-                  <span className="inline-block w-3 h-3 rounded-full" style={{ background: "#8C94A6" }}></span>
-                  Bad
-                  <span className="ml-2 text-gray-500">1%</span>
-                </div>
+                {dashboardStore.dashboardData?.QUALITY_RATINGS.map((e, i) => (
+                  <div key={i}>
+                    <div className="flex items-center text-sm text-gray-700 gap-2">
+                      <span className="inline-block w-3 h-3 rounded-full" style={{ background: e.color }}></span>
+                      {e.qualityRating}
+                      <span className="ml-2 text-gray-500">{e.percentage}%</span>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -457,14 +398,11 @@ const DashboardPage: React.FC = () => {
           <div className="w-full h-64">
             <Line
               data={{
-                labels: [
-                  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-                  "Jul", "Aug", "Sep", "Oct", "Nov"
-                ],
+                labels: dashboardStore.dashboardData?.COMPLETION_OVER_MONTH.monthName,
                 datasets: [
                   {
                     label: "Completion",
-                    data: [15, 21, 9, 25, 13, 20, 19, 13, 22, 17, 8],
+                    data: dashboardStore.dashboardData?.COMPLETION_OVER_MONTH.total,
                     borderColor: "#3366CC",
                     backgroundColor: "#3366CC",
                     tension: 0.4,
@@ -497,7 +435,7 @@ const DashboardPage: React.FC = () => {
       <div className="bg-white rounded-xl p-8 shadow mt-10 w-full">
         <DashboardTable
           header="Project Details"
-          data={projectDetailsData}
+          data={dashboardStore.dashboardData?.PROJECT_DETAILS}
           columns={projectDetailsColumns}
           emptyText="No data available"
           loading={false}
@@ -523,14 +461,14 @@ const DashboardPage: React.FC = () => {
                 <span className="inline-block w-3 h-3 rounded-full mr-2" style={{ background: "#22C55E" }}></span>
                 Resolved
               </span>
-              <span className="font-semibold text-gray-900">60</span>
+              <span className="font-semibold text-gray-900">{dashboardStore.dashboardData?.CONFLICT_RESOLUTION_PERCENTAGE.resolvedPercentage}</span>
             </div>
             <div className="flex items-center justify-between text-sm">
               <span className="flex items-center">
                 <span className="inline-block w-3 h-3 rounded-full mr-2" style={{ background: "#EA580C" }}></span>
                 Unresolved
               </span>
-              <span className="font-semibold text-gray-900">40</span>
+              <span className="font-semibold text-gray-900">{dashboardStore.dashboardData?.CONFLICT_RESOLUTION_PERCENTAGE.unresolvedPercentage}</span>
             </div>
           </div>
         </div>
@@ -538,7 +476,7 @@ const DashboardPage: React.FC = () => {
         <div className="col-span-2 flex flex-col">
           <DashboardTable
             header="Conflict Details"
-            data={conflictDetailsData}
+            data={dashboardStore.dashboardData?.CONFLICT_RESOLUTION_DETAILS}
             columns={conflictDetailsColumns}
             emptyText="No data available"
             loading={false}
@@ -595,7 +533,7 @@ const DashboardPage: React.FC = () => {
           <div className="col-span-2 flex flex-col">
             <DashboardTable
               header={"Community workers per project"}
-              data={communityData}
+              data={dashboardStore.dashboardData?.TOTAL_WORKER_IN_PROJECT}
               columns={communityColumns}
               emptyText={"No data available"}
               loading={false}
@@ -840,6 +778,6 @@ const DashboardPage: React.FC = () => {
       </div>
     </div>
   );
-};
+});
 
 export default DashboardPage;

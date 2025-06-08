@@ -1,0 +1,57 @@
+import { makeAutoObservable } from "mobx"
+import { dashboardService } from "../service/dashboardService";
+import { IDashboardStore, IFinishedDashboard, IGeneralDashboard } from "../types/interface";
+
+class DashboardStore implements IDashboardStore {
+    isLoading = false;
+    dashboardData: IFinishedDashboard | null = null;
+    constructor() {
+        makeAutoObservable(this);
+    }
+
+    transformDashboard(data: IGeneralDashboard): IFinishedDashboard {
+        return {
+            FIELDS_COMPLETION: Number(data.FIELDS_COMPLETION[0].percentFullyEstablished),
+            COMPLETION_STATUS: data.COMPLETION_STATUS[0],
+            COMMUNITY_BENEFIT: {
+                state: data.COMMUNITY_BENEFIT.map(item => item.state),
+                total: data.COMMUNITY_BENEFIT.map(item => item.community_count),
+            },
+            STATISTICS: data.STATISTICS[0],
+            OPERATIONAL_EXPENDITURE: data.OPERATIONAL_EXPENDITURE[0],
+            QUALITY_RATINGS: data.QUALITY_RATINGS,
+            COMPLETION_OVER_MONTH: {
+                monthName: data.COMPLETION_OVER_MONTH.map(item => item.monthName),
+                total: data.COMPLETION_OVER_MONTH.map(item => item.totalCompleted)
+            },
+            PROJECT_DETAILS: data.PROJECT_DETAILS,
+            CONFLICT_RESOLUTION_OVER_TIME: data.CONFLICT_RESOLUTION_OVER_TIME,
+            CONFLICT_RESOLUTION_PERCENTAGE: data.CONFLICT_RESOLUTION_PERCENTAGE[0],
+            CONFLICT_RESOLUTION_DETAILS: data.CONFLICT_RESOLUTION_DETAILS,
+            TOTAL_WORKER_IN_PROJECT: data.TOTAL_WORKER_IN_PROJECT,
+            EMPLOYEE_PER_PROJECT: data.EMPLOYEE_PER_PROJECT
+        };
+    }
+
+    async getDashboard(): Promise<void> {
+        try {
+            if (this.isLoading || this.dashboardData) return; // Prevent duplicate calls
+            this.isLoading = true;
+            let data = await dashboardService.generalDashboard();
+            if (data.success) {
+                const processedData = this.transformDashboard(data.data);
+                this.dashboardData = processedData;
+                // console.log(toJS(processedData))
+            }
+        } catch (error) {
+            throw error;
+        } finally {
+            this.isLoading = false;
+        }
+    }
+
+}
+
+export const dashboardStore = new DashboardStore();
+
+

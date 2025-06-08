@@ -3,7 +3,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { Navigate, useLocation, Route, Routes } from "react-router-dom";
 
 import DashboardLayout from "../../layouts/DashboardLayout";
-import DashboardPage from "./DashboardPage";
+import DashboardPage from "./component/DashboardPage";
 
 import Trusts from "../trust/components";
 import ProfileSettings from "../Settings/components";
