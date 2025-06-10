@@ -5,12 +5,15 @@ import { projectStore as ProjectStore } from "../store/projectStore";
 import ProjectDashboard from "./chat/ProjectDashboard";
 import ProjectTable from "./table/ProjectTable";
 import { useNavigate, useParams } from "react-router-dom";
+import { authStore as AuthStore } from "../../auth/store/authStore";
 
+const AuthStoreCTX = createContext(AuthStore)
 const ProjectStoreCTX = createContext(ProjectStore)
 const ProjectBaseView = observer(() => {
+    const authStore = useContext(AuthStoreCTX)
     const projectStore = useContext(ProjectStoreCTX)
     const { name } = useParams();
-      const navigate = useNavigate();
+    const navigate = useNavigate();
     const toForm = useCallback(() => {
         async function loadRequests() {
             // await projectStore.getCategory()
@@ -26,7 +29,7 @@ const ProjectBaseView = observer(() => {
     return (
         <>
             <div className="p-6 bg-gray-100">
-                 <GoBack action={() => navigate(-1)} trustName={name || ""} page="Project"/>
+                <GoBack action={() => navigate(-1)} trustName={name || ""} page="Project" />
                 <div className="flex items-center justify-between mb-6">
                     {/* Title */}
                     <h1 className="text-xl font-bold text-gray-800">
@@ -47,12 +50,13 @@ const ProjectBaseView = observer(() => {
                             </label>
                             <span className="text-sm text-gray-600 ml-2">Table</span>
                         </div>
-
-                        <Button
-                            buttonText="Add a Project"
-                            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-                            onClick={toForm}
-                        />
+                        {(authStore.user.role == "SUPER ADMIN" || authStore.user.role == "ADMIN") && (
+                            <Button
+                                buttonText="Add a Project"
+                                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+                                onClick={toForm}
+                            />
+                        )}
                     </div>
                 </div>
 

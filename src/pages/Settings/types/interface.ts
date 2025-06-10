@@ -18,6 +18,7 @@ export interface ISettingStore {
     getAllAdmin(): Promise<boolean>,
     createAdmin(payload: CreateAdminPayload): Promise<boolean>,
     editAdmin(payload: CreateAdminPayload): Promise<boolean>,
+    editLoginUser(payload: ILoginUpdate): Promise<boolean>,
     removeAdmin(userId: string): Promise<boolean>,
     declinePendingAdmin(userId: string): Promise<boolean>,
     approvePendingAdmin(payload: CreateAdminPayload): Promise<boolean>,
@@ -40,9 +41,9 @@ export interface ISettingStore {
     getRole(): Promise<void>,
 }
 
-export interface IProfilePicsPayload{
-    base64String:string;
-    mimeType:string;
+export interface IProfilePicsPayload {
+    base64String: string;
+    mimeType: string;
 }
 interface BaseItem {
     id: string;
@@ -126,6 +127,15 @@ export interface IAdminPayloadData {
     trusts: string;
     status: number;
 }
+
+export interface ILoginUpdate {
+    userId: string;
+    phoneNumber?: string | null;
+    community?: string | null;
+    state?: string | null;
+    localGovernmentArea?: string | null;
+    trusts: string | null;
+}
 export interface CreateAdminPayload {
     isCreate: boolean;
     data: IAdminPayloadData
@@ -177,7 +187,7 @@ export interface CreateSettlorPayload {
     isCreate: boolean;
     data: ISettlorPayloadData
 }
-export interface ISettlor extends BaseItem  {
+export interface ISettlor extends BaseItem {
     settlorId: string;
     settlorName: string;
     omlCode: string;

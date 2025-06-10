@@ -5,10 +5,13 @@ import { createContext, useCallback, useContext } from "react";
 import { observer } from "mobx-react-lite";
 import CreateTrust from "./forms/CreateTrust";
 import EditTrust from "./forms/EditTrust";
+import { authStore as AuthStore} from "../../auth/store/authStore";
 
 const trustStoreCTX = createContext(TrustStore);
+const AuthStoreCTX = createContext(AuthStore);
 const Trusts = observer(() => {
   const trustStore = useContext(trustStoreCTX);
+  const authStore = useContext(AuthStoreCTX);
   const search = useCallback((keyword: string) => {
     trustStore.searchTrust(keyword);
   }, [trustStore]);
@@ -38,11 +41,13 @@ const Trusts = observer(() => {
               />
 
               <div>
+                {(authStore.user.role == "SUPER ADMIN" || authStore.user.role == "ADMIN" ) &&(
                 <Button
                   onClick={switchPage}
                   padding="py-2 px-6"
                   buttonText="Create Trust"
                 />
+                )}
               </div>
             </div>
           </section>

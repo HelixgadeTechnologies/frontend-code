@@ -3,21 +3,12 @@ import { Doughnut, Bar, Line } from "react-chartjs-2";
 import DashboardTable, { DashboardTableColumn } from "../table/DashboardTable";
 import { observer } from "mobx-react-lite";
 import { dashboardStore as DashboardStore } from "../store/dashboardStore";
-import { useContext, createContext, useEffect } from "react";
+import { useContext, createContext } from "react";
 import dayjs from "dayjs";
 
 const dashboardStoreCTX = createContext(DashboardStore);
 const DashboardPage: React.FC = observer(() => {
   const dashboardStore = useContext(dashboardStoreCTX);
-
-  useEffect(() => {
-    async function getInfo() {
-      await dashboardStore.getDashboard()
-    }
-    getInfo();
-    return () => { };
-  }, []);
-
 
   const renderStars = (rating: number, max = 5) => {
     return (
@@ -82,25 +73,25 @@ const DashboardPage: React.FC = observer(() => {
 
   // Add this before your return statement
   const localEmploymentBarData = {
-    labels:dashboardStore.dashboardData?.EMPLOYEE_PER_PROJECT.map(e=>e.projectTitle),
+    labels: dashboardStore.dashboardData?.EMPLOYEE_PER_PROJECT.map(e => e.projectTitle),
     datasets: [
       {
         label: "Male",
-        data: dashboardStore.dashboardData?.EMPLOYEE_PER_PROJECT.map(e=>e.numberOfMaleEmployedByContractor),
+        data: dashboardStore.dashboardData?.EMPLOYEE_PER_PROJECT.map(e => e.numberOfMaleEmployedByContractor),
         backgroundColor: "#22C55E",
         borderRadius: 4,
         stack: "Stack 0",
       },
       {
         label: "Female",
-        data: dashboardStore.dashboardData?.EMPLOYEE_PER_PROJECT.map(e=>e.numberOfFemaleEmployedByContractor),
+        data: dashboardStore.dashboardData?.EMPLOYEE_PER_PROJECT.map(e => e.numberOfFemaleEmployedByContractor),
         backgroundColor: "#EF4444",
         borderRadius: 4,
         stack: "Stack 0",
       },
       {
         label: "Pwds",
-        data: dashboardStore.dashboardData?.EMPLOYEE_PER_PROJECT.map(e=>e.numberOfPwDsEmployedByContractor),
+        data: dashboardStore.dashboardData?.EMPLOYEE_PER_PROJECT.map(e => e.numberOfPwDsEmployedByContractor),
         backgroundColor: "#EF8",
         borderRadius: 4,
         stack: "Stack 0",
@@ -206,7 +197,7 @@ const DashboardPage: React.FC = observer(() => {
   // Conflict table Data 
   // Example data and columns for the "Conflict Details" table
 
-  
+
   const conflictDetailsColumns: DashboardTableColumn[] = [
     { key: "causeOfConflictName", label: "Cause" },
     { key: "partiesInvolveName", label: "Parties Involved" },
@@ -229,7 +220,7 @@ const DashboardPage: React.FC = observer(() => {
 
   // Usage example in your component:
   // Project Details Table Data
- 
+
 
   // Project Details Table Columns
 

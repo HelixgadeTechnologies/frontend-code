@@ -1,5 +1,5 @@
 import { makeAutoObservable, ObservableMap, remove } from "mobx"
-import { CreateAdminPayload, createDraPayload, createNuprcPayload, CreateSettlorPayload, IAdmin, IChangePassword, IDra, INuprc, IProfilePicsPayload, IRole, ISettingStore, ISettlor } from "../types/interface";
+import { CreateAdminPayload, createDraPayload, createNuprcPayload, CreateSettlorPayload, IAdmin, IChangePassword, IDra, ILoginUpdate, INuprc, IProfilePicsPayload, IRole, ISettingStore, ISettlor } from "../types/interface";
 import { SettingService } from "../service/settingService";
 
 class SettingStore implements ISettingStore {
@@ -77,13 +77,24 @@ class SettingStore implements ISettingStore {
             this.isSubmitting = false;
         }
     }
+    async editLoginUser(payload: ILoginUpdate): Promise<boolean> {
+        try {
+            this.isSubmitting = true;
+            await SettingService.updateLoginUser(payload)
+            return true
+        } catch (error) {
+            throw error
+        } finally {
+            this.isSubmitting = false;
+        }
+    }
     async approvePendingAdmin(payload: CreateAdminPayload): Promise<boolean> {
         try {
             this.isApproving = true;
             let data = await SettingService.createEditAdmin(payload)
             if (data.success) {
                 let newAdmin: IAdmin = data.data;
-                remove(this.allPendingAdmin,newAdmin.userId);
+                remove(this.allPendingAdmin, newAdmin.userId);
             }
             return true
         } catch (error) {
@@ -97,7 +108,7 @@ class SettingStore implements ISettingStore {
             this.isDeleting = true;
             let data = await SettingService.removeAdmin(userId)
             if (data.success) {
-                remove(this.allPendingAdmin,userId);
+                remove(this.allPendingAdmin, userId);
             }
             return true
         } catch (error) {
@@ -191,7 +202,7 @@ class SettingStore implements ISettingStore {
             let data = await SettingService.createEditDra(payload)
             if (data.success) {
                 let newAdmin: IDra = data.data;
-                remove(this.allPendingDra,newAdmin.userId);
+                remove(this.allPendingDra, newAdmin.userId);
             }
             return true
         } catch (error) {
@@ -205,7 +216,7 @@ class SettingStore implements ISettingStore {
             this.isDeleting = true;
             let data = await SettingService.removeDra(userId)
             if (data.success) {
-                remove(this.allPendingDra,userId);
+                remove(this.allPendingDra, userId);
             }
             return true
         } catch (error) {
@@ -382,7 +393,7 @@ class SettingStore implements ISettingStore {
         try {
             this.isUploading = true;
             let data = await SettingService.changeProfilePicture(credentials)
-            return data.data 
+            return data.data
         } catch (error) {
             throw error
         } finally {

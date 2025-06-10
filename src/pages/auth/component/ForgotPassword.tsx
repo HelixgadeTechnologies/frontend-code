@@ -1,22 +1,21 @@
-import { authBg } from "../../../assets/images";
-
 import { useForm } from "react-hook-form";
 
 import { FormInput, Button } from "../../../components/elements";
-import { Link } from "react-router-dom";
+import { createContext, useCallback, useContext } from "react";
+import { observer } from "mobx-react-lite";
+import { authStore as AuthStore } from "../store/authStore";
 
-const ForgotPassword = () => {
+const authStoreCTX = createContext(AuthStore)
+const ForgotPassword = observer(() => {
+  const authStore = useContext(authStoreCTX)
   const {
     register,
     formState: { errors },
   } = useForm();
-
+  const changeForm = useCallback((page: number) => {
+    authStore.pageSwitch = page;
+  }, [authStore]);
   return (
-    <div className=" h-screen  bg-white grid grid-cols-1 lg:grid-cols-2">
-      <section className="hidden lg:block overflow-hidden">
-        <img className="w-full h-full" src={authBg} alt="auth" />
-      </section>
-      <section className="px-4 lg:px-0 flex items-center justify-center">
         <form className="w-full lg:w-2/3">
           <h1 className="mb-8 font-semibold text-lg lg:text-4xl">
             Forgot Password
@@ -51,15 +50,13 @@ const ForgotPassword = () => {
 
             <span className="block text-center mt-6 text-gray-2 text-sm">
               Remember your password? {""}
-              <Link className="text-primary-200 font-semibold" to="/">
+              <button className="text-primary-200 font-semibold" onClick={() => changeForm(1)}>
                 Log in
-              </Link>
+              </button>
             </span>
           </div>
         </form>
-      </section>
-    </div>
   );
-};
+});
 
 export default ForgotPassword;

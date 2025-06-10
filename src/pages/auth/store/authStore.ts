@@ -6,6 +6,7 @@ import { makeAutoObservable } from "mobx"
 class AuthStore implements IAuthStore {
     isLoading = false;
     isSubmitting = false;
+    pageSwitch:number = 1
     user: IUser = {} as IUser;
 
 

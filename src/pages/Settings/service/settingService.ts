@@ -1,7 +1,9 @@
 import { client } from "../../../infrastructure/agent"
 import { HCDTRequestResponse } from "../../../infrastructure/HCDTRequestResponse"
-import { CreateAdminPayload, createDraPayload, createNuprcPayload, CreateSettlorPayload, IChangePassword, IProfilePicsPayload } from "../types/interface"
+import { CreateAdminPayload, createDraPayload, createNuprcPayload, CreateSettlorPayload, IChangePassword, ILoginUpdate, IProfilePicsPayload } from "../types/interface"
 export const SettingService = {
+    updateLoginUser:(payload:ILoginUpdate):Promise<HCDTRequestResponse> => client.put("/setting/update-login",{...payload}),
+    
     // changePassword
     changePassword: (credentials: IChangePassword): Promise<HCDTRequestResponse> => client.post('/setting/change-password', { ...credentials }),
     changeProfilePicture: (credentials: IProfilePicsPayload): Promise<HCDTRequestResponse> => client.post('/setting/update-profile-picture', { ...credentials }),

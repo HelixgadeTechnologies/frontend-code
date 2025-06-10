@@ -121,7 +121,7 @@ const BasicDetails = observer(({ method }: { method: any }) => {
             )}
           />
           {errors.settlorId && (
-            <p className="mt-2 mb-4 text-xs  text-red-400 ">Assign a trust</p>
+            <p className="mt-2 mb-4 text-xs  text-red-400 ">Assign a Settlor</p>
           )}
         </div>
 
@@ -143,7 +143,7 @@ const BasicDetails = observer(({ method }: { method: any }) => {
             )}
           />
           {errors.country && (
-            <p className="mt-2 mb-4 text-xs  text-red-400 ">Assign a trust</p>
+            <p className="mt-2 mb-4 text-xs  text-red-400 ">Assign a Country</p>
           )}
         </div>
 
@@ -172,7 +172,7 @@ const BasicDetails = observer(({ method }: { method: any }) => {
               )}
             />
             {errors.state && (
-              <p className="mt-2 mb-4 text-xs  text-red-400 ">Assign a trust</p>
+              <p className="mt-2 mb-4 text-xs  text-red-400 ">Assign a state</p>
             )}
           </div>
           <Observer>
@@ -203,7 +203,7 @@ const BasicDetails = observer(({ method }: { method: any }) => {
                   )}
                 />
                 {errors.localGovernmentArea && (
-                  <p className="mt-2 mb-4 text-xs  text-red-400 ">Assign a trust</p>
+                  <p className="mt-2 mb-4 text-xs  text-red-400 ">Assign LG</p>
                 )}
               </div>
             )}

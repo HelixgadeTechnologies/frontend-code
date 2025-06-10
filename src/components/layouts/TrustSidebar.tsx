@@ -1,9 +1,13 @@
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { logoutIcon, settingsIcon, trustIcon } from "../../assets/icons";
-
+import {authStore as AuthStore} from "../../pages/auth/store/authStore"
 import { useCookies } from "react-cookie";
+import { observer } from "mobx-react-lite";
+import { createContext, useContext } from "react";
 
-const TrustSidebar = () => {
+const authStoreCTX = createContext(AuthStore);
+const TrustSidebar = observer(() => {
+  const authStore = useContext(authStoreCTX);
   const { id, name } = useParams();
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -41,6 +45,33 @@ const TrustSidebar = () => {
       link: `/trust/${name}/${id}/economic-impact`,
     },
   ];
+  const subRoutesDRA = [
+    // {
+    //   id: 1,
+    //   name: "Trust Establishment and Governance Structure",
+    //   link: `/trust/${name}/${id}`,
+    // },
+    {
+      id: 1,
+      name: "HCDT Development Projects",
+      link: `/trust/${name}/${id}/hdct-projects`,
+    },
+    {
+      id: 2,
+      name: "Conflict Resolution",
+      link: `/trust/${name}/${id}/conflict-resolution`,
+    },
+    {
+      id: 3,
+      name: "Community Satisfaction",
+      link: `/trust/${name}/${id}/community-satisfaction`,
+    },
+    {
+      id: 4,
+      name: "Economic Impact of HCDT",
+      link: `/trust/${name}/${id}/economic-impact`,
+    },
+  ];
 
   return (
     <div className="hidden lg:flex h-full bg-white border-r border-gray-5  flex-col w-[272px]  py-6 px-4">
@@ -58,7 +89,20 @@ const TrustSidebar = () => {
           </Link>
           {/* Sub routes */}
           <div>
-            {subRoutes.map((route) => (
+            {(authStore.user.role == "SUPER ADMIN" || authStore.user.role == "ADMIN" ) && subRoutes.map((route) => (
+              <Link key={route.link} to={route.link}>
+                <li
+                  className={`${pathname === route.link ? "bg-primary-200/20" : "bg-white"
+                    } hover:bg-primary-200/20  rounded transition-all px-4 py-3 flex items-center gap-x-2`}
+                >
+                  <span className="text-sm font-medium text-gray-3">
+                    {route.name}
+                  </span>
+                </li>
+              </Link>
+            ))}
+            
+            {authStore.user.role == "DRA" && subRoutesDRA.map((route) => (
               <Link key={route.link} to={route.link}>
                 <li
                   className={`${pathname === route.link ? "bg-primary-200/20" : "bg-white"
@@ -97,6 +141,6 @@ const TrustSidebar = () => {
       </div>
     </div>
   );
-};
+});
 
 export default TrustSidebar;

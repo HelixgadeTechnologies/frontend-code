@@ -2,11 +2,12 @@ import { HCDTRequestResponse } from "../../../infrastructure/HCDTRequestResponse
 
 
 export interface IAuthStore {
-    isLoading: boolean,
-    isSubmitting: boolean,
-    user: IUser,
+    isLoading: boolean;
+    isSubmitting: boolean;
+    pageSwitch: number;
+    user: IUser;
 
-    login(credentials: ILoginCredentials): Promise<HCDTRequestResponse>,
+    login(credentials: ILoginCredentials): Promise<HCDTRequestResponse>;
     saveLoginUser(user: IUser): void;
     updateProfilePic(url: string): void;
 }

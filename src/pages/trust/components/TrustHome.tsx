@@ -13,16 +13,21 @@ import { observer } from "mobx-react-lite";
 import { trustStore as TrustStore } from "../store/trustStore";
 import ConflictResloution from "../../conflict/components/ConflictResolution";
 import CommunitySatisfaction from "../../communitySatisfaction/components/CommunitySatisfaction";
+import { authStore as AuthStore } from "../../auth/store/authStore"
+
+const AuthStoreCtx = createContext(AuthStore);
 const TrustStoreCtx = createContext(TrustStore);
 const TrustDashboard = observer(() => {
+  const authStore = useContext(AuthStoreCtx);
   const trustStore = useContext(TrustStoreCtx);
   const location = useLocation();
   const [isValid] = useState(true);
   useEffect(() => {
     async function getLoginUsers() {
+      // authStore.user.role == "DRA"
       let selectedTrustId = window.sessionStorage.getItem("selectedTrustId")
       trustStore.selectedTrustId = selectedTrustId as string
-      console.log("selectedTrustId", selectedTrustId)
+      // console.log("selectedTrustId", selectedTrustId)
     }
     getLoginUsers();
     return () => { };
@@ -37,21 +42,37 @@ const TrustDashboard = observer(() => {
       <>
         <Routes>
           <Route element={<TrustBoardLayout />}>
-            <Route path="/" element={<TrustEstablishment />} />
-            {/* <Route
-              path="trust-establishment/update"
-              element={<TrustEstablishment />}
-            /> */}
-            <Route path="hdct-projects" element={<HCDTProjects />} />
-            <Route
-              path="conflict-resolution"
-              element={<ConflictResloution />}
-            />
-            <Route
-              path="community-satisfaction"
-              element={<CommunitySatisfaction />}
-            />
-            <Route path="economic-impact" element={<EconomicImpact />} />
+            {authStore.user.role === "DRA" ? (
+              <>
+                <Route path="/" element={<HCDTProjects />} />
+                <Route
+                  path="conflict-resolution"
+                  element={<ConflictResloution />}
+                />
+                <Route
+                  path="community-satisfaction"
+                  element={<CommunitySatisfaction />}
+                />
+                <Route path="economic-impact" element={<EconomicImpact />} />
+
+              </>
+            ) : (
+              <>
+                <Route path="/" element={<TrustEstablishment />} />
+                <Route
+                  path="conflict-resolution"
+                  element={<ConflictResloution />}
+                />
+                <Route
+                  path="community-satisfaction"
+                  element={<CommunitySatisfaction />}
+                />
+                <Route path="economic-impact" element={<EconomicImpact />} />
+
+                <Route path="hdct-projects" element={<HCDTProjects />} />
+
+              </>
+            )}
           </Route>
         </Routes>
       </>

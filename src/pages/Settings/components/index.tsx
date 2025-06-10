@@ -1,35 +1,42 @@
-import { createContext, useContext, useRef } from "react";
-import { useForm } from "react-hook-form";
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 
 import { checkIcon, photoIcon } from "../../../assets/icons";
-import { Button, FormInput, Modal } from "../../../components/elements";
+import { Button, CustomSelect, FormInput, Modal } from "../../../components/elements";
 import { PageHeader, RoutedTabs } from "../../../components/layouts";
 import { Observer, observer } from "mobx-react-lite";
 import { settingStore as SettingStore } from "../store/settingStore"
 import { authStore as AuthStore } from "../../auth/store/authStore"
 import { ChangePassword } from "./form/ChangePassword";
 import { toast } from "react-toastify";
-import { CreateAdminPayload, IAdminPayloadData, IProfilePicsPayload } from "../types/interface";
+import { IDropdownProp, ILoginUpdate, IProfilePicsPayload } from "../types/interface";
 import { IUser } from "../../auth/types/interface";
 import { toJS } from "mobx";
 import { UpdateSuccess } from "./modal/UpdateSuccess";
 import { useCookies } from "react-cookie";
+import { trustStore as TrustStore } from "../../trust/store/trustStore";
 
 const SettingsStoreCtx = createContext(SettingStore);
 const AuthStoreCtx = createContext(AuthStore);
+const TrustStoreCtx = createContext(TrustStore);
 
 const ProfileSettings = observer(() => {
   const authStore = useContext(AuthStoreCtx);
   const settingStore = useContext(SettingsStoreCtx);
+  const trustStore = useContext(TrustStoreCtx);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [cookie,setCookie] = useCookies(["hcdt_admin"]);
+  const [cookie, setCookie] = useCookies(["hcdt_admin"]);
   const admin = cookie?.hcdt_admin;
+  const [lg, setSetLg] = useState<Array<string>>([]);
 
-  const {
-    register,
-    formState: { errors },
-    handleSubmit
-  } = useForm();
+  const { register, formState: { errors }, handleSubmit, setValue, control } = useForm();
+  useEffect(() => {
+    async function getData() {
+      trustStore.getAllStates()
+    }
+    getData();
+    return () => { };
+  }, []);
   const isNumeric = (value: string) => {
     return /^\d+$/.test(value);
   }
@@ -40,27 +47,25 @@ const ProfileSettings = observer(() => {
         toast.warning("Phone number must be a number");
         return;
       } else {
-        const formData: IAdminPayloadData = {
-          firstName: user.firstName as string,
-          lastName: user.lastName as string,
-          email: user.email as string,
-          roleId: user.roleId as string,
-          trusts: user.trusts as string,
-          userId: user.userId as string,
-          status: Number(user.status),
+        const formData: ILoginUpdate = {
+          trusts: user?.trusts as string,
+          userId: user?.userId as string,
+          community: data.communities,
+          localGovernmentArea: data.localGovernmentArea.value,
+          state: data.state.value,
           phoneNumber: data.phoneNumber,
         }
-        const payload: CreateAdminPayload = {
-          isCreate: false,
-          data: formData
-        };
-        const response = await settingStore.editAdmin(payload)
+
+        const response = await settingStore.editLoginUser(formData)
         if (response) {
           authStore.user = {
             ...toJS(authStore.user),
             phoneNumber: data.phoneNumber,
+            community: data.communities,
+            localGovernmentArea: data.localGovernmentArea.value,
+            state: data.state.value,
           } as IUser;
-          toast.success("Admin Update successful.");
+          toast.success(`${authStore.user.role} Update successful.`);
         }
       }
     } catch (error: any) {
@@ -74,23 +79,7 @@ const ProfileSettings = observer(() => {
     }
   };
 
-  // const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   async function loadRequests() {
-  //     const file = event.target.files?.[0];
 
-  //     if (file) {
-  //       // Handle the selected file (e.g., upload it to the server)
-  //       console.log("Selected file:", file);
-  //       const payload: IProfilePicsPayload = {
-  //         base64String: "",
-  //         mimeType: ""
-  //       }
-  //       await settingStore.uploadProfilePic(payload)
-  //     }
-
-  //   }
-  //   loadRequests();
-  // };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     async function loadRequests() {
@@ -121,11 +110,11 @@ const ProfileSettings = observer(() => {
 
 
               // Upload the profile picture
-              const res:any = await settingStore.uploadProfilePic(payload);
+              const res: any = await settingStore.uploadProfilePic(payload);
               authStore.updateProfilePic(res)
-              let myAdmin:IUser = admin
-              let update = {...myAdmin,profilePic:res.profilePic} as IUser
-              setCookie("hcdt_admin",JSON.stringify(update),{ path: "/" });
+              let myAdmin: IUser = admin
+              let update = { ...myAdmin, profilePic: res.profilePic } as IUser
+              setCookie("hcdt_admin", JSON.stringify(update), { path: "/" });
               toast.success("Profile picture uploaded successfully.");
             }
           };
@@ -151,6 +140,16 @@ const ProfileSettings = observer(() => {
       fileInputRef.current.click();
     }
   };
+  const selectState = useCallback((v: IDropdownProp) => {
+    trustStore.allLGA.clear();
+    let localGov = trustStore.getLG(String(v?.value));
+    if (localGov.length > 0) {
+      setSetLg(localGov);
+    }
+    trustStore.selectedState = String(v?.value);
+    setValue("state", v); //set state field
+    setValue("localGovernmentArea", null); // Reset LGA field
+  }, [trustStore]);
 
   return (
     <div className="px-10 py-11">
@@ -178,7 +177,7 @@ const ProfileSettings = observer(() => {
               <Button
                 border
                 padding="py-2 px-3"
-                buttonText={settingStore.isUploading?"Uploading...":"Change Photo"}
+                buttonText={settingStore.isUploading ? "Uploading..." : "Change Photo"}
                 width="w-fit"
                 iconLeft={<img src={photoIcon} alt="change photo" />}
                 onClick={handleButtonClick}
@@ -254,6 +253,83 @@ const ProfileSettings = observer(() => {
                   disabled
                   register={register}
                   placeholder={authStore.user.role as string}
+                />
+              </div>
+              <div>
+                <Observer>
+                  {() => (
+                    <>
+                      <Controller
+                        control={control}
+                        name="state"
+                        // rules={{}}
+                        render={({ field }) => (
+                          <CustomSelect
+                            id="state-select"
+                            {...field}
+                            // isLoading={trustLoading}
+                            options={[...trustStore.allStates.values()].map((s: string) => {
+                              return {
+                                label: s,
+                                value: s
+                              }
+                            })}
+                            label="State"
+                            isMulti={false}
+                            placeholder={authStore.user.state as string}
+                            onChange={(v) => selectState(v as IDropdownProp)}
+                          />
+                        )}
+                      />
+                      {errors.state && (
+                        <p className="mt-2 mb-4 text-xs  text-red-400 ">Assign a state</p>
+                      )}
+                    </>
+                  )}
+                </Observer>
+              </div>
+              <div>
+                <Controller
+                  control={control}
+                  name="localGovernmentArea"
+                  // rules={{}}
+
+                  render={({ field }) => (
+                    <CustomSelect
+                      id="lga-select"
+                      {...field}
+                      // isLoading={trustLoading}
+                      options={lg.map((s: string) => {
+                        return {
+                          label: s,
+                          value: s
+                        }
+                      })}
+                      label="Local Government Area"
+                      isMulti={false}
+                      // isDisabled={true}
+                      isDisabled={trustStore.selectedState ? false : true}
+                      placeholder={authStore.user.localGovernmentArea as string}
+                    />
+                  )}
+                />
+                {errors.localGovernmentArea && (
+                  <p className="mt-2 mb-4 text-xs  text-red-400 ">Assign LG</p>
+                )}
+              </div>
+              <div>
+                <FormInput
+                  label="Communities"
+                  name="communities"
+                  type="text"
+                  register={register}
+                  registerOptions={{
+                    required: "This field is required.",
+                  }}
+                  placeholder={authStore.user.community as string}
+                  error={errors.communities}
+                  errorMessage={`This field  is required`}
+                  required
                 />
               </div>
             </form>

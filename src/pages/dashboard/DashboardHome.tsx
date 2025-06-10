@@ -3,8 +3,6 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { Navigate, useLocation, Route, Routes } from "react-router-dom";
 
 import DashboardLayout from "../../layouts/DashboardLayout";
-import DashboardPage from "./component/DashboardPage";
-
 import Trusts from "../trust/components";
 import ProfileSettings from "../Settings/components";
 import ManageAdmin from "../Settings/components/ManageAdmin";
@@ -16,6 +14,8 @@ import { authStore as AuthStore } from "../auth/store/authStore";
 import { IUser } from "../auth/types/interface";
 import { observer } from "mobx-react-lite";
 import { trustStore as TrustStore } from "../trust/store/trustStore";
+import DashboardMasterPage from "./DashboardMasterPage";
+
 const TrustStoreCTX = createContext(TrustStore);
 const AuthStoreCTX = createContext(AuthStore);
 const DashboardHome = observer(() => {
@@ -45,7 +45,7 @@ const DashboardHome = observer(() => {
       <>
         <Routes>
           <Route element={<DashboardLayout />}>
-            <Route path="/" element={<DashboardPage />} />
+            <Route path="/" element={<DashboardMasterPage />} />
             <Route path="/trusts" element={<Trusts />} />
             <Route path="settings" element={<ProfileSettings />} />
             <Route path="settings/manage-admin" element={<ManageAdmin />} />

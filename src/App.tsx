@@ -6,8 +6,8 @@ import { Route, Routes } from "react-router-dom";
 import DashboardHome from "./pages/dashboard/DashboardHome";
 import TrustDashboard from "./pages/trust/components/TrustHome";
 import { configure } from "mobx";
-import Login from "./pages/auth/component/Login";
-import ForgotPassword from "./pages/auth/component/ForgotPassword";
+// import Login from "./pages/auth/component/Login";
+import AuthMasterPage from "./pages/auth/component/AuthMasterPage";
 
 // Disable strict mode globally
 configure({
@@ -22,9 +22,9 @@ function App() {
         <Route path="/dashboard/*" element={<DashboardHome />} />
         <Route path="/trust/:name/:id/*" element={<TrustDashboard />} />
 
-        <Route path="/" element={<Login />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="*" element={<Login />} />
+        <Route path="/" element={<AuthMasterPage />} />
+        {/* <Route path="/forgot-password" element={<ForgotPassword />} /> */}
+        <Route path="*" element={<AuthMasterPage />} />
       </Routes>
     </div>
   );
