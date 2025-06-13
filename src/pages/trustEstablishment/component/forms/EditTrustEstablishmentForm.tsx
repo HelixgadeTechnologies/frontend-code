@@ -9,7 +9,7 @@ import {
   Button,
 } from "../../../../components/elements";
 import { useForm, Controller } from "react-hook-form";
-import { year, currencyOptions } from "../../../../utils/data";
+import { year } from "../../../../utils/data";
 import { trustEstablishmentStore as TrustEstablishmentStore } from "../../store/trustEstablishmentStore";
 import { observer } from "mobx-react-lite";
 import { toast } from "react-toastify";
