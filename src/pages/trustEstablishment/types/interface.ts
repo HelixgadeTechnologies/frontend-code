@@ -9,8 +9,10 @@ export interface ITrustEstablishmentStore {
     isDashboardLoading: boolean;
     isDeleting: boolean;
     operationCount: ObservableMap<string, number>;
+    fundsDashboardData: IFundsDashboardData;
     trustEstablishmentStatus: ITrustEstablishmentStatus | null;
     dashboardData: IFinishedDashboard | null;
+    selectedYear: number;
     createTrustEstablishment(payload: ITrustEstablishmentPayload): Promise<boolean>;
     calculateTrustEstablishmentCompletion(data: ITrustEstablishmentPayload): number;
     getSingleTrustEstablishmentStatus(trustId: string): Promise<void>;
@@ -19,6 +21,7 @@ export interface ITrustEstablishmentStore {
     destroyMatrixDocument(url: string, trustEstablishmentId: string): Promise<void>;
     transformDashboard(data: IEstablishmentDashboard): IFinishedDashboard;
     getEstablishmentDashboardByTrustId(trustId: string): Promise<void>;
+    getFundsDashboardByTrustIdAndYear(trustId: string, year: number): Promise<void>;
 }
 interface BaseCompletionItem {
     completionStatus?: number;
@@ -41,10 +44,7 @@ export interface ITrustEstablishmentPayload extends BaseCompletionItem {
     developmentPlanDocumentMimeType: string,
     developmentPlanBudgetDocument: string,
     developmentPlanBudgetDocumentMimeType: string,
-    yearOfFundsReceivedByTrust: number,
-    totalFundsReceivedByTrust: number,
-    capitalExpenditure: number,
-    reserve: number,
+    fundsReceive: Array<IFundsReceived>,
     admin: string,
     yearOfNeedsAssessment: number,
     statusOfNeedAssessment: number,
@@ -57,6 +57,25 @@ export interface ITrustEstablishmentPayload extends BaseCompletionItem {
     trustDistributionMatrixDocument: string,
     trustDistributionMatrixDocumentMimeType: string,
     settlorOperationalExpenditures: Array<IOperationalExpenditure>
+}
+export interface IFundsReceived {
+    fundsReceivedByTrustId?: string;
+    yearReceived?: number;
+    reserveReceived?: number;
+    capitalExpenditureReceived?: number;
+    totalFundsReceived?: number;
+    paymentCheck?: number;
+    trustEstablishmentStatusId?: string;
+}
+export interface IFundsDashboardData {
+    totalFundsReceived: number,
+    capitalExpenditureReceived: number,
+    reserveReceived: number,
+    capitalPercentage: number,
+    reservePercentage: number
+}
+export interface IFundsDashboard {
+    FINANCIAL_SUMMARY: Array<IFundsDashboardData>
 }
 export interface IOperationalExpenditure {
     OperationalExpenditureId?: string;
@@ -82,10 +101,7 @@ export interface ITrustEstablishmentStatus {
     developmentPlanDocumentMimeType?: string | null;
     developmentPlanBudgetDocument?: string | null;
     developmentPlanBudgetDocumentMimeType?: string | null;
-    yearOfFundsReceivedByTrust?: number | null;
-    totalFundsReceivedByTrust?: number | null;
-    capitalExpenditure?: number | null;
-    reserve?: number | null;
+    fundsReceive:Array<IFundsReceived>
     admin?: string | null;
     yearOfNeedsAssessment?: number | null;
     statusOfNeedAssessment?: number | null;

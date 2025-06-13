@@ -16,8 +16,10 @@ import { trustEstablishmentStore as TrustEstablishmentStore } from "../../store/
 import { observer } from "mobx-react-lite";
 import FileCard from "./FileCard";
 import dayjs from "dayjs";
-import { Modal } from "../../../../components/elements";
+import { CustomSelect, Modal } from "../../../../components/elements";
 import { DeleteFile } from "../modal/DeleteFile";
+import { Controller, useForm } from "react-hook-form";
+import { year } from "../../../../utils/data";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -32,6 +34,7 @@ ChartJS.register(
 const TrustEstablishmentStoreCTX = createContext(TrustEstablishmentStore);
 const EstablishmentDashboard = observer(() => {
   const trustEstablishmentStore = useContext(TrustEstablishmentStoreCTX);
+  const { control } = useForm();
 
   const [type, setType] = useState<string | null>(null);
   const [url, setUrl] = useState<string | null>(null);
@@ -119,11 +122,44 @@ const EstablishmentDashboard = observer(() => {
     setType(null);
   }, [url, type]);
 
+  const changeYear = useCallback((year: number) => {
+    async function getInfo() {
+      trustEstablishmentStore.selectedYear = year;
+      let selectedTrustId = window.sessionStorage.getItem("selectedTrustId")
+      await trustEstablishmentStore.getFundsDashboardByTrustIdAndYear(selectedTrustId as string, year);
+    }
+    getInfo()
+
+  }, [trustEstablishmentStore]);
+
   return (
     <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
       {/* Financial Summary */}
       <div className="bg-white rounded-xl p-5 flex flex-col gap-4 shadow min-h-[320px]">
-        <h3 className="font-semibold text-lg mb-2">Financial Summary</h3>
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="font-semibold text-lg mb-2">Financial Summary</h3>
+          {/* Year Filter */}
+          <div>
+            <Controller
+              control={control}
+              name="yearOfNeedsAssessment"
+              rules={{ required: true }}
+              render={({ field }) => (
+                <CustomSelect
+                  // className="border border-gray-300 rounded px-3 py-1 text-sm bg-white focus:outline-none"
+                  label=""
+                  id="needs-assessment-year"
+                  {...field}
+                  options={year}
+                  isMulti={false}
+                  value={{ value: String(trustEstablishmentStore.selectedYear), label: trustEstablishmentStore.selectedYear == 0 ? "All" : String(trustEstablishmentStore.selectedYear) }}
+                  placeholder="Select Year"
+                  onChange={(e) => changeYear(Number(e?.value))}
+                />
+              )}
+            />
+          </div>
+        </div>
         <div className="flex flex-col items-center">
           <div className="w-40 h-40 mb-4">
             <Pie
@@ -133,8 +169,8 @@ const EstablishmentDashboard = observer(() => {
                   {
                     data: [
                       // trustEstablishmentStore.dashboardData?.ADMIN || 0,
-                      trustEstablishmentStore.dashboardData?.RESERVE || 0,
-                      trustEstablishmentStore.dashboardData?.CAPITAL_EXPENDITURE || 0,
+                      trustEstablishmentStore.fundsDashboardData?.reservePercentage || 0,
+                      trustEstablishmentStore.fundsDashboardData?.capitalPercentage || 0,
                       // trustEstablishmentStore.dashboardData?.TOTAL_FUNDS || 0,
                     ],
                     backgroundColor: [
@@ -160,17 +196,17 @@ const EstablishmentDashboard = observer(() => {
             <li className="flex items-center gap-2 text-sm">
               <span className="inline-block w-3 h-3 rounded-full" style={{ background: "#34C759" }}></span>
               <span className="text-gray-600 flex-1">Reserve</span>
-              <span className="font-medium text-gray-900">USD {trustEstablishmentStore.dashboardData?.RESERVE?.toLocaleString() || 0}</span>
+              <span className="font-medium text-gray-900">NGN {trustEstablishmentStore.fundsDashboardData?.reserveReceived?.toLocaleString() || 0}</span>
             </li>
             <li className="flex items-center gap-2 text-sm">
               <span className="inline-block w-3 h-3 rounded-full" style={{ background: "#FF3B30" }}></span>
               <span className="text-gray-600 flex-1">Capital expenditure</span>
-              <span className="font-medium text-gray-900">USD {trustEstablishmentStore.dashboardData?.CAPITAL_EXPENDITURE?.toLocaleString() || 0}</span>
+              <span className="font-medium text-gray-900">NGN {trustEstablishmentStore.fundsDashboardData?.capitalExpenditureReceived?.toLocaleString() || 0}</span>
             </li>
             <li className="flex items-center gap-2 text-sm">
               <span className="inline-block w-3 h-3 rounded-full" style={{ background: "#FFCC00" }}></span>
               <span className="text-gray-600 flex-1">Total Funds</span>
-              <span className="font-medium text-gray-900">USD {trustEstablishmentStore.dashboardData?.TOTAL_FUNDS?.toLocaleString() || 0}</span>
+              <span className="font-medium text-gray-900">NGN {trustEstablishmentStore.fundsDashboardData?.totalFundsReceived?.toLocaleString() || 0}</span>
             </li>
           </ul>
         </div>
@@ -219,10 +255,10 @@ const EstablishmentDashboard = observer(() => {
       <div className="bg-white rounded-lg p-5 shadow mt-6 flex flex-col items-center justify-center">
         <h3 className="font-semibold text-lg mb-2">Trust Development Plan & Budget</h3>
         {/* Replace this with your actual progress component */}
-          <div className="relative flex items-center justify-center w-44 h-44 my-4">
-            <Doughnut data={data} options={options} />
-            <span className="absolute text-3xl font-bold text-gray-900">{trustEstablishmentStore.dashboardData?.DEVELOP_PLAN_AND_BUDGET_PERCENTAGE!}%</span>
-          </div>
+        <div className="relative flex items-center justify-center w-44 h-44 my-4">
+          <Doughnut data={data} options={options} />
+          <span className="absolute text-3xl font-bold text-gray-900">{trustEstablishmentStore.dashboardData?.DEVELOP_PLAN_AND_BUDGET_PERCENTAGE!}%</span>
+        </div>
         {/* <div className="relative flex items-center justify-center my-4">
           <div className="w-40 h-40 ">
             <Doughnut data={data} options={options} />

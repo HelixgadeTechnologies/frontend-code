@@ -29,6 +29,10 @@ export const routes = [
 
 export const year = [
   {
+    label: "ALL",
+    value: "0",
+  },
+  {
     label: "2021",
     value: "2021",
   },

@@ -16,9 +16,10 @@ import { toast } from "react-toastify";
 import { settingStore as SettingStore } from "../../../Settings/store/settingStore"
 import { IAdmin } from "../../../Settings/types/interface";
 import { OpexFieldsArray } from "./OpexFieldsArray";
-import { IOperationalExpenditure, ITrustEstablishmentPayload } from "../../types/interface";
-import {trustStore as TrustStore} from "../../../trust/store/trustStore"
+import { IFundsReceived, IOperationalExpenditure, ITrustEstablishmentPayload } from "../../types/interface";
+import { trustStore as TrustStore } from "../../../trust/store/trustStore"
 import { convertFileToBase64 } from "../../../../utils/helpers";
+import { FundsReceived } from "./FundsReceived";
 const TrustStoreCTx = createContext(TrustStore);
 const trustEstablishmentStoreCTx = createContext(TrustEstablishmentStore);
 const SettingStoreCTx = createContext(SettingStore);
@@ -37,40 +38,55 @@ const TrustEstablishmentForm = observer(() => {
       // 
       // console.log("Form Data:", data);
       trustEstablishmentStore.isSubmitting = true;
-      let opex:Array<IOperationalExpenditure> = []; 
+      let opex: Array<IOperationalExpenditure> = [];
 
-      if(data.opex && data.opex.length > 0) {
+      if (data.opex && data.opex.length > 0) {
         // Map through the opex array and create IOperationalExpenditure objects  
-        data.opex.forEach((op:any) => {
+        data.opex.forEach((op: any) => {
           opex.push({
-            OperationalExpenditureId:"",
+            OperationalExpenditureId: "",
             settlorOperationalExpenditureYear: Number(op.year.value),
             settlorOperationalExpenditure: Number(op.amount),
             trustEstablishmentStatusId: ""
           } as IOperationalExpenditure);
         });
-       
+
       }
 
-      let cscDocument = data.cscDocument == undefined?undefined:await convertFileToBase64(data.cscDocument)
-      const uploadResCscDocument =cscDocument == undefined?{success:false,message:"",data:""}: await trustEstablishmentStore.uploadFile(cscDocument)
+      let totalFunds: Array<IFundsReceived> = [];
 
-      let developmentPlanBudgetDocument = data.developmentPlanBudgetDocument == undefined?undefined:await convertFileToBase64(data.developmentPlanBudgetDocument)
-      const uploadResDevelopmentPlanBudgetDocument =developmentPlanBudgetDocument == undefined?{success:false,message:"",data:""}: await trustEstablishmentStore.uploadFile(developmentPlanBudgetDocument)
+      if (data.totalFunds && data.totalFunds.length > 0) {
+        // Map through the totalFunds array and create IFundsReceived objects  
+        data.totalFunds.forEach((fn: any) => {
+          totalFunds.push({
+            yearReceived: Number(fn.year.value),
+            reserveReceived: Number(fn.reserved),
+            capitalExpenditureReceived: Number(fn.capitalExpenditure),
+            paymentCheck: Number(fn.paymentCheck),
+            totalFundsReceived:(Number(fn.reserved) + Number(fn.capitalExpenditure)),
+            trustEstablishmentStatusId: ""
+          } as IFundsReceived);
+        });
+      }
 
-      let developmentPlanDocument = data.developmentPlanDocument == undefined?undefined:await convertFileToBase64(data.developmentPlanDocument)
-      const uploadResDevelopmentPlanDocument =developmentPlanDocument == undefined?{success:false,message:"",data:""}: await trustEstablishmentStore.uploadFile(developmentPlanDocument)
+      let cscDocument = data.cscDocument == undefined ? undefined : await convertFileToBase64(data.cscDocument)
+      const uploadResCscDocument = cscDocument == undefined ? { success: false, message: "", data: "" } : await trustEstablishmentStore.uploadFile(cscDocument)
 
-      let trustDistributionMatrixDocument = data.trustDistributionMatrixDocument == undefined?undefined:await convertFileToBase64(data.trustDistributionMatrixDocument)
-      const uploadResTrustDistributionMatrixDocument =trustDistributionMatrixDocument == undefined?{success:false,message:"",data:""}: await trustEstablishmentStore.uploadFile(trustDistributionMatrixDocument)
+      let developmentPlanBudgetDocument = data.developmentPlanBudgetDocument == undefined ? undefined : await convertFileToBase64(data.developmentPlanBudgetDocument)
+      const uploadResDevelopmentPlanBudgetDocument = developmentPlanBudgetDocument == undefined ? { success: false, message: "", data: "" } : await trustEstablishmentStore.uploadFile(developmentPlanBudgetDocument)
+
+      let developmentPlanDocument = data.developmentPlanDocument == undefined ? undefined : await convertFileToBase64(data.developmentPlanDocument)
+      const uploadResDevelopmentPlanDocument = developmentPlanDocument == undefined ? { success: false, message: "", data: "" } : await trustEstablishmentStore.uploadFile(developmentPlanDocument)
+
+      let trustDistributionMatrixDocument = data.trustDistributionMatrixDocument == undefined ? undefined : await convertFileToBase64(data.trustDistributionMatrixDocument)
+      const uploadResTrustDistributionMatrixDocument = trustDistributionMatrixDocument == undefined ? { success: false, message: "", data: "" } : await trustEstablishmentStore.uploadFile(trustDistributionMatrixDocument)
       const establishmentData: ITrustEstablishmentPayload = {
-        trustEstablishmentStatusId:"", 
-        trustId:trustStore.selectedTrustId as string,
+        trustEstablishmentStatusId: "",
+        trustId: trustStore.selectedTrustId as string,
         admin: data.admin.value as string,
         advisoryCommitteeConstitutedAndInaugurated: Number(data.advisoryCommitteeConstitutedAndInaugurated),
-        attendanceSheet: Number(data.attendanceSheet), 
+        attendanceSheet: Number(data.attendanceSheet),
         botConstitutedAndInaugurated: Number(data.botConstitutedAndInaugurated),
-        capitalExpenditure: Number(data.capitalExpenditure),
         communityLeadershipConsulted: Number(data.communityLeadershipConsulted),
         communityWomenConsulted: Number(data.communityWomenConsulted),
         communityYouthsConsulted: Number(data.communityYouthsConsulted),
@@ -79,25 +95,24 @@ const TrustEstablishmentForm = observer(() => {
         isTrustDevelopmentPlanReadilyAvailable: Number(data.isTrustDevelopmentPlanReadilyAvailable),
         managementCommitteeConstitutedAndInaugurated: Number(data.managementCommitteeConstitutedAndInaugurated),
         pwDsConsulted: Number(data.pwDsConsulted),
-        reserve: Number(data.reserve),
         statusOfNeedAssessment: Number(data.statusOfNeedsAssessment),
-        totalFundsReceivedByTrust: Number(data.totalFundsReceivedByTrust),
+        fundsReceive: totalFunds,
         trustRegisteredWithCAC: Number(data.trustRegisteredWithCAC),
         yearDeveloped: Number(data.yearDeveloped),
         yearExpired: Number(data.yearExpired),
         yearIncorporated: Number(data.yearIncorporated.value),
-        yearOfFundsReceivedByTrust: Number(data.yearOfFundsReceivedByTrust.value),
         yearOfNeedsAssessment: Number(data.yearOfNeedsAssessment.value),
-        settlorOperationalExpenditures:opex,
-        cscDocument:uploadResCscDocument.success?uploadResCscDocument.data:"",
-        cscDocumentMimeType:cscDocument == undefined?"":cscDocument.mimeType,
-        developmentPlanBudgetDocument: uploadResDevelopmentPlanBudgetDocument.success?uploadResDevelopmentPlanBudgetDocument.data:"",
-        developmentPlanBudgetDocumentMimeType:developmentPlanBudgetDocument == undefined?"":developmentPlanBudgetDocument.mimeType,
-        developmentPlanDocument:uploadResDevelopmentPlanDocument.success?uploadResDevelopmentPlanDocument.data:"",
-        developmentPlanDocumentMimeType:developmentPlanDocument == undefined?"":developmentPlanDocument.mimeType,
-        trustDistributionMatrixDocument: uploadResTrustDistributionMatrixDocument.success?uploadResTrustDistributionMatrixDocument.data:"",
-        trustDistributionMatrixDocumentMimeType:trustDistributionMatrixDocument == undefined?"":trustDistributionMatrixDocument.mimeType
+        settlorOperationalExpenditures: opex,
+        cscDocument: uploadResCscDocument.success ? uploadResCscDocument.data : "",
+        cscDocumentMimeType: cscDocument == undefined ? "" : cscDocument.mimeType,
+        developmentPlanBudgetDocument: uploadResDevelopmentPlanBudgetDocument.success ? uploadResDevelopmentPlanBudgetDocument.data : "",
+        developmentPlanBudgetDocumentMimeType: developmentPlanBudgetDocument == undefined ? "" : developmentPlanBudgetDocument.mimeType,
+        developmentPlanDocument: uploadResDevelopmentPlanDocument.success ? uploadResDevelopmentPlanDocument.data : "",
+        developmentPlanDocumentMimeType: developmentPlanDocument == undefined ? "" : developmentPlanDocument.mimeType,
+        trustDistributionMatrixDocument: uploadResTrustDistributionMatrixDocument.success ? uploadResTrustDistributionMatrixDocument.data : "",
+        trustDistributionMatrixDocumentMimeType: trustDistributionMatrixDocument == undefined ? "" : trustDistributionMatrixDocument.mimeType
       };
+      // console.log("payload", establishmentData)
       const completion = trustEstablishmentStore.calculateTrustEstablishmentCompletion(establishmentData);
       establishmentData.completionStatus = completion;
 
@@ -118,7 +133,7 @@ const TrustEstablishmentForm = observer(() => {
     }
   };
   const setSwitch = useCallback(() => {
-      trustEstablishmentStore.pageSwitch = 1;
+    trustEstablishmentStore.pageSwitch = 1;
   }, [trustEstablishmentStore]);
   return (
     <div className="py-4 px-7">
@@ -129,11 +144,11 @@ const TrustEstablishmentForm = observer(() => {
           Trust Establishment and Governance <br /> Structure Dashboard
         </h2>
 
-        
-          <button className="px-3 py-2 rounded-md border border-black text-black font-medium text-sm" onClick={setSwitch}>
-            Back to Dashbaord
-          </button>
-      
+
+        <button className="px-3 py-2 rounded-md border border-black text-black font-medium text-sm" onClick={setSwitch}>
+          Back to Dashbaord
+        </button>
+
       </div>
 
       <form className="grid grid-cols-1 lg:grid-cols-2 gap-8" onSubmit={handleSubmit(onSubmit)}>
@@ -355,7 +370,7 @@ const TrustEstablishmentForm = observer(() => {
               <h2 className="font-semibold text-xl text-black capitalize">
                 Total funds received by trust
               </h2>
-              <div className="w-48">
+              {/* <div className="w-48">
                 <Controller
                   control={control}
                   name="yearOfFundsReceivedByTrust"
@@ -375,146 +390,10 @@ const TrustEstablishmentForm = observer(() => {
                 {errors.yearOfFundsReceivedByTrust && (
                   <p className="text-red-500 text-xs mt-1">Select year</p>
                 )}
-              </div>
+              </div> */}
             </div>
 
-
-            {/* Total Funds */}
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-900 mb-1">Total funds</label>
-              <div className="flex items-center rounded-md border border-blue-200 bg-white focus-within:border-blue-500 transition">
-                <div className="w-28 border-r border-blue-200 h-full flex items-center bg-white">
-                  <Controller
-                    name="totalFundsCurrency"
-                    control={control}
-                    render={({ field }) => (
-                      <CustomSelect
-                        id="total-funds-currency"
-                        label=""
-                        options={currencyOptions}
-                        onChange={(selected) =>
-                          field.onChange(selected ? selected.value : "USD")
-                        }
-                        defaultValue={currencyOptions[0]}
-                        className="!h-12 !border-0 !shadow-none"
-                        menuPlacement="auto"
-                      />
-                    )}
-                  />
-
-                </div>
-                <div className="flex-1">
-                  <FormInput
-                    label=""
-                    name="totalFundsReceivedByTrust"
-                    register={register}
-                    registerOptions={{
-                      required: "Amount is required",
-                      pattern: {
-                        value: /^[0-9]+(\.[0-9]{1,2})?$/,
-                        message: "Please enter a valid amount",
-                      },
-                    }}
-                    placeholder="Total funds"
-                    type="number"
-                    className="!h-12 !border-0 !shadow-none focus:!border-0 focus:!ring-0 focus:outline-none"
-                    inputClassName="pl-2 "
-                    error={errors.totalFundsReceivedByTrust}
-                  />
-                  {/* {errors.totalFundsReceivedByTrust && (
-                    <p className="text-red-500 text-xs mt-1">{String(errors?.totalFundsReceivedByTrust?.message!)}</p>
-                  )} */}
-                </div>
-              </div>
-            </div>
-
-            {/* Capital Expenditure */}
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-900 mb-1">Capital expenditure</label>
-              <div className="flex items-center rounded-md border border-blue-200 bg-white focus-within:border-blue-500 transition">
-                <div className="w-28 border-r border-blue-200 h-full flex items-center bg-white">
-                  <Controller
-                    name="capitalExpenditureCurrency"
-                    control={control}
-                    render={({ field }) => (
-                      <CustomSelect
-                        id="capital-expenditure-currency"
-                        label=""
-                        options={currencyOptions}
-                        onChange={(selected) =>
-                          field.onChange(selected ? selected.value : "USD")
-                        }
-                        defaultValue={currencyOptions[0]}
-                        className="!h-12 !border-0 !shadow-none focus:!ring-0 focus:!border-0"
-                      />
-                    )}
-                  />
-                </div>
-                <div className="flex-1">
-                  <FormInput
-                    label=""
-                    name="capitalExpenditure"
-                    register={register}
-                    registerOptions={{
-                      required: "Amount is required",
-                      pattern: {
-                        value: /^[0-9]+(\.[0-9]{1,2})?$/,
-                        message: "Please enter a valid amount",
-                      },
-                    }}
-                    error={errors.capitalExpenditure}
-                    placeholder="Capital expenditure"
-                    type="number"
-                    className="!h-12 !border-0 !shadow-none focus:!border-0 focus:!ring-0 focus:outline-none"
-                  />
-                  {/* {errors.capitalExpenditure && (
-                    <p className="text-red-500 text-xs mt-1">{String(errors?.capitalExpenditure?.message!)}</p>
-                  )} */}
-                </div>
-              </div>
-            </div>
-
-            {/* Reserve */}
-            {/* Total Funds */}
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-900 mb-1">Reserve</label>
-              <div className="flex items-center rounded-md border border-blue-200 bg-white focus-within:border-blue-500 transition">
-                <div className="w-28 border-r border-blue-200 h-full flex items-center bg-white">
-                  <Controller
-                    name="reserveCurrency"
-                    control={control}
-                    render={({ field }) => (
-                      <CustomSelect
-                        id="reserve-currency"
-                        label=""
-                        options={currencyOptions}
-                        onChange={(selected) =>
-                          field.onChange(selected ? selected.value : "USD")
-                        }
-                        defaultValue={currencyOptions[0]}
-                        className="!h-12 !border-0 !shadow-none focus:!ring-0 focus:!border-0"
-                      />
-                    )}
-                  />
-
-                </div>
-                <div className="flex-1">
-                  <FormInput
-                    label=""
-                    type="number"
-                    placeholder="Enter number"
-                    name="reserve"
-                    register={register}
-                    registerOptions={{ required: "This field is required." }}
-                    error={errors.reserve}
-                    className="!h-12 !border-0 !shadow-none focus:!border-0 focus:!ring-0 focus:outline-none"
-                  />
-                  {/* {errors.reserve && (
-                    <p className="text-red-500 text-xs mt-1">{String(errors?.reserve?.message!)}</p>
-                  )} */}
-                </div>
-              </div>
-            </div>
+            <FundsReceived control={control} register={register} />
 
             {/* Admin */}
             <div>
@@ -767,7 +646,7 @@ const TrustEstablishmentForm = observer(() => {
                 buttonText="Cancel"
                 width="w-fit"
               />
-              <Button padding="py-3" buttonText={trustEstablishmentStore.isSubmitting?"Submitting...":"Save Changes"} />
+              <Button padding="py-3" buttonText={trustEstablishmentStore.isSubmitting ? "Submitting..." : "Save Changes"} />
             </div>
           </div>
 

@@ -16,9 +16,10 @@ import { toast } from "react-toastify";
 import { settingStore as SettingStore } from "../../../Settings/store/settingStore"
 import { IAdmin } from "../../../Settings/types/interface";
 import { OpexFieldsArray } from "./OpexFieldsArray";
-import { IOperationalExpenditure, ITrustEstablishmentPayload } from "../../types/interface";
+import { IFundsReceived, IOperationalExpenditure, ITrustEstablishmentPayload } from "../../types/interface";
 import { trustStore as TrustStore } from "../../../trust/store/trustStore"
 import { convertFileToBase64 } from "../../../../utils/helpers";
+import { FundsReceived } from "./FundsReceived";
 const TrustStoreCTx = createContext(TrustStore);
 const trustEstablishmentStoreCTx = createContext(TrustEstablishmentStore);
 const SettingStoreCTx = createContext(SettingStore);
@@ -49,10 +50,14 @@ const EditTrustEstablishmentForm = observer(() => {
         yearDeveloped: data.yearDeveloped,
         yearExpired: data.yearExpired,
         developmentPlanDocument: undefined,
-        yearOfFundsReceivedByTrust: { value: data.yearOfFundsReceivedByTrust, label: String(data.yearOfFundsReceivedByTrust) },
-        totalFundsReceivedByTrust: data.totalFundsReceivedByTrust,
-        capitalExpenditure: data.capitalExpenditure,
-        reserve: data.reserve,
+        totalFunds: Array.isArray(data.fundsReceive)
+          ? data.fundsReceive.sort((a: IFundsReceived, b: IFundsReceived) => a.yearReceived! - b.yearReceived!).map((fn: IFundsReceived) => ({
+            year: { value: fn.yearReceived, label: String(fn.yearReceived) },
+            capitalExpenditure: fn.capitalExpenditureReceived,
+            reserved: fn.reserveReceived,
+            paymentCheck: String(fn.paymentCheck)
+          }))
+          : [],
         admin: { value: data.admin, label: `${adminInfo?.firstName} ${adminInfo?.lastName}` }, // adjust as needed
         yearOfNeedsAssessment: { value: data.yearOfNeedsAssessment, label: String(data.yearOfNeedsAssessment) },
         statusOfNeedsAssessment: String(data.statusOfNeedAssessment),
@@ -92,6 +97,23 @@ const EditTrustEstablishmentForm = observer(() => {
         });
       }
 
+
+      let totalFunds: Array<IFundsReceived> = [];
+
+      if (data.totalFunds && data.totalFunds.length > 0) {
+        // Map through the totalFunds array and create IFundsReceived objects  
+        data.totalFunds.forEach((fn: any) => {
+          totalFunds.push({
+            yearReceived: Number(fn.year.value),
+            reserveReceived: Number(fn.reserved),
+            capitalExpenditureReceived: Number(fn.capitalExpenditure),
+            paymentCheck: Number(fn.paymentCheck),
+            totalFundsReceived: (Number(fn.reserved) + Number(fn.capitalExpenditure)),
+            trustEstablishmentStatusId: ""
+          } as IFundsReceived);
+        });
+      }
+
       let cscDocument = data.cscDocument == undefined ? undefined : await convertFileToBase64(data.cscDocument)
       const uploadResCscDocument = cscDocument == undefined ? { success: false, message: "", data: "" } : await trustEstablishmentStore.uploadFile(cscDocument)
 
@@ -110,7 +132,7 @@ const EditTrustEstablishmentForm = observer(() => {
         advisoryCommitteeConstitutedAndInaugurated: Number(data.advisoryCommitteeConstitutedAndInaugurated),
         attendanceSheet: Number(data.attendanceSheet),
         botConstitutedAndInaugurated: Number(data.botConstitutedAndInaugurated),
-        capitalExpenditure: Number(data.capitalExpenditure),
+        fundsReceive: totalFunds,
         communityLeadershipConsulted: Number(data.communityLeadershipConsulted),
         communityWomenConsulted: Number(data.communityWomenConsulted),
         communityYouthsConsulted: Number(data.communityYouthsConsulted),
@@ -119,14 +141,12 @@ const EditTrustEstablishmentForm = observer(() => {
         isTrustDevelopmentPlanReadilyAvailable: Number(data.isTrustDevelopmentPlanReadilyAvailable),
         managementCommitteeConstitutedAndInaugurated: Number(data.managementCommitteeConstitutedAndInaugurated),
         pwDsConsulted: Number(data.pwDsConsulted),
-        reserve: Number(data.reserve),
+
         statusOfNeedAssessment: Number(data.statusOfNeedsAssessment),
-        totalFundsReceivedByTrust: Number(data.totalFundsReceivedByTrust),
         trustRegisteredWithCAC: Number(data.trustRegisteredWithCAC),
         yearDeveloped: Number(data.yearDeveloped),
         yearExpired: Number(data.yearExpired),
         yearIncorporated: Number(data.yearIncorporated.value),
-        yearOfFundsReceivedByTrust: Number(data.yearOfFundsReceivedByTrust.value),
         yearOfNeedsAssessment: Number(data.yearOfNeedsAssessment.value),
         settlorOperationalExpenditures: opex,
         cscDocument: uploadResCscDocument.success ? uploadResCscDocument.data : trustEstablishmentStore.trustEstablishmentStatus?.cscDocument,
@@ -412,171 +432,7 @@ const EditTrustEstablishmentForm = observer(() => {
           </section>
 
           <section>
-            {/* Total funds received by trust */}
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="font-semibold text-xl text-black capitalize">
-                Total funds received by trust
-              </h2>
-              <div className="w-48">
-                <Controller
-                  control={control}
-                  name="yearOfFundsReceivedByTrust"
-                  rules={{ required: true }}
-                  render={({ field }) => (
-                    <CustomSelect
-                      id="yearOfFundsReceivedByTrust"
-                      {...field}
-                      // isLoading={isLoading}
-                      label=""
-                      options={year}
-                      isMulti={false}
-                      placeholder="Select Year"
-                    />
-                  )}
-                />
-                {errors.yearOfFundsReceivedByTrust && (
-                  <p className="text-red-500 text-xs mt-1">Select year</p>
-                )}
-              </div>
-            </div>
-
-
-            {/* Total Funds */}
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-900 mb-1">Total funds</label>
-              <div className="flex items-center rounded-md border border-blue-200 bg-white focus-within:border-blue-500 transition">
-                <div className="w-28 border-r border-blue-200 h-full flex items-center bg-white">
-                  <Controller
-                    name="totalFundsCurrency"
-                    control={control}
-                    render={({ field }) => (
-                      <CustomSelect
-                        id="total-funds-currency"
-                        label=""
-                        options={currencyOptions}
-                        onChange={(selected) =>
-                          field.onChange(selected ? selected.value : "USD")
-                        }
-                        defaultValue={currencyOptions[0]}
-                        className="!h-12 !border-0 !shadow-none"
-                        menuPlacement="auto"
-                      />
-                    )}
-                  />
-
-                </div>
-                <div className="flex-1">
-                  <FormInput
-                    label=""
-                    name="totalFundsReceivedByTrust"
-                    register={register}
-                    registerOptions={{
-                      required: "Amount is required",
-                      pattern: {
-                        value: /^[0-9]+(\.[0-9]{1,2})?$/,
-                        message: "Please enter a valid amount",
-                      },
-                    }}
-                    placeholder="Total funds"
-                    type="number"
-                    className="!h-12 !border-0 !shadow-none focus:!border-0 focus:!ring-0 focus:outline-none"
-                    inputClassName="pl-2 "
-                    error={errors.totalFundsReceivedByTrust}
-                  />
-                  {/* {errors.totalFundsReceivedByTrust && (
-                    <p className="text-red-500 text-xs mt-1">{String(errors?.totalFundsReceivedByTrust?.message!)}</p>
-                  )} */}
-                </div>
-              </div>
-            </div>
-
-            {/* Capital Expenditure */}
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-900 mb-1">Capital expenditure</label>
-              <div className="flex items-center rounded-md border border-blue-200 bg-white focus-within:border-blue-500 transition">
-                <div className="w-28 border-r border-blue-200 h-full flex items-center bg-white">
-                  <Controller
-                    name="capitalExpenditureCurrency"
-                    control={control}
-                    render={({ field }) => (
-                      <CustomSelect
-                        id="capital-expenditure-currency"
-                        label=""
-                        options={currencyOptions}
-                        onChange={(selected) =>
-                          field.onChange(selected ? selected.value : "USD")
-                        }
-                        defaultValue={currencyOptions[0]}
-                        className="!h-12 !border-0 !shadow-none focus:!ring-0 focus:!border-0"
-                      />
-                    )}
-                  />
-                </div>
-                <div className="flex-1">
-                  <FormInput
-                    label=""
-                    name="capitalExpenditure"
-                    register={register}
-                    registerOptions={{
-                      required: "Amount is required",
-                      pattern: {
-                        value: /^[0-9]+(\.[0-9]{1,2})?$/,
-                        message: "Please enter a valid amount",
-                      },
-                    }}
-                    error={errors.capitalExpenditure}
-                    placeholder="Capital expenditure"
-                    type="number"
-                    className="!h-12 !border-0 !shadow-none focus:!border-0 focus:!ring-0 focus:outline-none"
-                  />
-                  {/* {errors.capitalExpenditure && (
-                    <p className="text-red-500 text-xs mt-1">{String(errors?.capitalExpenditure?.message!)}</p>
-                  )} */}
-                </div>
-              </div>
-            </div>
-
-            {/* Reserve */}
-            {/* Total Funds */}
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-900 mb-1">Reserve</label>
-              <div className="flex items-center rounded-md border border-blue-200 bg-white focus-within:border-blue-500 transition">
-                <div className="w-28 border-r border-blue-200 h-full flex items-center bg-white">
-                  <Controller
-                    name="reserveCurrency"
-                    control={control}
-                    render={({ field }) => (
-                      <CustomSelect
-                        id="reserve-currency"
-                        label=""
-                        options={currencyOptions}
-                        onChange={(selected) =>
-                          field.onChange(selected ? selected.value : "USD")
-                        }
-                        defaultValue={currencyOptions[0]}
-                        className="!h-12 !border-0 !shadow-none focus:!ring-0 focus:!border-0"
-                      />
-                    )}
-                  />
-
-                </div>
-                <div className="flex-1">
-                  <FormInput
-                    label=""
-                    type="number"
-                    placeholder="Enter number"
-                    name="reserve"
-                    register={register}
-                    registerOptions={{ required: "This field is required." }}
-                    error={errors.reserve}
-                    className="!h-12 !border-0 !shadow-none focus:!border-0 focus:!ring-0 focus:outline-none"
-                  />
-                  {/* {errors.reserve && (
-                    <p className="text-red-500 text-xs mt-1">{String(errors?.reserve?.message!)}</p>
-                  )} */}
-                </div>
-              </div>
-            </div>
+            <FundsReceived control={control} register={register} />
 
             {/* Admin */}
             <div>

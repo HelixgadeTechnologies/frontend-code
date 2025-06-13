@@ -22,7 +22,8 @@ const TrustEstablishment = observer(() => {
     async function getInfo() {
       let selectedTrustId = window.sessionStorage.getItem("selectedTrustId")
       trustEstablishmentStore.dashboardData = null;
-      await trustEstablishmentStore.getSingleTrustEstablishmentStatus(selectedTrustId as string)
+      // await trustEstablishmentStore.getSingleTrustEstablishmentStatus(selectedTrustId as string)
+      await trustEstablishmentStore.getFundsDashboardByTrustIdAndYear(selectedTrustId as string, 0)
       await trustEstablishmentStore.getEstablishmentDashboardByTrustId(selectedTrustId as string)
       await settingStore.getAllAdmin();
     }
@@ -45,7 +46,7 @@ const TrustEstablishment = observer(() => {
               <DashboardSkeleton />
             ) : (
               <>
-                <GoBack action={() => navigate(-1)} trustName={name || ""} page="Trust Establishment"/>
+                <GoBack action={() => navigate(-1)} trustName={name || ""} page="Trust Establishment" />
                 <div className="my-7 flex items-center justify-between">
                   <h2 className="font-semibold text-2xl text-black capitalize">
                     Trust Establishment and Governance <br /> Structure Dashboard

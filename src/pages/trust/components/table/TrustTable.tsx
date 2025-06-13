@@ -13,12 +13,15 @@ import { trustStore as TrustStore } from "../../../trust/store/trustStore";
 import { ITrustList } from "../../types/interface";
 import { settingStore as SettingStore } from "../../../Settings/store/settingStore";
 import { DeleteTrust } from "../forms/DeleteTrust";
+import { trustEstablishmentStore as  TrustEstablishmentStore} from "../../../trustEstablishment/store/trustEstablishmentStore";
 
 const settingStoreCTX = createContext(SettingStore);
 const TrustStoreCtx = createContext(TrustStore);
+const TrustEstablishmentStoreCtx = createContext(TrustEstablishmentStore);
 const TrustTable = observer(() => {
   const trustStore = useContext(TrustStoreCtx);
   const settingStore = useContext(settingStoreCTX);
+  const trustEstablishmentStore = useContext(TrustEstablishmentStoreCtx);
   // State to manage row selection and active menu
   // Using useState to manage row selection state
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
@@ -76,6 +79,15 @@ const TrustTable = observer(() => {
     loadRequests();
   }, [trustStore]);
 
+  const trustAction = useCallback((trustId: string) => {
+    async function loadRequests() {
+      trustStore.selectedTrustId = trustId; // Set selected trust ID in the store
+      sessionStorage.setItem("selectedTrustId", trustId); // Store selected trust ID in sessionStorage
+      await trustEstablishmentStore.getSingleTrustEstablishmentStatus(trustId)
+    }
+    loadRequests();
+  }, [trustEstablishmentStore]);
+
   // Define columns with memoization
   const columns = useMemo(
     () => [
@@ -91,11 +103,9 @@ const TrustTable = observer(() => {
             <Link
               className="hover:underline"
               to={`/trust/${formattedName}/${trust.trustId}`}
-              onClick={(e) => {
+              onClick={async(e) => {
                 e.stopPropagation(); // Prevent row click event
-                trustStore.selectedTrustId = trust.trustId; // Set selected trust ID in the store
-                sessionStorage.setItem("selectedTrustId", trust.trustId); // Store selected trust ID in sessionStorage
-
+                trustAction(trust.trustId)
               }}
             >
               {trustName}

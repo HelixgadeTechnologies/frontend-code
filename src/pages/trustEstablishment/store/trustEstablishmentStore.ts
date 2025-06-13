@@ -1,5 +1,5 @@
 import { makeAutoObservable, ObservableMap } from "mobx"
-import { IEstablishmentDashboard, IFinishedDashboard, IOperationalExpenditure, ITrustEstablishmentPayload, ITrustEstablishmentStatus, ITrustEstablishmentStore } from "../types/interface";
+import { IEstablishmentDashboard, IFinishedDashboard, IFundsDashboard, IFundsDashboardData, IOperationalExpenditure, ITrustEstablishmentPayload, ITrustEstablishmentStatus, ITrustEstablishmentStore } from "../types/interface";
 import { trustEstablishmentService } from "../service/trustEstablishmentService";
 import { IUploadPayload } from "../../project/types/interface";
 import { HCDTRequestResponse } from "../../../infrastructure/HCDTRequestResponse";
@@ -9,9 +9,11 @@ class TrustEstablishmentStore implements ITrustEstablishmentStore {
     isDashboardLoading = false;
     isEstablishmentCreated = false;
     isDeleting = false
+    selectedYear: number = 0;
     pageSwitch: number = 1;
     dashboardData: IFinishedDashboard | null = null;
     operationCount = new ObservableMap<string, number>();
+    fundsDashboardData: IFundsDashboardData = {} as IFundsDashboardData;
     trustEstablishmentStatus: ITrustEstablishmentStatus | null = null;
     constructor() {
         makeAutoObservable(this);
@@ -35,8 +37,14 @@ class TrustEstablishmentStore implements ITrustEstablishmentStore {
     calculateTrustEstablishmentCompletion(data: ITrustEstablishmentPayload): number {
         const keys = Object.keys(data) as (keyof ITrustEstablishmentPayload)[];
 
-        // Filter out keys you want to skip
-        const relevantKeys = keys.filter(key => key !== 'completionStatus');
+        // Add all fields you want to skip
+        const excludedKeys: (keyof ITrustEstablishmentPayload)[] = [
+            'completionStatus',
+            'cscDocument',
+            'cscDocumentMimeType',
+        ];
+
+        const relevantKeys = keys.filter(key => !excludedKeys.includes(key));
 
         const totalFields = relevantKeys.length;
 
@@ -60,6 +68,7 @@ class TrustEstablishmentStore implements ITrustEstablishmentStore {
         return Math.round(percentage);
     }
 
+
     async getSingleTrustEstablishmentStatus(trustId: string): Promise<void> {
         try {
             this.isLoading = true;
@@ -68,6 +77,7 @@ class TrustEstablishmentStore implements ITrustEstablishmentStore {
                 this.trustEstablishmentStatus = {} as ITrustEstablishmentStatus
                 if (data.data === null) {
                     this.operationCount.set("1", 1);
+                    this.isEstablishmentCreated = false;
                 } else {
                     this.isEstablishmentCreated = true;
                     let establishmentData: ITrustEstablishmentStatus = data.data as ITrustEstablishmentStatus
@@ -153,6 +163,23 @@ class TrustEstablishmentStore implements ITrustEstablishmentStore {
                 const processedData = this.transformDashboard(data.data);
                 this.dashboardData = processedData;
                 // console.log(toJS(processedData))
+            }
+        } catch (error) {
+            throw error;
+        } finally {
+            this.isDashboardLoading = false;
+        }
+    }
+
+    async getFundsDashboardByTrustIdAndYear(trustId: string, year: number): Promise<void> {
+        try {
+            // Prevent duplicate calls
+            this.isDashboardLoading = true;
+            let data = await trustEstablishmentService.getFundsDashboard(trustId, year);
+            if (data.success) {
+                this.fundsDashboardData = {} as IFundsDashboardData
+                const processedData: IFundsDashboard = data.data;
+                this.fundsDashboardData = processedData.FINANCIAL_SUMMARY[0]
             }
         } catch (error) {
             throw error;

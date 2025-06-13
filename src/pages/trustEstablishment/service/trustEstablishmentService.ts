@@ -12,6 +12,8 @@ export const trustEstablishmentService = {
     destroyCloudFile: (url: string): Promise<HCDTRequestResponse> => client.post('/upload/file-destroy', { url }),
 
     getDashboard: (trustId: string): Promise<HCDTRequestResponse> => client.get(`/trust/dashboard/${trustId}`),
+    
+    getFundsDashboard: (trustId: string,year:number): Promise<HCDTRequestResponse> => client.get(`/trust/fundsDashboard/${trustId}/${year}`),
 
     removeCACFile: (trustEstablishmentId: string): Promise<HCDTRequestResponse> => client.del(`/trust/remove-cac-file/${trustEstablishmentId}`),
 
