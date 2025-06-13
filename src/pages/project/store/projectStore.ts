@@ -222,8 +222,7 @@ class ProjectStore implements IProjectStore {
     }
     transformProjectDashboard(data: IDashboard): IDashboardData {
         return {
-            TOTAL_BUDGET: data.TOTAL_BUDGET[0].totalBudget,
-            TOTAL_ANNUAL_BUDGET: data.TOTAL_ANNUAL_BUDGET[0].annualApprovedBudget,
+            TOP_PROJECT:data.TOP_PROJECT,
             BENEFITS: [
                 data.BENEFITS[0].totalMales,
                 data.BENEFITS[0].totalFemales,

@@ -165,9 +165,16 @@ interface IStatus {
     ABANDONED: number,
 }
 
+export interface ITopProject{
+    trustName: string,
+    projectTitle: string,
+    community: string,
+    createAt: string,
+    rating: number
+}
+
 export interface IDashboard {
-    TOTAL_BUDGET: Array<ITotalBudget>,
-    TOTAL_ANNUAL_BUDGET: Array<IAnnualApprovedBudget>,
+    TOP_PROJECT: Array<ITopProject>,
     BENEFITS: Array<IBenefit>,
     EMPLOYMENT: Array<IEmployees>,
     CATEGORY: Array<ICategory>,
@@ -175,8 +182,7 @@ export interface IDashboard {
 }
 
 export interface IDashboardData {
-    TOTAL_BUDGET: number,
-    TOTAL_ANNUAL_BUDGET: number,
+    TOP_PROJECT: Array<ITopProject>,
     BENEFITS: Array<number>,
     EMPLOYMENT: Array<number>,
     CATEGORY: Array<number>,

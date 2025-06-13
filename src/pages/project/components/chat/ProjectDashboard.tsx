@@ -14,6 +14,9 @@ import {
     ArcElement,
 } from "chart.js";
 import { Line, Pie } from "react-chartjs-2";
+import DashboardTable from "../../../dashboard/table/DashboardTable";
+import { FaRegStar, FaStar } from "react-icons/fa";
+import dayjs from "dayjs";
 
 ChartJS.register(
     CategoryScale,
@@ -134,22 +137,51 @@ const ProjectDashboard = observer(() => {
             },
         ],
     };
-
+    const renderStars = (rating: number, max = 5) => {
+        return (
+            <span className="flex items-center gap-1">
+                {Array.from({ length: max }, (_, i) =>
+                    i < rating ? (
+                        <FaStar key={i} className="text-[#FFB800] text-base" />
+                    ) : (
+                        <FaRegStar key={i} className="text-[#FFB800] text-base" />
+                    )
+                )}
+            </span>
+        );
+    };
+    const projectDetailsColumns = [
+        { key: "trustName", label: "Trust" },
+        { key: "projectTitle", label: "Project" },
+        { key: "community", label: "Community" },
+        {
+            key: "createdAt",
+            label: "Creation date",
+            render: (row: any) => (
+                <span className="bg-[#E6F7F0] text-[#3BB77E] rounded px-3 py-1 text-xs font-medium mr-2">
+                    {dayjs(row.completeAt).format("DD-MM-YYYY hh:mm A")}
+                </span>
+            ),
+        },
+        {
+            key: "rating",
+            label: "Rating",
+            render: (row: any) => (
+                renderStars(row.rating)
+            ),
+        },
+    ];
     return (
         <div className="p-6 bg-gray-100 min-h-screen">
             {/* Project Overview */}
-            <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-                <h2 className="text-lg font-bold text-gray-800 mb-4">Project Overview</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="bg-gray-100 p-4 rounded-lg text-center">
-                        <h3 className="text-sm font-medium text-gray-700">Total Budget</h3>
-                        <p className="text-xl font-bold text-gray-800">NGN {projectStore.dashboardData?.TOTAL_BUDGET.toLocaleString() || "0"}</p>
-                    </div>
-                    <div className="bg-gray-100 p-4 rounded-lg text-center">
-                        <h3 className="text-sm font-medium text-gray-700">Annual Budget Allocation</h3>
-                        <p className="text-xl font-bold text-gray-800">NGN {projectStore.dashboardData?.TOTAL_ANNUAL_BUDGET.toLocaleString() || "0"}</p>
-                    </div>
-                </div>
+            <div className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
+                <DashboardTable
+                    header="Project Details"
+                    data={projectStore.dashboardData?.TOP_PROJECT}
+                    columns={projectDetailsColumns}
+                    emptyText="No data available"
+                    loading={false}
+                />
             </div>
 
             {/* Charts */}
