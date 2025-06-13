@@ -125,12 +125,12 @@ export interface IUploadPayload {
     mimeType: string
 
 }
-interface ITotalBudget {
-    totalBudget: number
-}
-interface IAnnualApprovedBudget {
-    annualApprovedBudget: number
-}
+// interface ITotalBudget {
+//     totalBudget: number
+// }
+// interface IAnnualApprovedBudget {
+//     annualApprovedBudget: number
+// }
 interface IBenefit {
 
     totalMales: number,
@@ -165,7 +165,7 @@ interface IStatus {
     ABANDONED: number,
 }
 
-export interface ITopProject{
+export interface ITopProject {
     trustName: string,
     projectTitle: string,
     community: string,
