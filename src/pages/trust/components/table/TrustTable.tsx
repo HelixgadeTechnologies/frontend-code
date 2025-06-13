@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useMemo, useCallback, createContext, useContext } from "react";
-import {Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   Table,
   Modal,
@@ -13,7 +13,7 @@ import { trustStore as TrustStore } from "../../../trust/store/trustStore";
 import { ITrustList } from "../../types/interface";
 import { settingStore as SettingStore } from "../../../Settings/store/settingStore";
 import { DeleteTrust } from "../forms/DeleteTrust";
-import { trustEstablishmentStore as  TrustEstablishmentStore} from "../../../trustEstablishment/store/trustEstablishmentStore";
+import { trustEstablishmentStore as TrustEstablishmentStore } from "../../../trustEstablishment/store/trustEstablishmentStore";
 
 const settingStoreCTX = createContext(SettingStore);
 const TrustStoreCtx = createContext(TrustStore);
@@ -83,6 +83,7 @@ const TrustTable = observer(() => {
     async function loadRequests() {
       trustStore.selectedTrustId = trustId; // Set selected trust ID in the store
       sessionStorage.setItem("selectedTrustId", trustId); // Store selected trust ID in sessionStorage
+      trustEstablishmentStore.selectedYear = 0;
       await trustEstablishmentStore.getSingleTrustEstablishmentStatus(trustId)
     }
     loadRequests();
@@ -103,7 +104,7 @@ const TrustTable = observer(() => {
             <Link
               className="hover:underline"
               to={`/trust/${formattedName}/${trust.trustId}`}
-              onClick={async(e) => {
+              onClick={async (e) => {
                 e.stopPropagation(); // Prevent row click event
                 trustAction(trust.trustId)
               }}
