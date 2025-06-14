@@ -25,6 +25,7 @@ class TrustEstablishmentStore implements ITrustEstablishmentStore {
             let data = await trustEstablishmentService.createAndUpdateTrustEstablishment(payload)
             await this.getSingleTrustEstablishmentStatus(payload.trustId);
             await this.getEstablishmentDashboardByTrustId(payload.trustId);
+            await this.getFundsDashboardByTrustIdAndYear(payload.trustId, 0);
             return data.success ? true : false
         } catch (error) {
             throw error

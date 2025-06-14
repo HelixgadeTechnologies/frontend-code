@@ -137,7 +137,7 @@ const EstablishmentDashboard = observer(() => {
       {/* Financial Summary */}
       <div className="bg-white rounded-xl p-5 flex flex-col gap-4 shadow min-h-[320px]">
         <div className="flex items-center justify-between mb-2">
-          <h3 className="font-semibold text-lg mb-2">Financial Summary</h3>
+          <h3 className="font-semibold text-lg mb-2">Funds received by trust</h3>
           {/* Year Filter */}
           <div>
             <Controller

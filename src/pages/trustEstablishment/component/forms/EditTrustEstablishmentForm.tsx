@@ -432,6 +432,9 @@ const EditTrustEstablishmentForm = observer(() => {
           </section>
 
           <section>
+            <h2 className="font-semibold text-xl text-black mb-1 mt-8">
+              Total funds received by trust
+            </h2>
             <FundsReceived control={control} register={register} />
 
             {/* Admin */}

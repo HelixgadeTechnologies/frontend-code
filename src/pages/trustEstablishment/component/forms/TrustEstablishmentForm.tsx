@@ -366,32 +366,10 @@ const TrustEstablishmentForm = observer(() => {
 
           <section>
             {/* Total funds received by trust */}
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="font-semibold text-xl text-black capitalize">
-                Total funds received by trust
-              </h2>
-              {/* <div className="w-48">
-                <Controller
-                  control={control}
-                  name="yearOfFundsReceivedByTrust"
-                  rules={{ required: true }}
-                  render={({ field }) => (
-                    <CustomSelect
-                      id="yearOfFundsReceivedByTrust"
-                      {...field}
-                      // isLoading={isLoading}
-                      label=""
-                      options={year}
-                      isMulti={false}
-                      placeholder="Select Year"
-                    />
-                  )}
-                />
-                {errors.yearOfFundsReceivedByTrust && (
-                  <p className="text-red-500 text-xs mt-1">Select year</p>
-                )}
-              </div> */}
-            </div>
+  
+            <h2 className="font-semibold text-xl text-black mb-1 mt-8">
+              Total funds received by trust
+            </h2>
 
             <FundsReceived control={control} register={register} />
 
