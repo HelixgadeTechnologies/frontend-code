@@ -264,7 +264,15 @@ const DashboardPage: React.FC = observer(() => {
   ];
   const conflictDetailsColumnsR = [
     { key: "projectTitle", label: "Project Title" },
-    { key: "createAt", label: "Report Date" },
+    {
+      key: "createAt",
+      label: "Report Date",
+      render: (row: any) => (
+        <span className="bg-[#E6F7F0] text-[#3BB77E] rounded px-3 py-1 text-xs font-medium mr-2">
+          {dayjs(row.createAt).format("DD-MM-YYYY hh:mm A")}
+        </span>
+      ),
+    },
   ];
 
 
