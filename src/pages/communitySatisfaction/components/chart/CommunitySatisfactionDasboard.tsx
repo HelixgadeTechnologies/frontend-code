@@ -27,31 +27,31 @@ const CommunitySatisfactionDashboard = observer(
         }, [satisfactionStore]);
 
         // Bar chart options
-        const barOptions = {
-            plugins: {
-                legend: {
-                    display: false, // Disable the legend
-                },
-            },
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                x: {
-                    stacked: true,
-                    title: {
-                        display: true,
-                        text: "Responses",
-                    },
-                },
-                y: {
-                    stacked: true,
-                    title: {
-                        display: true,
-                        text: "total",
-                    },
-                },
-            },
-        };
+        // const barOptions = {
+        //     plugins: {
+        //         legend: {
+        //             display: false, // Disable the legend
+        //         },
+        //     },
+        //     responsive: true,
+        //     maintainAspectRatio: false,
+        //     scales: {
+        //         x: {
+        //             stacked: true,
+        //             title: {
+        //                 display: true,
+        //                 text: "Responses",
+        //             },
+        //         },
+        //         y: {
+        //             stacked: true,
+        //             title: {
+        //                 display: true,
+        //                 text: "total",
+        //             },
+        //         },
+        //     },
+        // };
 
         const pieOptions = {
             plugins: {
@@ -64,16 +64,16 @@ const CommunitySatisfactionDashboard = observer(
         };
 
         // Generate bar chart data dynamically
-        const generateBarData = (data: number[]) => ({
-            labels: ["STRONGLY DISAGREE", "DISAGREE", "SLIGHTLY AGREE", "AGREE", "STRONGLY AGREE"],
-            datasets: [
-                {
-                    label: "10%",
-                    data: data,
-                    backgroundColor: ["#EF4444", "#de9292", "#FACC15", "#3B82F6", "#22C55E"],
-                },
-            ],
-        });
+        // const generateBarData = (data: number[]) => ({
+        //     labels: ["STRONGLY DISAGREE", "DISAGREE", "SLIGHTLY AGREE", "AGREE", "STRONGLY AGREE"],
+        //     datasets: [
+        //         {
+        //             label: "10%",
+        //             data: data,
+        //             backgroundColor: ["#EF4444", "#de9292", "#FACC15", "#3B82F6", "#22C55E"],
+        //         },
+        //     ],
+        // });
 
         // Generate pie chart data dynamically
         const generatePieData = (data: number[]) => ({
@@ -86,85 +86,130 @@ const CommunitySatisfactionDashboard = observer(
                 },
             ],
         });
+
+
+        // ...existing imports...
+
+        // Add this function to generate grouped horizontal stacked bar data
+        const generateGroupedBarData = (data: number[][]) => ({
+            labels: [
+                "We feel well-informed about Trust projects.",
+                "There has been enough community consultation on Trust projects.",
+                "The community has had fair opportunities to take part in HCDT projects.",
+                "A clear system exists to report and address concerns.",
+                "The actions of governing structures have reduced conflict in my community.",
+            ],
+            datasets: [
+                {
+                    label: "Strongly Disagree",
+                    data: data.map(d => d[0]),
+                    backgroundColor: "#EF4444",
+                },
+                {
+                    label: "Disagree",
+                    data: data.map(d => d[1]),
+                    backgroundColor: "#de9292",
+                },
+                {
+                    label: "Slightly Agree",
+                    data: data.map(d => d[2]),
+                    backgroundColor: "#FACC15",
+                },
+                {
+                    label: "Agree",
+                    data: data.map(d => d[3]),
+                    backgroundColor: "#3B82F6",
+                },
+                {
+                    label: "Strongly Agree",
+                    data: data.map(d => d[4]),
+                    backgroundColor: "#22C55E",
+                },
+            ],
+        });
+
+        // Bar options for horizontal grouped stacked bars
+        // const groupedBarOptions = {
+        //     indexAxis: 'y' as const,
+        //     responsive: true,
+        //     maintainAspectRatio: false,
+        //     plugins: {
+        //         legend: {
+        //             position: 'bottom' as const,
+        //         },
+        //     },
+        //     scales: {
+        //         x: {
+        //             stacked: true,
+        //             min: 0,
+        //             max: 100,
+        //             type: 'linear' as const,
+        //             title: {
+        //                 display: false,
+        //             },
+        //             ticks: {
+        //                 stepSize: 10,
+        //                 callback: (value: string | number) => `${value}`,
+        //             },
+        //         },
+        //         y: {
+        //             stacked: true,
+        //             type: 'category' as const,
+        //             title: {
+        //                 display: false,
+        //             },
+        //         },
+        //     },
+        // };
+        const groupedBarOptions = {
+            indexAxis: 'y' as const,
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom' as const,
+                },
+            },
+            scales: {
+                x: {
+                    stacked: true,
+                    type: 'linear' as const,
+                    title: {
+                        display: true,
+                        text: 'Number of Respondents',
+                    },
+                    ticks: {
+                        stepSize: 100, // Adjust based on your actual range (e.g. 100, 200)
+                        // No need for a custom callback if showing raw numbers
+                    },
+                },
+                y: {
+                    stacked: true,
+                    type: 'category' as const,
+                    title: {
+                        display: false,
+                    },
+                },
+            },
+        };
+
+
         return (
-            <div className="p-6 bg-gray-100 ">
+            <div className="p-6 ">
                 <div className=" mx-auto space-y-8">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {/* Question 1 */}
-                        <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
-                            <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
-                                We feel well-informed about the implemented projects by the Trust governing structure.
-                            </h3>
-                            <div className="h-48 sm:h-56">
-                                <Bar
-                                    data={generateBarData(
-                                        satisfactionStore.dashboardData?.infoProjects || [0, 0, 0, 0, 0]
-                                    )}
-                                    options={barOptions}
-                                />
-                            </div>
-                        </div>
-
-                        {/* Question 2 */}
-                        <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
-                            <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
-                                We feel the community has been sufficiently consulted about the implemented projects by the Trust governing structure.
-                            </h3>
-                            <div className="h-48 sm:h-56">
-                                <Bar
-                                    data={generateBarData(
-                                        satisfactionStore.dashboardData?.communityConsult || [0, 0, 0, 0, 0]
-                                    )}
-                                    options={barOptions}
-                                />
-                            </div>
-                        </div>
-
-                        {/* Question 3 */}
-                        <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
-                            <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
-                                We feel sufficient opportunities have been given to local community members to participate in the HCDT projects.
-                            </h3>
-                            <div className="h-48 sm:h-56">
-                                <Bar
-                                    data={generateBarData(
-                                        satisfactionStore.dashboardData?.localParticipation || [0, 0, 0, 0, 0]
-                                    )}
-                                    options={barOptions}
-                                />
-                            </div>
-                        </div>
-
-                        {/* Question 4 */}
-                        <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
-                            <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
-                                There is a clear mechanism to report concerns to the governing structures and community complaints/concerns are efficiently addressed.
-                            </h3>
-                            <div className="h-48 sm:h-56">
-                                <Bar
-                                    data={generateBarData(
-                                        satisfactionStore.dashboardData?.reportMechanism || [0, 0, 0, 0, 0]
-                                    )}
-                                    options={barOptions}
-                                />
-                            </div>
-                        </div>
-
-                        {/* Question 5 */}
-                        <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
-                            <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
-                                The way the governing structures have acted has minimized the potential for conflict in my community.
-                            </h3>
-                            <div className="h-48 sm:h-56">
-                                <Bar
-                                    data={generateBarData(
-                                        satisfactionStore.dashboardData?.conflictMinimization || [0, 0, 0, 0, 0]
-                                    )}
-                                    options={barOptions}
-                                />
-                            </div>
-                        </div>
+                    <div className="h-[400px] sm:h-[500px]">
+                        <Bar
+                            data={generateGroupedBarData([
+                                satisfactionStore.dashboardData?.infoProjects || [0, 0, 0, 0, 0],
+                                satisfactionStore.dashboardData?.communityConsult || [0, 0, 0, 0, 0],
+                                satisfactionStore.dashboardData?.localParticipation || [0, 0, 0, 0, 0],
+                                satisfactionStore.dashboardData?.reportMechanism || [0, 0, 0, 0, 0],
+                                satisfactionStore.dashboardData?.conflictMinimization || [0, 0, 0, 0, 0],
+                            ])}
+                            options={groupedBarOptions}
+                        />
                     </div>
+                  
                 </div>
 
                 {/* Pie Charts Section */}

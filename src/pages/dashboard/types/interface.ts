@@ -15,9 +15,10 @@ export interface IFinishedDashboard {
     PROJECT_DETAILS: ProjectDetail[];
     CONFLICT_RESOLUTION_OVER_TIME: ConflictResolutionOverTime[];
     CONFLICT_RESOLUTION_PERCENTAGE: ConflictStatusPercentage,
-    CONFLICT_RESOLUTION_DETAILS: ConflictDetail[],
-    TOTAL_WORKER_IN_PROJECT: WorkersInProject[],
+    CONFLICT_RESOLUTION_DETAILS: ConflictDetail[];
+    TOTAL_WORKER_IN_PROJECT: WorkersInProject[];
     EMPLOYEE_PER_PROJECT: EmployeePerProject[];
+    STATISTICS_PERCENTAGE: IStatistsPercentage;
 }
 
 interface ConflictStatusPercentage  {
@@ -50,9 +51,13 @@ export interface IGeneralDashboard {
     CONFLICT_RESOLUTION_DETAILS: ConflictDetail[],
     TOTAL_WORKER_IN_PROJECT: WorkersInProject[],
     EMPLOYEE_PER_PROJECT: EmployeePerProject[];
+    STATISTICS_PERCENTAGE:IStatistsPercentage[]
 }
 
 // Subtypes
+interface IStatistsPercentage {
+    fully_received_percentage: number;
+}
 interface Statists {
     community_count: number;
 }

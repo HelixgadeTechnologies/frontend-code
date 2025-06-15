@@ -1,14 +1,31 @@
 import { FaStar, FaRegStar } from "react-icons/fa";
-import { Doughnut, Bar, Line } from "react-chartjs-2";
+import {
+  ChartOptions,
+} from "chart.js";
+import { Doughnut, Bar, Line, Pie } from "react-chartjs-2";
 import DashboardTable, { DashboardTableColumn } from "../table/DashboardTable";
-import { observer } from "mobx-react-lite";
+import { Observer, observer } from "mobx-react-lite";
 import { dashboardStore as DashboardStore } from "../store/dashboardStore";
 import { useContext, createContext } from "react";
 import dayjs from "dayjs";
+import { IConflictView } from "../../conflict/types/interface";
+import IMG from "../../../assets/svgs/dashboardConflictNotFound.svg"
+import { economicImpactStore as EconomicImpactStore } from "../../EconomicImpact/store/economicImpactStore";
+import { satisfactionStore as SatisfactionStore } from "../../communitySatisfaction/store/satisfactionStore";
+import { conflictStore as ConflictStore } from "../../conflict/store/conflictStore";
+import { projectStore as ProjectStore } from "../../project/store/projectStore";
 
 const dashboardStoreCTX = createContext(DashboardStore);
+const economicImpactStoreCTX = createContext(EconomicImpactStore);
+const satisfactionStoreCTX = createContext(SatisfactionStore);
+const conflictStoreCTX = createContext(ConflictStore);
+const projectStoreCTX = createContext(ProjectStore);
 const DashboardPage: React.FC = observer(() => {
   const dashboardStore = useContext(dashboardStoreCTX);
+  const economicImpactStore = useContext(economicImpactStoreCTX);
+  const satisfactionStore = useContext(satisfactionStoreCTX);
+  const conflictStore = useContext(conflictStoreCTX);
+  const projectStore = useContext(projectStoreCTX);
 
   const renderStars = (rating: number, max = 5) => {
     return (
@@ -245,6 +262,307 @@ const DashboardPage: React.FC = observer(() => {
       ),
     },
   ];
+  const conflictDetailsColumnsR = [
+    { key: "projectTitle", label: "Project Title" },
+    { key: "createAt", label: "Report Date" },
+  ];
+
+
+
+  // Economic Impact
+  // Data for the pie charts
+  const pieData1 = {
+    labels: ["Very True", "Slightly", "Not True"],
+    datasets: [
+      {
+        data: economicImpactStore?.dashboardData?.incomeIncrease.length! > 0 ? [...economicImpactStore?.dashboardData?.businessGrowth as Array<number>] : [0, 0, 0],
+        backgroundColor: ["#22C55E", "#FACC15", "#EF4444"],
+        hoverBackgroundColor: ["#16A34A", "#EAB308", "#DC2626"],
+      },
+    ],
+  };
+
+  const pieData2 = {
+    labels: ["Very True", "Slightly", "Not True"],
+    datasets: [
+      {
+        data: economicImpactStore?.dashboardData?.incomeIncrease.length! > 0 ? [...economicImpactStore?.dashboardData?.incomeIncrease as Array<number>] : [0, 0, 0],
+        backgroundColor: ["#22C55E", "#FACC15", "#EF4444"],
+        hoverBackgroundColor: ["#16A34A", "#EAB308", "#DC2626"],
+      },
+    ],
+  };
+
+  const pieData3 = {
+    labels: ["Very True", "Slightly", "Not True"],
+    datasets: [
+      {
+        data: economicImpactStore?.dashboardData?.livelihoodImprove.length! > 0 ? [...economicImpactStore?.dashboardData?.livelihoodImprove as Array<number>] : [0, 0, 0],
+        backgroundColor: ["#22C55E", "#FACC15", "#EF4444"],
+        hoverBackgroundColor: ["#16A34A", "#EAB308", "#DC2626"],
+      },
+    ],
+  };
+
+  // Data for the line chart
+  const lineData = {
+    labels: [
+      "Good Roads",
+      "Healthcare",
+      "Education",
+      "Portable Water",
+      "Electricity",
+      "Market",
+      "Favourable Business Environment",
+    ],
+    datasets: [
+      {
+        label: "Access to Basic Amenities",
+        data: economicImpactStore?.dashboardData?.accessAmenities.length! > 0 ? [...economicImpactStore?.dashboardData?.accessAmenities as Array<number>] : [0, 0, 0, 0, 0, 0, 0],
+        borderColor: "#3B82F6",
+        backgroundColor: "rgba(59, 130, 246, 0.2)",
+        tension: 0.4,
+      },
+    ],
+  };
+
+  // community satisfaction
+  const groupedBarOptions = {
+    indexAxis: 'y' as const,
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'bottom' as const,
+      },
+    },
+    scales: {
+      x: {
+        stacked: true,
+        type: 'linear' as const,
+        title: {
+          display: true,
+          text: 'Number of Respondents',
+        },
+        ticks: {
+          stepSize: 100, // Adjust based on your actual range (e.g. 100, 200)
+          // No need for a custom callback if showing raw numbers
+        },
+      },
+      y: {
+        stacked: true,
+        type: 'category' as const,
+        title: {
+          display: false,
+        },
+      },
+    },
+  };
+
+  const generateGroupedBarData = (data: number[][]) => ({
+    labels: [
+      "We feel well-informed about Trust projects.",
+      "There has been enough community consultation on Trust projects.",
+      "The community has had fair opportunities to take part in HCDT projects.",
+      "A clear system exists to report and address concerns.",
+      "The actions of governing structures have reduced conflict in my community.",
+    ],
+    datasets: [
+      {
+        label: "Strongly Disagree",
+        data: data.map(d => d[0]),
+        backgroundColor: "#EF4444",
+      },
+      {
+        label: "Disagree",
+        data: data.map(d => d[1]),
+        backgroundColor: "#de9292",
+      },
+      {
+        label: "Slightly Agree",
+        data: data.map(d => d[2]),
+        backgroundColor: "#FACC15",
+      },
+      {
+        label: "Agree",
+        data: data.map(d => d[3]),
+        backgroundColor: "#3B82F6",
+      },
+      {
+        label: "Strongly Agree",
+        data: data.map(d => d[4]),
+        backgroundColor: "#22C55E",
+      },
+    ],
+  });
+
+  // Generate pie chart data dynamically
+  const generatePieData = (data: number[]) => ({
+    labels: ["In Progress", "True", "Project yet to be implemented in my community", "Not True"],
+    datasets: [
+      {
+        data: data,
+        backgroundColor: ["#3B82F6", "#22C55E", "#FACC15", "#EF4444"],
+        hoverBackgroundColor: ["#2563EB", "#16A34A", "#EAB308", "#DC2626"],
+      },
+    ],
+  });
+  const pieOptions = {
+    plugins: {
+      legend: {
+        position: "bottom" as const, // Fix the type error
+      },
+    },
+    responsive: true,
+    maintainAspectRatio: false,
+  };
+
+  // Conflict
+  const pieDataStatusOfConflict = {
+    labels: ["Effectively Resolved", "Not Effectively Resolved", "Requested", "Yet To Be Addressed"],
+    datasets: [
+      {
+        data: conflictStore.dashboardData?.STATUS_OF_CONFLICT! || [0, 0, 0, 0],
+        backgroundColor: ["#22C55E", "#FACC15", "#3B82F6", "#EF4444"],
+        hoverBackgroundColor: ["#16A34A", "#EAB308", "#2563EB", "#DC2626"],
+      },
+    ],
+  };
+
+  const pieDataCourtLitigation = {
+    labels: ["Ongoing", "Standing Trial", "Judgment", "Withdrawn"],
+    datasets: [
+      {
+        data: conflictStore.dashboardData?.CONFLICT_OF_COURT_LITIGATION! || [0, 0, 0, 0],
+        backgroundColor: ["#3B82F6", "#FACC15", "#22C55E", "#EF4444"],
+        hoverBackgroundColor: ["#2563EB", "#EAB308", "#16A34A", "#DC2626"],
+      },
+    ],
+  };
+
+  const lineDataReportFrequency = {
+    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    datasets: [
+      {
+        label: "Report Frequency",
+        data: conflictStore.dashboardData?.REPORT_FREQUENCY! || [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        borderColor: "#3B82F6",
+        backgroundColor: "rgba(59, 130, 246, 0.2)",
+        fill: true,
+      },
+    ],
+  };
+
+  function removeUnderscores(input: string): string {
+    return input.replace(/_/g, ' ');
+  }
+
+  // Project
+  const chartOptions: ChartOptions<"line"> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "top" as const,
+        align: "end" as const, // Align legend to the end
+      },
+      title: {
+        display: false,
+        text: "Chart.js Line Chart",
+      },
+    },
+    scales: {
+      x: {
+        grid: {
+          display: false,
+        },
+      },
+      y: {
+        grid: {
+          tickBorderDash: [3, 3],
+        },
+      },
+    },
+  };
+
+  const pieChartOptions: ChartOptions<"pie"> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "top" as const,
+        align: "end" as const, // Align legend to the end
+      },
+      title: {
+        display: false,
+        text: "Number of Trust Project by Category",
+      },
+    },
+  };
+
+  const labels = ["Males", "Females", "PwDs"];
+
+  const data1 = {
+    labels,
+    datasets: [
+      {
+        label: "Community Members Benefitting",
+        data: projectStore.dashboardData?.BENEFITS || [0, 0, 0],
+        borderColor: "rgb(54, 162, 235)",
+        backgroundColor: "rgba(54, 162, 235, 0.5)",
+      },
+    ],
+  };
+
+  const data2 = {
+    labels,
+    datasets: [
+      {
+        label: "Trust Community Members Employed",
+        data: projectStore.dashboardData?.EMPLOYMENT || [0, 0, 0],
+        borderColor: "rgb(54, 162, 235)",
+        backgroundColor: "rgba(54, 162, 235, 0.5)",
+      },
+    ],
+  };
+
+  const pieChartData1 = {
+    labels: ["EDUCATION", "ELECTRIFICATION", "AGRICULTURE", "HEALTH", "INFORMATION_TECHNOLOGY", "ROAD", "WATER"],
+    datasets: [
+      {
+        label: "Number of Trust Project by Category",
+        data: projectStore.dashboardData?.CATEGORY || [0, 0, 0, 0, 0, 0],
+        backgroundColor: [
+          "rgb(54, 162, 235)",
+          "rgb(75, 192, 192)",
+          "rgb(201, 203, 207)",
+          "rgb(0, 0, 0)",
+          "rgb(255, 205, 86)",
+          "rgb(255, 99, 132)",
+          "rgb(255, 99, 32)",
+        ],
+      },
+    ],
+  };
+
+  const pieChartData2 = {
+    labels: ["YET_TO_START", "IN_PROGRESS", "COMPLETED", "GOOD", "ABANDONED"],
+    datasets: [
+      {
+        label: "Number of Trust Project by status",
+        data: projectStore.dashboardData?.STATUS || [0, 0, 0, 0],
+        backgroundColor: [
+          "rgb(54, 162, 235)",
+          "rgb(255, 205, 86)",
+          "rgb(26, 233, 136)",
+          "rgb(62, 175, 251)",
+          "rgb(237, 12, 12)",
+        ],
+      },
+    ],
+  };
+
+
   return (
     <div className="bg-[#F3F5F7] min-h-screen p-6">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-4">
@@ -300,11 +618,11 @@ const DashboardPage: React.FC = observer(() => {
                 <span>Total number of Trust</span>
               </div>
             </div>
-            <div className="w-full mt-4 flex justify-center">
+            {/* <div className="w-full mt-4 flex justify-center">
               <span className="text-xs text-gray-500 bg-[#FFF6F0] px-2 py-1 rounded font-medium">
                 <span className="text-[#FF6B00] font-semibold">62 Companies</span> available & assessment distribution
               </span>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
@@ -316,7 +634,7 @@ const DashboardPage: React.FC = observer(() => {
         <div className="bg-white rounded-xl p-8 shadow flex flex-col justify-center min-h-[220px]">
           <span className="font-semibold text-base text-gray-900 mb-4">HCDT Statistics</span>
           <div className="mb-3">
-            <span className="font-bold text-3xl text-gray-900 align-middle">83%</span>
+            <span className="font-bold text-3xl text-gray-900 align-middle">{dashboardStore.dashboardData?.STATISTICS_PERCENTAGE.fully_received_percentage}%</span>
             <span className="text-base text-gray-700 ml-2 align-middle">Trusts have reported to have received their approved funds</span>
           </div>
           {/* <div className="text-base text-gray-700 mb-3 ml-1">reported to have received their approved funds</div> */}
@@ -341,89 +659,8 @@ const DashboardPage: React.FC = observer(() => {
 
 
 
-      <h2 className="font-semibold text-xl text-gray-900 mb-4 mt-10">
-        Project Implementation and Quality Assessment
-      </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Project Quality Ratings */}
-        <div className="bg-white rounded-xl p-8 shadow flex flex-col md:flex-row items-center min-h-[320px]">
-          <div className="flex flex-col items-center w-full">
-            <span className="font-semibold text-base text-gray-900 mb-4 self-start">Project Quality Ratings</span>
-            <div className="flex flex-row items-center w-full">
-              <div className="w-40 h-40">
-                <Doughnut
-                  data={{
-                    // labels: ["Worse", "Good", "Fair", "Excellent", "Bad"],
-                    labels: dashboardStore.dashboardData?.QUALITY_RATINGS.map(e => e.qualityRating),
-                    datasets: [
-                      {
-                        data: dashboardStore.dashboardData?.QUALITY_RATINGS.map(e => e.percentage),
-                        backgroundColor: dashboardStore.dashboardData?.QUALITY_RATINGS.map(e => e.color),
-                        borderWidth: 0,
-                      },
-                    ],
-                  }}
-                  options={{
-                    plugins: { legend: { display: false }, tooltip: { enabled: false } },
-                    cutout: "60%",
-                  }}
-                />
-              </div>
-              <div className="ml-6 flex flex-col gap-2">
-                {dashboardStore.dashboardData?.QUALITY_RATINGS.map((e, i) => (
-                  <div key={i}>
-                    <div className="flex items-center text-sm text-gray-700 gap-2">
-                      <span className="inline-block w-3 h-3 rounded-full" style={{ background: e.color }}></span>
-                      {e.qualityRating}
-                      <span className="ml-2 text-gray-500">{e.percentage}%</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-        {/* Project Completion over time */}
-        <div className="bg-white rounded-xl p-8 shadow flex flex-col min-h-[320px]">
-          <span className="font-semibold text-base text-gray-900 mb-4">Project Completion over time</span>
-          <div className="w-full h-64">
-            <Line
-              data={{
-                labels: dashboardStore.dashboardData?.COMPLETION_OVER_MONTH.monthName,
-                datasets: [
-                  {
-                    label: "Completion",
-                    data: dashboardStore.dashboardData?.COMPLETION_OVER_MONTH.total,
-                    borderColor: "#3366CC",
-                    backgroundColor: "#3366CC",
-                    tension: 0.4,
-                    fill: false,
-                    pointRadius: 0,
-                    borderWidth: 2,
-                  },
-                ],
-              }}
-              options={{
-                plugins: { legend: { display: false }, tooltip: { enabled: false } },
-                scales: {
-                  x: {
-                    grid: { display: false },
-                    ticks: { color: "#8C94A6" },
-                  },
-                  y: {
-                    grid: { color: "#F3F5F7" },
-                    ticks: { color: "#8C94A6", stepSize: 5 },
-                    beginAtZero: true,
-                    min: 0,
-                    max: 30,
-                  },
-                },
-              }}
-            />
-          </div>
-        </div>
-      </div>
-      <div className="bg-white rounded-xl p-8 shadow mt-10 w-full">
+
+      {/* <div className="bg-white rounded-xl p-8 shadow mt-10 w-full">
         <DashboardTable
           header="Project Details"
           data={dashboardStore.dashboardData?.PROJECT_DETAILS}
@@ -431,57 +668,16 @@ const DashboardPage: React.FC = observer(() => {
           emptyText="No data available"
           loading={false}
         />
-      </div>
-      <div className="bg-white rounded-xl p-8 shadow mt-10 w-full">
-        <div className="font-semibold text-base text-gray-900 mb-4">Conflict resolution over time</div>
-        <div className="w-full max-w-4xl mx-auto" style={{ minHeight: "320px" }}>
-          <Bar data={conflictBarData} options={conflictBarOptions} />
-        </div>
-      </div>
+      </div> */}
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
-        {/* Conflict resolution status chart */}
-        <div className="bg-white rounded-xl p-6 shadow flex flex-col items-center  w-full md:max-w-xs">
-          <span className="font-semibold text-base text-gray-900 mb-4">Conflict resolution status</span>
-          <div className="w-32 h-32 mb-4">
-            <Doughnut data={conflictStatusData} options={conflictStatusOptions} />
-          </div>
-          <div className="flex flex-col gap-2 w-full mt-2">
-            <div className="flex items-center justify-between text-sm">
-              <span className="flex items-center">
-                <span className="inline-block w-3 h-3 rounded-full mr-2" style={{ background: "#22C55E" }}></span>
-                Resolved
-              </span>
-              <span className="font-semibold text-gray-900">{dashboardStore.dashboardData?.CONFLICT_RESOLUTION_PERCENTAGE.resolvedPercentage}</span>
-            </div>
-            <div className="flex items-center justify-between text-sm">
-              <span className="flex items-center">
-                <span className="inline-block w-3 h-3 rounded-full mr-2" style={{ background: "#EA580C" }}></span>
-                Unresolved
-              </span>
-              <span className="font-semibold text-gray-900">{dashboardStore.dashboardData?.CONFLICT_RESOLUTION_PERCENTAGE.unresolvedPercentage}</span>
-            </div>
-          </div>
-        </div>
-        {/* Conflict Details Table - take more space */}
-        <div className="col-span-2 flex flex-col">
-          <DashboardTable
-            header="Conflict Details"
-            data={dashboardStore.dashboardData?.CONFLICT_RESOLUTION_DETAILS}
-            columns={conflictDetailsColumns}
-            emptyText="No data available"
-            loading={false}
-          />
-        </div>
-      </div>
 
       {/* // ...inside your DashboardPage component, where you want this section... */}
-      <div>
+      {/* <div>
         <h2 className="font-semibold text-xl text-gray-900 mb-4 mt-10">
           Community Participation & Employment
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
-          {/* Contracts Awarded Doughnut Chart */}
+        
           <div className="bg-white rounded-xl p-6 shadow flex flex-col items-center w-full md:max-w-xs h-full">
             <span className="font-semibold text-base text-gray-900 mb-4">Contracts Awarded</span>
             <div className="w-32 h-32 mb-4">
@@ -520,31 +716,20 @@ const DashboardPage: React.FC = observer(() => {
               </div>
             </div>
           </div>
-          {/* Community workers per project Table */}
+         
           <div className="col-span-2 flex flex-col">
-            <DashboardTable
-              header={"Community workers per project"}
-              data={dashboardStore.dashboardData?.TOTAL_WORKER_IN_PROJECT}
-              columns={communityColumns}
-              emptyText={"No data available"}
-              loading={false}
-            />
+          
           </div>
         </div>
-      </div>
-      <div className="bg-white rounded-xl p-8 shadow mt-10 w-full">
-        <div className="font-semibold text-base text-gray-900 mb-4">Local Employment by gender and Social Inclusion</div>
-        <div className="w-full max-w-4xl mx-auto" style={{ minHeight: "320px" }}>
-          <Bar data={localEmploymentBarData} options={conflictBarOptions} />
-        </div>
-      </div>
+      </div> */}
+
       {/* // ...existing code... */}
 
-      <h2 className="font-semibold text-xl text-gray-900 mb-4 mt-10">
+      {/* <h2 className="font-semibold text-xl text-gray-900 mb-4 mt-10">
         Impact & Sustainability
       </h2>
       <div className="flex flex-col md:flex-row gap-4 md:gap-6 items-stretch">
-        {/* Project with sustainable plans Pie Chart */}
+       
         <div className="bg-white rounded-xl p-6 shadow flex flex-col items-center w-full md:max-w-xs md:flex-shrink-0">
           <span className="font-semibold text-base text-gray-900 mb-4">Project with sustainable plans</span>
           <div className="w-40 h-40 mb-4">
@@ -585,7 +770,7 @@ const DashboardPage: React.FC = observer(() => {
             </div>
           </div>
         </div>
-        {/* Income changes over time Line Chart */}
+      
         <div className="bg-white rounded-xl p-6 shadow flex flex-col min-h-[320px] flex-1">
           <span className="font-semibold text-base text-gray-900 mb-4">Income changes over time</span>
           <div className="w-full h-64">
@@ -624,9 +809,9 @@ const DashboardPage: React.FC = observer(() => {
             />
           </div>
         </div>
-      </div>
+      </div> */}
       {/* Next code  */}
-      <div className="bg-white rounded-xl p-6 shadow mt-8 w-full">
+      {/* <div className="bg-white rounded-xl p-6 shadow mt-8 w-full">
         <div className="font-semibold text-base text-gray-900 mb-4">Impact Statistics</div>
         <div className="flex flex-col gap-3">
           <div className="text-gray-900 text-lg font-bold">
@@ -642,14 +827,14 @@ const DashboardPage: React.FC = observer(() => {
             </span>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Next Code */}
-      <h2 className="font-semibold text-xl text-gray-900 mb-4 mt-10">
+      {/* <h2 className="font-semibold text-xl text-gray-900 mb-4 mt-10">
         Human Capital Development & Gender Inclusion
       </h2>
       <div className="flex flex-col md:flex-row gap-4 md:gap-6 items-stretch">
-        {/* Beneficiaries by gender and social inclusion Pie Chart */}
+       
         <div className="bg-white rounded-xl p-6 shadow flex flex-col items-center w-full md:max-w-xs md:flex-shrink-0">
           <span className="font-semibold text-base text-gray-900 mb-4 text-center">
             Beneficiaries by gender and social inclusion
@@ -696,7 +881,7 @@ const DashboardPage: React.FC = observer(() => {
             </div>
           </div>
         </div>
-        {/* Income changes over time Line Chart */}
+    
         <div className="bg-white rounded-xl p-6 shadow flex flex-col min-h-[320px] flex-1">
           <span className="font-semibold text-base text-gray-900 mb-4">Income changes over time</span>
           <div className="w-full h-64">
@@ -735,10 +920,10 @@ const DashboardPage: React.FC = observer(() => {
             />
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Next code */}
-      <div className="bg-white rounded-xl p-6 shadow mt-8 w-full">
+      {/* <div className="bg-white rounded-xl p-6 shadow mt-8 w-full">
         <div className="font-semibold text-base text-gray-900 mb-4">Impact Statistics</div>
         <div className="flex flex-col gap-3">
           <div className="text-gray-900 text-lg font-bold">
@@ -765,6 +950,440 @@ const DashboardPage: React.FC = observer(() => {
               income-generating initiatives established by the Trusts
             </span>
           </div>
+        </div>
+      </div> */}
+      {/* Project */}
+      <div className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
+        {/* <div className="p-6 bg-gray-100 min-h-screen"> */}
+        <h2 className="font-semibold text-xl text-gray-900 mb-4 mt-10">
+          Project Implementation and Quality Assessment
+        </h2>
+        {/* Project Overview */}
+        <div className="pb-6 ">
+          <DashboardTable
+            header="Top completed Project Details"
+            data={dashboardStore.dashboardData?.PROJECT_DETAILS}
+            columns={projectDetailsColumns}
+            emptyText="No data available"
+            loading={false}
+          />
+        </div>
+        <div className="pb-6 ">
+          <DashboardTable
+            header={"Top community workers per project"}
+            data={dashboardStore.dashboardData?.TOTAL_WORKER_IN_PROJECT}
+            columns={communityColumns}
+            emptyText={"No data available"}
+            loading={false}
+          />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-6">
+          {/* Project Quality Ratings */}
+          <div className="bg-white rounded-xl p-8 shadow flex flex-col md:flex-row items-center min-h-[320px]">
+            <div className="flex flex-col items-center w-full">
+              <span className="font-semibold text-base text-gray-900 mb-4 self-start">Project Quality Ratings</span>
+              <div className="flex flex-row items-center w-full">
+                <div className="w-40 h-40">
+                  <Doughnut
+                    data={{
+                      // labels: ["Worse", "Good", "Fair", "Excellent", "Bad"],
+                      labels: dashboardStore.dashboardData?.QUALITY_RATINGS.map(e => e.qualityRating),
+                      datasets: [
+                        {
+                          data: dashboardStore.dashboardData?.QUALITY_RATINGS.map(e => e.percentage),
+                          backgroundColor: dashboardStore.dashboardData?.QUALITY_RATINGS.map(e => e.color),
+                          borderWidth: 0,
+                        },
+                      ],
+                    }}
+                    options={{
+                      plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                      cutout: "60%",
+                    }}
+                  />
+                </div>
+                <div className="ml-6 flex flex-col gap-2">
+                  {dashboardStore.dashboardData?.QUALITY_RATINGS.map((e, i) => (
+                    <div key={i}>
+                      <div className="flex items-center text-sm text-gray-700 gap-2">
+                        <span className="inline-block w-3 h-3 rounded-full" style={{ background: e.color }}></span>
+                        {e.qualityRating}
+                        <span className="ml-2 text-gray-500">{e.percentage}%</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* Project Completion over time */}
+          <div className="bg-white rounded-xl p-8 shadow flex flex-col min-h-[320px]">
+            <span className="font-semibold text-base text-gray-900 mb-4">Project Completion over time</span>
+            <div className="w-full h-64">
+              <Line
+                data={{
+                  labels: dashboardStore.dashboardData?.COMPLETION_OVER_MONTH.monthName,
+                  datasets: [
+                    {
+                      label: "Completion",
+                      data: dashboardStore.dashboardData?.COMPLETION_OVER_MONTH.total,
+                      borderColor: "#3366CC",
+                      backgroundColor: "#3366CC",
+                      tension: 0.4,
+                      fill: false,
+                      pointRadius: 0,
+                      borderWidth: 2,
+                    },
+                  ],
+                }}
+                options={{
+                  plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                  scales: {
+                    x: {
+                      grid: { display: false },
+                      ticks: { color: "#8C94A6" },
+                    },
+                    y: {
+                      grid: { color: "#F3F5F7" },
+                      ticks: { color: "#8C94A6", stepSize: 5 },
+                      beginAtZero: true,
+                      min: 0,
+                      max: 30,
+                    },
+                  },
+                }}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Charts */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Line Chart 1 */}
+          <div className="bg-white p-3 rounded-md shadow-sm">
+            <h3 className="font-semibold text-lg text-gray-600 mb-2">Number of community members benefitting from livelihood/ human capacity development initiatives</h3>
+            <div className="h-80 flex items-center justify-center">
+              <Line options={chartOptions} data={data1} />
+            </div>
+          </div>
+
+          {/* Pie Chart 1 */}
+          <div className="bg-white p-3 rounded-md shadow-sm">
+            <h3 className="font-semibold  text-lg text-gray-600 mb-2"> Number of Trust Project by Category</h3>
+            <div className="h-80 flex items-center justify-center">
+              <Pie options={pieChartOptions} data={pieChartData1} />
+            </div>
+          </div>
+
+          {/* Line Chart 2 */}
+          <div className="bg-white p-3 rounded-md shadow-sm">
+            <h3 className="font-semibold text-lg text-gray-600 mb-2"> Number of Trust community members who were locally employed by HCDT project contractors</h3>
+            <div className="h-80 flex items-center justify-center">
+              <Line options={chartOptions} data={data2} />
+            </div>
+          </div>
+
+
+          {/* Pie Chart 2 */}
+          <div className="bg-white p-3 rounded-md shadow-sm">
+            <h3 className="font-semibold text-lg text-gray-600 mb-2">Number of Trust Project by Status</h3>
+            <div className="h-80 flex items-center justify-center">
+              <Pie options={pieChartOptions} data={pieChartData2} />
+            </div>
+          </div>
+        </div>
+        {/* </div> */}
+        <div className="bg-white rounded-xl p-8 shadow mt-10 w-full">
+          <div className="font-semibold text-base text-gray-900 mb-4">Local Employment by gender and Social Inclusion</div>
+          <div className="w-full max-w-4xl mx-auto" style={{ minHeight: "320px" }}>
+            <Bar data={localEmploymentBarData} options={conflictBarOptions} />
+          </div>
+        </div>
+
+      </div>
+
+      {/* Conflict Resolution */}
+      <div className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
+        <h2 className="font-semibold text-xl text-gray-900 mb-4 mt-10">
+          Conflict Resolution
+        </h2>
+        {/* Summary Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+          {[
+            { title: "All Conflict Reported", count: conflictStore.dashboardData?.ALL_CONFLICT_REPORT },
+            { title: "Conflicts Resolved", count: conflictStore.dashboardData?.RESOLVED_CONFLICT },
+            { title: "Conflicts Pending Resolution", count: conflictStore.dashboardData?.PENDING_CONFLICT },
+            { title: "Conflicts in Court", count: conflictStore.dashboardData?.CONFLICTS_IN_COURT },
+          ].map((item, index) => (
+            <div
+              key={index}
+              className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center"
+            >
+              <h3 className="text-sm font-medium text-gray-600">{item.title}</h3>
+              <p className="text-2xl font-bold text-gray-800">{item.count}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="bg-white rounded-xl p-8 shadow mt-10 w-full">
+          <div className="font-semibold text-base text-gray-900 mb-4">Conflict resolution over time</div>
+          <div className="w-full max-w-4xl mx-auto" style={{ minHeight: "320px" }}>
+            <Bar data={conflictBarData} options={conflictBarOptions} />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10 pb-6">
+          {/* Conflict resolution status chart */}
+          <div className="bg-white rounded-xl p-6 shadow flex flex-col items-center  w-full md:max-w-xs">
+            <span className="font-semibold text-base text-gray-900 mb-4">Conflict resolution status</span>
+            <div className="w-32 h-32 mb-4">
+              <Doughnut data={conflictStatusData} options={conflictStatusOptions} />
+            </div>
+            <div className="flex flex-col gap-2 w-full mt-2">
+              <div className="flex items-center justify-between text-sm">
+                <span className="flex items-center">
+                  <span className="inline-block w-3 h-3 rounded-full mr-2" style={{ background: "#22C55E" }}></span>
+                  Resolved
+                </span>
+                <span className="font-semibold text-gray-900">{dashboardStore.dashboardData?.CONFLICT_RESOLUTION_PERCENTAGE.resolvedPercentage}</span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="flex items-center">
+                  <span className="inline-block w-3 h-3 rounded-full mr-2" style={{ background: "#EA580C" }}></span>
+                  Unresolved
+                </span>
+                <span className="font-semibold text-gray-900">{dashboardStore.dashboardData?.CONFLICT_RESOLUTION_PERCENTAGE.unresolvedPercentage}</span>
+              </div>
+            </div>
+          </div>
+          {/* Conflict Details Table - take more space */}
+          <div className="col-span-2 flex flex-col">
+            <DashboardTable
+              header="Conflict Details"
+              data={dashboardStore.dashboardData?.CONFLICT_RESOLUTION_DETAILS}
+              columns={conflictDetailsColumns}
+              emptyText="No data available"
+              loading={false}
+            />
+          </div>
+        </div>
+
+        {/* Charts Section */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mb-4">
+          <div className="bg-white p-3 rounded-md shadow-sm">
+            <h3 className="text-xs font-medium text-gray-600 mb-2">Status of Conflict</h3>
+            <div className="h-80 flex items-center justify-center">
+              <Pie data={pieDataStatusOfConflict} />
+            </div>
+          </div>
+          <div className="bg-white p-3 rounded-md shadow-sm">
+            <h3 className="text-xs font-medium text-gray-600 mb-2">Status of Court Litigation</h3>
+            <div className="h-80 flex items-center justify-center">
+              <Pie data={pieDataCourtLitigation} />
+            </div>
+          </div>
+        </div>
+
+        {/* Report Frequency and Major Causes */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6 ">
+          <div className="bg-white p-4 rounded-lg shadow-md">
+            <h3 className="text-sm font-medium text-gray-600 mb-4">Report Frequency</h3>
+            <Line data={lineDataReportFrequency} />
+          </div>
+          <div className="bg-white p-9 rounded-lg shadow-md">
+            <h3 className="text-sm font-medium text-gray-600 mb-4">Major Causes of Conflict</h3>
+            {conflictStore.dashboardData?.CAUSE_OF_CONFLICT.length! > 0 ? (
+              <ul className="space-y-2">
+                {conflictStore.dashboardData?.CAUSE_OF_CONFLICT.map((cause, index) => (
+                  <li key={index} className="flex justify-between text-sm text-gray-600">
+                    <span className="font-bold text-lg">{removeUnderscores(cause.label)}</span>
+                    <span className="font-bold text-lg">{cause.value}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="mt-8 h-[40vh] text-center flex items-center justify-center border border-grey-500 rounded-lg">
+                <div>
+                  <img className="mx-auto" src={IMG} alt="No data available" style={{ width: "200px" }} />
+                  <div className="mt-2">
+                    <h3 className="text-base lg:text-lg font-semibold text-grey-500">
+                      No major cause of conflict
+                    </h3>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Resolved and Unresolved Conflicts */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="bg-white p-4 rounded-lg shadow-md">
+            <DashboardTable
+              header={"Top Resolved Conflict"}
+              data={conflictStore?.dashboardData?.RESOLVED_CONFLICTS.map((conflict: IConflictView) => {
+                return {
+                  projectTitle: conflict.projectTitle,
+                  createAt: conflict.createAt
+                }
+              })}
+              columns={conflictDetailsColumnsR}
+              emptyText={"No data available"}
+              loading={false}
+            />
+
+          </div>
+          <div className="bg-white p-4 rounded-lg shadow-md">
+            <DashboardTable
+              header={"Top Unresolved Conflict"}
+              data={conflictStore?.dashboardData?.UNRESOLVED_CONFLICTS.map((conflict: IConflictView) => {
+                return {
+                  projectTitle: conflict.projectTitle,
+                  createAt: conflict.createAt
+                }
+              })}
+              columns={conflictDetailsColumnsR}
+              emptyText={"No data available"}
+              loading={false}
+            />
+          </div>
+        </div>
+      </div>
+
+
+      {/* Community Satisfaction */}
+      <div className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
+        <h2 className="font-semibold text-xl text-gray-900 mb-4 mt-10">
+          Community Satisfaction
+        </h2>
+        <div className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
+          <div className="h-[400px] sm:h-[500px]">
+            <Bar
+              data={generateGroupedBarData([
+                satisfactionStore.dashboardData?.infoProjects || [0, 0, 0, 0, 0],
+                satisfactionStore.dashboardData?.communityConsult || [0, 0, 0, 0, 0],
+                satisfactionStore.dashboardData?.localParticipation || [0, 0, 0, 0, 0],
+                satisfactionStore.dashboardData?.reportMechanism || [0, 0, 0, 0, 0],
+                satisfactionStore.dashboardData?.conflictMinimization || [0, 0, 0, 0, 0],
+              ])}
+              options={groupedBarOptions}
+            />
+          </div>
+
+        </div>
+
+        {/* Pie Charts Section */}
+        {/* <br /> */}
+        <br />
+        <div>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4">
+            Existence, and activeness of sustainability management structure/committees established by the Trust
+          </h1>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Question 1 */}
+            <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
+              <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
+                The Trust commissioned and handed over completed projects in our community to the community leadership?
+              </h3>
+              <div className="h-40 sm:h-48">
+                <Pie
+                  data={generatePieData(
+                    satisfactionStore.dashboardData?.projectHandover || [0, 0, 0, 0]
+                  )}
+                  options={pieOptions}
+                />
+              </div>
+            </div>
+            <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
+              <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
+                The Trust has consulted our community leadership to discuss or develop maintenance plans for all the completed projects implemented in our community.
+              </h3>
+              <div className="h-40 sm:h-48">
+                <Pie
+                  data={generatePieData(
+                    satisfactionStore.dashboardData?.maintenanceConsult || [0, 0, 0, 0]
+                  )}
+                  options={pieOptions}
+                />
+              </div>
+            </div>
+
+            {/* Question 3 */}
+            <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
+              <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
+                The Trust implemented or is implementing at least one income-generating project for the host communities.
+              </h3>
+              <div className="h-40 sm:h-48">
+                <Pie
+                  data={generatePieData(
+                    satisfactionStore.dashboardData?.incomeProject || [0, 0, 0, 0]
+                  )}
+                  options={pieOptions}
+                />
+              </div>
+            </div>
+          </div>
+          {/* Pie Charts Section */}
+        </div>
+      </div>
+
+
+      {/* Economic impact */}
+      <div className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
+        <h2 className="font-semibold text-xl text-gray-900 mb-4 mt-10">
+          Economic impact
+        </h2>
+        <div className=" mx-auto space-y-8">
+          {/* Pie Charts */}
+          <Observer>
+            {() => (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
+                  <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
+                    My business is generating more money since they implemented some
+                    of the HCDT projects in my community.
+                  </h3>
+                  <div className="h-48 sm:h-56">
+                    <Pie data={pieData1} options={{ maintainAspectRatio: false }} />
+                  </div>
+                </div>
+                <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
+                  <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
+                    My income has increased since the implementation of some of the
+                    HCDT projects in my community.
+                  </h3>
+                  <div className="h-48 sm:h-56">
+                    <Pie data={pieData2} options={{ maintainAspectRatio: false }} />
+                  </div>
+                </div>
+                <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
+                  <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
+                    The implemented HCDT projects have bettered my livelihood and
+                    quality of lives.
+                  </h3>
+                  <div className="h-48 sm:h-56">
+                    <Pie data={pieData3} options={{ maintainAspectRatio: false }} />
+                  </div>
+                </div>
+              </div>
+            )}
+          </Observer>
+
+          {/* Line Chart */}
+
+          <Observer>
+            {() => (
+              <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
+                <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
+                  As a result of the HCDT projects, my household/I now have access to
+                  these basic amenities than before.
+                </h3>
+                <div className="h-64 sm:h-80">
+                  <Line data={lineData} options={{ maintainAspectRatio: false }} />
+                </div>
+              </div>
+            )}
+          </Observer>
         </div>
       </div>
     </div>
