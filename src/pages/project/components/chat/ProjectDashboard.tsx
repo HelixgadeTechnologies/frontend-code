@@ -103,7 +103,7 @@ const ProjectDashboard = observer(() => {
     };
 
     const pieChartData1 = {
-        labels: ["EDUCATION", "ELECTRIFICATION", "AGRICULTURE", "HEALTH", "INFORMATION_TECHNOLOGY", "ROAD", "WATER"],
+        labels: ["EDUCATION", "ELECTRIFICATION", "AGRICULTURE", "HEALTH", "INFORMATION TECHNOLOGY", "ROAD", "WATER"],
         datasets: [
             {
                 label: "Number of Trust Project by Category",
@@ -122,7 +122,7 @@ const ProjectDashboard = observer(() => {
     };
 
     const pieChartData2 = {
-        labels: ["YET_TO_START", "IN_PROGRESS", "COMPLETED", "GOOD", "ABANDONED"],
+        labels: ["YET TO START", "IN PROGRESS", "COMPLETED", "GOOD", "ABANDONED"],
         datasets: [
             {
                 label: "Number of Trust Project by status",

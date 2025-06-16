@@ -19,12 +19,14 @@ export interface IFinishedDashboard {
     TOTAL_WORKER_IN_PROJECT: WorkersInProject[];
     EMPLOYEE_PER_PROJECT: EmployeePerProject[];
     STATISTICS_PERCENTAGE: IStatistsPercentage;
+    DISTRIBUTION_MATRIX: IDistributionMatrix;
+    NEEDS_ASSESSMENT_COMMUNITY_COUNT:INeedsAssessmentCommunityCount;
 }
 
-interface ConflictStatusPercentage  {
+interface ConflictStatusPercentage {
     resolvedPercentage: number,
     unresolvedPercentage: number
-  }
+}
 interface ConflictDetail {
     causeOfConflictName: string,
     partiesInvolveName: string,
@@ -51,10 +53,18 @@ export interface IGeneralDashboard {
     CONFLICT_RESOLUTION_DETAILS: ConflictDetail[],
     TOTAL_WORKER_IN_PROJECT: WorkersInProject[],
     EMPLOYEE_PER_PROJECT: EmployeePerProject[];
-    STATISTICS_PERCENTAGE:IStatistsPercentage[]
+    STATISTICS_PERCENTAGE: IStatistsPercentage[];
+    DISTRIBUTION_MATRIX: IDistributionMatrix[];
+    NEEDS_ASSESSMENT_COMMUNITY_COUNT:INeedsAssessmentCommunityCount[]
 }
 
 // Subtypes
+interface INeedsAssessmentCommunityCount {
+    distinct_community_count: number;
+}
+interface IDistributionMatrix {
+    total_complete: number;
+}
 interface IStatistsPercentage {
     fully_received_percentage: number;
 }

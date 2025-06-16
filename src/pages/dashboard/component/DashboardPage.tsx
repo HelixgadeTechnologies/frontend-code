@@ -535,7 +535,7 @@ const DashboardPage: React.FC = observer(() => {
   };
 
   const pieChartData1 = {
-    labels: ["EDUCATION", "ELECTRIFICATION", "AGRICULTURE", "HEALTH", "INFORMATION_TECHNOLOGY", "ROAD", "WATER"],
+    labels: ["EDUCATION", "ELECTRIFICATION", "AGRICULTURE", "HEALTH", "INFORMATION TECHNOLOGY", "ROAD", "WATER"],
     datasets: [
       {
         label: "Number of Trust Project by Category",
@@ -554,7 +554,7 @@ const DashboardPage: React.FC = observer(() => {
   };
 
   const pieChartData2 = {
-    labels: ["YET_TO_START", "IN_PROGRESS", "COMPLETED", "GOOD", "ABANDONED"],
+    labels: ["YET TO START", "IN PROGRESS", "COMPLETED", "GOOD", "ABANDONED"],
     datasets: [
       {
         label: "Number of Trust Project by status",
@@ -654,13 +654,23 @@ const DashboardPage: React.FC = observer(() => {
         </div>
         {/* Settlors Operational Expenditure */}
         <div className="bg-white rounded-xl p-8 shadow flex flex-col justify-center min-h-[220px]">
-          <span className="font-semibold text-base text-gray-900 mb-4">Settlors Operational Expenditure</span>
-          <div className="flex flex-col items-center justify-center mb-2">
-            <span className="font-bold text-4xl text-gray-900">NGN{dashboardStore.dashboardData?.OPERATIONAL_EXPENDITURE.totalExpenditure.toLocaleString()}</span>
+          <span className="font-semibold text-base text-gray-900 mb-4">Number of Trust with agreed distribution matrix</span>
+          <div>
+            <span className="font-bold text-3xl text-gray-900 align-middle">{dashboardStore.dashboardData?.DISTRIBUTION_MATRIX.total_complete}</span>
+            <span className="text-base text-gray-700 ml-2 align-middle">Trust with agreed distribution matrix</span>
           </div>
-          <span className="text-base text-gray-700 mt-2">
+          <br />
+         <br />
+        
+          <span className="font-semibold text-base text-gray-900 mb-4">Number of communities where needs assessment has been full completed</span>
+          <div>
+            <span className="font-bold text-3xl text-gray-900 align-middle">{dashboardStore.dashboardData?.NEEDS_ASSESSMENT_COMMUNITY_COUNT.distinct_community_count}</span>
+            <span className="text-base text-gray-700 ml-2 align-middle">communities needs assessment has been full completed</span>
+          </div>
+
+          {/* <span className="text-base text-gray-700 mt-2">
             The total amount of OPEX provided by all the OMLs under a Trust
-          </span>
+          </span> */}
         </div>
       </div>
       {/* ...existing code below... */}
@@ -989,7 +999,7 @@ const DashboardPage: React.FC = observer(() => {
           {/* Project Quality Ratings */}
           <div className="bg-white rounded-xl p-8 shadow flex flex-col md:flex-row items-center min-h-[320px]">
             <div className="flex flex-col items-center w-full">
-              <span className="font-semibold text-base text-gray-900 mb-4 self-start">Project Quality Ratings</span>
+              <span className="font-semibold text-base text-gray-900 mb-4 self-start">Project quality ratings</span>
               <div className="flex flex-row items-center w-full">
                 <div className="w-40 h-40">
                   <Doughnut
@@ -1026,7 +1036,7 @@ const DashboardPage: React.FC = observer(() => {
           </div>
           {/* Project Completion over time */}
           <div className="bg-white rounded-xl p-8 shadow flex flex-col min-h-[320px]">
-            <span className="font-semibold text-base text-gray-900 mb-4">Project Completion over time</span>
+            <span className="font-semibold text-base text-gray-900 mb-4">Project completion over time</span>
             <div className="w-full h-64">
               <Line
                 data={{
@@ -1077,7 +1087,7 @@ const DashboardPage: React.FC = observer(() => {
 
           {/* Pie Chart 1 */}
           <div className="bg-white p-3 rounded-md shadow-sm">
-            <h3 className="font-semibold  text-lg text-gray-600 mb-2"> Number of Trust Project by Category</h3>
+            <h3 className="font-semibold  text-lg text-gray-600 mb-2"> Number of trust project by category</h3>
             <div className="h-80 flex items-center justify-center">
               <Pie options={pieChartOptions} data={pieChartData1} />
             </div>
@@ -1085,7 +1095,7 @@ const DashboardPage: React.FC = observer(() => {
 
           {/* Line Chart 2 */}
           <div className="bg-white p-3 rounded-md shadow-sm">
-            <h3 className="font-semibold text-lg text-gray-600 mb-2"> Number of Trust community members who were locally employed by HCDT project contractors</h3>
+            <h3 className="font-semibold text-lg text-gray-600 mb-2"> Number of trust community members who were locally employed by HCDT project contractors</h3>
             <div className="h-80 flex items-center justify-center">
               <Line options={chartOptions} data={data2} />
             </div>
@@ -1094,7 +1104,7 @@ const DashboardPage: React.FC = observer(() => {
 
           {/* Pie Chart 2 */}
           <div className="bg-white p-3 rounded-md shadow-sm">
-            <h3 className="font-semibold text-lg text-gray-600 mb-2">Number of Trust Project by Status</h3>
+            <h3 className="font-semibold text-lg text-gray-600 mb-2">Number of trust project by status</h3>
             <div className="h-80 flex items-center justify-center">
               <Pie options={pieChartOptions} data={pieChartData2} />
             </div>
@@ -1262,7 +1272,7 @@ const DashboardPage: React.FC = observer(() => {
       {/* Community Satisfaction */}
       <div className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
         <h2 className="font-semibold text-xl text-gray-900 mb-4 mt-10">
-          Community Satisfaction
+          Average community satisfaction with the process, inclusion, approach and management of the HCDTs by the government structure (BoT, MC & AC)
         </h2>
         <div className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
           <div className="h-[400px] sm:h-[500px]">
