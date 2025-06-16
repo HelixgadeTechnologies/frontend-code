@@ -575,7 +575,7 @@ const DashboardPage: React.FC = observer(() => {
     <div className="bg-[#F3F5F7] min-h-screen p-6">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-4">
         <div>
-          <h2 className="font-semibold text-xl text-gray-900">Dashboard</h2>
+          <h2 className="font-semibold text-xl text-gray-900">Aggregated Dashboard</h2>
           <p className="text-gray-500 text-sm">Control your profile setup and integrations</p>
         </div>
       </div>
@@ -587,7 +587,7 @@ const DashboardPage: React.FC = observer(() => {
         <div className="flex flex-col gap-5 h-full">
           {/* HCDT Establishment and Governance */}
           <div className="bg-white rounded-xl p-4 shadow flex flex-col gap-2">
-            <div className="text-xs text-gray-700 mb-1">HCDT Establishment and Governance</div>
+            <div className="text-xs text-gray-700 mb-1">Percentage of HCDT Establishment and Governance</div>
             <div className="flex items-center gap-2">
               <div className="flex-1 h-2 bg-[#E5E7EB] rounded-full overflow-hidden">
                 <div className="h-full bg-[#22C55E]" style={{ width: `${dashboardStore.dashboardData?.FIELDS_COMPLETION}%` }}></div>
@@ -599,7 +599,7 @@ const DashboardPage: React.FC = observer(() => {
           {/* Communities benefiting by state */}
           <div className="bg-white rounded-xl p-6 shadow flex flex-col gap-4 flex-1 justify-between">
             <div className="flex items-center justify-between mb-4">
-              <span className="text-sm text-gray-700 font-medium">Communities benefiting by state</span>
+              <span className="text-sm text-gray-700 font-medium">Total number of host communities involved with the HCDTs</span>
               <span className="text-xs text-gray-500 font-medium">Total Number of all Benefiting Communities | {dashboardStore.dashboardData?.COMMUNITY_BENEFIT.total.reduce((sum: any, num: any) => sum + num, 0)}</span>
             </div>
             <div className="w-full h-56 flex items-end">
@@ -611,7 +611,7 @@ const DashboardPage: React.FC = observer(() => {
         <div className="flex flex-col h-full">
           {/* Number of Trust with Compliance */}
           <div className="bg-white rounded-xl p-4 shadow flex flex-col items-center gap-2 relative h-full justify-center">
-            <div className="font-semibold text-base text-gray-900 mb-2">Number of Trust with Compliance</div>
+            <div className="font-semibold text-base text-gray-900 mb-2">Number of HCDTs with Development plan fully completed by Settlor and readily available</div>
             <div className="relative flex items-center justify-center w-44 h-44 my-4">
               <Doughnut data={doughnutData} options={doughnutOptions} />
               <span className="absolute text-3xl font-bold text-gray-900">{dashboardStore.dashboardData?.COMPLETION_STATUS.percentFullyEstablished}%</span>
