@@ -21,6 +21,7 @@ export interface IFinishedDashboard {
     STATISTICS_PERCENTAGE: IStatistsPercentage;
     DISTRIBUTION_MATRIX: IDistributionMatrix;
     NEEDS_ASSESSMENT_COMMUNITY_COUNT:INeedsAssessmentCommunityCount;
+    BOT_DISPLAY:{ male: number[]; female: number[]; pwd:number[]};
 }
 
 interface ConflictStatusPercentage {
@@ -55,10 +56,24 @@ export interface IGeneralDashboard {
     EMPLOYEE_PER_PROJECT: EmployeePerProject[];
     STATISTICS_PERCENTAGE: IStatistsPercentage[];
     DISTRIBUTION_MATRIX: IDistributionMatrix[];
-    NEEDS_ASSESSMENT_COMMUNITY_COUNT:INeedsAssessmentCommunityCount[]
+    NEEDS_ASSESSMENT_COMMUNITY_COUNT:INeedsAssessmentCommunityCount[],
+    BOT_DISPLAY:ICommitteeBOTMemberStats[]
 }
 
 // Subtypes
+export interface ICommitteeBOTMemberStats {
+  totalMaleBotMembers: number;
+  totalFemaleBotMembers: number;
+  totalPwdBotMembers: number;
+
+  totalMaleAdvisoryCommitteeMembers: number;
+  totalFemaleAdvisoryCommitteeMembers: number;
+  totalPwdAdvisoryCommitteeMembers: number;
+
+  totalMaleManagementCommitteeMembers: number;
+  totalFemaleManagementCommitteeMembers: number;
+  totalPwdManagementCommitteeMembers: number;
+}
 interface INeedsAssessmentCommunityCount {
     distinct_community_count: number;
 }

@@ -115,6 +115,33 @@ const DashboardPage: React.FC = observer(() => {
       },
     ],
   };
+  const BoTData = {
+    labels: ["Bot Members", "Advisory Committee Members", "Management Committee Members"],
+    datasets: [
+      {
+        label: "Male",
+        data: dashboardStore.dashboardData?.BOT_DISPLAY.male,
+        backgroundColor: "#22C55E",
+        borderRadius: 4,
+        stack: "Stack 0",
+      },
+      {
+        label: "Female",
+        data: dashboardStore.dashboardData?.BOT_DISPLAY.female,
+        backgroundColor: "#EF4444",
+        borderRadius: 4,
+        stack: "Stack 0",
+      },
+      {
+        label: "Pwds",
+        data: dashboardStore.dashboardData?.BOT_DISPLAY.pwd,
+        backgroundColor: "#EF8",
+        borderRadius: 4,
+        stack: "Stack 0",
+      },
+    ],
+  };
+
   const conflictBarData = {
     labels: dashboardStore.dashboardData?.CONFLICT_RESOLUTION_OVER_TIME.map(e => String(e.month)),
     datasets: [
@@ -621,6 +648,7 @@ const DashboardPage: React.FC = observer(() => {
                 <span className="font-semibold text-lg text-gray-900">{dashboardStore.dashboardData?.COMPLETION_STATUS.totalCompleteTrust}</span>
                 <span>Completed Development plan</span>
               </div>
+
               <div className="flex flex-col items-center flex-1">
                 <span className="font-semibold text-lg text-gray-900">{dashboardStore.dashboardData?.COMPLETION_STATUS.totalTrust}</span>
                 <span>Total number of Trust</span>
@@ -645,6 +673,8 @@ const DashboardPage: React.FC = observer(() => {
             <span className="font-bold text-3xl text-gray-900 align-middle">{dashboardStore.dashboardData?.STATISTICS_PERCENTAGE.fully_received_percentage}%</span>
             <span className="text-base text-gray-700 ml-2 align-middle">Trusts have reported to have received their approved funds</span>
           </div>
+          <br />
+          <br />
           {/* <div className="text-base text-gray-700 mb-3 ml-1">reported to have received their approved funds</div> */}
           <div>
             <span className="font-bold text-3xl text-gray-900 align-middle">{dashboardStore.dashboardData?.STATISTICS.community_count}</span>
@@ -660,8 +690,8 @@ const DashboardPage: React.FC = observer(() => {
             <span className="text-base text-gray-700 ml-2 align-middle">Trust with agreed distribution matrix</span>
           </div>
           <br />
-         <br />
-        
+          <br />
+
           <span className="font-semibold text-base text-gray-900 mb-4">Number of communities where needs assessment has been full completed</span>
           <div>
             <span className="font-bold text-3xl text-gray-900 align-middle">{dashboardStore.dashboardData?.NEEDS_ASSESSMENT_COMMUNITY_COUNT.distinct_community_count}</span>
@@ -671,6 +701,12 @@ const DashboardPage: React.FC = observer(() => {
           {/* <span className="text-base text-gray-700 mt-2">
             The total amount of OPEX provided by all the OMLs under a Trust
           </span> */}
+        </div>
+      </div>
+      <div className="bg-white rounded-xl p-8 shadow mt-10 w-full">
+        <div className="font-semibold text-base text-gray-900 mb-4">Number of HCDTs with established BoT, Management committee and Advisory committee</div>
+        <div className="w-full max-w-4xl mx-auto" style={{ minHeight: "320px" }}>
+          <Bar data={BoTData} options={conflictBarOptions} />
         </div>
       </div>
       {/* ...existing code below... */}

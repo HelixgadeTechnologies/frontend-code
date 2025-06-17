@@ -32,7 +32,24 @@ class DashboardStore implements IDashboardStore {
             EMPLOYEE_PER_PROJECT: data.EMPLOYEE_PER_PROJECT,
             STATISTICS_PERCENTAGE: data.STATISTICS_PERCENTAGE[0],
             DISTRIBUTION_MATRIX: data.DISTRIBUTION_MATRIX[0],
-            NEEDS_ASSESSMENT_COMMUNITY_COUNT:data.NEEDS_ASSESSMENT_COMMUNITY_COUNT[0]
+            NEEDS_ASSESSMENT_COMMUNITY_COUNT:data.NEEDS_ASSESSMENT_COMMUNITY_COUNT[0],
+            BOT_DISPLAY:{
+                male:[
+                    data.BOT_DISPLAY[0].totalMaleBotMembers,
+                    data.BOT_DISPLAY[0].totalMaleAdvisoryCommitteeMembers,
+                    data.BOT_DISPLAY[0].totalMaleManagementCommitteeMembers,
+                ],
+                female:[
+                    data.BOT_DISPLAY[0].totalFemaleBotMembers,
+                    data.BOT_DISPLAY[0].totalFemaleAdvisoryCommitteeMembers,
+                    data.BOT_DISPLAY[0].totalFemaleManagementCommitteeMembers,
+                ],
+                pwd:[
+                    data.BOT_DISPLAY[0].totalPwdBotMembers,
+                    data.BOT_DISPLAY[0].totalPwdAdvisoryCommitteeMembers,
+                    data.BOT_DISPLAY[0].totalPwdManagementCommitteeMembers,
+                ]
+            }
         };
     }
 
