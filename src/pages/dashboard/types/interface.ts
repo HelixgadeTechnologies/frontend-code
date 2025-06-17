@@ -20,8 +20,9 @@ export interface IFinishedDashboard {
     EMPLOYEE_PER_PROJECT: EmployeePerProject[];
     STATISTICS_PERCENTAGE: IStatistsPercentage;
     DISTRIBUTION_MATRIX: IDistributionMatrix;
-    NEEDS_ASSESSMENT_COMMUNITY_COUNT:INeedsAssessmentCommunityCount;
-    BOT_DISPLAY:{ male: number[]; female: number[]; pwd:number[]};
+    NEEDS_ASSESSMENT_COMMUNITY_COUNT: INeedsAssessmentCommunityCount;
+    BOT_DISPLAY: { male: number[]; female: number[]; pwd: number[] };
+    CONFLICT_RESOLUTION_OVER: IConflictResolutionOverTime[];
 }
 
 interface ConflictStatusPercentage {
@@ -56,23 +57,30 @@ export interface IGeneralDashboard {
     EMPLOYEE_PER_PROJECT: EmployeePerProject[];
     STATISTICS_PERCENTAGE: IStatistsPercentage[];
     DISTRIBUTION_MATRIX: IDistributionMatrix[];
-    NEEDS_ASSESSMENT_COMMUNITY_COUNT:INeedsAssessmentCommunityCount[],
-    BOT_DISPLAY:ICommitteeBOTMemberStats[]
+    NEEDS_ASSESSMENT_COMMUNITY_COUNT: INeedsAssessmentCommunityCount[],
+    BOT_DISPLAY: ICommitteeBOTMemberStats[];
+    CONFLICT_RESOLUTION_OVER: IConflictResolutionOverTime[]
+}
+
+export interface IConflictResolutionOverTime {
+    partiesInvolveId: number,
+    partyName: string,
+    percentage: number,
 }
 
 // Subtypes
 export interface ICommitteeBOTMemberStats {
-  totalMaleBotMembers: number;
-  totalFemaleBotMembers: number;
-  totalPwdBotMembers: number;
+    totalMaleBotMembers: number;
+    totalFemaleBotMembers: number;
+    totalPwdBotMembers: number;
 
-  totalMaleAdvisoryCommitteeMembers: number;
-  totalFemaleAdvisoryCommitteeMembers: number;
-  totalPwdAdvisoryCommitteeMembers: number;
+    totalMaleAdvisoryCommitteeMembers: number;
+    totalFemaleAdvisoryCommitteeMembers: number;
+    totalPwdAdvisoryCommitteeMembers: number;
 
-  totalMaleManagementCommitteeMembers: number;
-  totalFemaleManagementCommitteeMembers: number;
-  totalPwdManagementCommitteeMembers: number;
+    totalMaleManagementCommitteeMembers: number;
+    totalFemaleManagementCommitteeMembers: number;
+    totalPwdManagementCommitteeMembers: number;
 }
 interface INeedsAssessmentCommunityCount {
     distinct_community_count: number;

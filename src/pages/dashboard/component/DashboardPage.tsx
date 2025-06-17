@@ -14,6 +14,7 @@ import { economicImpactStore as EconomicImpactStore } from "../../EconomicImpact
 import { satisfactionStore as SatisfactionStore } from "../../communitySatisfaction/store/satisfactionStore";
 import { conflictStore as ConflictStore } from "../../conflict/store/conflictStore";
 import { projectStore as ProjectStore } from "../../project/store/projectStore";
+import { IConflictResolutionOverTime } from "../types/interface";
 
 const dashboardStoreCTX = createContext(DashboardStore);
 const economicImpactStoreCTX = createContext(EconomicImpactStore);
@@ -142,26 +143,26 @@ const DashboardPage: React.FC = observer(() => {
     ],
   };
 
-  const conflictBarData = {
-    labels: dashboardStore.dashboardData?.CONFLICT_RESOLUTION_OVER_TIME.map(e => String(e.month)),
-    datasets: [
-      {
-        label: "Not in court",
-        data: dashboardStore.dashboardData?.CONFLICT_RESOLUTION_OVER_TIME.map(e => e.notInCourt),
-        backgroundColor: "#22C55E",
-        borderRadius: 4,
-        stack: "Stack 0",
-      },
-      {
-        label: "In court",
-        data: dashboardStore.dashboardData?.CONFLICT_RESOLUTION_OVER_TIME.map(e => e.inCourt),
-        backgroundColor: "#EF4444",
-        borderRadius: 4,
-        stack: "Stack 0",
-      },
+  // const conflictBarData = {
+  //   labels: dashboardStore.dashboardData?.CONFLICT_RESOLUTION_OVER_TIME.map(e => String(e.month)),
+  //   datasets: [
+  //     {
+  //       label: "Not in court",
+  //       data: dashboardStore.dashboardData?.CONFLICT_RESOLUTION_OVER_TIME.map(e => e.notInCourt),
+  //       backgroundColor: "#22C55E",
+  //       borderRadius: 4,
+  //       stack: "Stack 0",
+  //     },
+  //     {
+  //       label: "In court",
+  //       data: dashboardStore.dashboardData?.CONFLICT_RESOLUTION_OVER_TIME.map(e => e.inCourt),
+  //       backgroundColor: "#EF4444",
+  //       borderRadius: 4,
+  //       stack: "Stack 0",
+  //     },
 
-    ],
-  };
+  //   ],
+  // };
   const conflictBarOptions = {
     plugins: {
       legend: {
@@ -596,7 +597,16 @@ const DashboardPage: React.FC = observer(() => {
       },
     ],
   };
-
+  const doughnutColors = [
+    "#FF6384", // pink/red
+    "#36A2EB", // blue
+    "#FFCE56", // yellow
+    "#4BC0C0", // teal
+    "#9966FF", // purple
+    "#FF9F40", // orange
+    "#00C49A", // green
+    "#C0C0C0"  // gray
+  ];
 
   return (
     <div className="bg-[#F3F5F7] min-h-screen p-6">
@@ -704,7 +714,7 @@ const DashboardPage: React.FC = observer(() => {
         </div>
       </div>
       <div className="bg-white rounded-xl p-8 shadow mt-10 w-full">
-        <div className="font-semibold text-base text-gray-900 mb-4">Number of HCDTs with established BoT, Management committee and Advisory committee</div>
+        <div className="font-semibold text-base text-gray-900 mb-4">Number of HCDTs with constitute and inaugurated Board of Trustee and Management Committee and Advisory Committee</div>
         <div className="w-full max-w-4xl mx-auto" style={{ minHeight: "320px" }}>
           <Bar data={BoTData} options={conflictBarOptions} />
         </div>
@@ -1178,11 +1188,40 @@ const DashboardPage: React.FC = observer(() => {
             </div>
           ))}
         </div>
-
-        <div className="bg-white rounded-xl p-8 shadow mt-10 w-full">
-          <div className="font-semibold text-base text-gray-900 mb-4">Conflict resolution over time</div>
-          <div className="w-full max-w-4xl mx-auto" style={{ minHeight: "320px" }}>
-            <Bar data={conflictBarData} options={conflictBarOptions} />
+        <div className="bg-white rounded-xl p-8 shadow flex flex-col md:flex-row items-center min-h-[320px]">
+          <div className="flex flex-col items-center w-full">
+            <span className="font-semibold text-base text-gray-900 mb-4 self-start">Percentage of issues being addressed by the different Stakeholder</span>
+            <div className="flex flex-row items-center justify-center w-full">
+              <div className="w-40 h-40 flex items-center justify-center">
+                <Doughnut
+                  data={{
+                    labels: dashboardStore.dashboardData?.CONFLICT_RESOLUTION_OVER.map((e: IConflictResolutionOverTime) => e.partyName),
+                    datasets: [
+                      {
+                        data: dashboardStore.dashboardData?.CONFLICT_RESOLUTION_OVER.map((e: IConflictResolutionOverTime) => e.percentage),
+                        backgroundColor: doughnutColors,
+                        borderWidth: 0,
+                      },
+                    ],
+                  }}
+                  options={{
+                    plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                    cutout: "60%",
+                  }}
+                />
+              </div>
+              <div className="ml-6 flex flex-col gap-2">
+                {dashboardStore.dashboardData?.CONFLICT_RESOLUTION_OVER.map((e: IConflictResolutionOverTime, i: number) => (
+                  <div key={i}>
+                    <div className="flex items-center text-sm text-gray-700 gap-2">
+                      <span className="inline-block w-3 h-3 rounded-full" style={{ background: doughnutColors[i] }}></span>
+                      {e.partyName}
+                      <span className="ml-2 text-gray-500">{e.percentage}%</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
 
@@ -1385,7 +1424,7 @@ const DashboardPage: React.FC = observer(() => {
       {/* Economic impact */}
       <div className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
         <h2 className="font-semibold text-xl text-gray-900 mb-4 mt-10">
-          Economic impact
+          Economic impact: Percentage of community members who reported that their income and livelihood have improved as a result of thr implementation of the HCDT project & initiatives
         </h2>
         <div className=" mx-auto space-y-8">
           {/* Pie Charts */}
