@@ -50,7 +50,9 @@ class DashboardStore implements IDashboardStore {
                     data.BOT_DISPLAY[0].totalPwdManagementCommitteeMembers,
                 ]
             },
-            CONFLICT_RESOLUTION_OVER:data.CONFLICT_RESOLUTION_OVER
+            CONFLICT_RESOLUTION_OVER:data.CONFLICT_RESOLUTION_OVER,
+            BOT_INAUGURATION_CHECK: data.BOT_INAUGURATION_CHECK[0]
+
         };
     }
 

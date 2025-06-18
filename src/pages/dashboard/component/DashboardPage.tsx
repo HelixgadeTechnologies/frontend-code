@@ -708,314 +708,76 @@ const DashboardPage: React.FC = observer(() => {
             <span className="text-base text-gray-700 ml-2 align-middle">communities needs assessment has been full completed</span>
           </div>
 
-          {/* <span className="text-base text-gray-700 mt-2">
-            The total amount of OPEX provided by all the OMLs under a Trust
-          </span> */}
         </div>
       </div>
-      <div className="bg-white rounded-xl p-8 shadow mt-10 w-full">
-        <div className="font-semibold text-base text-gray-900 mb-4">Number of HCDTs with constitute and inaugurated Board of Trustee and Management Committee and Advisory Committee</div>
-        <div className="w-full max-w-4xl mx-auto" style={{ minHeight: "320px" }}>
-          <Bar data={BoTData} options={conflictBarOptions} />
-        </div>
-      </div>
-      {/* ...existing code below... */}
-
-
-
-
-      {/* <div className="bg-white rounded-xl p-8 shadow mt-10 w-full">
-        <DashboardTable
-          header="Project Details"
-          data={dashboardStore.dashboardData?.PROJECT_DETAILS}
-          columns={projectDetailsColumns}
-          emptyText="No data available"
-          loading={false}
-        />
-      </div> */}
-
-
-      {/* // ...inside your DashboardPage component, where you want this section... */}
-      {/* <div>
-        <h2 className="font-semibold text-xl text-gray-900 mb-4 mt-10">
-          Community Participation & Employment
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
-        
-          <div className="bg-white rounded-xl p-6 shadow flex flex-col items-center w-full md:max-w-xs h-full">
-            <span className="font-semibold text-base text-gray-900 mb-4">Contracts Awarded</span>
-            <div className="w-32 h-32 mb-4">
-              <Doughnut
-                data={{
-                  labels: ["Non local", "Local"],
-                  datasets: [
-                    {
-                      data: [33, 7],
-                      backgroundColor: ["#22C55E", "#EF4444"],
-                      borderWidth: 0,
-                      // cutout: "75%",
-                    },
-                  ],
-                }}
-                options={{
-                  cutout: "75%",
-                  plugins: { legend: { display: false }, tooltip: { enabled: false } },
-                }}
-              />
-            </div>
-            <div className="flex flex-col gap-2 w-full mt-2">
-              <div className="flex items-center justify-between text-sm">
-                <span className="flex items-center">
-                  <span className="inline-block w-3 h-3 rounded-full mr-2" style={{ background: "#22C55E" }}></span>
-                  Non local
-                </span>
-                <span className="font-semibold text-gray-900">33%</span>
-              </div>
-              <div className="flex items-center justify-between text-sm">
-                <span className="flex items-center">
-                  <span className="inline-block w-3 h-3 rounded-full mr-2" style={{ background: "#EF4444" }}></span>
-                  Local
-                </span>
-                <span className="font-semibold text-gray-900">7%</span>
-              </div>
-            </div>
-          </div>
-         
-          <div className="col-span-2 flex flex-col">
-          
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 min-h-[220px]">
+        <div className="bg-white rounded-xl p-8 shadow">
+          <div className="font-semibold text-base text-gray-900 mb-4">Gender Composition of HCDT Committees</div>
+          <div className="w-full max-w-4xl mx-auto" style={{ minHeight: "220px" }}>
+            <Bar data={BoTData} options={conflictBarOptions} />
           </div>
         </div>
-      </div> */}
 
-      {/* // ...existing code... */}
-
-      {/* <h2 className="font-semibold text-xl text-gray-900 mb-4 mt-10">
-        Impact & Sustainability
-      </h2>
-      <div className="flex flex-col md:flex-row gap-4 md:gap-6 items-stretch">
-       
-        <div className="bg-white rounded-xl p-6 shadow flex flex-col items-center w-full md:max-w-xs md:flex-shrink-0">
-          <span className="font-semibold text-base text-gray-900 mb-4">Project with sustainable plans</span>
-          <div className="w-40 h-40 mb-4">
-            <Doughnut
+        <div className="bg-white rounded-xl p-6 shadow flex flex-col items-center ">
+          <span className="font-semibold text-base text-gray-900 mb-4 self-start">
+            Percentage of HCDTs with constitute and inaugurated Board of Trustee and Management Committee and Advisory Committee
+          </span>
+            <Bar
               data={{
                 labels: [
-                  "Project with Sustainable Plan",
-                  "Project without Sustainable Plan",
+                  "Bot Members",
+                  "Management Committee",
+                  "Advisory Committee"
                 ],
                 datasets: [
                   {
-                    data: [93, 7],
-                    backgroundColor: ["#EF4444", "#FFCC00"],
-                    borderWidth: 0,
-                  },
-                ],
+                    label: "Percentage",
+                    data: [
+                      dashboardStore.dashboardData?.BOT_INAUGURATION_CHECK.botYesPercentage,
+                      dashboardStore.dashboardData?.BOT_INAUGURATION_CHECK.managementYesPercentage,
+                      dashboardStore.dashboardData?.BOT_INAUGURATION_CHECK.advisoryYesPercentage,
+                    ],
+                    backgroundColor: [
+                      doughnutColors[0],
+                      doughnutColors[1],
+                      doughnutColors[2]
+                    ],
+                    borderRadius: 8,
+                    barPercentage: 0.5,
+                    categoryPercentage: 0.5,
+                  }
+                ]
               }}
               options={{
-                cutout: "65%",
-                plugins: { legend: { display: false }, tooltip: { enabled: false } },
-              }}
-            />
-          </div>
-          <div className="flex flex-col gap-2 w-full mt-2">
-            <div className="flex items-center justify-between text-sm">
-              <span className="flex items-center">
-                <span className="inline-block w-3 h-3 rounded-full mr-2" style={{ background: "#EF4444" }}></span>
-                Project with Sustainable Plan
-              </span>
-              <span className="font-semibold text-gray-900">93%</span>
-            </div>
-            <div className="flex items-center justify-between text-sm">
-              <span className="flex items-center">
-                <span className="inline-block w-3 h-3 rounded-full mr-2" style={{ background: "#FFCC00" }}></span>
-                Project without Sustainable Plan
-              </span>
-              <span className="font-semibold text-gray-900">7%</span>
-            </div>
-          </div>
-        </div>
-      
-        <div className="bg-white rounded-xl p-6 shadow flex flex-col min-h-[320px] flex-1">
-          <span className="font-semibold text-base text-gray-900 mb-4">Income changes over time</span>
-          <div className="w-full h-64">
-            <Line
-              data={{
-                labels: ["2020", "2021", "2022", "2023", "2024", "2025"],
-                datasets: [
-                  {
-                    label: "Income",
-                    data: [15, 22, 10, 25, 18, 21, 13, 20, 22, 12, 19, 24, 16, 9],
-                    borderColor: "#174EA6",
-                    backgroundColor: "#174EA6",
-                    tension: 0.4,
-                    fill: false,
-                    pointRadius: 0,
-                    borderWidth: 2,
-                  },
-                ],
-              }}
-              options={{
-                plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                indexAxis: "y",
+                plugins: {
+                  legend: { display: false },
+                  tooltip: { enabled: true }
+                },
                 scales: {
                   x: {
-                    grid: { display: false },
-                    ticks: { color: "#8C94A6" },
+                    min: 0,
+                    max: 100,
+                    ticks: {
+                      callback: function (tickValue) {
+                        return `${tickValue}%`;
+                      }
+                    },
+                    title: {
+                      display: false
+                    }
                   },
                   y: {
-                    grid: { color: "#E5E7EB" },
-                    ticks: { color: "#8C94A6", stepSize: 5 },
-                    beginAtZero: true,
-                    min: 0,
-                    max: 30,
-                  },
-                },
+                    title: {
+                      display: false
+                    }
+                  }
+                }
               }}
             />
-          </div>
         </div>
-      </div> */}
-      {/* Next code  */}
-      {/* <div className="bg-white rounded-xl p-6 shadow mt-8 w-full">
-        <div className="font-semibold text-base text-gray-900 mb-4">Impact Statistics</div>
-        <div className="flex flex-col gap-3">
-          <div className="text-gray-900 text-lg font-bold">
-            65%
-            <span className="font-normal text-base text-gray-900 ml-2">
-              of community members reported improved income due to HCDT projects
-            </span>
-          </div>
-          <div className="text-gray-900 text-lg font-bold">
-            25
-            <span className="font-normal text-base text-gray-900 ml-2">
-              income-generating initiatives established by the Trusts
-            </span>
-          </div>
-        </div>
-      </div> */}
+      </div>
 
-      {/* Next Code */}
-      {/* <h2 className="font-semibold text-xl text-gray-900 mb-4 mt-10">
-        Human Capital Development & Gender Inclusion
-      </h2>
-      <div className="flex flex-col md:flex-row gap-4 md:gap-6 items-stretch">
-       
-        <div className="bg-white rounded-xl p-6 shadow flex flex-col items-center w-full md:max-w-xs md:flex-shrink-0">
-          <span className="font-semibold text-base text-gray-900 mb-4 text-center">
-            Beneficiaries by gender and social inclusion
-          </span>
-          <div className="w-40 h-40 mb-4">
-            <Doughnut
-              data={{
-                labels: ["Male", "Female", "PwD"],
-                datasets: [
-                  {
-                    data: [63, 30, 7],
-                    backgroundColor: ["#22C55E", "#FFCC00", "#EF4444"],
-                    borderWidth: 0,
-                  },
-                ],
-              }}
-              options={{
-                cutout: "65%",
-                plugins: { legend: { display: false }, tooltip: { enabled: false } },
-              }}
-            />
-          </div>
-          <div className="flex flex-col gap-2 w-full mt-2">
-            <div className="flex items-center justify-between text-sm">
-              <span className="flex items-center">
-                <span className="inline-block w-3 h-3 rounded-full mr-2" style={{ background: "#22C55E" }}></span>
-                Male
-              </span>
-              <span className="font-semibold text-gray-900">63%</span>
-            </div>
-            <div className="flex items-center justify-between text-sm">
-              <span className="flex items-center">
-                <span className="inline-block w-3 h-3 rounded-full mr-2" style={{ background: "#FFCC00" }}></span>
-                Female
-              </span>
-              <span className="font-semibold text-gray-900">30%</span>
-            </div>
-            <div className="flex items-center justify-between text-sm">
-              <span className="flex items-center">
-                <span className="inline-block w-3 h-3 rounded-full mr-2" style={{ background: "#EF4444" }}></span>
-                PwD
-              </span>
-              <span className="font-semibold text-gray-900">7%</span>
-            </div>
-          </div>
-        </div>
-    
-        <div className="bg-white rounded-xl p-6 shadow flex flex-col min-h-[320px] flex-1">
-          <span className="font-semibold text-base text-gray-900 mb-4">Income changes over time</span>
-          <div className="w-full h-64">
-            <Line
-              data={{
-                labels: ["2020", "2021", "2022", "2023", "2024", "2025"],
-                datasets: [
-                  {
-                    label: "Income",
-                    data: [15, 22, 10, 25, 18, 21, 13, 20, 22, 12, 19, 24, 16, 9],
-                    borderColor: "#174EA6",
-                    backgroundColor: "#174EA6",
-                    tension: 0.4,
-                    fill: false,
-                    pointRadius: 0,
-                    borderWidth: 2,
-                  },
-                ],
-              }}
-              options={{
-                plugins: { legend: { display: false }, tooltip: { enabled: false } },
-                scales: {
-                  x: {
-                    grid: { display: false },
-                    ticks: { color: "#8C94A6" },
-                  },
-                  y: {
-                    grid: { color: "#E5E7EB" },
-                    ticks: { color: "#8C94A6", stepSize: 5 },
-                    beginAtZero: true,
-                    min: 0,
-                    max: 30,
-                  },
-                },
-              }}
-            />
-          </div>
-        </div>
-      </div> */}
-
-      {/* Next code */}
-      {/* <div className="bg-white rounded-xl p-6 shadow mt-8 w-full">
-        <div className="font-semibold text-base text-gray-900 mb-4">Impact Statistics</div>
-        <div className="flex flex-col gap-3">
-          <div className="text-gray-900 text-lg font-bold">
-            83%
-            <span className="font-normal text-base text-gray-900 ml-2">
-              of male community members benefited from the trust HCDT projects
-            </span>
-          </div>
-          <div className="text-gray-900 text-lg font-bold">
-            17%
-            <span className="font-normal text-base text-gray-900 ml-2">
-              of females community members benefited from the trust HCDT projects
-            </span>
-          </div>
-          <div className="text-gray-900 text-lg font-bold">
-            2023
-            <span className="font-normal text-base text-gray-900 ml-2">
-              has the highest number of income generation by the community members
-            </span>
-          </div>
-          <div className="text-gray-900 text-lg font-bold">
-            25
-            <span className="font-normal text-base text-gray-900 ml-2">
-              income-generating initiatives established by the Trusts
-            </span>
-          </div>
-        </div>
-      </div> */}
       {/* Project */}
       <div className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
         {/* <div className="p-6 bg-gray-100 min-h-screen"> */}
