@@ -624,7 +624,7 @@ const DashboardPage: React.FC = observer(() => {
         <div className="flex flex-col gap-5 h-full">
           {/* HCDT Establishment and Governance */}
           <div className="bg-white rounded-xl p-4 shadow flex flex-col gap-2">
-            <div className="text-xs text-gray-700 mb-1">Percentage of HCDT Establishment and Governance</div>
+            <div className="text-xs text-gray-700 mb-1">Percentage of HCDT establishment and governance</div>
             <div className="flex items-center gap-2">
               <div className="flex-1 h-2 bg-[#E5E7EB] rounded-full overflow-hidden">
                 <div className="h-full bg-[#22C55E]" style={{ width: `${dashboardStore.dashboardData?.FIELDS_COMPLETION}%` }}></div>
@@ -648,7 +648,7 @@ const DashboardPage: React.FC = observer(() => {
         <div className="flex flex-col h-full">
           {/* Number of Trust with Compliance */}
           <div className="bg-white rounded-xl p-4 shadow flex flex-col items-center gap-2 relative h-full justify-center">
-            <div className="font-semibold text-base text-gray-900 mb-2">Number of HCDTs with Development plan fully completed by Settlor and readily available</div>
+            <div className="font-semibold text-base text-gray-900 mb-2">Number of HCDTs with development plan fully completed by Settlor and readily available</div>
             <div className="relative flex items-center justify-center w-44 h-44 my-4">
               <Doughnut data={doughnutData} options={doughnutOptions} />
               <span className="absolute text-3xl font-bold text-gray-900">{dashboardStore.dashboardData?.COMPLETION_STATUS.percentFullyEstablished}%</span>
@@ -712,7 +712,7 @@ const DashboardPage: React.FC = observer(() => {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 min-h-[220px]">
         <div className="bg-white rounded-xl p-8 shadow">
-          <div className="font-semibold text-base text-gray-900 mb-4">Gender Composition of HCDT Committees</div>
+          <div className="font-semibold text-base text-gray-900 mb-4">Gender composition of HCDT committees</div>
           <div className="w-full max-w-4xl mx-auto" style={{ minHeight: "220px" }}>
             <Bar data={BoTData} options={conflictBarOptions} />
           </div>
@@ -720,7 +720,7 @@ const DashboardPage: React.FC = observer(() => {
 
         <div className="bg-white rounded-xl p-6 shadow flex flex-col items-center ">
           <span className="font-semibold text-base text-gray-900 mb-4 self-start">
-            Percentage of HCDTs with constitute and inaugurated Board of Trustee and Management Committee and Advisory Committee
+            Percentage of HCDTs with constitute and inaugurated Board of trustee and Management Committee and Advisory Committee
           </span>
             <Bar
               data={{
@@ -782,7 +782,7 @@ const DashboardPage: React.FC = observer(() => {
       <div className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
         {/* <div className="p-6 bg-gray-100 min-h-screen"> */}
         <h2 className="font-semibold text-xl text-gray-900 mb-4 mt-10">
-          Project Implementation and Quality Assessment
+          Project implementation and quality assessment
         </h2>
         {/* Project Overview */}
         <div className="pb-6 ">
@@ -920,7 +920,7 @@ const DashboardPage: React.FC = observer(() => {
         </div>
         {/* </div> */}
         <div className="bg-white rounded-xl p-8 shadow mt-10 w-full">
-          <div className="font-semibold text-base text-gray-900 mb-4">Local Employment by gender and Social Inclusion</div>
+          <div className="font-semibold text-base text-gray-900 mb-4">Local employment by gender and social inclusion</div>
           <div className="w-full max-w-4xl mx-auto" style={{ minHeight: "320px" }}>
             <Bar data={localEmploymentBarData} options={conflictBarOptions} />
           </div>
@@ -952,7 +952,7 @@ const DashboardPage: React.FC = observer(() => {
         </div>
         <div className="bg-white rounded-xl p-8 shadow flex flex-col md:flex-row items-center min-h-[320px]">
           <div className="flex flex-col items-center w-full">
-            <span className="font-semibold text-base text-gray-900 mb-4 self-start">Percentage of issues being addressed by the different Stakeholder</span>
+            <span className="font-semibold text-base text-gray-900 mb-4 self-start">Percentage of issues being addressed by the different stakeholder</span>
             <div className="flex flex-row items-center justify-center w-full">
               <div className="w-40 h-40 flex items-center justify-center">
                 <Doughnut
@@ -1026,13 +1026,13 @@ const DashboardPage: React.FC = observer(() => {
         {/* Charts Section */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mb-4">
           <div className="bg-white p-3 rounded-md shadow-sm">
-            <h3 className="text-xs font-medium text-gray-600 mb-2">Status of Conflict</h3>
+            <h3 className="text-xs font-medium text-gray-600 mb-2">Status of conflict</h3>
             <div className="h-80 flex items-center justify-center">
               <Pie data={pieDataStatusOfConflict} />
             </div>
           </div>
           <div className="bg-white p-3 rounded-md shadow-sm">
-            <h3 className="text-xs font-medium text-gray-600 mb-2">Status of Court Litigation</h3>
+            <h3 className="text-xs font-medium text-gray-600 mb-2">Status of Court litigation</h3>
             <div className="h-80 flex items-center justify-center">
               <Pie data={pieDataCourtLitigation} />
             </div>
@@ -1042,11 +1042,11 @@ const DashboardPage: React.FC = observer(() => {
         {/* Report Frequency and Major Causes */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6 ">
           <div className="bg-white p-4 rounded-lg shadow-md">
-            <h3 className="text-sm font-medium text-gray-600 mb-4">Report Frequency</h3>
+            <h3 className="text-sm font-medium text-gray-600 mb-4">Report frequency</h3>
             <Line data={lineDataReportFrequency} />
           </div>
           <div className="bg-white p-9 rounded-lg shadow-md">
-            <h3 className="text-sm font-medium text-gray-600 mb-4">Major Causes of Conflict</h3>
+            <h3 className="text-sm font-medium text-gray-600 mb-4">Major causes of conflict</h3>
             {conflictStore.dashboardData?.CAUSE_OF_CONFLICT.length! > 0 ? (
               <ul className="space-y-2">
                 {conflictStore.dashboardData?.CAUSE_OF_CONFLICT.map((cause, index) => (

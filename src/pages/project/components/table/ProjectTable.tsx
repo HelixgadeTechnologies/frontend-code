@@ -7,9 +7,13 @@ import { EmptyTable, LoadingTable, Table, Tag } from "../../../../components/ele
 import { caretDownIcon, checkIcon, filterIcon, sortIcon } from "../../../../assets/icons";
 import IMG from "../../../../assets/svgs/dashboardConflictNotFound.svg";
 import { FaEdit } from "react-icons/fa";
+import { authStore as AuthStore } from "../../../auth/store/authStore";
+
 const ProjectStoreCTX = createContext(ProjectStore)
+const authStoreCTX = createContext(AuthStore)
 const ProjectTable = observer(() => {
     const projectStore = useContext(ProjectStoreCTX)
+    const authStore = useContext(authStoreCTX)
 
     useEffect(() => {
         async function loadRequests() {
@@ -109,12 +113,14 @@ const ProjectTable = observer(() => {
                                         icon={checkIcon}
                                         onClick={() => handleView(economicImpact)} // Add your view handler
                                     />
-                                    <Tag
-                                        label="Edit"
-                                        type="default"
-                                        icon={<FaEdit />}
-                                        onClick={() => handleEdit(economicImpact)} // Add your Edit handler
-                                    />
+                                    {(authStore.user.role == "SUPER ADMIN" || authStore.user.role == "ADMIN") && (
+                                        <Tag
+                                            label="Edit"
+                                            type="default"
+                                            icon={<FaEdit />}
+                                            onClick={() => handleEdit(economicImpact)} // Add your Edit handler
+                                        />
+                                    )}
                                 </div>
                             )}
                         </Observer>

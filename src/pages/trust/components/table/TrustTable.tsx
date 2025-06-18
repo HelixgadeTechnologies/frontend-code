@@ -14,14 +14,17 @@ import { ITrustList } from "../../types/interface";
 import { settingStore as SettingStore } from "../../../Settings/store/settingStore";
 import { DeleteTrust } from "../forms/DeleteTrust";
 import { trustEstablishmentStore as TrustEstablishmentStore } from "../../../trustEstablishment/store/trustEstablishmentStore";
+import { authStore as AuthStore } from "../../../auth/store/authStore";
 
 const settingStoreCTX = createContext(SettingStore);
 const TrustStoreCtx = createContext(TrustStore);
+const authStoreCtx = createContext(AuthStore);
 const TrustEstablishmentStoreCtx = createContext(TrustEstablishmentStore);
 const TrustTable = observer(() => {
   const trustStore = useContext(TrustStoreCtx);
   const settingStore = useContext(settingStoreCTX);
   const trustEstablishmentStore = useContext(TrustEstablishmentStoreCtx);
+  const authStore = useContext(authStoreCtx);
   // State to manage row selection and active menu
   // Using useState to manage row selection state
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
@@ -173,7 +176,7 @@ const TrustTable = observer(() => {
         ) : trustStore.allTrust.size > 0 ? (
           <Table
             columns={columns}
-            data={[...trustStore.allTrust.values()].map((trust: ITrustList, i: number) => ({
+            data={(authStore.user.role == "DRA"?[...trustStore.allTrust.values()].filter(e=> e.trustId == authStore.user?.trusts!):[...trustStore.allTrust.values()]).map((trust: ITrustList, i: number) => ({
               ...trust, id: i.toString()
             } as ITrustList))
             }

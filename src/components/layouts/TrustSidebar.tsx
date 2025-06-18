@@ -54,7 +54,7 @@ const TrustSidebar = observer(() => {
     {
       id: 1,
       name: "HCDT Development Projects",
-      link: `/trust/${name}/${id}/hdct-projects`,
+      link: `/trust/${name}/${id}/`,
     },
     {
       id: 2,
