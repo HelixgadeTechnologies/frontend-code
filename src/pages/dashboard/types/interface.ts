@@ -3,8 +3,9 @@ export interface IDashboardStore {
     dashboardData: IFinishedDashboard | null;
     selectedYear: number;
     selectedState: string;
+    selectedSettlor: string;
     transformDashboard(data: IGeneralDashboard): IFinishedDashboard;
-    getDashboard(year: number, state: string): Promise<void>;
+    getDashboard(year: number, state: string, settlor: string): Promise<void>;
 }
 export interface IFinishedDashboard {
     FIELDS_COMPLETION: number;

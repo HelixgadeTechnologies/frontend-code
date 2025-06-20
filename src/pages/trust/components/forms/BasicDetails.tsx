@@ -24,7 +24,7 @@ const BasicDetails = observer(({ method }: { method: any }) => {
     const trustFormData: ITrustPayloadData = {
       ...trustStore.trustFormData,
       trustName: data.trustName,
-      settlor: data.settlor.map((e: IDropdownProp) => e.value).join(", "),
+      settlor: data.settlor.value,
       nameOfOmls: data.nameOfOmls,
       userId: authStore.user.userId,
       country: data.country.value,
@@ -115,7 +115,7 @@ const BasicDetails = observer(({ method }: { method: any }) => {
                   }
                 })}
                 label="Name of Settlor"
-                isMulti={true}
+                // isMulti={true}
                 placeholder="Select Settlor"
               />
             )}

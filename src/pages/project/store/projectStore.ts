@@ -126,7 +126,7 @@ class ProjectStore implements IProjectStore {
             this.dashboardData = null;
             await projectService.createAndUpdateProject(payload);
             await this.getProjects(payload.data.trustId || "");
-            await this.getProjectDashboardByTrustId(payload.data.trustId || "ALL", 0, "ALL")
+            await this.getProjectDashboardByTrustId(payload.data.trustId || "ALL", 0, "ALL","ALL")
             return true;
         } catch (error) {
             throw error;
@@ -252,11 +252,11 @@ class ProjectStore implements IProjectStore {
         };
     }
 
-    async getProjectDashboardByTrustId(trustId: string, selectedYear: number, selectedState: string): Promise<void> {
+    async getProjectDashboardByTrustId(trustId: string, selectedYear: number, selectedState: string,settlor:string): Promise<void> {
         try {
             if (this.isDashboardLoading || this.dashboardData) return; // Prevent duplicate calls
             this.isDashboardLoading = true;
-            let data = await projectService.getDashboard(trustId, selectedYear, selectedState);
+            let data = await projectService.getDashboard(trustId, selectedYear, selectedState,settlor);
             if (data.success) {
                 const processedData = this.transformProjectDashboard(data.data);
                 this.dashboardData = processedData;

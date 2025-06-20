@@ -8,6 +8,7 @@ import { satisfactionStore as SatisfactionStore } from "../communitySatisfaction
 import { conflictStore as ConflictStore } from "../conflict/store/conflictStore";
 import { projectStore as ProjectStore } from "../project/store/projectStore";
 import { trustStore as TrustStore } from "../trust/store/trustStore";
+import { settingStore as SettingStore } from "../Settings/store/settingStore";
 
 const DashboardStoreCTX = createContext(DashboardStore)
 const trustStoreCTX = createContext(TrustStore)
@@ -15,8 +16,10 @@ const economicImpactStoreCTX = createContext(EconomicImpactStore)
 const satisfactionStoreCTX = createContext(SatisfactionStore)
 const conflictStoreCTX = createContext(ConflictStore)
 const projectStoreCTX = createContext(ProjectStore)
+const settingStoreCTX = createContext(SettingStore)
 const DashboardMasterPage = observer(() => {
     const dashboardStore = useContext(DashboardStoreCTX)
+    const settingStore = useContext(settingStoreCTX)
     const trustStore = useContext(trustStoreCTX)
     const economicImpactStore = useContext(economicImpactStoreCTX)
     const satisfactionStore = useContext(satisfactionStoreCTX)
@@ -25,19 +28,20 @@ const DashboardMasterPage = observer(() => {
     useEffect(() => {
         async function getInfo() {
             trustStore.getAllStates()
-            await dashboardStore.getDashboard(0, "ALL")
+            await dashboardStore.getDashboard(0, "ALL","ALL")
             economicImpactStore.isDashboardLoading = false;
             economicImpactStore.dashboardData = null;
-            await economicImpactStore.getEconomicImpactDashboardByTrustId("ALL",0,"ALL");
+            await economicImpactStore.getEconomicImpactDashboardByTrustId("ALL",0,"ALL","ALL");
             satisfactionStore.isDashboardLoading = false;
             satisfactionStore.dashboardData = null;
-            await satisfactionStore.getSatisfactionDashboardByTrustId("ALL",0,"ALL");
+            await satisfactionStore.getSatisfactionDashboardByTrustId("ALL",0,"ALL","ALL");
             conflictStore.isDashboardLoading = false;
             conflictStore.dashboardData = null;
-            await conflictStore.getConflictDashboardByTrustId("ALL",0,"ALL");
+            await conflictStore.getConflictDashboardByTrustId("ALL",0,"ALL","ALL");
             projectStore.isDashboardLoading = false;
             projectStore.dashboardData = null;
-            await projectStore.getProjectDashboardByTrustId("ALL",0,"ALL");
+            await projectStore.getProjectDashboardByTrustId("ALL",0,"ALL","ALL");
+            await settingStore.getAllSettlor();
         }
         getInfo();
         return () => { };

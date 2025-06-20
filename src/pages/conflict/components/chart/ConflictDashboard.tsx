@@ -41,6 +41,7 @@ const ConflictDashboard = observer(() => {
             await conflictStore.getConflictDashboardByTrustId(
                 selectedTrustId as string,
                 0,
+                "ALL",
                 "ALL"
             );
         }

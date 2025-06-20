@@ -17,8 +17,11 @@ import { projectStore as ProjectStore } from "../../project/store/projectStore";
 import { IConflictResolutionOverTime } from "../types/interface";
 import { year } from "../../../utils/data";
 import { trustStore as TrustStore } from "../../trust/store/trustStore";
+import { ISettlor } from "../../Settings/types/interface";
+import { settingStore as SettingStore} from "../../Settings/store/settingStore";
 
 const dashboardStoreCTX = createContext(DashboardStore);
+const settingStoreCTX = createContext(SettingStore);
 const trustStoreCTX = createContext(TrustStore);
 const economicImpactStoreCTX = createContext(EconomicImpactStore);
 const satisfactionStoreCTX = createContext(SatisfactionStore);
@@ -26,6 +29,7 @@ const conflictStoreCTX = createContext(ConflictStore);
 const projectStoreCTX = createContext(ProjectStore);
 const DashboardPage: React.FC = observer(() => {
   const dashboardStore = useContext(dashboardStoreCTX);
+  const settingStore = useContext(settingStoreCTX);
   const trustStore = useContext(trustStoreCTX);
   const economicImpactStore = useContext(economicImpactStoreCTX);
   const satisfactionStore = useContext(satisfactionStoreCTX);
@@ -615,19 +619,19 @@ const DashboardPage: React.FC = observer(() => {
     async function getInfo() {
       dashboardStore.selectedYear = Number(v)
       dashboardStore.dashboardData = null
-      await dashboardStore.getDashboard(Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState)
+      await dashboardStore.getDashboard(Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState,dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor)
       economicImpactStore.isDashboardLoading = false;
       economicImpactStore.dashboardData = null;
-      await economicImpactStore.getEconomicImpactDashboardByTrustId("ALL", Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState);
+      await economicImpactStore.getEconomicImpactDashboardByTrustId("ALL", Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState,dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
       satisfactionStore.isDashboardLoading = false;
       satisfactionStore.dashboardData = null;
-      await satisfactionStore.getSatisfactionDashboardByTrustId("ALL", Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState);
+      await satisfactionStore.getSatisfactionDashboardByTrustId("ALL", Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState,dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
       conflictStore.isDashboardLoading = false;
       conflictStore.dashboardData = null;
-      await conflictStore.getConflictDashboardByTrustId("ALL", Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState);
+      await conflictStore.getConflictDashboardByTrustId("ALL", Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState,dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
       projectStore.isDashboardLoading = false;
       projectStore.dashboardData = null;
-      await projectStore.getProjectDashboardByTrustId("ALL", Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState);
+      await projectStore.getProjectDashboardByTrustId("ALL", Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState,dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
     }
     getInfo()
   }, [dashboardStore]);
@@ -636,19 +640,40 @@ const DashboardPage: React.FC = observer(() => {
     async function getInfo() {
       dashboardStore.selectedState = v
       dashboardStore.dashboardData = null
-      await dashboardStore.getDashboard(dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, v)
+      await dashboardStore.getDashboard(dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear,v,dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor)
       economicImpactStore.isDashboardLoading = false;
       economicImpactStore.dashboardData = null;
-      await economicImpactStore.getEconomicImpactDashboardByTrustId("ALL", dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, v);
+      await economicImpactStore.getEconomicImpactDashboardByTrustId("ALL", dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear,v,dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
       satisfactionStore.isDashboardLoading = false;
       satisfactionStore.dashboardData = null;
-      await satisfactionStore.getSatisfactionDashboardByTrustId("ALL", dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, v);
+      await satisfactionStore.getSatisfactionDashboardByTrustId("ALL", dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear,v,dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
       conflictStore.isDashboardLoading = false;
       conflictStore.dashboardData = null;
-      await conflictStore.getConflictDashboardByTrustId("ALL", dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, v);
+      await conflictStore.getConflictDashboardByTrustId("ALL", dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear,v,dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
       projectStore.isDashboardLoading = false;
       projectStore.dashboardData = null;
-      await projectStore.getProjectDashboardByTrustId("ALL", dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, v);
+      await projectStore.getProjectDashboardByTrustId("ALL", dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear,v,dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
+    }
+    getInfo()
+  }, [dashboardStore]);
+
+  const selectSettlor = useCallback((v: string) => {
+    async function getInfo() {
+      dashboardStore.selectedSettlor = v
+      dashboardStore.dashboardData = null
+      await dashboardStore.getDashboard(dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear,dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, v)
+      economicImpactStore.isDashboardLoading = false;
+      economicImpactStore.dashboardData = null;
+      await economicImpactStore.getEconomicImpactDashboardByTrustId("ALL", dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear,dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, v);
+      satisfactionStore.isDashboardLoading = false;
+      satisfactionStore.dashboardData = null;
+      await satisfactionStore.getSatisfactionDashboardByTrustId("ALL", dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState,v);
+      conflictStore.isDashboardLoading = false;
+      conflictStore.dashboardData = null;
+      await conflictStore.getConflictDashboardByTrustId("ALL", dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear,dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, v);
+      projectStore.isDashboardLoading = false;
+      projectStore.dashboardData = null;
+      await projectStore.getProjectDashboardByTrustId("ALL", dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear,dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, v);
     }
     getInfo()
   }, [dashboardStore]);
@@ -665,7 +690,28 @@ const DashboardPage: React.FC = observer(() => {
               <Observer>
                 {() => (
                   <>
-                    <label className="text-sm font-medium text-gray-700 mb-1">Select Trust</label>
+                    <label className="text-sm font-medium text-gray-700 mb-1">Select Settlor</label>
+                    <select
+                      className="border border-gray-300 rounded px-4 py-2 min-w-[160px] focus:outline-none focus:ring-2 focus:ring-primary-200 bg-white text-gray-700"
+                      value={dashboardStore.selectedSettlor}
+                      onChange={e => selectSettlor(e.target.value)}
+
+                    >
+                      <option key="ALL" value="ALL">ALL</option>
+                      {[...settingStore.allSettlor.values()].map((v: ISettlor) =>  (
+                        <option key={v.settlorName} value={v.settlorName}>{v.settlorName}</option>
+                      ))}
+                    </select>
+
+                  </>
+                )}
+              </Observer>
+            </div>
+            <div className="flex flex-col">
+              <Observer>
+                {() => (
+                  <>
+                    <label className="text-sm font-medium text-gray-700 mb-1">Select State</label>
                     <select
                       className="border border-gray-300 rounded px-4 py-2 min-w-[160px] focus:outline-none focus:ring-2 focus:ring-primary-200 bg-white text-gray-700"
                       value={dashboardStore.selectedState}
@@ -801,7 +847,7 @@ const DashboardPage: React.FC = observer(() => {
 
         <div className="bg-white rounded-xl p-6 shadow flex flex-col items-center ">
           <span className="font-semibold text-base text-gray-900 mb-4 self-start">
-            Percentage of HCDTs with constitute and inaugurated Board of trustee and Management Committee and Advisory Committee
+            Percentage of HCDTs with constituted and inaugurated Board of trustee and Management Committee and Advisory Committee
           </span>
           <Bar
             data={{
@@ -976,7 +1022,7 @@ const DashboardPage: React.FC = observer(() => {
 
           {/* Pie Chart 1 */}
           <div className="bg-white p-3 rounded-md shadow-sm">
-            <h3 className="font-semibold  text-lg text-gray-600 mb-2"> Number of trust project by category</h3>
+            <h3 className="font-semibold  text-lg text-gray-600 mb-2"> Number of Trust project by category</h3>
             <div className="h-80 flex items-center justify-center">
               <Pie options={pieChartOptions} data={pieChartData1} />
             </div>
@@ -984,7 +1030,7 @@ const DashboardPage: React.FC = observer(() => {
 
           {/* Line Chart 2 */}
           <div className="bg-white p-3 rounded-md shadow-sm">
-            <h3 className="font-semibold text-lg text-gray-600 mb-2"> Number of trust community members who were locally employed by HCDT project contractors</h3>
+            <h3 className="font-semibold text-lg text-gray-600 mb-2"> Number of Trust community members who were locally employed by HCDT project contractors</h3>
             <div className="h-80 flex items-center justify-center">
               <Line options={chartOptions} data={data2} />
             </div>

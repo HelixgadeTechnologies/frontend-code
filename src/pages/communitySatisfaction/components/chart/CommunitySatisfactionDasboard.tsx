@@ -22,6 +22,7 @@ const CommunitySatisfactionDashboard = observer(
                 await satisfactionStore.getSatisfactionDashboardByTrustId(
                     selectedTrustId as string,
                     0,
+                    "ALL",
                     "ALL"
                 );
             }

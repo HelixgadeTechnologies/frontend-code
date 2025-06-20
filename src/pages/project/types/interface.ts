@@ -31,7 +31,7 @@ export interface IProjectStore {
     getTypeOfWork(): Promise<boolean>;
     uploadFile(payload: IUploadPayload): Promise<HCDTRequestResponse>;
     transformProjectDashboard(data: IDashboard): IDashboardData;
-    getProjectDashboardByTrustId(trustId: string, selectedYear:number,selectedState:string): Promise<void>;
+    getProjectDashboardByTrustId(trustId: string, selectedYear:number,selectedState:string,settlor:string): Promise<void>;
 
 }
 interface BaseItem {

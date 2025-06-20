@@ -17,6 +17,6 @@ export const economicImpactService = {
 
     getImpactOptionTwo: (): Promise<HCDTRequestResponse> => client.get('/economic-impact/impactOptionTwo'),
 
-    getEconomicImpactDashboardByTrustId: (trustId: string, selectedYear: number, selectedState: string): Promise<HCDTRequestResponse> => client.get(`/economic-impact/dashboard/${trustId}/${selectedYear}/${selectedState}`),
+    getEconomicImpactDashboardByTrustId: (trustId: string, selectedYear: number, selectedState: string,settlor:string): Promise<HCDTRequestResponse> => client.get(`/economic-impact/dashboard/${trustId}/${selectedYear}/${selectedState}/${settlor}`),
 
 }

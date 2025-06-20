@@ -19,6 +19,6 @@ export const conflictService = {
 
     getCourtLitigationStatuses: (): Promise<HCDTRequestResponse> => client.get('/conflict/courtLitigationStatuses'),
 
-    getConflictDashboardByTrustId: (trustId: string, selectedYear: number, selectedState: string): Promise<HCDTRequestResponse> => client.get(`/conflict/dashboard/${trustId}/${selectedYear}/${selectedState}`),
+    getConflictDashboardByTrustId: (trustId: string, selectedYear: number, selectedState: string,settlor:string): Promise<HCDTRequestResponse> => client.get(`/conflict/dashboard/${trustId}/${selectedYear}/${selectedState}/${settlor}`),
 
 }

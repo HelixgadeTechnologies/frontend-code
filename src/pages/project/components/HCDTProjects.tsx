@@ -15,7 +15,7 @@ const HCDTProjects = observer(() => {
       projectStore.dashboardData =  null;
       let selectedTrustId = window.sessionStorage.getItem("selectedTrustId")
       projectStore.selectedProjectScreen = 1
-      await projectStore.getProjectDashboardByTrustId(selectedTrustId as string,0,"ALL")
+      await projectStore.getProjectDashboardByTrustId(selectedTrustId as string,0,"ALL","ALL")
       projectStore.getFormSteps()
       await projectStore.getCategory()
       await projectStore.getTypeOfWork()

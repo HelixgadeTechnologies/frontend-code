@@ -85,7 +85,7 @@ class ConflictStore implements IConflictStore {
             this.dashboardData = null;
             await conflictService.createAndUpdateConflict(payload);
             await this.getConflicts(trustId || "");
-            await this.getConflictDashboardByTrustId(trustId || "",0,"ALL")
+            await this.getConflictDashboardByTrustId(trustId || "",0,"ALL","ALL")
             return true;
         } catch (error) {
             throw error;
@@ -256,11 +256,11 @@ class ConflictStore implements IConflictStore {
         };
     }
 
-    async getConflictDashboardByTrustId(trustId: string, selectedYear: number, selectedState: string): Promise<void> {
+    async getConflictDashboardByTrustId(trustId: string, selectedYear: number, selectedState: string,settlor:string): Promise<void> {
         try {
             if (this.isDashboardLoading || this.dashboardData) return; // Prevent duplicate calls
             this.isDashboardLoading = true;
-            let data = await conflictService.getConflictDashboardByTrustId(trustId, selectedYear, selectedState);
+            let data = await conflictService.getConflictDashboardByTrustId(trustId, selectedYear, selectedState,settlor);
             if (data.success) {
                 const processedData = this.transformConflictDashboard(data.data);
                 this.dashboardData = processedData;

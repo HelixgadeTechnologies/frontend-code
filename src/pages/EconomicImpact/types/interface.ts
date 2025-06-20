@@ -19,7 +19,7 @@ export interface IEconomicImpactStore {
     deleteEconomicImpact(economicImpactId: string): Promise<boolean>;
     getEconomicImpactByTrustId(trustId: string): Promise<boolean>;
     extractDashboardData(dashboard: IEconomicImpactDashboard): IEconomicImpactDashboardData;
-    getEconomicImpactDashboardByTrustId(trustId: string, selectedYear:number,selectedState:string): Promise<void>;
+    getEconomicImpactDashboardByTrustId(trustId: string, selectedYear:number,selectedState:string,settlor:string): Promise<void>;
     getEconomicImpactByEconomicImpactId(economicImpactId: string): Promise<boolean>;
     getImpactOptionOne(): Promise<boolean>;
     getImpactOptionTwo(): Promise<boolean>;

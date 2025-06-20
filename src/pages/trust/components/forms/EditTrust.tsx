@@ -33,7 +33,7 @@ const EditTrust = observer(() => {
       country: trustStore.trustFormData.country ? { label: trustStore.trustFormData.country, value: trustStore.trustFormData.country } : null,
       state: trustStore.trustFormData.state ? { label: trustStore.trustFormData.state, value: trustStore.trustFormData.state } : null,
       localGovernmentArea: trustStore.trustFormData.localGovernmentArea ? { label: trustStore.trustFormData.localGovernmentArea, value: trustStore.trustFormData.localGovernmentArea } : null,
-      settlor: trustStore.trustFormData.settlor.split(",").map((e: string) => { return { label: e, value: e } }),
+      settlor: trustStore.trustFormData.settlor?{ label:trustStore.trustFormData.settlor, value:trustStore.trustFormData.settlor}:null
     },
     shouldUnregister: false,
   })

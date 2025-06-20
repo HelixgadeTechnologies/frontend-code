@@ -21,5 +21,5 @@ export const projectService = {
 
     upload: (payload: IUploadPayload): Promise<HCDTRequestResponse> => client.post('/upload/file-upload', { ...payload }),
 
-    getDashboard: (trustId: string, selectedYear: number, selectedState: string): Promise<HCDTRequestResponse> => client.get(`/project/dashboard/${trustId}/${selectedYear}/${selectedState}`)
+    getDashboard: (trustId: string, selectedYear: number, selectedState: string,settlor:string): Promise<HCDTRequestResponse> => client.get(`/project/dashboard/${trustId}/${selectedYear}/${selectedState}/${settlor}`)
 }

@@ -28,7 +28,7 @@ const CommunitySatisfaction = observer(() => {
         async function loadRequests() {
             let selectedTrustId = window.sessionStorage.getItem("selectedTrustId")
             satisfactionStore.dashboardData = null;
-            await satisfactionStore.getSatisfactionDashboardByTrustId(selectedTrustId as string,0,"ALL");
+            await satisfactionStore.getSatisfactionDashboardByTrustId(selectedTrustId as string,0,"ALL","ALL");
         }
         loadRequests();
     }, []);
