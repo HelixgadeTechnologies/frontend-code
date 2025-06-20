@@ -25,6 +25,7 @@ const EconomicImpactForm = observer(({ close, economicImpactStore, trustStore }:
       }
       const response = await economicImpactStore.createEconomicImpact(payload)
       if (response) {
+        reset()
         toast.success("Economic Impact Successfully Submitted");
         economicImpactStore.isAddModelOpen = false;
       }
