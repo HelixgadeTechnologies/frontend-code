@@ -31,7 +31,7 @@ export interface IConflictStore {
   getCourtLitigation(): Promise<boolean>;
   filterMajorConflict(cc: Array<ICauseOfConflictDashboard>): Array<IDropdownProp>;
   transformConflictDashboard(data: IConflictDashboard): IConflictDashboardOutput;
-  getConflictDashboardByTrustId(trustId: string): Promise<void>;
+  getConflictDashboardByTrustId(trustId: string, selectedYear:number,selectedState:string): Promise<void>;
 
 }
 

@@ -39,7 +39,9 @@ const ConflictDashboard = observer(() => {
         async function fetchData() {
             let selectedTrustId = window.sessionStorage.getItem("selectedTrustId");
             await conflictStore.getConflictDashboardByTrustId(
-                selectedTrustId as string
+                selectedTrustId as string,
+                0,
+                "ALL"
             );
         }
         fetchData();

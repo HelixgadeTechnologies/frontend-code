@@ -25,7 +25,7 @@ const EconomicImpact = observer(() => {
           async function loadRequests() {
               let selectedTrustId = window.sessionStorage.getItem("selectedTrustId")
               economicImpactStore.dashboardData = null;
-              await economicImpactStore.getEconomicImpactDashboardByTrustId(selectedTrustId as string);
+              await economicImpactStore.getEconomicImpactDashboardByTrustId(selectedTrustId as string,0,"ALL");
           }
           loadRequests();
       }, []);

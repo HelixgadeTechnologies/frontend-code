@@ -19,7 +19,7 @@ export interface ISatisfactionStore {
     updateSatisfaction(payload: ISatisfactionPayload): Promise<boolean>;
     getSatisfactionByTrustId(trustId: string): Promise<boolean>;
     extractDashboardData(dashboard: IAverageCommunitySatisfactionDashboardData): ISatisfactionDashboardData;
-    getSatisfactionDashboardByTrustId(trustId: string): Promise<void>;
+    getSatisfactionDashboardByTrustId(trustId: string, selectedYear: number, selectedState: string): Promise<void>;
     getSatisfactionById(satisfactionId: string): Promise<boolean>
     getOptionOne(): Promise<boolean>;
     getOptionTwo(): Promise<boolean>;

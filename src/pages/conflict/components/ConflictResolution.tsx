@@ -23,7 +23,7 @@ const ConflictResolution = observer(() => {
     async function fetchData() {
       let selectedTrustId = window.sessionStorage.getItem("selectedTrustId");
       conflictStore.dashboardData = null;
-      await conflictStore.getConflictDashboardByTrustId(selectedTrustId as string)
+      await conflictStore.getConflictDashboardByTrustId(selectedTrustId as string, 0, "ALL")
       await conflictStore.getConflicts(selectedTrustId as string)
       await projectStore.getProjects(selectedTrustId as string)
       await conflictStore.getCauseOfConflict()

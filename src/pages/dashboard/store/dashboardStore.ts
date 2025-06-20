@@ -5,6 +5,8 @@ import { IDashboardStore, IFinishedDashboard, IGeneralDashboard } from "../types
 class DashboardStore implements IDashboardStore {
     isLoading = false;
     dashboardData: IFinishedDashboard | null = null;
+    selectedYear:number = 0;
+    selectedState:string = "ALL";
     constructor() {
         makeAutoObservable(this);
     }
@@ -56,11 +58,11 @@ class DashboardStore implements IDashboardStore {
         };
     }
 
-    async getDashboard(): Promise<void> {
+    async getDashboard(year:number,state:string): Promise<void> {
         try {
             if (this.isLoading || this.dashboardData) return; // Prevent duplicate calls
             this.isLoading = true;
-            let data = await dashboardService.generalDashboard();
+            let data = await dashboardService.generalDashboard(year,state);
             if (data.success) {
                 const processedData = this.transformDashboard(data.data);
                 this.dashboardData = processedData;

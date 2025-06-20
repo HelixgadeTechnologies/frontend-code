@@ -44,7 +44,7 @@ class SatisfactionStore implements ISatisfactionStore {
             this.isDashboardLoading = false
             this.dashboardData = null;
             await satisfactionService.createAndUpdateSatisfaction(payload);
-            await this.getSatisfactionDashboardByTrustId(payload.data.trustId || "ALL");
+            await this.getSatisfactionDashboardByTrustId(payload.data.trustId || "ALL",0,"ALL");
             await this.getSatisfactionByTrustId(payload.data.trustId || "");
             return true;
         } catch (error) {
@@ -120,11 +120,11 @@ class SatisfactionStore implements ISatisfactionStore {
             incomeProject: mapOptionTwoResponse(dashboard.incomeProject),
         };
     }
-    async getSatisfactionDashboardByTrustId(trustId: string): Promise<void> {
+    async getSatisfactionDashboardByTrustId(trustId: string, selectedYear:number,selectedState:string): Promise<void> {
         try {
             if (this.isDashboardLoading || this.dashboardData) return; // Prevent duplicate calls
             this.isDashboardLoading = true;
-            let data = await satisfactionService.getSatisfactionDashboardByTrustId(trustId);
+            let data = await satisfactionService.getSatisfactionDashboardByTrustId(trustId, selectedYear,selectedState);
             if (data.success) {
                 const processedData = this.extractDashboardData(data.data);
                 this.dashboardData = processedData;

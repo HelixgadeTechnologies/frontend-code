@@ -41,9 +41,9 @@ class EconomicImpactStore implements IEconomicImpactStore {
         try {
             this.isSubmitting = true;
             this.isDashboardLoading = false;
-            this.dashboardData= null;
+            this.dashboardData = null;
             await economicImpactService.createAndUpdateEconomicImpact(payload);
-            await this.getEconomicImpactDashboardByTrustId(payload.data.trustId || "ALL");
+            await this.getEconomicImpactDashboardByTrustId(payload.data.trustId || "ALL", 0, "ALL");
             await this.getEconomicImpactByTrustId(payload.data.trustId || "");
             return true;
         } catch (error) {
@@ -131,11 +131,11 @@ class EconomicImpactStore implements IEconomicImpactStore {
             accessAmenities: mapOptionTwoResponse(dashboard.accessAmenities)
         };
     }
-    async getEconomicImpactDashboardByTrustId(trustId: string): Promise<void> {
+    async getEconomicImpactDashboardByTrustId(trustId: string, selectedYear: number, selectedState: string): Promise<void> {
         try {
             if (this.isDashboardLoading || this.dashboardData) return; // Prevent duplicate calls
             this.isDashboardLoading = true;
-            let data = await economicImpactService.getEconomicImpactDashboardByTrustId(trustId);
+            let data = await economicImpactService.getEconomicImpactDashboardByTrustId(trustId, selectedYear, selectedState);
             if (data.success) {
                 this.dashboardData = {} as IEconomicImpactDashboardData;
                 const processedData = this.extractDashboardData(data.data);

@@ -6,7 +6,7 @@ import { Doughnut, Bar, Line, Pie } from "react-chartjs-2";
 import DashboardTable, { DashboardTableColumn } from "../table/DashboardTable";
 import { Observer, observer } from "mobx-react-lite";
 import { dashboardStore as DashboardStore } from "../store/dashboardStore";
-import { useContext, createContext } from "react";
+import { useContext, createContext, useCallback } from "react";
 import dayjs from "dayjs";
 import { IConflictView } from "../../conflict/types/interface";
 import IMG from "../../../assets/svgs/dashboardConflictNotFound.svg"
@@ -15,14 +15,18 @@ import { satisfactionStore as SatisfactionStore } from "../../communitySatisfact
 import { conflictStore as ConflictStore } from "../../conflict/store/conflictStore";
 import { projectStore as ProjectStore } from "../../project/store/projectStore";
 import { IConflictResolutionOverTime } from "../types/interface";
+import { year } from "../../../utils/data";
+import { trustStore as TrustStore } from "../../trust/store/trustStore";
 
 const dashboardStoreCTX = createContext(DashboardStore);
+const trustStoreCTX = createContext(TrustStore);
 const economicImpactStoreCTX = createContext(EconomicImpactStore);
 const satisfactionStoreCTX = createContext(SatisfactionStore);
 const conflictStoreCTX = createContext(ConflictStore);
 const projectStoreCTX = createContext(ProjectStore);
 const DashboardPage: React.FC = observer(() => {
   const dashboardStore = useContext(dashboardStoreCTX);
+  const trustStore = useContext(trustStoreCTX);
   const economicImpactStore = useContext(economicImpactStoreCTX);
   const satisfactionStore = useContext(satisfactionStoreCTX);
   const conflictStore = useContext(conflictStoreCTX);
@@ -607,13 +611,90 @@ const DashboardPage: React.FC = observer(() => {
     "#00C49A", // green
     "#C0C0C0"  // gray
   ];
+  const setSelectedYear = useCallback((v: string) => {
+    async function getInfo() {
+      dashboardStore.selectedYear = Number(v)
+      dashboardStore.dashboardData = null
+      await dashboardStore.getDashboard(Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState)
+      economicImpactStore.isDashboardLoading = false;
+      economicImpactStore.dashboardData = null;
+      await economicImpactStore.getEconomicImpactDashboardByTrustId("ALL", Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState);
+      satisfactionStore.isDashboardLoading = false;
+      satisfactionStore.dashboardData = null;
+      await satisfactionStore.getSatisfactionDashboardByTrustId("ALL", Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState);
+      conflictStore.isDashboardLoading = false;
+      conflictStore.dashboardData = null;
+      await conflictStore.getConflictDashboardByTrustId("ALL", Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState);
+      projectStore.isDashboardLoading = false;
+      projectStore.dashboardData = null;
+      await projectStore.getProjectDashboardByTrustId("ALL", Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState);
+    }
+    getInfo()
+  }, [dashboardStore]);
 
+  const selectState = useCallback((v: string) => {
+    async function getInfo() {
+      dashboardStore.selectedState = v
+      dashboardStore.dashboardData = null
+      await dashboardStore.getDashboard(dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, v)
+      economicImpactStore.isDashboardLoading = false;
+      economicImpactStore.dashboardData = null;
+      await economicImpactStore.getEconomicImpactDashboardByTrustId("ALL", dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, v);
+      satisfactionStore.isDashboardLoading = false;
+      satisfactionStore.dashboardData = null;
+      await satisfactionStore.getSatisfactionDashboardByTrustId("ALL", dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, v);
+      conflictStore.isDashboardLoading = false;
+      conflictStore.dashboardData = null;
+      await conflictStore.getConflictDashboardByTrustId("ALL", dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, v);
+      projectStore.isDashboardLoading = false;
+      projectStore.dashboardData = null;
+      await projectStore.getProjectDashboardByTrustId("ALL", dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, v);
+    }
+    getInfo()
+  }, [dashboardStore]);
   return (
     <div className="bg-[#F3F5F7] min-h-screen p-6">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-4">
         <div>
           <h2 className="font-semibold text-xl text-gray-900">Aggregated Dashboard</h2>
           <p className="text-gray-500 text-sm">Control your profile setup and integrations</p>
+        </div>
+        <div>
+          <div className="flex flex-col md:flex-row gap-4 md:gap-8 mb-8 w-full justify-end">
+            <div className="flex flex-col">
+              <Observer>
+                {() => (
+                  <>
+                    <label className="text-sm font-medium text-gray-700 mb-1">Select Trust</label>
+                    <select
+                      className="border border-gray-300 rounded px-4 py-2 min-w-[160px] focus:outline-none focus:ring-2 focus:ring-primary-200 bg-white text-gray-700"
+                      value={dashboardStore.selectedState}
+                      onChange={e => selectState(e.target.value)}
+
+                    >
+                      {[...trustStore.allStates.values()].map((s: string) => (
+                        <option key={s} value={s}>{s}</option>
+                      ))}
+                    </select>
+
+                  </>
+                )}
+              </Observer>
+            </div>
+            <div className="flex flex-col">
+              <label className="text-sm font-medium text-gray-700 mb-1">Select Year</label>
+              <select
+                className="border border-gray-300 rounded px-4 py-2 min-w-[120px] focus:outline-none focus:ring-2 focus:ring-primary-200 bg-white text-gray-700"
+                value={dashboardStore.selectedYear}
+                onChange={e => setSelectedYear(e.target.value)}
+              >
+                {year.map(year => (
+                  <option key={year.value} value={year.value}>{year.label}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
         </div>
       </div>
 
@@ -722,59 +803,59 @@ const DashboardPage: React.FC = observer(() => {
           <span className="font-semibold text-base text-gray-900 mb-4 self-start">
             Percentage of HCDTs with constitute and inaugurated Board of trustee and Management Committee and Advisory Committee
           </span>
-            <Bar
-              data={{
-                labels: [
-                  "Bot Members",
-                  "Management Committee",
-                  "Advisory Committee"
-                ],
-                datasets: [
-                  {
-                    label: "Percentage",
-                    data: [
-                      dashboardStore.dashboardData?.BOT_INAUGURATION_CHECK.botYesPercentage,
-                      dashboardStore.dashboardData?.BOT_INAUGURATION_CHECK.managementYesPercentage,
-                      dashboardStore.dashboardData?.BOT_INAUGURATION_CHECK.advisoryYesPercentage,
-                    ],
-                    backgroundColor: [
-                      doughnutColors[0],
-                      doughnutColors[1],
-                      doughnutColors[2]
-                    ],
-                    borderRadius: 8,
-                    barPercentage: 0.5,
-                    categoryPercentage: 0.5,
-                  }
-                ]
-              }}
-              options={{
-                indexAxis: "y",
-                plugins: {
-                  legend: { display: false },
-                  tooltip: { enabled: true }
-                },
-                scales: {
-                  x: {
-                    min: 0,
-                    max: 100,
-                    ticks: {
-                      callback: function (tickValue) {
-                        return `${tickValue}%`;
-                      }
-                    },
-                    title: {
-                      display: false
+          <Bar
+            data={{
+              labels: [
+                "Bot Members",
+                "Management Committee",
+                "Advisory Committee"
+              ],
+              datasets: [
+                {
+                  label: "Percentage",
+                  data: [
+                    dashboardStore.dashboardData?.BOT_INAUGURATION_CHECK.botYesPercentage,
+                    dashboardStore.dashboardData?.BOT_INAUGURATION_CHECK.managementYesPercentage,
+                    dashboardStore.dashboardData?.BOT_INAUGURATION_CHECK.advisoryYesPercentage,
+                  ],
+                  backgroundColor: [
+                    doughnutColors[0],
+                    doughnutColors[1],
+                    doughnutColors[2]
+                  ],
+                  borderRadius: 8,
+                  barPercentage: 0.5,
+                  categoryPercentage: 0.5,
+                }
+              ]
+            }}
+            options={{
+              indexAxis: "y",
+              plugins: {
+                legend: { display: false },
+                tooltip: { enabled: true }
+              },
+              scales: {
+                x: {
+                  min: 0,
+                  max: 100,
+                  ticks: {
+                    callback: function (tickValue) {
+                      return `${tickValue}%`;
                     }
                   },
-                  y: {
-                    title: {
-                      display: false
-                    }
+                  title: {
+                    display: false
+                  }
+                },
+                y: {
+                  title: {
+                    display: false
                   }
                 }
-              }}
-            />
+              }
+            }}
+          />
         </div>
       </div>
 

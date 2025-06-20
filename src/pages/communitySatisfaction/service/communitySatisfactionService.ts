@@ -15,6 +15,6 @@ export const satisfactionService = {
 
     getOptionTwo: (): Promise<HCDTRequestResponse> => client.get('/average-community-satisfaction/acsOptionTwo'),
 
-    getSatisfactionDashboardByTrustId: (trustId: string): Promise<HCDTRequestResponse> => client.get(`/average-community-satisfaction/dashboard/${trustId}`),
+    getSatisfactionDashboardByTrustId: (trustId: string, selectedYear: number, selectedState: string): Promise<HCDTRequestResponse> => client.get(`/average-community-satisfaction/dashboard/${trustId}/${selectedYear}/${selectedState}`),
 
 }

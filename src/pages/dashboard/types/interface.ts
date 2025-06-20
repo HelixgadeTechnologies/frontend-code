@@ -1,8 +1,10 @@
 export interface IDashboardStore {
     isLoading: boolean;
     dashboardData: IFinishedDashboard | null;
+    selectedYear: number;
+    selectedState: string;
     transformDashboard(data: IGeneralDashboard): IFinishedDashboard;
-    getDashboard(): Promise<void>;
+    getDashboard(year: number, state: string): Promise<void>;
 }
 export interface IFinishedDashboard {
     FIELDS_COMPLETION: number;
