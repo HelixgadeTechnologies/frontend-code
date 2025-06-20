@@ -121,7 +121,7 @@ const DashboardPage: React.FC = observer(() => {
     ],
   };
   const BoTData = {
-    labels: ["Bot Members", "Advisory Committee Members", "Management Committee Members"],
+    labels: ["Bot Committee", "Advisory Committee", "Management Committee"],
     datasets: [
       {
         label: "Male",
@@ -806,7 +806,7 @@ const DashboardPage: React.FC = observer(() => {
           <Bar
             data={{
               labels: [
-                "Bot Members",
+                "Bot Committee",
                 "Management Committee",
                 "Advisory Committee"
               ],

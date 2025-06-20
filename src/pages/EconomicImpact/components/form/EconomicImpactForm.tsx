@@ -17,7 +17,7 @@ const EconomicImpactForm = observer(({ close, economicImpactStore, trustStore }:
         incomeIncrease: Number(data.incomeIncrease),
         livelihoodImprove: Number(data.livelihoodImprove),
         accessAmenities: Number(data.accessAmenities),
-        trustId: trustStore.selectedTrustId 
+        trustId: trustStore.selectedTrustId
       };
       const payload: IEconomicImpactPayload = {
         isCreate: true,
@@ -130,7 +130,7 @@ const EconomicImpactForm = observer(({ close, economicImpactStore, trustStore }:
           </div>
           <div className="mt-8 flex flex-col lg:flex-row items-center gap-8 justify-between">
             <Button
-              onClick={reset}
+              onClick={close}
               className="border text-black bg-white border-blue-7 rounded-lg py-2 px-4 lg:px-10"
               buttonText="Cancel"
               width="w-fit"

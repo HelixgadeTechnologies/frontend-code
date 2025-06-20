@@ -290,12 +290,12 @@ const EditConflict = observer(({ close, conflictStore, selectedTrust, projectSto
                     {/* Buttons */}
                     <div className="flex flex-col sm:flex-row justify-end space-y-4 sm:space-y-0 sm:space-x-4 mt-8">
                         <Button
-                            onClick={reset}
+                            onClick={close}
                             className="border text-black bg-white border-gray-7 rounded-lg py-2 px-7"
                             buttonText="Cancel"
                             width="w-fit"
                             type="button"
-                            disabled
+
                         />
                         <Button
                             padding="py-3"

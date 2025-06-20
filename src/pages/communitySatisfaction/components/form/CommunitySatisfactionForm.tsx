@@ -9,7 +9,7 @@ import { ITrustStore } from "../../../trust/types/interface";
 import { useCallback } from "react";
 type Props = {
     satisfactionStore: ISatisfactionStore; // Replace with actual type if available
-    trustStore:ITrustStore;
+    trustStore: ITrustStore;
 }
 const CommunitySatisfactionForm = observer((props: Props) => {
     const { name } = useParams();
@@ -26,14 +26,14 @@ const CommunitySatisfactionForm = observer((props: Props) => {
             const satisfactionData: ISatisfactionPayloadData = {
                 infoProjects: Number(data.infoProjects),
                 communityConsult: Number(data.communityConsult),
-                localParticipation: Number(data.localParticipation), 
+                localParticipation: Number(data.localParticipation),
                 reportMechanism: Number(data.reportMechanism),
                 conflictMinimization: Number(data.conflictMinimization),
                 projectHandover: Number(data.projectHandover),
                 maintenanceConsult: Number(data.maintenanceConsult),
                 incomeProject: Number(data.incomeProject),
                 trustId: String(props.trustStore.selectedTrustId),
-                
+
             };
             const payload: ISatisfactionPayload = {
                 isCreate: true,
@@ -203,8 +203,9 @@ const CommunitySatisfactionForm = observer((props: Props) => {
                     <Button
                         onClick={reset}
                         className="border text-black bg-white border-blue-7 rounded-lg py-2 px-4 lg:px-10"
-                        buttonText="Cancel"
+                        buttonText="Reset"
                         width="w-fit"
+                        type="reset"
                     />
 
                     <Button padding="py-3" buttonText={props.satisfactionStore.isSubmitting ? "Submitting..." : "Submit"} />
