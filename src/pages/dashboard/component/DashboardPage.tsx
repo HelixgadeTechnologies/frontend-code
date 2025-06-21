@@ -18,8 +18,8 @@ import { IConflictResolutionOverTime } from "../types/interface";
 import { year } from "../../../utils/data";
 import { trustStore as TrustStore } from "../../trust/store/trustStore";
 import { ISettlor } from "../../Settings/types/interface";
-import { settingStore as SettingStore} from "../../Settings/store/settingStore";
-
+import { settingStore as SettingStore } from "../../Settings/store/settingStore";
+import ChartDataLabels from "chartjs-plugin-datalabels";
 const dashboardStoreCTX = createContext(DashboardStore);
 const settingStoreCTX = createContext(SettingStore);
 const trustStoreCTX = createContext(TrustStore);
@@ -125,7 +125,7 @@ const DashboardPage: React.FC = observer(() => {
     ],
   };
   const BoTData = {
-    labels: ["Bot Committee", "Advisory Committee", "Management Committee"],
+    labels: ["BoT Committee", "Advisory Committee", "Management Committee"],
     datasets: [
       {
         label: "Male",
@@ -171,6 +171,77 @@ const DashboardPage: React.FC = observer(() => {
 
   //   ],
   // };
+  // const conflictBarOptions = {
+  //   plugins: {
+  //     legend: {
+  //       display: true,
+  //       position: "top" as const,
+  //       align: "end" as const,
+  //       labels: {
+  //         boxWidth: 12,
+  //         boxHeight: 12,
+  //         usePointStyle: true,
+  //         padding: 20,
+  //       },
+  //     },
+  //     tooltip: { enabled: true },
+
+  //   },
+  //   responsive: true,
+  //   scales: {
+  //     x: {
+  //       stacked: true,
+  //       grid: { display: false },
+  //       ticks: { color: "#8C94A6" },
+  //     },
+  //     y: {
+  //       stacked: true,
+  //       grid: { color: "#E5E7EB" },
+  //       ticks: { color: "#8C94A6" },
+  //       beginAtZero: true,
+  //     },
+  //   },
+  // };
+
+  //   const conflictBarOptions = {
+  //   plugins: {
+  //     legend: {
+  //       display: true,
+  //       position: "top" as const,
+  //       align: "end" as const,
+  //       labels: {
+  //         boxWidth: 12,
+  //         boxHeight: 12,
+  //         usePointStyle: true,
+  //         padding: 20,
+  //       },
+  //     },
+  //     tooltip: { enabled: true },
+  //     datalabels: {
+  //       anchor: 'end',
+  //       align: 'right',
+  //       color: '#222',
+  //       font: { weight: 'bold' },
+  //       formatter: function(value: number) {
+  //         return `${value}%`;
+  //       },
+  //     },
+  //   },
+  //   responsive: true,
+  //   scales: {
+  //     x: {
+  //       stacked: true,
+  //       grid: { display: false },
+  //       ticks: { color: "#8C94A6" },
+  //     },
+  //     y: {
+  //       stacked: true,
+  //       grid: { color: "#E5E7EB" },
+  //       ticks: { color: "#8C94A6" },
+  //       beginAtZero: true,
+  //     },
+  //   },
+  // };
   const conflictBarOptions = {
     plugins: {
       legend: {
@@ -185,6 +256,15 @@ const DashboardPage: React.FC = observer(() => {
         },
       },
       tooltip: { enabled: true },
+      datalabels: {
+        anchor: 'center' as const,
+        align: 'center' as const,
+        color: '#222',
+        font: { weight: 'bold' },
+        formatter: function (value: number) {
+          return `${value}%`;
+        },
+      },
     },
     responsive: true,
     scales: {
@@ -200,7 +280,8 @@ const DashboardPage: React.FC = observer(() => {
         beginAtZero: true,
       },
     },
-  };
+  } as const; // <== This helps in some cases too
+
 
   // Chart data and options
   const conflictStatusData = {
@@ -371,6 +452,126 @@ const DashboardPage: React.FC = observer(() => {
   };
 
   // community satisfaction
+  // const groupedBarOptions = {
+  //   indexAxis: 'y' as const,
+  //   responsive: true,
+  //   maintainAspectRatio: false,
+  //   plugins: {
+  //     legend: {
+  //       position: 'bottom' as const,
+  //     },
+  //   },
+  //   scales: {
+  //     x: {
+  //       stacked: true,
+  //       type: 'linear' as const,
+  //       title: {
+  //         display: true,
+  //         text: 'Number of Respondents',
+  //       },
+  //       ticks: {
+  //         stepSize: 100, // Adjust based on your actual range (e.g. 100, 200)
+  //         // No need for a custom callback if showing raw numbers
+  //       },
+  //     },
+  //     y: {
+  //       stacked: true,
+  //       type: 'category' as const,
+  //       title: {
+  //         display: false,
+  //       },
+  //     },
+  //   },
+  // };
+  //   const groupedBarOptions = {
+  //   indexAxis: 'y' as const,
+  //   responsive: true,
+  //   maintainAspectRatio: false,
+  //   plugins: {
+  //     legend: {
+  //       position: 'bottom' as const,
+  //     },
+  //     datalabels: {
+  //       anchor: 'center',
+  //       align: 'center',
+  //       color: '#222',
+  //       font: { weight: 'bold' },
+  //       formatter: function(value: number) {
+  //         return `${value}%`;
+  //       },
+  //     },
+  //   },
+  //   scales: {
+  //     x: {
+  //       stacked: true,
+  //       type: 'linear' as const,
+  //       min: 0,
+  //       max: 100,
+  //       title: {
+  //         display: true,
+  //         text: 'Percentage of Respondents',
+  //       },
+  //       ticks: {
+  //         stepSize: 20,
+  //         callback: function (tickValue:number) {
+  //           return `${tickValue}%`;
+  //         },
+  //       },
+  //     },
+  //     y: {
+  //       stacked: true,
+  //       type: 'category' as const,
+  //       title: {
+  //         display: false,
+  //       },
+  //    },
+  //   },
+  // };
+
+  // const groupedBarOptions = {
+  //   indexAxis: 'y' as const,
+  //   responsive: true,
+  //   maintainAspectRatio: false,
+  //   plugins: {
+  //     legend: {
+  //       position: 'bottom' as const,
+  //     },
+  //     datalabels: {
+  //       anchor: 'center' as const,
+  //       align: 'center' as const,
+  //       color: '#222',
+  //       font: { weight: 'bold' },
+  //       formatter: function (value: number) {
+  //         return `${value}%`;
+  //       },
+  //     },
+  //   },
+  //   scales: {
+  //     x: {
+  //       stacked: true,
+  //       type: 'linear' as const,
+  //       min: 0,
+  //       max: 100,
+  //       title: {
+  //         display: true,
+  //         text: 'Percentage of Respondents',
+  //       },
+  //       ticks: {
+  //         stepSize: 20,
+  //         callback: function (tickValue: number) {
+  //           return `${tickValue}%`;
+  //         },
+  //       },
+  //     },
+  //     y: {
+  //       stacked: true,
+  //       type: 'category' as const,
+  //       title: {
+  //         display: false,
+  //       },
+  //     },
+  //   },
+  // };
   const groupedBarOptions = {
     indexAxis: 'y' as const,
     responsive: true,
@@ -379,18 +580,34 @@ const DashboardPage: React.FC = observer(() => {
       legend: {
         position: 'bottom' as const,
       },
+      datalabels: {
+        anchor: 'center' as const,
+        align: 'center' as const,
+        color: '#222',
+        font: {
+          weight: 'bold' as 'bold',
+          size: 12,
+        },
+        formatter: function (value: number) {
+          return `${value}%`;
+        },
+      },
     },
     scales: {
       x: {
         stacked: true,
         type: 'linear' as const,
+        min: 0,
+        max: 100,
         title: {
           display: true,
-          text: 'Number of Respondents',
+          text: 'Percentage of Respondents',
         },
         ticks: {
-          stepSize: 100, // Adjust based on your actual range (e.g. 100, 200)
-          // No need for a custom callback if showing raw numbers
+          stepSize: 20,
+          callback: function (tickValue: any) {
+            return `${tickValue}%`;
+          },
         },
       },
       y: {
@@ -402,6 +619,8 @@ const DashboardPage: React.FC = observer(() => {
       },
     },
   };
+
+
 
   const generateGroupedBarData = (data: number[][]) => ({
     labels: [
@@ -619,19 +838,19 @@ const DashboardPage: React.FC = observer(() => {
     async function getInfo() {
       dashboardStore.selectedYear = Number(v)
       dashboardStore.dashboardData = null
-      await dashboardStore.getDashboard(Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState,dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor)
+      await dashboardStore.getDashboard(Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor)
       economicImpactStore.isDashboardLoading = false;
       economicImpactStore.dashboardData = null;
-      await economicImpactStore.getEconomicImpactDashboardByTrustId("ALL", Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState,dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
+      await economicImpactStore.getEconomicImpactDashboardByTrustId("ALL", Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
       satisfactionStore.isDashboardLoading = false;
       satisfactionStore.dashboardData = null;
-      await satisfactionStore.getSatisfactionDashboardByTrustId("ALL", Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState,dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
+      await satisfactionStore.getSatisfactionDashboardByTrustId("ALL", Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
       conflictStore.isDashboardLoading = false;
       conflictStore.dashboardData = null;
-      await conflictStore.getConflictDashboardByTrustId("ALL", Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState,dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
+      await conflictStore.getConflictDashboardByTrustId("ALL", Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
       projectStore.isDashboardLoading = false;
       projectStore.dashboardData = null;
-      await projectStore.getProjectDashboardByTrustId("ALL", Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState,dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
+      await projectStore.getProjectDashboardByTrustId("ALL", Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
     }
     getInfo()
   }, [dashboardStore]);
@@ -640,19 +859,19 @@ const DashboardPage: React.FC = observer(() => {
     async function getInfo() {
       dashboardStore.selectedState = v
       dashboardStore.dashboardData = null
-      await dashboardStore.getDashboard(dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear,v,dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor)
+      await dashboardStore.getDashboard(dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, v, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor)
       economicImpactStore.isDashboardLoading = false;
       economicImpactStore.dashboardData = null;
-      await economicImpactStore.getEconomicImpactDashboardByTrustId("ALL", dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear,v,dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
+      await economicImpactStore.getEconomicImpactDashboardByTrustId("ALL", dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, v, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
       satisfactionStore.isDashboardLoading = false;
       satisfactionStore.dashboardData = null;
-      await satisfactionStore.getSatisfactionDashboardByTrustId("ALL", dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear,v,dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
+      await satisfactionStore.getSatisfactionDashboardByTrustId("ALL", dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, v, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
       conflictStore.isDashboardLoading = false;
       conflictStore.dashboardData = null;
-      await conflictStore.getConflictDashboardByTrustId("ALL", dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear,v,dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
+      await conflictStore.getConflictDashboardByTrustId("ALL", dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, v, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
       projectStore.isDashboardLoading = false;
       projectStore.dashboardData = null;
-      await projectStore.getProjectDashboardByTrustId("ALL", dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear,v,dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
+      await projectStore.getProjectDashboardByTrustId("ALL", dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, v, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
     }
     getInfo()
   }, [dashboardStore]);
@@ -661,19 +880,19 @@ const DashboardPage: React.FC = observer(() => {
     async function getInfo() {
       dashboardStore.selectedSettlor = v
       dashboardStore.dashboardData = null
-      await dashboardStore.getDashboard(dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear,dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, v)
+      await dashboardStore.getDashboard(dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, v)
       economicImpactStore.isDashboardLoading = false;
       economicImpactStore.dashboardData = null;
-      await economicImpactStore.getEconomicImpactDashboardByTrustId("ALL", dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear,dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, v);
+      await economicImpactStore.getEconomicImpactDashboardByTrustId("ALL", dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, v);
       satisfactionStore.isDashboardLoading = false;
       satisfactionStore.dashboardData = null;
-      await satisfactionStore.getSatisfactionDashboardByTrustId("ALL", dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState,v);
+      await satisfactionStore.getSatisfactionDashboardByTrustId("ALL", dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, v);
       conflictStore.isDashboardLoading = false;
       conflictStore.dashboardData = null;
-      await conflictStore.getConflictDashboardByTrustId("ALL", dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear,dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, v);
+      await conflictStore.getConflictDashboardByTrustId("ALL", dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, v);
       projectStore.isDashboardLoading = false;
       projectStore.dashboardData = null;
-      await projectStore.getProjectDashboardByTrustId("ALL", dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear,dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, v);
+      await projectStore.getProjectDashboardByTrustId("ALL", dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, v);
     }
     getInfo()
   }, [dashboardStore]);
@@ -698,7 +917,7 @@ const DashboardPage: React.FC = observer(() => {
 
                     >
                       <option key="ALL" value="ALL">ALL</option>
-                      {[...settingStore.allSettlor.values()].map((v: ISettlor) =>  (
+                      {[...settingStore.allSettlor.values()].map((v: ISettlor) => (
                         <option key={v.settlorName} value={v.settlorName}>{v.settlorName}</option>
                       ))}
                     </select>
@@ -852,7 +1071,7 @@ const DashboardPage: React.FC = observer(() => {
           <Bar
             data={{
               labels: [
-                "Bot Committee",
+                "BoT Committee",
                 "Management Committee",
                 "Advisory Committee"
               ],
@@ -879,7 +1098,18 @@ const DashboardPage: React.FC = observer(() => {
               indexAxis: "y",
               plugins: {
                 legend: { display: false },
-                tooltip: { enabled: true }
+                tooltip: { enabled: true },
+                datalabels: {
+                  anchor: 'center' as const,
+                  align: 'center' as const,
+                  formatter: function (value) {
+                    return `${value}%`;
+                  },
+                  color: '#222',
+                  font: {
+                    weight: 'bold'
+                  }
+                }
               },
               scales: {
                 x: {
@@ -1039,7 +1269,7 @@ const DashboardPage: React.FC = observer(() => {
 
           {/* Pie Chart 2 */}
           <div className="bg-white p-3 rounded-md shadow-sm">
-            <h3 className="font-semibold text-lg text-gray-600 mb-2">Number of trust project by status</h3>
+            <h3 className="font-semibold text-lg text-gray-600 mb-2">Number of Trust project by status</h3>
             <div className="h-80 flex items-center justify-center">
               <Pie options={pieChartOptions} data={pieChartData2} />
             </div>
@@ -1249,6 +1479,7 @@ const DashboardPage: React.FC = observer(() => {
                 satisfactionStore.dashboardData?.conflictMinimization || [0, 0, 0, 0, 0],
               ])}
               options={groupedBarOptions}
+              plugins={[ChartDataLabels]}
             />
           </div>
 
