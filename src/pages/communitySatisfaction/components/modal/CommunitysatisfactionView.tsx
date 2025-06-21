@@ -50,7 +50,7 @@ const CommunitySatisfactionView = observer(
                     <div className="space-y-4">
                         {/* Question 1 */}
                         <div className="flex justify-between items-center">
-                            <p className="text-sm text-gray-700" style={{width:"600px"}}>
+                            <p className="text-sm text-gray-700" style={{ width: "600px" }}>
                                 (i). We feel well-informed about the implemented projects by the Trust governing structure.
                             </p>
                             <span className={getStatusClass(satisfactionStore.selectedSatisfaction?.infoProjectsStatus!)}>
@@ -60,7 +60,7 @@ const CommunitySatisfactionView = observer(
 
                         {/* Question 2 */}
                         <div className="flex justify-between items-center">
-                            <p className="text-sm text-gray-700" style={{width:"600px"}}>
+                            <p className="text-sm text-gray-700" style={{ width: "600px" }}>
                                 (ii). We feel the community has been sufficiently consulted about the implemented projects by the Trust governing structure.
                             </p>
                             <span className={getStatusClass(satisfactionStore.selectedSatisfaction?.communityConsultStatus!)}>
@@ -70,7 +70,7 @@ const CommunitySatisfactionView = observer(
 
                         {/* Question 3 */}
                         <div className="flex justify-between items-center">
-                            <p className="text-sm text-gray-700" style={{width:"600px"}}>
+                            <p className="text-sm text-gray-700" style={{ width: "600px" }}>
                                 (iii). We feel sufficient opportunities have been given to local community members to participate in the HCDT projects.
                             </p>
                             <span className={getStatusClass(satisfactionStore.selectedSatisfaction?.localParticipationStatus!)}>
@@ -80,7 +80,7 @@ const CommunitySatisfactionView = observer(
 
                         {/* Question 4 */}
                         <div className="flex justify-between items-center">
-                            <p className="text-sm text-gray-700" style={{width:"600px"}}>
+                            <p className="text-sm text-gray-700" style={{ width: "600px" }}>
                                 (iv). There is a clear mechanism to report concerns to the governing structures and community complaints/concerns are efficiently addressed.
                             </p>
                             <span className={getStatusClass(satisfactionStore.selectedSatisfaction?.reportMechanismStatus!)}>
@@ -90,11 +90,29 @@ const CommunitySatisfactionView = observer(
 
                         {/* Question 5 */}
                         <div className="flex justify-between items-center">
-                            <p className="text-sm text-gray-700" style={{width:"600px"}}>
+                            <p className="text-sm text-gray-700" style={{ width: "600px" }}>
                                 (v). The way the governing structures have acted has minimized the potential for conflict in my community.
                             </p>
                             <span className={getStatusClass(satisfactionStore.selectedSatisfaction?.conflictMinimizationStatus!)}>
                                 {satisfactionStore.selectedSatisfaction?.conflictMinimizationStatus}
+                            </span>
+                        </div>
+                        {/* Question 6 */}
+                        <div className="flex justify-between items-center">
+                            <p className="text-sm text-gray-700" style={{ width: "600px" }}>
+                                (vi) Communities Satisfaction with the the Settlor's.
+                            </p>
+                            <span className={getStatusClass(satisfactionStore.selectedSatisfaction?.settlorActionStatus!)}>
+                                {satisfactionStore.selectedSatisfaction?.settlorActionStatus}
+                            </span>
+                        </div>
+                        {/* Question 7 */}
+                        <div className="flex justify-between items-center">
+                            <p className="text-sm text-gray-700" style={{ width: "600px" }}>
+                                (vii)   Communities Satisfaction with the the NUPRC’s.
+                            </p>
+                            <span className={getStatusClass(satisfactionStore.selectedSatisfaction?.nuprcActionStatus!)}>
+                                {satisfactionStore.selectedSatisfaction?.nuprcActionStatus}
                             </span>
                         </div>
                     </div>
@@ -110,7 +128,7 @@ const CommunitySatisfactionView = observer(
                     <div className="space-y-4">
                         {/* Question 6 */}
                         <div className="flex justify-between items-center">
-                            <p className="text-sm text-gray-700" style={{width:"600px"}}>
+                            <p className="text-sm text-gray-700" style={{ width: "600px" }}>
                                 (i). The Trust commissioned and handed over completed projects <br />
                                 in our community to the community leadership.
                             </p>
@@ -121,7 +139,7 @@ const CommunitySatisfactionView = observer(
 
                         {/* Question 7 */}
                         <div className="flex justify-between items-center">
-                            <p className="text-sm text-gray-700" style={{width:"600px"}}>
+                            <p className="text-sm text-gray-700" style={{ width: "600px" }}>
                                 (ii). The Trust has consulted our community leadership to discuss or develop maintenance plans for all the completed projects implemented in our community.
                             </p>
                             <span className={getStatusClass(satisfactionStore.selectedSatisfaction?.maintenanceConsultStatus!)}>
@@ -131,7 +149,7 @@ const CommunitySatisfactionView = observer(
 
                         {/* Question 8 */}
                         <div className="flex justify-between items-center">
-                            <p className="text-sm text-gray-700" style={{width:"600px"}}>
+                            <p className="text-sm text-gray-700" style={{ width: "600px" }}>
                                 (iii). The Trust implemented or is implementing at least one income-generating project for the host communities.
                             </p>
                             <span className={getStatusClass(satisfactionStore.selectedSatisfaction?.incomeProjectStatus!)}>

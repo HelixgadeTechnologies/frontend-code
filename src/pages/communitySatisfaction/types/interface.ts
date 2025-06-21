@@ -19,7 +19,7 @@ export interface ISatisfactionStore {
     updateSatisfaction(payload: ISatisfactionPayload): Promise<boolean>;
     getSatisfactionByTrustId(trustId: string): Promise<boolean>;
     extractDashboardData(dashboard: IAverageCommunitySatisfactionDashboardData): ISatisfactionDashboardData;
-    getSatisfactionDashboardByTrustId(trustId: string, selectedYear: number, selectedState: string,settlor:string): Promise<void>;
+    getSatisfactionDashboardByTrustId(trustId: string, selectedYear: number, selectedState: string, settlor: string): Promise<void>;
     getSatisfactionById(satisfactionId: string): Promise<boolean>
     getOptionOne(): Promise<boolean>;
     getOptionTwo(): Promise<boolean>;
@@ -32,6 +32,8 @@ export interface ISatisfactionPayloadData {
     localParticipation?: number,
     reportMechanism?: number,
     conflictMinimization?: number,
+    settlorAction?: number,
+    nuprcAction?: number,
     projectHandover?: number,
     maintenanceConsult?: number,
     incomeProject?: number,
@@ -49,6 +51,8 @@ export interface IAverageCommunitySatisfaction {
     localParticipation?: number | null;
     reportMechanism?: number | null;
     conflictMinimization?: number | null;
+    settlorAction?: number | null;
+    nuprcAction?: number | null;
     projectHandover?: number | null;
     maintenanceConsult?: number | null;
     incomeProject?: number | null;
@@ -65,12 +69,16 @@ export interface IAverageCommunitySatisfactionView extends BaseItem {
     localParticipation?: number | null;
     reportMechanism?: number | null;
     conflictMinimization?: number | null;
+    settlorAction?: number | null;
+    nuprcAction?: number | null;
 
     infoProjectsStatus?: string | null;
     communityConsultStatus?: string | null;
     localParticipationStatus?: string | null;
     reportMechanismStatus?: string | null;
     conflictMinimizationStatus?: string | null;
+    settlorActionStatus?: string | null;
+    nuprcActionStatus?: string | null;
 
     projectHandover?: number | null;
     maintenanceConsult?: number | null;
@@ -122,6 +130,8 @@ export interface IAverageCommunitySatisfactionDashboardData {
     localParticipation: Array<IAverageCommunitySatisfactionDashboardDataOne>;
     reportMechanism: Array<IAverageCommunitySatisfactionDashboardDataOne>;
     conflictMinimization: Array<IAverageCommunitySatisfactionDashboardDataOne>;
+    settlorAction: Array<IAverageCommunitySatisfactionDashboardDataOne>;
+    nuprcAction: Array<IAverageCommunitySatisfactionDashboardDataOne>;
 
     projectHandover: Array<IAverageCommunitySatisfactionDashboardDataTwo>;
     maintenanceConsult: Array<IAverageCommunitySatisfactionDashboardDataTwo>;
@@ -133,6 +143,9 @@ export interface ISatisfactionDashboardData {
     localParticipation: Array<number>;
     reportMechanism: Array<number>;
     conflictMinimization: Array<number>;
+    settlorAction: Array<number>;
+    nuprcAction: Array<number>;
+
 
     projectHandover: Array<number>;
     maintenanceConsult: Array<number>;

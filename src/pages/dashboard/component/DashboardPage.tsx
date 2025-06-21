@@ -510,6 +510,8 @@ const DashboardPage: React.FC = observer(() => {
       "The community has had fair opportunities to take part in HCDT projects.",
       "A clear system exists to report and address concerns.",
       "The actions of governing structures have reduced conflict in my community.",
+      "Communities Satisfaction with the the Settlor's.",
+      "Communities Satisfaction with the the NUPRC’s"
     ],
     datasets: [
       {
@@ -1358,6 +1360,8 @@ const DashboardPage: React.FC = observer(() => {
                 satisfactionStore.dashboardData?.localParticipation || [0, 0, 0, 0, 0],
                 satisfactionStore.dashboardData?.reportMechanism || [0, 0, 0, 0, 0],
                 satisfactionStore.dashboardData?.conflictMinimization || [0, 0, 0, 0, 0],
+                satisfactionStore.dashboardData?.settlorAction || [0, 0, 0, 0, 0],
+                satisfactionStore.dashboardData?.nuprcAction || [0, 0, 0, 0, 0],
               ])}
               options={groupedBarOptions}
               plugins={[ChartDataLabels]}

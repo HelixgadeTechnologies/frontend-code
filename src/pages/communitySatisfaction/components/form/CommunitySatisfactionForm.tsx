@@ -29,6 +29,9 @@ const CommunitySatisfactionForm = observer((props: Props) => {
                 localParticipation: Number(data.localParticipation),
                 reportMechanism: Number(data.reportMechanism),
                 conflictMinimization: Number(data.conflictMinimization),
+                settlorAction: Number(data.settlorAction),
+                nuprcAction: Number(data.nuprcAction),
+            
                 projectHandover: Number(data.projectHandover),
                 maintenanceConsult: Number(data.maintenanceConsult),
                 incomeProject: Number(data.incomeProject),
@@ -134,6 +137,33 @@ const CommunitySatisfactionForm = observer((props: Props) => {
                             name="conflictMinimization"
                             control={control}
                             label="(v). The way the governing structures (BoT, Mc & AC) have acted has minimized the potential for conflict in my community."
+                            options={[
+                                { value: "1", label: "Strongly Disagree" },
+                                { value: "2", label: "Disagree" },
+                                { value: "3", label: "Slightly Agree" },
+                                { value: "4", label: "Agree" },
+                                { value: "5", label: "Strongly Agree" },
+                            ]}
+                        />
+                        {/* Question 5*/}
+                        <CustomRadio
+                            name="settlorAction"
+                            control={control}
+                            label="The way the Settlor has acted has  minimized conflict and improved their relationship with the host communities."
+                            options={[
+                                { value: "1", label: "Strongly Disagree" },
+                                { value: "2", label: "Disagree" },
+                                { value: "3", label: "Slightly Agree" },
+                                { value: "4", label: "Agree" },
+                                { value: "5", label: "Strongly Agree" },
+                            ]}
+                        />
+                        {/* Question 6 */}
+                      
+                        <CustomRadio
+                            name="nuprcAction"
+                            control={control}
+                            label="The way NUPRC is regulating and responding is effectively addressing disputes emanating from the implementation of the HCDT, and promoting improved relationships between host communities and Settlor's."
                             options={[
                                 { value: "1", label: "Strongly Disagree" },
                                 { value: "2", label: "Disagree" },
