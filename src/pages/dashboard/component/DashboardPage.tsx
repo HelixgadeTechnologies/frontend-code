@@ -20,6 +20,7 @@ import { trustStore as TrustStore } from "../../trust/store/trustStore";
 import { ISettlor } from "../../Settings/types/interface";
 import { settingStore as SettingStore } from "../../Settings/store/settingStore";
 import ChartDataLabels from "chartjs-plugin-datalabels";
+import FloatingStepper from "./FloatingStepper";
 
 const dashboardStoreCTX = createContext(DashboardStore);
 const settingStoreCTX = createContext(SettingStore);
@@ -781,7 +782,8 @@ const DashboardPage: React.FC = observer(() => {
   }, [dashboardStore]);
   return (
     <div className="bg-[#F3F5F7] min-h-screen p-6">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-4">
+      <div id="trust-establishment" className="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-4">
+      
         <div>
           <h2 className="font-semibold text-xl text-gray-900">Aggregated Dashboard</h2>
           <p className="text-gray-500 text-sm">Control your profile setup and integrations</p>
@@ -1019,7 +1021,8 @@ const DashboardPage: React.FC = observer(() => {
       </div>
 
       {/* Project */}
-      <div className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
+      <div id="project" className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
+     
         {/* <div className="p-6 bg-gray-100 min-h-screen"> */}
         <h2 className="font-semibold text-xl text-gray-900 mb-4 mt-10">
           Project implementation and quality assessment
@@ -1169,7 +1172,8 @@ const DashboardPage: React.FC = observer(() => {
       </div>
 
       {/* Conflict Resolution */}
-      <div className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
+      <div id="conflict" className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
+     
         <h2 className="font-semibold text-xl text-gray-900 mb-4 mt-10">
           Conflict Resolution
         </h2>
@@ -1347,7 +1351,8 @@ const DashboardPage: React.FC = observer(() => {
 
 
       {/* Community Satisfaction */}
-      <div className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
+      <div id="community-satisfaction" className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
+        
         <h2 className="font-semibold text-xl text-gray-900 mb-4 mt-10">
           Average community satisfaction with the process, inclusion, approach and management of the HCDTs by the government structure (BoT, MC & AC)
         </h2>
@@ -1427,7 +1432,8 @@ const DashboardPage: React.FC = observer(() => {
 
 
       {/* Economic impact */}
-      <div className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
+      <div id="economic-impact" className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
+
         <h2 className="font-semibold text-xl text-gray-900 mb-4 mt-10">
           Economic impact: Percentage of community members who reported that their income and livelihood have improved as a result of thr implementation of the HCDT project & initiatives
         </h2>
@@ -1484,8 +1490,12 @@ const DashboardPage: React.FC = observer(() => {
           </Observer>
         </div>
       </div>
+      {/* // Place this at the root of your dashboard page (outside your main content) */}
+        <FloatingStepper/>
     </div>
   );
 });
+
+// You can put this in the same file or a separate one
 
 export default DashboardPage;
