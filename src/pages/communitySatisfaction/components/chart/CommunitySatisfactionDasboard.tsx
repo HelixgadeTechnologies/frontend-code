@@ -10,6 +10,7 @@ import {
 } from "chart.js";
 import { observer } from "mobx-react-lite";
 import { ISatisfactionStore } from "../../types/interface";
+import ChartDataLabels from "chartjs-plugin-datalabels";
 
 // Register Chart.js components
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
@@ -164,43 +165,100 @@ const CommunitySatisfactionDashboard = observer(
         //         },
         //     },
         // };
-        const groupedBarOptions = {
-            indexAxis: 'y' as const,
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom' as const,
-                },
-            },
-            scales: {
-                x: {
-                    stacked: true,
-                    type: 'linear' as const,
-                    title: {
-                        display: true,
-                        text: 'Number of Respondents',
-                    },
-                    ticks: {
-                        stepSize: 100, // Adjust based on your actual range (e.g. 100, 200)
-                        // No need for a custom callback if showing raw numbers
-                    },
-                },
-                y: {
-                    stacked: true,
-                    type: 'category' as const,
-                    title: {
-                        display: false,
-                    },
-                },
-            },
-        };
+        // const groupedBarOptions = {
+        //     indexAxis: 'y' as const,
+        //     responsive: true,
+        //     maintainAspectRatio: false,
+        //     plugins: {
+        //         legend: {
+        //             position: 'bottom' as const,
+        //         },
+        //     },
+        //     scales: {
+        //         x: {
+        //             stacked: true,
+        //             type: 'linear' as const,
+        //             title: {
+        //                 display: true,
+        //                 text: 'Number of Respondents',
+        //             },
+        //             ticks: {
+        //                 stepSize: 100, // Adjust based on your actual range (e.g. 100, 200)
+        //                 // No need for a custom callback if showing raw numbers
+        //             },
+        //         },
+        //         y: {
+        //             stacked: true,
+        //             type: 'category' as const,
+        //             title: {
+        //                 display: false,
+        //             },
+        //         },
+        //     },
+        // };
+         const groupedBarOptions = {
+    indexAxis: 'y' as const,
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'bottom' as const,
+      },
+      datalabels: {
+        anchor: 'center' as const,
+        align: 'center' as const,
+        color: '#222',
+        font: {
+          weight: 'bold' as 'bold',
+          size: 12,
+        },
+        formatter: function (value: number) {
+          return `${value}%`;
+        },
+      },
+    },
+    scales: {
+      x: {
+        stacked: true,
+        type: 'linear' as const,
+        min: 0,
+        max: 100,
+        title: {
+          display: true,
+          text: 'Percentage of Respondents',
+        },
+        ticks: {
+          stepSize: 20,
+          callback: function (tickValue: any) {
+            return `${tickValue}%`;
+          },
+        },
+      },
+      y: {
+        stacked: true,
+        type: 'category' as const,
+        title: {
+          display: false,
+        },
+      },
+    },
+  };
 
 
         return (
             <div className="p-6 ">
                 <div className=" mx-auto space-y-8">
                     <div className="h-[400px] sm:h-[500px]">
+                        {/* <Bar
+                            data={generateGroupedBarData([
+                                satisfactionStore.dashboardData?.infoProjects || [0, 0, 0, 0, 0],
+                                satisfactionStore.dashboardData?.communityConsult || [0, 0, 0, 0, 0],
+                                satisfactionStore.dashboardData?.localParticipation || [0, 0, 0, 0, 0],
+                                satisfactionStore.dashboardData?.reportMechanism || [0, 0, 0, 0, 0],
+                                satisfactionStore.dashboardData?.conflictMinimization || [0, 0, 0, 0, 0],
+                            ])}
+                            options={groupedBarOptions}
+                        /> */}
                         <Bar
                             data={generateGroupedBarData([
                                 satisfactionStore.dashboardData?.infoProjects || [0, 0, 0, 0, 0],
@@ -210,9 +268,10 @@ const CommunitySatisfactionDashboard = observer(
                                 satisfactionStore.dashboardData?.conflictMinimization || [0, 0, 0, 0, 0],
                             ])}
                             options={groupedBarOptions}
+                            plugins={[ChartDataLabels]}
                         />
                     </div>
-                  
+
                 </div>
 
                 {/* Pie Charts Section */}

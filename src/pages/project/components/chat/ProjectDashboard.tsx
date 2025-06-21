@@ -176,7 +176,7 @@ const ProjectDashboard = observer(() => {
             {/* Project Overview */}
             <div className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
                 <DashboardTable
-                    header="Project Details"
+                    header="Project details"
                     data={projectStore.dashboardData?.TOP_PROJECT}
                     columns={projectDetailsColumns}
                     emptyText="No data available"
@@ -196,7 +196,7 @@ const ProjectDashboard = observer(() => {
 
                 {/* Pie Chart 1 */}
                 <div className="bg-white p-3 rounded-md shadow-sm">
-                    <h3 className="font-semibold  text-lg text-gray-600 mb-2"> Number of Trust Project by Category</h3>
+                    <h3 className="font-semibold  text-lg text-gray-600 mb-2"> Number of Trust project by category</h3>
                     <div className="h-80 flex items-center justify-center">
                         <Pie options={pieChartOptions} data={pieChartData1} />
                     </div>
@@ -213,7 +213,7 @@ const ProjectDashboard = observer(() => {
 
                 {/* Pie Chart 2 */}
                 <div className="bg-white p-3 rounded-md shadow-sm">
-                    <h3 className="font-semibold text-lg text-gray-600 mb-2">Number of Trust Project by Status</h3>
+                    <h3 className="font-semibold text-lg text-gray-600 mb-2">Number of Trust project by status</h3>
                     <div className="h-80 flex items-center justify-center">
                         <Pie options={pieChartOptions} data={pieChartData2} />
                     </div>

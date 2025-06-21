@@ -20,6 +20,7 @@ import { trustStore as TrustStore } from "../../trust/store/trustStore";
 import { ISettlor } from "../../Settings/types/interface";
 import { settingStore as SettingStore } from "../../Settings/store/settingStore";
 import ChartDataLabels from "chartjs-plugin-datalabels";
+
 const dashboardStoreCTX = createContext(DashboardStore);
 const settingStoreCTX = createContext(SettingStore);
 const trustStoreCTX = createContext(TrustStore);
@@ -452,126 +453,6 @@ const DashboardPage: React.FC = observer(() => {
   };
 
   // community satisfaction
-  // const groupedBarOptions = {
-  //   indexAxis: 'y' as const,
-  //   responsive: true,
-  //   maintainAspectRatio: false,
-  //   plugins: {
-  //     legend: {
-  //       position: 'bottom' as const,
-  //     },
-  //   },
-  //   scales: {
-  //     x: {
-  //       stacked: true,
-  //       type: 'linear' as const,
-  //       title: {
-  //         display: true,
-  //         text: 'Number of Respondents',
-  //       },
-  //       ticks: {
-  //         stepSize: 100, // Adjust based on your actual range (e.g. 100, 200)
-  //         // No need for a custom callback if showing raw numbers
-  //       },
-  //     },
-  //     y: {
-  //       stacked: true,
-  //       type: 'category' as const,
-  //       title: {
-  //         display: false,
-  //       },
-  //     },
-  //   },
-  // };
-  //   const groupedBarOptions = {
-  //   indexAxis: 'y' as const,
-  //   responsive: true,
-  //   maintainAspectRatio: false,
-  //   plugins: {
-  //     legend: {
-  //       position: 'bottom' as const,
-  //     },
-  //     datalabels: {
-  //       anchor: 'center',
-  //       align: 'center',
-  //       color: '#222',
-  //       font: { weight: 'bold' },
-  //       formatter: function(value: number) {
-  //         return `${value}%`;
-  //       },
-  //     },
-  //   },
-  //   scales: {
-  //     x: {
-  //       stacked: true,
-  //       type: 'linear' as const,
-  //       min: 0,
-  //       max: 100,
-  //       title: {
-  //         display: true,
-  //         text: 'Percentage of Respondents',
-  //       },
-  //       ticks: {
-  //         stepSize: 20,
-  //         callback: function (tickValue:number) {
-  //           return `${tickValue}%`;
-  //         },
-  //       },
-  //     },
-  //     y: {
-  //       stacked: true,
-  //       type: 'category' as const,
-  //       title: {
-  //         display: false,
-  //       },
-  //    },
-  //   },
-  // };
-
-  // const groupedBarOptions = {
-  //   indexAxis: 'y' as const,
-  //   responsive: true,
-  //   maintainAspectRatio: false,
-  //   plugins: {
-  //     legend: {
-  //       position: 'bottom' as const,
-  //     },
-  //     datalabels: {
-  //       anchor: 'center' as const,
-  //       align: 'center' as const,
-  //       color: '#222',
-  //       font: { weight: 'bold' },
-  //       formatter: function (value: number) {
-  //         return `${value}%`;
-  //       },
-  //     },
-  //   },
-  //   scales: {
-  //     x: {
-  //       stacked: true,
-  //       type: 'linear' as const,
-  //       min: 0,
-  //       max: 100,
-  //       title: {
-  //         display: true,
-  //         text: 'Percentage of Respondents',
-  //       },
-  //       ticks: {
-  //         stepSize: 20,
-  //         callback: function (tickValue: number) {
-  //           return `${tickValue}%`;
-  //         },
-  //       },
-  //     },
-  //     y: {
-  //       stacked: true,
-  //       type: 'category' as const,
-  //       title: {
-  //         display: false,
-  //       },
-  //     },
-  //   },
-  // };
   const groupedBarOptions = {
     indexAxis: 'y' as const,
     responsive: true,
