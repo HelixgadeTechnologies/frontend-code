@@ -63,7 +63,7 @@ const TrustEstablishmentForm = observer(() => {
             reserveReceived: Number(fn.reserved),
             capitalExpenditureReceived: Number(fn.capitalExpenditure),
             paymentCheck: Number(fn.paymentCheck),
-            totalFundsReceived:(Number(fn.reserved) + Number(fn.capitalExpenditure)),
+            totalFundsReceived: (Number(fn.reserved) + Number(fn.capitalExpenditure)),
             trustEstablishmentStatusId: ""
           } as IFundsReceived);
         });
@@ -146,7 +146,7 @@ const TrustEstablishmentForm = observer(() => {
 
 
         <button className="px-3 py-2 rounded-md border border-black text-black font-medium text-sm" onClick={setSwitch}>
-          Back to Dashbaord
+          Back to Dashboard
         </button>
 
       </div>
@@ -366,7 +366,7 @@ const TrustEstablishmentForm = observer(() => {
 
           <section>
             {/* Total funds received by trust */}
-  
+
             <h2 className="font-semibold text-xl text-black mb-1 mt-8">
               Total funds received by trust
             </h2>
@@ -621,10 +621,13 @@ const TrustEstablishmentForm = observer(() => {
               <Button
                 onClick={reset}
                 className="border text-black bg-white border-blue-7 rounded-lg py-2 px-4 lg:px-10"
-                buttonText="Cancel"
+                buttonText="Clear"
                 width="w-fit"
               />
               <Button padding="py-3" buttonText={trustEstablishmentStore.isSubmitting ? "Submitting..." : "Save Changes"} />
+              <button className="px-3 py-2 rounded-md border border-black text-black font-medium text-sm" onClick={setSwitch}>
+                Back to Dashboard
+              </button>
             </div>
           </div>
 

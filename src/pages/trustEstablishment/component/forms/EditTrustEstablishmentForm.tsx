@@ -711,10 +711,13 @@ const EditTrustEstablishmentForm = observer(() => {
               <Button
                 onClick={reset}
                 className="border text-black bg-white border-blue-7 rounded-lg py-2 px-4 lg:px-10"
-                buttonText="Cancel"
+                buttonText="Clear"
                 width="w-fit"
               />
               <Button padding="py-3" buttonText={trustEstablishmentStore.isSubmitting ? "Submitting..." : "Save Changes"} />
+            <button className="px-3 py-2 rounded-md border border-black text-black font-medium text-sm" onClick={setSwitch}>
+              Back to Dashboard
+            </button>
             </div>
           </div>
 
