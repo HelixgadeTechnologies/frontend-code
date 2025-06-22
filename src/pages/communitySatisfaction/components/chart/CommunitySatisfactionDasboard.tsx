@@ -102,8 +102,8 @@ const CommunitySatisfactionDashboard = observer(
                 "The community has had fair opportunities to take part in HCDT projects.",
                 "A clear system exists to report and address concerns.",
                 "The actions of governing structures have reduced conflict in my community.",
-                "Communities Satisfaction with the the Settlor's.",
-                "Communities Satisfaction with the the NUPRC’s"
+                // "Communities Satisfaction with the the Settlor's.",
+                // "Communities Satisfaction with the the NUPRC’s"
             ],
             datasets: [
                 {
@@ -183,6 +183,27 @@ const CommunitySatisfactionDashboard = observer(
             },
         };
 
+        const pieDataForSettlorSatisfaction = {
+            labels: ["Strongly Disagree", "Disagree", "Slightly Agree", "Agree", "Strongly Agree"],
+            datasets: [
+                {
+                    data: satisfactionStore.dashboardData?.settlorAction || [0, 0, 0, 0, 0],
+                    backgroundColor: ["#EF4444", "#de9292", "#FACC15", "#3B82F6", "#22C55E"],
+                    hoverBackgroundColor: ["#EF4444", "#de9292", "#FACC15", "#3B82F6", "#22C55E"],
+                },
+            ],
+        };
+        const pieDataForNUPRCSatisfaction = {
+            labels: ["Strongly Disagree", "Disagree", "Slightly Agree", "Agree", "Strongly Agree"],
+            datasets: [
+                {
+                    data: satisfactionStore.dashboardData?.nuprcAction || [0, 0, 0, 0, 0],
+                    backgroundColor: ["#EF4444", "#de9292", "#FACC15", "#3B82F6", "#22C55E"],
+                    hoverBackgroundColor: ["#EF4444", "#de9292", "#FACC15", "#3B82F6", "#22C55E"],
+                },
+            ],
+        };
+
 
         return (
             <div className="p-6 ">
@@ -195,14 +216,30 @@ const CommunitySatisfactionDashboard = observer(
                                 satisfactionStore.dashboardData?.localParticipation || [0, 0, 0, 0, 0],
                                 satisfactionStore.dashboardData?.reportMechanism || [0, 0, 0, 0, 0],
                                 satisfactionStore.dashboardData?.conflictMinimization || [0, 0, 0, 0, 0],
-                                satisfactionStore.dashboardData?.settlorAction || [0, 0, 0, 0, 0],
-                                satisfactionStore.dashboardData?.nuprcAction || [0, 0, 0, 0, 0],
+                                // satisfactionStore.dashboardData?.settlorAction || [0, 0, 0, 0, 0],
+                                // satisfactionStore.dashboardData?.nuprcAction || [0, 0, 0, 0, 0],
                             ])}
                             options={groupedBarOptions}
                             plugins={[ChartDataLabels]}
                         />
                     </div>
 
+                </div>
+                <br />
+                <br />
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mb-4">
+                    <div className="bg-white p-3 rounded-md shadow-sm">
+                        <h2 className="text-s font-medium text-gray-800 mb-2">Community satisfaction with Settlor's</h2>
+                        <div className="h-80 flex items-center justify-center">
+                            <Pie data={pieDataForSettlorSatisfaction} />
+                        </div>
+                    </div>
+                    <div className="bg-white p-3 rounded-md shadow-sm">
+                        <h2 className="text-s font-medium text-gray-800 mb-2">Community satisfaction with NUPRC's</h2>
+                        <div className="h-80 flex items-center justify-center">
+                            <Pie data={pieDataForNUPRCSatisfaction} />
+                        </div>
+                    </div>
                 </div>
 
                 {/* Pie Charts Section */}

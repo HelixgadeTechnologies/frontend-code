@@ -21,7 +21,18 @@ const CreateTrust = observer(() => {
   const { name } = useParams();
 
   const method = useForm({
-    defaultValues: trustStore.trustFormData,
+    defaultValues: {
+      ...trustStore.trustFormData,
+      totalMaleBotMembers: 0,
+      totalFemaleBotMembers: 0,
+      totalPwdBotMembers: 0,
+      totalMaleAdvisoryCommitteeMembers: 0,
+      totalFemaleAdvisoryCommitteeMembers: 0,
+      totalPwdAdvisoryCommitteeMembers: 0,
+      totalMaleManagementCommitteeMembers: 0,
+      totalFemaleManagementCommitteeMembers: 0,
+      totalPwdManagementCommitteeMembers: 0,
+    },
     shouldUnregister: false,
   })
   useEffect(() => {
@@ -42,7 +53,7 @@ const CreateTrust = observer(() => {
       try {
         const completion = trustStore.calculateTrustCompletion(trustStore.trustFormData);
         trustStore.trustFormData.completionStatus = completion;
-  
+
         const payload: ITrustPayload = {
           isCreate: true,
           data: trustStore.trustFormData

@@ -2,11 +2,12 @@ import { FormInput, CustomSelect, Button } from "../../../../components/elements
 import { Controller } from "react-hook-form";
 import { Observer, observer } from "mobx-react-lite";
 import { trustStore as TrustStore } from "../../store/trustStore"
-import { createContext,useCallback, useContext, useState } from "react";
+import { createContext, useCallback, useContext, useState } from "react";
 import { ITrustPayloadData } from "../../types/interface";
 import { settingStore as SettingStore } from "../../../Settings/store/settingStore";
 import { IDropdownProp, ISettlor } from "../../../Settings/types/interface";
 import { authStore as AuthStore } from "../../../auth/store/authStore";
+import MultiTextInput from "./MultiTextInput";
 
 const AuthStoreCTX = createContext(AuthStore);
 const settingStoreCTX = createContext(SettingStore);
@@ -19,7 +20,7 @@ const BasicDetails = observer(({ method }: { method: any }) => {
   const [lg, setSetLg] = useState<Array<string>>([]);
   const onSubmit = (data: any) => {
     trustStore.isSaving = true
-    // console.log("Form Data:", data,);
+    // console.log("Form Data:", data.trustCommunities,);
 
     const trustFormData: ITrustPayloadData = {
       ...trustStore.trustFormData,
@@ -30,7 +31,7 @@ const BasicDetails = observer(({ method }: { method: any }) => {
       country: data.country.value,
       state: data.state.value,
       localGovernmentArea: data.localGovernmentArea.value,
-      trustCommunities: data.trustCommunities,
+      trustCommunities: data.trustCommunities.join(","),
     }
 
 
@@ -211,7 +212,7 @@ const BasicDetails = observer(({ method }: { method: any }) => {
         </div>
 
         <div>
-          <FormInput
+          {/* <FormInput
             label="Trust Communities"
             name="trustCommunities"
             type="text"
@@ -223,6 +224,19 @@ const BasicDetails = observer(({ method }: { method: any }) => {
             error={errors.trustCommunities}
             errorMessage={`This field  is required`}
             required
+          /> */}
+          <Controller
+            name="trustCommunities"
+            control={control}
+            // defaultValue={[]}
+            render={({ field }) => (
+              <MultiTextInput
+                label="Trust Communities"
+                value={field.value}
+                onChange={field.onChange}
+                placeholder="Type and press Enter"
+              />           
+            )}
           />
         </div>
       </div>

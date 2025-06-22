@@ -6,12 +6,12 @@ import { ITrustPayloadData } from "../../types/interface";
 
 const trustStoreCTX = createContext(TrustStore);
 const Bot_AC = observer(({ method }: { method: any }) => {
-const trustStore = useContext(trustStoreCTX);
-const { register, handleSubmit, formState: { errors } } = method;
+  const trustStore = useContext(trustStoreCTX);
+  const { register, handleSubmit, formState: { errors } } = method;
   const onSubmit = (data: any) => {
     trustStore.isSaving = true
     // console.log("Form Data:", data, );
- 
+
     const trustFormData: ITrustPayloadData = {
       ...trustStore.trustFormData,
       totalMaleBotMembers: Number(data.totalMaleBotMembers),
@@ -61,7 +61,7 @@ const { register, handleSubmit, formState: { errors } } = method;
                 required: "This field is required.",
               }}
               errorMessage="This field is required"
-            />
+              />
           </div>
 
           <div>

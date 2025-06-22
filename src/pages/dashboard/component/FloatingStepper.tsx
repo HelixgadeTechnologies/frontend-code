@@ -3,7 +3,7 @@ import { useState } from "react";
 // StepButton component
 const StepButton = ({ label, target, onClick }: { label: string; target: string; onClick: () => void }) => (
   <button
-    className="text-left px-4 py-2 rounded hover:bg-primary-100 transition text-gray-700 font-medium w-full"
+    className="text-left px-4 py-2 rounded hover:bg-primary-100 hover:text-white transition text-gray-700 font-medium w-full"
     onClick={() => {
       const el = document.getElementById(target);
       if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });

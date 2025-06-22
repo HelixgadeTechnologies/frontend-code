@@ -511,9 +511,10 @@ const DashboardPage: React.FC = observer(() => {
       "The community has had fair opportunities to take part in HCDT projects.",
       "A clear system exists to report and address concerns.",
       "The actions of governing structures have reduced conflict in my community.",
-      "Communities Satisfaction with the the Settlor's.",
-      "Communities Satisfaction with the the NUPRC’s"
+      // "Communities Satisfaction with the the Settlor's.",
+      // "Communities Satisfaction with the the NUPRC’s"
     ],
+
     datasets: [
       {
         label: "Strongly Disagree",
@@ -572,6 +573,28 @@ const DashboardPage: React.FC = observer(() => {
         data: conflictStore.dashboardData?.STATUS_OF_CONFLICT! || [0, 0, 0, 0],
         backgroundColor: ["#22C55E", "#FACC15", "#3B82F6", "#EF4444"],
         hoverBackgroundColor: ["#16A34A", "#EAB308", "#2563EB", "#DC2626"],
+      },
+    ],
+  };
+
+
+  const pieDataForSettlorSatisfaction = {
+    labels: ["Strongly Disagree", "Disagree", "Slightly Agree", "Agree", "Strongly Agree"],
+    datasets: [
+      {
+        data: satisfactionStore.dashboardData?.settlorAction || [0, 0, 0, 0, 0],
+        backgroundColor: ["#EF4444", "#de9292", "#FACC15", "#3B82F6", "#22C55E"],
+        hoverBackgroundColor: ["#EF4444", "#de9292", "#FACC15", "#3B82F6", "#22C55E"],
+      },
+    ],
+  };
+  const pieDataForNUPRCSatisfaction = {
+    labels: ["Strongly Disagree", "Disagree", "Slightly Agree", "Agree", "Strongly Agree"],
+    datasets: [
+      {
+        data: satisfactionStore.dashboardData?.nuprcAction || [0, 0, 0, 0, 0],
+        backgroundColor: ["#EF4444", "#de9292", "#FACC15", "#3B82F6", "#22C55E"],
+        hoverBackgroundColor: ["#EF4444", "#de9292", "#FACC15", "#3B82F6", "#22C55E"],
       },
     ],
   };
@@ -783,7 +806,7 @@ const DashboardPage: React.FC = observer(() => {
   return (
     <div className="bg-[#F3F5F7] min-h-screen p-6">
       <div id="trust-establishment" className="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-4">
-      
+
         <div>
           <h2 className="font-semibold text-xl text-gray-900">Aggregated Dashboard</h2>
           <p className="text-gray-500 text-sm">Control your profile setup and integrations</p>
@@ -1022,7 +1045,7 @@ const DashboardPage: React.FC = observer(() => {
 
       {/* Project */}
       <div id="project" className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
-     
+
         {/* <div className="p-6 bg-gray-100 min-h-screen"> */}
         <h2 className="font-semibold text-xl text-gray-900 mb-4 mt-10">
           Project implementation and quality assessment
@@ -1173,7 +1196,7 @@ const DashboardPage: React.FC = observer(() => {
 
       {/* Conflict Resolution */}
       <div id="conflict" className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
-     
+
         <h2 className="font-semibold text-xl text-gray-900 mb-4 mt-10">
           Conflict Resolution
         </h2>
@@ -1352,7 +1375,7 @@ const DashboardPage: React.FC = observer(() => {
 
       {/* Community Satisfaction */}
       <div id="community-satisfaction" className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
-        
+
         <h2 className="font-semibold text-xl text-gray-900 mb-4 mt-10">
           Average community satisfaction with the process, inclusion, approach and management of the HCDTs by the government structure (BoT, MC & AC)
         </h2>
@@ -1365,8 +1388,8 @@ const DashboardPage: React.FC = observer(() => {
                 satisfactionStore.dashboardData?.localParticipation || [0, 0, 0, 0, 0],
                 satisfactionStore.dashboardData?.reportMechanism || [0, 0, 0, 0, 0],
                 satisfactionStore.dashboardData?.conflictMinimization || [0, 0, 0, 0, 0],
-                satisfactionStore.dashboardData?.settlorAction || [0, 0, 0, 0, 0],
-                satisfactionStore.dashboardData?.nuprcAction || [0, 0, 0, 0, 0],
+                // satisfactionStore.dashboardData?.settlorAction || [0, 0, 0, 0, 0],
+                // satisfactionStore.dashboardData?.nuprcAction || [0, 0, 0, 0, 0],
               ])}
               options={groupedBarOptions}
               plugins={[ChartDataLabels]}
@@ -1377,6 +1400,22 @@ const DashboardPage: React.FC = observer(() => {
 
         {/* Pie Charts Section */}
         {/* <br /> */}
+        <br />
+        <br />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mb-4">
+          <div className="bg-white p-3 rounded-md shadow-sm">
+            <h3 className="text-s font-medium text-gray-800 mb-2">Community satisfaction with Settlor's</h3>
+            <div className="h-80 flex items-center justify-center">
+              <Pie data={pieDataForSettlorSatisfaction} />
+            </div>
+          </div>
+          <div className="bg-white p-3 rounded-md shadow-sm">
+            <h3 className="text-s font-medium text-gray-800 mb-2">Community satisfaction with NUPRC's</h3>
+            <div className="h-80 flex items-center justify-center">
+              <Pie data={pieDataForNUPRCSatisfaction} />
+            </div>
+          </div>
+        </div>
         <br />
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4">
@@ -1491,7 +1530,7 @@ const DashboardPage: React.FC = observer(() => {
         </div>
       </div>
       {/* // Place this at the root of your dashboard page (outside your main content) */}
-        <FloatingStepper/>
+      <FloatingStepper />
     </div>
   );
 });
