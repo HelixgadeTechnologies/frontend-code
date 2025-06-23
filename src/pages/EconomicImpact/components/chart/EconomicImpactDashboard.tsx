@@ -125,7 +125,7 @@ const EconomicImpactDashboard = observer(({ economicImpactStore }: { economicImp
                                                         return `${percent}%`;
                                                     },
                                                 },
-                                                 legend: {
+                                                legend: {
                                                     position: "bottom" as const,
                                                     align: "end" as const, // Align legend to the end
                                                 },
@@ -186,7 +186,7 @@ const EconomicImpactDashboard = observer(({ economicImpactStore }: { economicImp
                                                         return `${percent}%`;
                                                     },
                                                 },
-                                                 legend: {
+                                                legend: {
                                                     position: "bottom" as const,
                                                     align: "end" as const, // Align legend to the end
                                                 },
@@ -210,7 +210,35 @@ const EconomicImpactDashboard = observer(({ economicImpactStore }: { economicImp
                                 these basic amenities than before.
                             </h3>
                             <div className="h-64 sm:h-80">
-                                <Line data={lineData} options={{ maintainAspectRatio: false }} />
+                                <Line
+
+                                    data={lineData}
+                                    options={{
+                                        maintainAspectRatio: false,
+                                        plugins: {
+                                            datalabels: {
+                                                align: 'top',
+                                                anchor: 'end',
+                                                color: '#222',
+                                                font: { weight: 'bold' },
+                                                formatter: (value) => `${value}%`
+                                            }
+                                        },
+                                        scales: {
+                                            y: {
+                                                ticks: {
+                                                    callback: function (value) {
+                                                        return `${value}%`;
+                                                    }
+                                                },
+                                                min: 0,
+                                                max: 100,
+                                            }
+                                        }
+                                    }}
+                                    plugins={[ChartDataLabels]}
+
+                                />
                             </div>
                         </div>
                     )}
