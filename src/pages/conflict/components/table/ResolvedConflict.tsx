@@ -53,9 +53,9 @@ export const ResolvedConflict = observer(({ conflictStore }: { conflictStore: IC
     const columns = useMemo(
         () => [
             {
-                id: "projectTitle",
-                header: "Project Title",
-                accessorKey: "projectTitle"
+                id: "trustName",
+                header: "Trust Name",
+                accessorKey: "trustName",
             },
             {
                 id: "createAt",

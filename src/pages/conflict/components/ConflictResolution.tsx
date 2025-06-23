@@ -63,9 +63,9 @@ const ConflictResolution = observer(() => {
           body={
             <ConflictForm
               conflictStore={conflictStore}
-              projectStore={projectStore}
               selectedTrust={trustStore.selectedTrustId as string}
               close={() => conflictStore.isReportDialogVisible = false}
+              
             />
           }
           close={() => conflictStore.isReportDialogVisible = false}

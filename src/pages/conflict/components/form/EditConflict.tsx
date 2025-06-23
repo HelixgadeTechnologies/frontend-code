@@ -3,19 +3,18 @@ import { CustomSelect, Button, FormInput } from "../../../../components/elements
 import { toast } from "react-toastify";
 import { ICauseOfConflict, IConflictPayload, IConflictPayloadData, IConflictStatus, IConflictStore, IConflictView, ICourtLitigationStatus, IIssuesAddressBy, IPartiesInvolve } from "../../types/interface";
 import { IDropdownProp } from "../../../Settings/types/interface";
-import { IProjectStore, IProjectView } from "../../../project/types/interface";
 // import { useCallback } from "react";
 import { observer } from "mobx-react-lite";
 import { useEffect } from "react";
 // import { useParams } from "react-router-dom";
 
-const EditConflict = observer(({ close, conflictStore, selectedTrust, projectStore }: { close: () => void, conflictStore: IConflictStore, selectedTrust: string, projectStore: IProjectStore }) => {
+const EditConflict = observer(({ close, conflictStore, selectedTrust }: { close: () => void, conflictStore: IConflictStore, selectedTrust: string }) => {
     const { control, reset, register, handleSubmit, formState: { errors } } = useForm();
     useEffect(() => {
         async function loadRequests() {
             if (conflictStore.selectedConflict) {
                 let data = conflictStore.selectedConflict as IConflictView
-                let project = projectStore.projects.get(data.projectId as string)
+
                 reset({
                     causeOfConflict: {
                         label: data?.causeOfConflictName,
@@ -37,17 +36,13 @@ const EditConflict = observer(({ close, conflictStore, selectedTrust, projectSto
                         label: data.courtLitigationStatusName,
                         value: String(data.courtLitigationStatusId)
                     } as IDropdownProp,
-                    project: {
-                        label: project?.projectTitle,
-                        value: project?.projectId
-                    } as IDropdownProp,
                     narrateIssues: data.narrateIssues || "",
                 });
             }
         }
         loadRequests();
 
-    }, [conflictStore, projectStore, reset]);
+    }, [conflictStore, reset]);
     const onSubmit = async (data: any) => {
         try {
             // console.log("Form Data:", data);
@@ -56,7 +51,6 @@ const EditConflict = observer(({ close, conflictStore, selectedTrust, projectSto
             const conflictStatus = data.conflictStatus as IDropdownProp
             const issuesAddressBy = data.issuesAddressBy as IDropdownProp
             const courtLitigationStatus = data.courtLitigationStatus as IDropdownProp
-            const project = data.project as IDropdownProp
 
             const conflictPayloadData: IConflictPayloadData = {
                 causeOfConflictId: Number(causeOfConflict.value),
@@ -65,7 +59,7 @@ const EditConflict = observer(({ close, conflictStore, selectedTrust, projectSto
                 partiesInvolveId: Number(partiesInvolved.value),
                 issuesAddressById: Number(issuesAddressBy.value),
                 courtLitigationStatusId: Number(courtLitigationStatus.value),
-                projectId: project.value,
+                trustId: selectedTrust,
                 conflictId: conflictStore.selectedConflict?.conflictId
             };
 
@@ -93,7 +87,7 @@ const EditConflict = observer(({ close, conflictStore, selectedTrust, projectSto
 
     return (
         <div className=" flex ">
-            <div className="relative w-full max-w-3xl mx-auto bg-white shadow-md rounded-lg p-6 sm:p-8">
+            <div className=" relative w-full max-w-3xl mx-auto bg-white shadow-md rounded-lg p-6 sm:p-8">
                 {/* <GoBack action={closeAddForm} trustName={name || ""} page="conflict" /> */}
                 <button
                     onClick={close}
@@ -104,15 +98,8 @@ const EditConflict = observer(({ close, conflictStore, selectedTrust, projectSto
                 </button>
                 {/* Header */}
                 <h1 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2">
-                    Data Reporting Agent Detail
+                    Conflict Data Reporting Detail
                 </h1>
-                <p className="text-sm text-gray-600 mb-6">
-                    Build stronger relationships with customers
-                </p>
-
-                <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4">
-                    Conflict Mechanism
-                </h2>
                 <p className="text-sm text-gray-600 mb-6">
                     Fill out these details to build your broadcast
                 </p>
@@ -218,56 +205,30 @@ const EditConflict = observer(({ close, conflictStore, selectedTrust, projectSto
                                 <p className="mt-2 text-xs text-red-400">Select who addressed the issue</p>
                             )}
                         </div>
-
-                        {/* Status of Court Litigation */}
-                        <div>
-                            <Controller
-                                control={control}
-                                name="courtLitigationStatus"
-                                rules={{ required: true }}
-                                render={({ field }) => (
-                                    <CustomSelect
-                                        id="court-litigation-status-select"
-                                        {...field}
-                                        options={[...conflictStore.courtLitigationStatus.values()].map((v: ICourtLitigationStatus) => ({
-                                            label: v?.courtLitigationStatus as string,
-                                            value: v?.courtLitigationStatusId,
-                                        }))}
-                                        isLoading={conflictStore.isLoading}
-                                        label="Status of the court litigation"
-                                        placeholder="Status of the court litigation"
-                                    />
-                                )}
-                            />
-                            {errors.courtLitigationStatus && (
-                                <p className="mt-2 text-xs text-red-400">Select a court litigation status</p>
+                    </div>
+                    {/* Status of Court Litigation */}
+                    <div>
+                        <Controller
+                            control={control}
+                            name="courtLitigationStatus"
+                            rules={{ required: true }}
+                            render={({ field }) => (
+                                <CustomSelect
+                                    id="court-litigation-status-select"
+                                    {...field}
+                                    options={[...conflictStore.courtLitigationStatus.values()].map((v: ICourtLitigationStatus) => ({
+                                        label: v?.courtLitigationStatus as string,
+                                        value: v?.courtLitigationStatusId,
+                                    }))}
+                                    isLoading={conflictStore.isLoading}
+                                    label="Status of the court litigation"
+                                    placeholder="Status of the court litigation"
+                                />
                             )}
-                        </div>
-
-                        {/* Projects */}
-                        <div>
-                            <Controller
-                                control={control}
-                                name="project"
-                                rules={{ required: true }}
-                                render={({ field }) => (
-                                    <CustomSelect
-                                        id="project-select"
-                                        {...field}
-                                        options={[...projectStore.projects.values()].map((v: IProjectView) => ({
-                                            label: v?.projectTitle as string,
-                                            value: v?.projectId,
-                                        }))}
-                                        isLoading={projectStore.isLoading}
-                                        label="Project"
-                                        placeholder="Select Project"
-                                    />
-                                )}
-                            />
-                            {errors.project && (
-                                <p className="mt-2 text-xs text-red-400">Select a project</p>
-                            )}
-                        </div>
+                        />
+                        {errors.courtLitigationStatus && (
+                            <p className="mt-2 text-xs text-red-400">Select a court litigation status</p>
+                        )}
                     </div>
 
                     {/* Narrate Issues */}

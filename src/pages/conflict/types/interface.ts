@@ -31,14 +31,14 @@ export interface IConflictStore {
   getCourtLitigation(): Promise<boolean>;
   filterMajorConflict(cc: Array<ICauseOfConflictDashboard>): Array<IDropdownProp>;
   transformConflictDashboard(data: IConflictDashboard): IConflictDashboardOutput;
-  getConflictDashboardByTrustId(trustId: string, selectedYear:number,selectedState:string,settlor:string): Promise<void>;
+  getConflictDashboardByTrustId(trustId: string, selectedYear: number, selectedState: string, settlor: string): Promise<void>;
 
 }
 
 
 export interface IConflict {
   conflictId: string;
-  projectId?: string | null;
+  trustId?: string | null;
   userId?: string | null;
   causeOfConflictId?: number | null;
   partiesInvolveId?: number | null;
@@ -55,8 +55,6 @@ interface BaseItem {
 }
 export interface IConflictView extends BaseItem {
   conflictId: string;
-  projectId: string | null;
-  projectTitle: string | null;
   userId: string | null;
   userFirstName: string | null;
   userLastName: string | null;
@@ -76,6 +74,7 @@ export interface IConflictView extends BaseItem {
   createAt: string;
   updateAt: string;
   trustId: string;
+  trustName: string | null;
   projectCreateAt?: string;
 }
 
@@ -106,7 +105,7 @@ export interface ICourtLitigationStatus {
 
 export interface IConflictPayloadData {
   conflictId?: string;
-  projectId: string;
+  trustId: string;
   causeOfConflictId: number;
   partiesInvolveId: number;
   narrateIssues: string;

@@ -34,7 +34,7 @@ const EconomicImpactDashboard = observer(({ economicImpactStore }: { economicImp
     useEffect(() => {
         async function getData() {
             let selectedTrustId = window.sessionStorage.getItem("selectedTrustId")
-            await economicImpactStore.getEconomicImpactDashboardByTrustId(selectedTrustId as string,0,"ALL","ALL");
+            await economicImpactStore.getEconomicImpactDashboardByTrustId(selectedTrustId as string, 0, "ALL", "ALL");
             console.log("hello");
 
         }
@@ -111,7 +111,25 @@ const EconomicImpactDashboard = observer(({ economicImpactStore }: { economicImp
                                     of the HCDT projects in my community.
                                 </h3>
                                 <div className="h-48 sm:h-56">
-                                    <Pie data={pieData1} options={{ maintainAspectRatio: false }} />
+                                    <Pie
+                                        data={pieData1}
+                                        options={{
+                                            plugins: {
+                                                datalabels: {
+                                                    color: "#222",
+                                                    font: { weight: "bold" },
+                                                    formatter: (value: number, context: any) => {
+                                                        const dataArr = context.chart.data.datasets[0].data;
+                                                        const total = dataArr.reduce((a: number, b: number) => a + b, 0);
+                                                        const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                                                        return `${percent}%`;
+                                                    },
+                                                },
+                                                legend: { display: true },
+                                            },
+                                        }}
+                                        plugins={[ChartDataLabels]}
+                                    />
                                 </div>
                             </div>
                             <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
@@ -120,7 +138,25 @@ const EconomicImpactDashboard = observer(({ economicImpactStore }: { economicImp
                                     HCDT projects in my community.
                                 </h3>
                                 <div className="h-48 sm:h-56">
-                                    <Pie data={pieData2} options={{ maintainAspectRatio: false }} />
+                                    <Pie
+                                        data={pieData2}
+                                        options={{
+                                            plugins: {
+                                                datalabels: {
+                                                    color: "#222",
+                                                    font: { weight: "bold" },
+                                                    formatter: (value: number, context: any) => {
+                                                        const dataArr = context.chart.data.datasets[0].data;
+                                                        const total = dataArr.reduce((a: number, b: number) => a + b, 0);
+                                                        const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                                                        return `${percent}%`;
+                                                    },
+                                                },
+                                                legend: { display: true },
+                                            },
+                                        }}
+                                        plugins={[ChartDataLabels]}
+                                    />
                                 </div>
                             </div>
                             <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
@@ -129,7 +165,25 @@ const EconomicImpactDashboard = observer(({ economicImpactStore }: { economicImp
                                     quality of lives.
                                 </h3>
                                 <div className="h-48 sm:h-56">
-                                    <Pie data={pieData3} options={{ maintainAspectRatio: false }} />
+                                    <Pie
+                                        data={pieData3}
+                                        options={{
+                                            plugins: {
+                                                datalabels: {
+                                                    color: "#222",
+                                                    font: { weight: "bold" },
+                                                    formatter: (value: number, context: any) => {
+                                                        const dataArr = context.chart.data.datasets[0].data;
+                                                        const total = dataArr.reduce((a: number, b: number) => a + b, 0);
+                                                        const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                                                        return `${percent}%`;
+                                                    },
+                                                },
+                                                legend: { display: true },
+                                            },
+                                        }}
+                                        plugins={[ChartDataLabels]}
+                                    />
                                 </div>
                             </div>
                         </div>

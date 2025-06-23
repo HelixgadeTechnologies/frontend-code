@@ -1,8 +1,14 @@
 import { useLocation } from "react-router-dom";
-import { bellIcon, userIcon } from "../../assets/icons";
+import { bellIcon} from "../../assets/icons";
 import { routes } from "../../utils/data";
+import { authStore as AuthStore } from "../../pages/auth/store/authStore";
+import { observer } from "mobx-react-lite";
+import { createContext, useContext } from "react";
+import UserProfileDropdown from "./UserProfileDropdown";
 
-const Header = () => {
+const AuthStoreCTX = createContext(AuthStore);
+const Header = observer(() => {
+  const authStore = useContext(AuthStoreCTX);
   const { pathname } = useLocation();
 
   const route = routes?.find((route) => route.link === pathname);
@@ -21,12 +27,14 @@ const Header = () => {
           </span> */}
         </button>
 
-        <button className="h-9 w-9 rounded-full bg-primary-200/20 flex items-center justify-center">
-          <img src={userIcon} alt="admin" />
-        </button>
+        <UserProfileDropdown user={authStore.user} />
       </div>
     </header>
   );
-};
+});
 
 export default Header;
+
+
+
+// export default UserProfileDropdown;

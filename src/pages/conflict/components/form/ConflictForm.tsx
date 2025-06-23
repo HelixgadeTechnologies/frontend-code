@@ -3,11 +3,10 @@ import { CustomSelect, Button, FormInput} from "../../../../components/elements"
 import { toast } from "react-toastify";
 import { ICauseOfConflict, IConflictPayload, IConflictPayloadData, IConflictStatus, IConflictStore, ICourtLitigationStatus, IIssuesAddressBy, IPartiesInvolve } from "../../types/interface";
 import { IDropdownProp } from "../../../Settings/types/interface";
-import { IProjectStore, IProjectView } from "../../../project/types/interface";
 import { observer } from "mobx-react-lite";
 import { useCallback } from "react";
 
-const ConflictForm = observer(({close, conflictStore, selectedTrust, projectStore }: {close: () => void, conflictStore: IConflictStore, selectedTrust: string, projectStore: IProjectStore }) => {
+const ConflictForm = observer(({close, conflictStore, selectedTrust }: {close: () => void, conflictStore: IConflictStore, selectedTrust: string}) => {
   const { control, reset, register, handleSubmit, formState: { errors } } = useForm();
 
 
@@ -19,7 +18,7 @@ const ConflictForm = observer(({close, conflictStore, selectedTrust, projectStor
       const conflictStatus = data.conflictStatus as IDropdownProp
       const issuesAddressBy = data.issuesAddressBy as IDropdownProp
       const courtLitigationStatus = data.courtLitigationStatus as IDropdownProp
-      const project = data.project as IDropdownProp
+      // const project = data.project as IDropdownProp
 
       const conflictPayloadData: IConflictPayloadData = {
         causeOfConflictId: Number(causeOfConflict.value),
@@ -28,7 +27,7 @@ const ConflictForm = observer(({close, conflictStore, selectedTrust, projectStor
         partiesInvolveId: Number(partiesInvolved.value),
         issuesAddressById: Number(issuesAddressBy.value),
         courtLitigationStatusId: Number(courtLitigationStatus.value),
-        projectId: project.value
+        trustId: selectedTrust,
       };
 
       const payload: IConflictPayload = {
@@ -201,7 +200,7 @@ const ConflictForm = observer(({close, conflictStore, selectedTrust, projectStor
                 <p className="mt-2 text-xs text-red-400">Select who addressed the issue</p>
               )}
             </div>
-
+          </div>
             {/* Status of Court Litigation */}
             <div>
               <Controller
@@ -226,32 +225,6 @@ const ConflictForm = observer(({close, conflictStore, selectedTrust, projectStor
                 <p className="mt-2 text-xs text-red-400">Select a court litigation status</p>
               )}
             </div>
-
-            {/* Projects */}
-            <div>
-              <Controller
-                control={control}
-                name="project"
-                rules={{ required: true }}
-                render={({ field }) => (
-                  <CustomSelect
-                    id="project-select"
-                    {...field}
-                    options={[...projectStore.projects.values()].map((v: IProjectView) => ({
-                      label: v?.projectTitle as string,
-                      value: v?.projectId,
-                    }))}
-                    isLoading={projectStore.isLoading}
-                    label="Project"
-                    placeholder="Select Project"
-                  />
-                )}
-              />
-              {errors.project && (
-                <p className="mt-2 text-xs text-red-400">Select a project</p>
-              )}
-            </div>
-          </div>
 
           {/* Narrate Issues */}
           <div>

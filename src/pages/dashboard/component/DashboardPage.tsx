@@ -382,7 +382,8 @@ const DashboardPage: React.FC = observer(() => {
     },
   ];
   const conflictDetailsColumnsR = [
-    { key: "projectTitle", label: "Project Title" },
+    { key: "trustName", label: "Trust Name" },
+    { key: "causeOfConflictName", label: "Cause" },
     {
       key: "createAt",
       label: "Report Date",
@@ -555,15 +556,34 @@ const DashboardPage: React.FC = observer(() => {
       },
     ],
   });
-  const pieOptions = {
-    plugins: {
-      legend: {
-        position: "bottom" as const, // Fix the type error
-      },
-    },
-    responsive: true,
-    maintainAspectRatio: false,
-  };
+
+
+
+  // const pieOptions = {
+  //   // plugins: {
+  //   //   legend: {
+  //   //     position: "bottom" as const, // Fix the type error
+  //   //   },
+  //   // },
+  //   plugins: {
+  //     datalabels: {
+  //       color: "#222",
+  //       font: { weight: "bold" },
+  //       formatter: (value: number, context: any) => {
+  //         const dataArr = context.chart.data.datasets[0].data;
+  //         const total = dataArr.reduce((a: number, b: number) => a + b, 0);
+  //         const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+  //         return `${percent}%`;
+  //       },
+  //     },
+  //     legend: {
+  //       position: "bottom" as const, // Fix the type error
+  //     },
+  //     // legend: { display: true },
+  //   },
+  //   responsive: true,
+  //   maintainAspectRatio: false,
+  // };
 
   // Conflict
   const pieDataStatusOfConflict = {
@@ -655,20 +675,20 @@ const DashboardPage: React.FC = observer(() => {
     },
   };
 
-  const pieChartOptions: ChartOptions<"pie"> = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: "top" as const,
-        align: "end" as const, // Align legend to the end
-      },
-      title: {
-        display: false,
-        text: "Number of Trust Project by Category",
-      },
-    },
-  };
+  // const pieChartOptions: ChartOptions<"pie"> = {
+  //   responsive: true,
+  //   maintainAspectRatio: false,
+  //   plugins: {
+  //     legend: {
+  //       position: "top" as const,
+  //       align: "end" as const, // Align legend to the end
+  //     },
+  //     title: {
+  //       display: false,
+  //       text: "Number of Trust Project by Category",
+  //     },
+  //   },
+  // };
 
   const labels = ["Males", "Females", "PwDs"];
 
@@ -1163,7 +1183,24 @@ const DashboardPage: React.FC = observer(() => {
           <div className="bg-white p-3 rounded-md shadow-sm">
             <h3 className="font-semibold  text-lg text-gray-600 mb-2"> Number of Trust project by category</h3>
             <div className="h-80 flex items-center justify-center">
-              <Pie options={pieChartOptions} data={pieChartData1} />
+              <Pie
+                options={{
+                  plugins: {
+                    datalabels: {
+                      color: "#222",
+                      font: { weight: "bold" },
+                      formatter: (value: number, context: any) => {
+                        const dataArr = context.chart.data.datasets[0].data;
+                        const total = dataArr.reduce((a: number, b: number) => a + b, 0);
+                        const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                        return `${percent}%`;
+                      },
+                    },
+                    legend: { display: true },
+                  },
+                }}
+                plugins={[ChartDataLabels]}
+                data={pieChartData1} />
             </div>
           </div>
 
@@ -1180,7 +1217,24 @@ const DashboardPage: React.FC = observer(() => {
           <div className="bg-white p-3 rounded-md shadow-sm">
             <h3 className="font-semibold text-lg text-gray-600 mb-2">Number of Trust project by status</h3>
             <div className="h-80 flex items-center justify-center">
-              <Pie options={pieChartOptions} data={pieChartData2} />
+              <Pie
+                options={{
+                  plugins: {
+                    datalabels: {
+                      color: "#222",
+                      font: { weight: "bold" },
+                      formatter: (value: number, context: any) => {
+                        const dataArr = context.chart.data.datasets[0].data;
+                        const total = dataArr.reduce((a: number, b: number) => a + b, 0);
+                        const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                        return `${percent}%`;
+                      },
+                    },
+                    legend: { display: true },
+                  },
+                }}
+                plugins={[ChartDataLabels]}
+                data={pieChartData2} />
             </div>
           </div>
         </div>
@@ -1295,13 +1349,50 @@ const DashboardPage: React.FC = observer(() => {
           <div className="bg-white p-3 rounded-md shadow-sm">
             <h3 className="text-xs font-medium text-gray-600 mb-2">Status of conflict</h3>
             <div className="h-80 flex items-center justify-center">
-              <Pie data={pieDataStatusOfConflict} />
+              <Pie
+
+                data={pieDataStatusOfConflict}
+                options={{
+                  plugins: {
+                    datalabels: {
+                      color: "#222",
+                      font: { weight: "bold" },
+                      formatter: (value: number, context: any) => {
+                        const dataArr = context.chart.data.datasets[0].data;
+                        const total = dataArr.reduce((a: number, b: number) => a + b, 0);
+                        const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                        return `${percent}%`;
+                      },
+                    },
+                    legend: { display: true },
+                  },
+                }}
+                plugins={[ChartDataLabels]}
+              />
             </div>
           </div>
           <div className="bg-white p-3 rounded-md shadow-sm">
             <h3 className="text-xs font-medium text-gray-600 mb-2">Status of Court litigation</h3>
             <div className="h-80 flex items-center justify-center">
-              <Pie data={pieDataCourtLitigation} />
+              <Pie
+                data={pieDataCourtLitigation}
+                options={{
+                  plugins: {
+                    datalabels: {
+                      color: "#222",
+                      font: { weight: "bold" },
+                      formatter: (value: number, context: any) => {
+                        const dataArr = context.chart.data.datasets[0].data;
+                        const total = dataArr.reduce((a: number, b: number) => a + b, 0);
+                        const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                        return `${percent}%`;
+                      },
+                    },
+                    legend: { display: true },
+                  },
+                }}
+                plugins={[ChartDataLabels]}
+              />
             </div>
           </div>
         </div>
@@ -1345,7 +1436,8 @@ const DashboardPage: React.FC = observer(() => {
               header={"Top Resolved Conflict"}
               data={conflictStore?.dashboardData?.RESOLVED_CONFLICTS.map((conflict: IConflictView) => {
                 return {
-                  projectTitle: conflict.projectTitle,
+                  trustName: conflict.trustName,
+                  causeOfConflictName: conflict.causeOfConflictName,
                   createAt: conflict.createAt
                 }
               })}
@@ -1360,7 +1452,8 @@ const DashboardPage: React.FC = observer(() => {
               header={"Top Unresolved Conflict"}
               data={conflictStore?.dashboardData?.UNRESOLVED_CONFLICTS.map((conflict: IConflictView) => {
                 return {
-                  projectTitle: conflict.projectTitle,
+                  trustName: conflict.trustName,
+                  causeOfConflictName: conflict.causeOfConflictName,
                   createAt: conflict.createAt
                 }
               })}
@@ -1404,15 +1497,53 @@ const DashboardPage: React.FC = observer(() => {
         <br />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mb-4">
           <div className="bg-white p-3 rounded-md shadow-sm">
-            <h3 className="text-s font-medium text-gray-800 mb-2">Community satisfaction with Settlor's</h3>
+            <h3 className="text-s font-medium text-gray-800 mb-2">The way the Settlor has acted has  minimized conflict and improved their relationship with the host communities.</h3>
             <div className="h-80 flex items-center justify-center">
-              <Pie data={pieDataForSettlorSatisfaction} />
+              <Pie
+
+                data={pieDataForSettlorSatisfaction}
+                options={{
+                  plugins: {
+                    datalabels: {
+                      color: "#222",
+                      font: { weight: "bold" },
+                      formatter: (value: number, context: any) => {
+                        const dataArr = context.chart.data.datasets[0].data;
+                        const total = dataArr.reduce((a: number, b: number) => a + b, 0);
+                        const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                        return `${percent}%`;
+                      },
+                    },
+                    legend: { display: true },
+                  },
+                }}
+                plugins={[ChartDataLabels]}
+              />
             </div>
           </div>
           <div className="bg-white p-3 rounded-md shadow-sm">
-            <h3 className="text-s font-medium text-gray-800 mb-2">Community satisfaction with NUPRC's</h3>
+            <h3 className="text-s font-medium text-gray-800 mb-2">The way NUPRC is regulating and responding is effectively addressing disputes emanating from the implementation of the HCDT, and promoting improved relationships between host communities and Settlor's.</h3>
             <div className="h-80 flex items-center justify-center">
-              <Pie data={pieDataForNUPRCSatisfaction} />
+              <Pie
+
+                data={pieDataForNUPRCSatisfaction}
+                options={{
+                  plugins: {
+                    datalabels: {
+                      color: "#222",
+                      font: { weight: "bold" },
+                      formatter: (value: number, context: any) => {
+                        const dataArr = context.chart.data.datasets[0].data;
+                        const total = dataArr.reduce((a: number, b: number) => a + b, 0);
+                        const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                        return `${percent}%`;
+                      },
+                    },
+                    legend: { display: true },
+                  },
+                }}
+                plugins={[ChartDataLabels]}
+              />
             </div>
           </div>
         </div>
@@ -1432,7 +1563,22 @@ const DashboardPage: React.FC = observer(() => {
                   data={generatePieData(
                     satisfactionStore.dashboardData?.projectHandover || [0, 0, 0, 0]
                   )}
-                  options={pieOptions}
+                  options={{
+                    plugins: {
+                      datalabels: {
+                        color: "#222",
+                        font: { weight: "bold" },
+                        formatter: (value: number, context: any) => {
+                          const dataArr = context.chart.data.datasets[0].data;
+                          const total = dataArr.reduce((a: number, b: number) => a + b, 0);
+                          const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                          return `${percent}%`;
+                        },
+                      },
+                      legend: { display: true },
+                    },
+                  }}
+                  plugins={[ChartDataLabels]}
                 />
               </div>
             </div>
@@ -1445,7 +1591,22 @@ const DashboardPage: React.FC = observer(() => {
                   data={generatePieData(
                     satisfactionStore.dashboardData?.maintenanceConsult || [0, 0, 0, 0]
                   )}
-                  options={pieOptions}
+                  options={{
+                    plugins: {
+                      datalabels: {
+                        color: "#222",
+                        font: { weight: "bold" },
+                        formatter: (value: number, context: any) => {
+                          const dataArr = context.chart.data.datasets[0].data;
+                          const total = dataArr.reduce((a: number, b: number) => a + b, 0);
+                          const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                          return `${percent}%`;
+                        },
+                      },
+                      legend: { display: true },
+                    },
+                  }}
+                  plugins={[ChartDataLabels]}
                 />
               </div>
             </div>
@@ -1460,7 +1621,22 @@ const DashboardPage: React.FC = observer(() => {
                   data={generatePieData(
                     satisfactionStore.dashboardData?.incomeProject || [0, 0, 0, 0]
                   )}
-                  options={pieOptions}
+                  options={{
+                    plugins: {
+                      datalabels: {
+                        color: "#222",
+                        font: { weight: "bold" },
+                        formatter: (value: number, context: any) => {
+                          const dataArr = context.chart.data.datasets[0].data;
+                          const total = dataArr.reduce((a: number, b: number) => a + b, 0);
+                          const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                          return `${percent}%`;
+                        },
+                      },
+                      legend: { display: true },
+                    },
+                  }}
+                  plugins={[ChartDataLabels]}
                 />
               </div>
             </div>
@@ -1487,7 +1663,25 @@ const DashboardPage: React.FC = observer(() => {
                     of the HCDT projects in my community.
                   </h3>
                   <div className="h-48 sm:h-56">
-                    <Pie data={pieData1} options={{ maintainAspectRatio: false }} />
+                    <Pie
+                      data={pieData1}
+                      options={{
+                        plugins: {
+                          datalabels: {
+                            color: "#222",
+                            font: { weight: "bold" },
+                            formatter: (value: number, context: any) => {
+                              const dataArr = context.chart.data.datasets[0].data;
+                              const total = dataArr.reduce((a: number, b: number) => a + b, 0);
+                              const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                              return `${percent}%`;
+                            },
+                          },
+                          legend: { display: true },
+                        },
+                      }}
+                      plugins={[ChartDataLabels]}
+                    />
                   </div>
                 </div>
                 <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
@@ -1496,7 +1690,25 @@ const DashboardPage: React.FC = observer(() => {
                     HCDT projects in my community.
                   </h3>
                   <div className="h-48 sm:h-56">
-                    <Pie data={pieData2} options={{ maintainAspectRatio: false }} />
+                    <Pie
+                      data={pieData2}
+                      options={{
+                        plugins: {
+                          datalabels: {
+                            color: "#222",
+                            font: { weight: "bold" },
+                            formatter: (value: number, context: any) => {
+                              const dataArr = context.chart.data.datasets[0].data;
+                              const total = dataArr.reduce((a: number, b: number) => a + b, 0);
+                              const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                              return `${percent}%`;
+                            },
+                          },
+                          legend: { display: true },
+                        },
+                      }}
+                      plugins={[ChartDataLabels]}
+                    />
                   </div>
                 </div>
                 <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
@@ -1505,7 +1717,25 @@ const DashboardPage: React.FC = observer(() => {
                     quality of lives.
                   </h3>
                   <div className="h-48 sm:h-56">
-                    <Pie data={pieData3} options={{ maintainAspectRatio: false }} />
+                    <Pie
+                      data={pieData3}
+                      options={{
+                        plugins: {
+                          datalabels: {
+                            color: "#222",
+                            font: { weight: "bold" },
+                            formatter: (value: number, context: any) => {
+                              const dataArr = context.chart.data.datasets[0].data;
+                              const total = dataArr.reduce((a: number, b: number) => a + b, 0);
+                              const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                              return `${percent}%`;
+                            },
+                          },
+                          legend: { display: true },
+                        },
+                      }}
+                      plugins={[ChartDataLabels]}
+                    />
                   </div>
                 </div>
               </div>

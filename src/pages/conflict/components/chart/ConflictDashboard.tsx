@@ -130,13 +130,49 @@ const ConflictDashboard = observer(() => {
                 <div className="bg-white p-3 rounded-md shadow-sm">
                     <h3 className="text-xs font-medium text-gray-600 mb-2">Status of Conflict</h3>
                     <div className="h-80 flex items-center justify-center">
-                        <Pie data={pieDataStatusOfConflict} />
+                        <Pie
+                            data={pieDataStatusOfConflict}
+                            options={{
+                                plugins: {
+                                    datalabels: {
+                                        color: "#222",
+                                        font: { weight: "bold" },
+                                        formatter: (value: number, context: any) => {
+                                            const dataArr = context.chart.data.datasets[0].data;
+                                            const total = dataArr.reduce((a: number, b: number) => a + b, 0);
+                                            const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                                            return `${percent}%`;
+                                        },
+                                    },
+                                    legend: { display: true },
+                                },
+                            }}
+                            plugins={[ChartDataLabels]}
+                        />
                     </div>
                 </div>
                 <div className="bg-white p-3 rounded-md shadow-sm">
                     <h3 className="text-xs font-medium text-gray-600 mb-2">Status of Court Litigation</h3>
                     <div className="h-80 flex items-center justify-center">
-                        <Pie data={pieDataCourtLitigation} />
+                        <Pie
+                            data={pieDataCourtLitigation}
+                            options={{
+                                plugins: {
+                                    datalabels: {
+                                        color: "#222",
+                                        font: { weight: "bold" },
+                                        formatter: (value: number, context: any) => {
+                                            const dataArr = context.chart.data.datasets[0].data;
+                                            const total = dataArr.reduce((a: number, b: number) => a + b, 0);
+                                            const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                                            return `${percent}%`;
+                                        },
+                                    },
+                                    legend: { display: true },
+                                },
+                            }}
+                            plugins={[ChartDataLabels]}
+                        />
                     </div>
                 </div>
             </div>

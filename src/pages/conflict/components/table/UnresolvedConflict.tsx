@@ -53,15 +53,16 @@ export const UnresolvedConflict = observer(({ conflictStore }: { conflictStore: 
     const columns = useMemo(
         () => [
             {
-                id: "projectTitle",
-                header: "Project Title",
-                accessorKey: "projectTitle"
+                id: "trustName",
+                header: "Trust Name",
+                accessorKey: "trustName",
             },
             {
                 id: "createAt",
                 header: "Report Date",
                 accessorKey: "createAt",
                 cell: ({ row }: { row: { original: IConflictView } }) => {
+                    console.log(row.original);
                     const formatted = dayjs(row.original.createAt).format('MMM DD, YYYY hh:mmA');
                     return <span>{formatted}</span>;
                 },

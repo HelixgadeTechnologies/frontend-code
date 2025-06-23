@@ -3,7 +3,6 @@ import { Observer, observer } from "mobx-react-lite";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { EmptyTable, LoadingTable, Modal, Table } from "../../../../components/elements";
 import { conflictStore as ConflictStore } from "../../store/conflictStore"
-import { projectStore as ProjectStore } from "../../../project/store/projectStore"
 import { trustStore as TrustStore } from "../../../trust/store/trustStore"
 import { IConflictView } from "../../types/interface";
 import Tag from "../../../../components/elements/Tag";
@@ -14,12 +13,10 @@ import IMG from "../../../../assets/svgs/dashboardConflictNotFound.svg"
 import ConflictForm from "../form/ConflictForm";
 
 const ConflictStoreCtx = createContext(ConflictStore);
-const ProjectStoreCtx = createContext(ProjectStore);
 const TrustStoreCtx = createContext(TrustStore);
 
 export const ConflictTable = observer(() => {
     const conflictStore = useContext(ConflictStoreCtx);
-    const projectStore = useContext(ProjectStoreCtx);
     const trustStore = useContext(TrustStoreCtx);
 
     useEffect(() => {
@@ -54,9 +51,9 @@ export const ConflictTable = observer(() => {
     const columns = useMemo(
         () => [
             {
-                id: "projectTitle",
-                header: "Project Title",
-                accessorKey: "projectTitle",
+                id: "trustName",
+                header: "Trust Name",
+                accessorKey: "trustName",
             },
             {
                 id: "causeOfConflictName",
@@ -157,7 +154,6 @@ export const ConflictTable = observer(() => {
                         body={
                             <EditConflict
                                 conflictStore={conflictStore}
-                                projectStore={projectStore}
                                 selectedTrust={trustStore.selectedTrustId as string}
                                 close={() => { conflictStore.isEditDialogVisible = false; conflictStore.selectedConflict = null }}
                             />
@@ -171,7 +167,6 @@ export const ConflictTable = observer(() => {
                         body={
                             <ConflictForm
                                 conflictStore={conflictStore}
-                                projectStore={projectStore}
                                 selectedTrust={trustStore.selectedTrustId as string}
                                 close={() => conflictStore.isReportDialogVisible = false}
                             />

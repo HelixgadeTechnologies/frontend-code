@@ -229,13 +229,13 @@ const CommunitySatisfactionDashboard = observer(
                 <br />
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mb-4">
                     <div className="bg-white p-3 rounded-md shadow-sm">
-                        <h2 className="text-s font-medium text-gray-800 mb-2">Community satisfaction with Settlor's</h2>
+                        <h2 className="text-s font-medium text-gray-800 mb-2">The way the Settlor has acted has  minimized conflict and improved their relationship with the host communities.</h2>
                         <div className="h-80 flex items-center justify-center">
                             <Pie data={pieDataForSettlorSatisfaction} />
                         </div>
                     </div>
                     <div className="bg-white p-3 rounded-md shadow-sm">
-                        <h2 className="text-s font-medium text-gray-800 mb-2">Community satisfaction with NUPRC's</h2>
+                        <h2 className="text-s font-medium text-gray-800 mb-2">The way NUPRC is regulating and responding is effectively addressing disputes emanating from the implementation of the HCDT, and promoting improved relationships between host communities and Settlor's.</h2>
                         <div className="h-80 flex items-center justify-center">
                             <Pie data={pieDataForNUPRCSatisfaction} />
                         </div>

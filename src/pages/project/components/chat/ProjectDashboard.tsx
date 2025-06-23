@@ -1,6 +1,7 @@
 import { createContext, useContext } from "react";
 import { projectStore as ProjectStore } from "../../store/projectStore";
 import { observer } from "mobx-react-lite";
+import ChartDataLabels from "chartjs-plugin-datalabels";
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -26,7 +27,8 @@ ChartJS.register(
     Title,
     Tooltip,
     Legend,
-    ArcElement
+    ArcElement,
+    ChartDataLabels
 );
 
 const ProjectStoreCTX = createContext(ProjectStore);
@@ -61,20 +63,20 @@ const ProjectDashboard = observer(() => {
         },
     };
 
-    const pieChartOptions: ChartOptions<"pie"> = {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                position: "top" as const,
-                align: "end" as const, // Align legend to the end
-            },
-            title: {
-                display: false,
-                text: "Number of Trust Project by Category",
-            },
-        },
-    };
+    // const pieChartOptions: ChartOptions<"pie"> = {
+    //     responsive: true,
+    //     maintainAspectRatio: false,
+    //     plugins: {
+    //         legend: {
+    //             position: "top" as const,
+    //             align: "end" as const, // Align legend to the end
+    //         },
+    //         title: {
+    //             display: false,
+    //             text: "Number of Trust Project by Category",
+    //         },
+    //     },
+    // };
 
     const labels = ["Males", "Females", "PwDs"];
 
@@ -198,7 +200,24 @@ const ProjectDashboard = observer(() => {
                 <div className="bg-white p-3 rounded-md shadow-sm">
                     <h3 className="font-semibold  text-lg text-gray-600 mb-2"> Number of Trust project by category</h3>
                     <div className="h-80 flex items-center justify-center">
-                        <Pie options={pieChartOptions} data={pieChartData1} />
+                        <Pie
+                            options={{
+                                plugins: {
+                                    datalabels: {
+                                        color: "#222",
+                                        font: { weight: "bold" },
+                                        formatter: (value: number, context: any) => {
+                                            const dataArr = context.chart.data.datasets[0].data;
+                                            const total = dataArr.reduce((a: number, b: number) => a + b, 0);
+                                            const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                                            return `${percent}%`;
+                                        },
+                                    },
+                                    legend: { display: true },
+                                },
+                            }}
+                            plugins={[ChartDataLabels]}
+                            data={pieChartData1} />
                     </div>
                 </div>
 
@@ -215,7 +234,24 @@ const ProjectDashboard = observer(() => {
                 <div className="bg-white p-3 rounded-md shadow-sm">
                     <h3 className="font-semibold text-lg text-gray-600 mb-2">Number of Trust project by status</h3>
                     <div className="h-80 flex items-center justify-center">
-                        <Pie options={pieChartOptions} data={pieChartData2} />
+                        <Pie
+                            options={{
+                                plugins: {
+                                    datalabels: {
+                                        color: "#222",
+                                        font: { weight: "bold" },
+                                        formatter: (value: number, context: any) => {
+                                            const dataArr = context.chart.data.datasets[0].data;
+                                            const total = dataArr.reduce((a: number, b: number) => a + b, 0);
+                                            const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                                            return `${percent}%`;
+                                        },
+                                    },
+                                    legend: { display: true },
+                                },
+                            }}
+                            plugins={[ChartDataLabels]}
+                            data={pieChartData2} />
                     </div>
                 </div>
             </div>
