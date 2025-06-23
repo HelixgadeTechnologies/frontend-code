@@ -1544,7 +1544,7 @@ const DashboardPage: React.FC = observer(() => {
                     },
                     legend: {
                       position: "bottom" as const,
-                      align: "end" as const, // Align legend to the end
+                      align: "center" as const, // Align legend to the end
                     },
                   },
                 }}
