@@ -57,15 +57,15 @@ const CommunitySatisfactionDashboard = observer(
         //     },
         // };
 
-        const pieOptions = {
-            plugins: {
-                legend: {
-                    position: "bottom" as const, // Fix the type error
-                },
-            },
-            responsive: true,
-            maintainAspectRatio: false,
-        };
+        // const pieOptions = {
+        //     plugins: {
+        //         legend: {
+        //             position: "bottom" as const, // Fix the type error
+        //         },
+        //     },
+        //     responsive: true,
+        //     maintainAspectRatio: false,
+        // };
 
         // Generate bar chart data dynamically
         // const generateBarData = (data: number[]) => ({
@@ -231,13 +231,55 @@ const CommunitySatisfactionDashboard = observer(
                     <div className="bg-white p-3 rounded-md shadow-sm">
                         <h2 className="text-s font-medium text-gray-800 mb-2">The way the Settlor has acted has  minimized conflict and improved their relationship with the host communities.</h2>
                         <div className="h-80 flex items-center justify-center">
-                            <Pie data={pieDataForSettlorSatisfaction} />
+                            <Pie
+                                data={pieDataForSettlorSatisfaction}
+                                options={{
+                                    plugins: {
+                                        datalabels: {
+                                            color: "#222",
+                                            font: { weight: "bold" },
+                                            formatter: (value: number, context: any) => {
+                                                const dataArr = context.chart.data.datasets[0].data;
+                                                const total = dataArr.reduce((a: number, b: number) => a + b, 0);
+                                                const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                                                return `${percent}%`;
+                                            },
+                                        },
+                                        legend: {
+                                            position: "bottom" as const,
+                                            align: "center" as const, // Align legend to the end
+                                        },
+                                    },
+                                }}
+                                plugins={[ChartDataLabels]}
+                            />
                         </div>
                     </div>
                     <div className="bg-white p-3 rounded-md shadow-sm">
                         <h2 className="text-s font-medium text-gray-800 mb-2">The way NUPRC is regulating and responding is effectively addressing disputes emanating from the implementation of the HCDT, and promoting improved relationships between host communities and Settlor's.</h2>
                         <div className="h-80 flex items-center justify-center">
-                            <Pie data={pieDataForNUPRCSatisfaction} />
+                            <Pie
+                                data={pieDataForNUPRCSatisfaction}
+                                options={{
+                                    plugins: {
+                                        datalabels: {
+                                            color: "#222",
+                                            font: { weight: "bold" },
+                                            formatter: (value: number, context: any) => {
+                                                const dataArr = context.chart.data.datasets[0].data;
+                                                const total = dataArr.reduce((a: number, b: number) => a + b, 0);
+                                                const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                                                return `${percent}%`;
+                                            },
+                                        },
+                                        legend: {
+                                            position: "bottom" as const,
+                                            align: "center" as const, // Align legend to the end
+                                        },
+                                    },
+                                }}
+                                plugins={[ChartDataLabels]}
+                            />
                         </div>
                     </div>
                 </div>
@@ -258,26 +300,82 @@ const CommunitySatisfactionDashboard = observer(
                         <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
                             The Trust commissioned and handed over completed projects in our community to the community leadership?
                         </h3>
-                        <div className="h-40 sm:h-48">
-                            <Pie
-                                data={generatePieData(
-                                    satisfactionStore.dashboardData?.projectHandover || [0, 0, 0, 0]
-                                )}
-                                options={pieOptions}
-                            />
+                        <div className="flex flex-col items-center">
+                            <div className="h-52 w-52 mb-4">
+                                <Pie
+                                    data={generatePieData(
+                                        satisfactionStore.dashboardData?.projectHandover || [0, 0, 0, 0]
+                                    )}
+                                    options={{
+                                        plugins: {
+                                            datalabels: {
+                                                color: "#222",
+                                                font: { weight: "bold", size: 16 },
+                                                formatter: (value: number, context: any) => {
+                                                    const dataArr = context.chart.data.datasets[0].data;
+                                                    const total = dataArr.reduce((a: number, b: number) => a + b, 0);
+                                                    const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                                                    return `${percent}%`;
+                                                },
+                                            },
+                                            legend: {
+                                                display: true,
+                                                position: "bottom" as const,
+                                                align: "center" as const,
+                                                labels: {
+                                                    boxWidth: 18,
+                                                    boxHeight: 18,
+                                                    padding: 10,
+                                                    font: { size: 9 },
+                                                },
+                                            },
+                                        },
+                                    }}
+                                    plugins={[ChartDataLabels]}
+                                    height={260}
+                                />
+                            </div>
                         </div>
                     </div>
                     <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
                         <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
                             The Trust has consulted our community leadership to discuss or develop maintenance plans for all the completed projects implemented in our community.
                         </h3>
-                        <div className="h-40 sm:h-48">
-                            <Pie
-                                data={generatePieData(
-                                    satisfactionStore.dashboardData?.maintenanceConsult || [0, 0, 0, 0]
-                                )}
-                                options={pieOptions}
-                            />
+                        <div className="flex flex-col items-center">
+                            <div className="h-52 w-52 mb-4">
+                                <Pie
+                                    data={generatePieData(
+                                        satisfactionStore.dashboardData?.maintenanceConsult || [0, 0, 0, 0]
+                                    )}
+                                    options={{
+                                        plugins: {
+                                            datalabels: {
+                                                color: "#222",
+                                                font: { weight: "bold", size: 16 },
+                                                formatter: (value: number, context: any) => {
+                                                    const dataArr = context.chart.data.datasets[0].data;
+                                                    const total = dataArr.reduce((a: number, b: number) => a + b, 0);
+                                                    const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                                                    return `${percent}%`;
+                                                },
+                                            },
+                                            legend: {
+                                                display: true,
+                                                position: "bottom" as const,
+                                                align: "center" as const,
+                                                labels: {
+                                                    boxWidth: 18,
+                                                    boxHeight: 18,
+                                                    padding: 10,
+                                                    font: { size: 9 },
+                                                },
+                                            },
+                                        },
+                                    }}
+                                    plugins={[ChartDataLabels]}
+                                    height={260}
+                                />
+                            </div>
                         </div>
                     </div>
 
@@ -286,13 +384,41 @@ const CommunitySatisfactionDashboard = observer(
                         <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
                             The Trust implemented or is implementing at least one income-generating project for the host communities.
                         </h3>
-                        <div className="h-40 sm:h-48">
-                            <Pie
-                                data={generatePieData(
-                                    satisfactionStore.dashboardData?.incomeProject || [0, 0, 0, 0]
-                                )}
-                                options={pieOptions}
-                            />
+                        <div className="flex flex-col items-center">
+                            <div className="h-52 w-52 mb-4">
+                                <Pie
+                                    data={generatePieData(
+                                        satisfactionStore.dashboardData?.incomeProject || [0, 0, 0, 0]
+                                    )}
+                                    options={{
+                                        plugins: {
+                                            datalabels: {
+                                                color: "#222",
+                                                font: { weight: "bold", size: 16 },
+                                                formatter: (value: number, context: any) => {
+                                                    const dataArr = context.chart.data.datasets[0].data;
+                                                    const total = dataArr.reduce((a: number, b: number) => a + b, 0);
+                                                    const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                                                    return `${percent}%`;
+                                                },
+                                            },
+                                            legend: {
+                                                display: true,
+                                                position: "bottom" as const,
+                                                align: "center" as const,
+                                                labels: {
+                                                    boxWidth: 18,
+                                                    boxHeight: 18,
+                                                    padding: 10,
+                                                    font: { size: 9 },
+                                                },
+                                            },
+                                        },
+                                    }}
+                                    plugins={[ChartDataLabels]}
+                                    height={260}
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>

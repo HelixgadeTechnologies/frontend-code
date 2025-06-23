@@ -125,7 +125,10 @@ const EconomicImpactDashboard = observer(({ economicImpactStore }: { economicImp
                                                         return `${percent}%`;
                                                     },
                                                 },
-                                                legend: { display: true },
+                                                 legend: {
+                                                    position: "bottom" as const,
+                                                    align: "end" as const, // Align legend to the end
+                                                },
                                             },
                                         }}
                                         plugins={[ChartDataLabels]}
@@ -152,7 +155,11 @@ const EconomicImpactDashboard = observer(({ economicImpactStore }: { economicImp
                                                         return `${percent}%`;
                                                     },
                                                 },
-                                                legend: { display: true },
+                                                legend: {
+                                                    position: "bottom" as const,
+                                                    align: "end" as const, // Align legend to the end
+                                                },
+                                                // legend: { display: true },
                                             },
                                         }}
                                         plugins={[ChartDataLabels]}
@@ -179,7 +186,10 @@ const EconomicImpactDashboard = observer(({ economicImpactStore }: { economicImp
                                                         return `${percent}%`;
                                                     },
                                                 },
-                                                legend: { display: true },
+                                                 legend: {
+                                                    position: "bottom" as const,
+                                                    align: "end" as const, // Align legend to the end
+                                                },
                                             },
                                         }}
                                         plugins={[ChartDataLabels]}
