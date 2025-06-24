@@ -1,6 +1,7 @@
 import { ObservableMap } from "mobx";
 import { IUploadPayload } from "../../project/types/interface";
 import { HCDTRequestResponse } from "../../../infrastructure/HCDTRequestResponse";
+import { IBotInauguration } from "../../dashboard/types/interface";
 
 export interface ITrustEstablishmentStore {
     isLoading: boolean;
@@ -101,7 +102,7 @@ export interface ITrustEstablishmentStatus {
     developmentPlanDocumentMimeType?: string | null;
     developmentPlanBudgetDocument?: string | null;
     developmentPlanBudgetDocumentMimeType?: string | null;
-    fundsReceive:Array<IFundsReceived>
+    fundsReceive: Array<IFundsReceived>
     admin?: string | null;
     yearOfNeedsAssessment?: number | null;
     statusOfNeedAssessment?: number | null;
@@ -149,6 +150,7 @@ export interface IEstablishmentDashboard {
     SUB_FIELDS: Array<ISubFields>,
     OPERATION_YEAR: Array<IOperationYear>,
     TRENDS: Array<ITrends>,
+    BOT_INAUGURATION_CHECK: IBotInauguration[]
 }
 
 export interface IFinishedDashboard {
@@ -170,5 +172,6 @@ export interface IFinishedDashboard {
     TRENDS_AMOUNT: Array<string>,
     COMPLETION_STATUS: number,
     DATE_UPDATED?: String,
+    BOT_INAUGURATION_CHECK: IBotInauguration
 }
 

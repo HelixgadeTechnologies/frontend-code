@@ -69,7 +69,7 @@ export interface IGeneralDashboard {
 
 export interface IBotInauguration {
     botYesPercentage: number,
-    managementYesPercentage: string,
+    managementYesPercentage: number,
     advisoryYesPercentage: number,
 }
 export interface IConflictResolutionOverTime {
