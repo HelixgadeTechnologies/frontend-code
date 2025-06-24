@@ -198,7 +198,7 @@ const ProjectDashboard = observer(() => {
 
                 {/* Pie Chart 1 */}
                 <div className="bg-white p-3 rounded-md shadow-sm">
-                    <h3 className="font-semibold  text-lg text-gray-600 mb-2"> Number of Trust project by category</h3>
+                    <h3 className="font-semibold  text-lg text-gray-600 mb-2"> Trust Project by Category</h3>
                     <div className="h-80 flex items-center justify-center">
                         <Pie
                             options={{
@@ -232,7 +232,7 @@ const ProjectDashboard = observer(() => {
 
                 {/* Pie Chart 2 */}
                 <div className="bg-white p-3 rounded-md shadow-sm">
-                    <h3 className="font-semibold text-lg text-gray-600 mb-2">Number of Trust project by status</h3>
+                    <h3 className="font-semibold text-lg text-gray-600 mb-2">Trust Project by Status</h3>
                     <div className="h-80 flex items-center justify-center">
                         <Pie
                             options={{
