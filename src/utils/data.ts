@@ -10,6 +10,33 @@ export const routes = [
     title: "Dashboard",
     link: "/dashboard",
     icon: dashboardIcon,
+    children:[
+      {
+        id: 1,
+        name: "Trust Establishment",
+        link: "trust-establishment",
+      },
+      {
+        id: 2,
+        name: "Project",
+        link: "project",
+      },
+      {
+        id: 3,
+        name: "Conflict",
+        link: "conflict",
+      },
+      {
+        id: 4,
+        name: "Community Satisfaction",
+        link: "community-satisfaction",
+      },
+      {
+        id: 5,
+        name: "Economic Impact",
+        link: "economic-impact",
+      },
+    ]
   },
   {
     id: 2,
@@ -17,6 +44,7 @@ export const routes = [
     title: "Trusts",
     link: "/dashboard/trusts",
     icon: trustIcon,
+    children:[]
   },
   {
     id: 3,
@@ -24,6 +52,7 @@ export const routes = [
     title: "Settings",
     link: "/dashboard/settings",
     icon: settingsIcon,
+    children:[]
   },
 ];
 
