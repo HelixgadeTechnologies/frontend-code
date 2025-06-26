@@ -5,6 +5,9 @@ export interface ITrustStore {
     isSubmitting: boolean;
     isSaving: boolean;
     isDeleting: boolean;
+    setConflictForm: boolean;
+    setSatisfactionForm: boolean;
+    setEconomicImpactForm: boolean;
     pageSwitched: number;
     selectedTrust: ITrustList | null;
     selectedTrustId: string | undefined;
@@ -30,6 +33,7 @@ export interface ITrustStore {
     createTrust(payload: ITrustPayload): Promise<boolean>;
     updateTrust(payload: ITrustPayload): Promise<boolean>;
     getSingleTrust(trustId: string): Promise<void>;
+    getATrust(trustId: string): Promise<void>
     removeTrust(trustId: string): Promise<boolean>;
 }
 export interface ITrust extends BaseItem {
@@ -65,6 +69,9 @@ export interface ITrust extends BaseItem {
     totalFemaleManagementCommitteeMembers: number;
     totalPwdManagementCommitteeMembers: number;
     createAt: string;
+    disableConflictSurvey: number;
+    disableSatisfactionSurvey: number;
+    disableEconomicImpactSurvey: number;
 }
 interface BaseItem {
     id: string;
@@ -100,6 +107,9 @@ export interface ITrustList extends BaseItem {
     botDetailsTwoPhoneNumber: string;
 
     createAt: string;
+    disableConflictSurvey: number;
+    disableSatisfactionSurvey: number;
+    disableEconomicImpactSurvey: number;
 }
 
 export interface ITrustPayloadData {
@@ -144,4 +154,13 @@ export interface IStateAndLGA {
     state: string,
     senatorial_districts: Array<string>,
     lgas: Array<string>,
+}
+
+export interface ISurveyType {
+    type: "CONFLICT" | "SATISFACTION" | "ECONOMIC";
+}
+
+export interface ISurveyTypePayload {
+    trustId: string;
+    accessName: string; // "CONFLICT" | "SATISFACTION" | "ECONOMIC"
 }

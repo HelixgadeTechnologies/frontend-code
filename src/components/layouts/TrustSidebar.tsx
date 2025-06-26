@@ -44,6 +44,11 @@ const TrustSidebar = observer(() => {
       name: "Economic Impact of HCDT",
       link: `/trust/${name}/${id}/economic-impact`,
     },
+    {
+      id: 6,
+      name: `${name?.toLocaleUpperCase()} Surveys Settings`,
+      link: `/trust/${name}/${id}/settings`,
+    },
   ];
   const subRoutesDRA = [
     // {

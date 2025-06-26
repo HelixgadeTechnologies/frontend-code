@@ -8,6 +8,9 @@ import TrustDashboard from "./pages/trust/components/TrustHome";
 import { configure } from "mobx";
 // import Login from "./pages/auth/component/Login";
 import AuthMasterPage from "./pages/auth/component/AuthMasterPage";
+import ConflictDataForm from "./pages/form/ConflictDataForm";
+import SatisfactionDataForm from "./pages/form/SatisfactionDataForm";
+import EconomicImpactDataForm from "./pages/form/EconomicImpactDataForm";
 
 // Disable strict mode globally
 configure({
@@ -23,6 +26,9 @@ function App() {
         <Route path="/trust/:name/:id/*" element={<TrustDashboard />} />
 
         <Route path="/" element={<AuthMasterPage />} />
+        <Route path="/conflict/:trustId" element={<ConflictDataForm />} />
+        <Route path="/satisfaction/:trustId" element={<SatisfactionDataForm />} />
+        <Route path="/economic-impact/:trustId" element={<EconomicImpactDataForm />} />
         {/* <Route path="/forgot-password" element={<ForgotPassword />} /> */}
         <Route path="*" element={<AuthMasterPage />} />
       </Routes>

@@ -1,5 +1,5 @@
-import { makeAutoObservable, ObservableMap } from "mobx"
-import { IStateAndLGA, ITrust, ITrustList, ITrustPayload, ITrustPayloadData, ITrustStore } from "../types/interface";
+import { makeAutoObservable, ObservableMap, toJS } from "mobx"
+import { IStateAndLGA, ISurveyTypePayload, ITrust, ITrustList, ITrustPayload, ITrustPayloadData, ITrustStore } from "../types/interface";
 import { trustService } from "../service/trustService";
 import { TabType } from "../../project/types/interface";
 import data from "../../../utils/stateAndLg.json"
@@ -8,6 +8,9 @@ class TrustStore implements ITrustStore {
     isSubmitting = false;
     isSaving = false;
     isDeleting = false;
+    setConflictForm = false;
+    setSatisfactionForm = false;
+    setEconomicImpactForm = false;
     pageSwitched: number = 1;
     selectedTrust: ITrustList | null = {} as ITrustList;
     trust: ITrust = {} as ITrust;
@@ -210,6 +213,27 @@ class TrustStore implements ITrustStore {
                 this.trust = {} as ITrust
                 this.trust = data as ITrust
                 this.trustFormData = { ...data } as ITrustPayloadData;
+                console.log("trust", toJS(data))
+            }
+        } catch (error) {
+            throw error
+        } finally {
+            this.isLoading = false;
+        }
+    }
+    async getATrust(trustId: string): Promise<void> {
+        try {
+            this.isLoading = true;
+            let data = await trustService.getTrustById(trustId)
+            // let data = await this.allTrust.get(trustId)
+            if (data.success) {
+                const trustDta = data.data as ITrust
+                this.trust = {} as ITrust
+                this.trust = data.data as ITrust
+                this.setConflictForm = trustDta.disableConflictSurvey == 1 ? true : false;
+                this.setSatisfactionForm = trustDta.disableSatisfactionSurvey == 1 ? true : false;
+                this.setEconomicImpactForm = trustDta.disableEconomicImpactSurvey == 1 ? true : false;
+                // console.log("trust", toJS(data))
             }
         } catch (error) {
             throw error
@@ -229,6 +253,17 @@ class TrustStore implements ITrustStore {
             throw error
         } finally {
             this.isDeleting = false;
+        }
+    }
+    async surveyAccess(payload: ISurveyTypePayload): Promise<boolean> {
+        try {
+            this.isLoading = true;
+            await trustService.updateSurveyAccess(payload)
+            return true
+        } catch (error) {
+            throw error
+        } finally {
+            this.isLoading = false;
         }
     }
 }

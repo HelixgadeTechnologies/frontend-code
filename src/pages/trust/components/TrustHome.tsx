@@ -14,6 +14,7 @@ import { trustStore as TrustStore } from "../store/trustStore";
 import ConflictResloution from "../../conflict/components/ConflictResolution";
 import CommunitySatisfaction from "../../communitySatisfaction/components/CommunitySatisfaction";
 import { authStore as AuthStore } from "../../auth/store/authStore"
+import TrustSettingsPage from "./TrustSettingsPage";
 
 const AuthStoreCtx = createContext(AuthStore);
 const TrustStoreCtx = createContext(TrustStore);
@@ -55,6 +56,7 @@ const TrustDashboard = observer(() => {
                 />
                 <Route path="economic-impact" element={<EconomicImpact />} />
 
+
               </>
             ) : (
               <>
@@ -70,6 +72,7 @@ const TrustDashboard = observer(() => {
                 <Route path="economic-impact" element={<EconomicImpact />} />
 
                 <Route path="hdct-projects" element={<HCDTProjects />} />
+                <Route path="settings" element={<TrustSettingsPage />} />
 
               </>
             )}
