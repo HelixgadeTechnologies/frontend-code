@@ -19,7 +19,7 @@ const ManageSettlor = observer(() => {
     <div className="px-10 py-11">
       <PageHeader
         title="Add Settlors"
-        desc="Check and filter all your medical appointments here"
+        desc="All Settlor will be displayed here"
         ctaText="New Settlor"
         action={() => setOpenModal(true)}
         iconLeft={<img src={addCircleIcon} alt="add settlor" />}

@@ -17,7 +17,7 @@ const ManageNUPRC = observer(() => {
     <div className="px-10 py-11">
       <PageHeader
         title="Add NUPRC-ADR"
-        desc="Check and filter all your medical appointments here"
+        desc="All NUPRC will be displayed here"
         ctaText="New NUPRC-ADR"
         action={() => setOpenModal(true)}
         iconLeft={<img src={addCircleIcon} alt="add dra" />}

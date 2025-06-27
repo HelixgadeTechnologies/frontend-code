@@ -23,7 +23,7 @@ const ManageDRA = observer(() => {
     <div className="px-10 py-11">
       <PageHeader
         title="Add DRA"
-        desc="Check and filter all your medical appointments here"
+        desc="All DRA will be displayed here"
         ctaText="New DRA"
         action={() => setOpenModal(true)}
         iconLeft={<img src={addCircleIcon} alt="add dra" />}
