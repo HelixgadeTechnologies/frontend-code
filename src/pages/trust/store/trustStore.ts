@@ -255,10 +255,10 @@ class TrustStore implements ITrustStore {
             this.isDeleting = false;
         }
     }
-    async surveyAccess(payload: ISurveyTypePayload): Promise<boolean> {
+    async surveyAccess(payload: ISurveyTypePayload,url:string): Promise<boolean> {
         try {
             this.isLoading = true;
-            await trustService.updateSurveyAccess(payload)
+            await trustService.updateSurveyAccess(payload,url)
             return true
         } catch (error) {
             throw error

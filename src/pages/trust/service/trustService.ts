@@ -11,5 +11,5 @@ export const trustService = {
 
     removeTrustById: (trustId: string): Promise<HCDTRequestResponse> => client.post(`/trust/remove/`, { trustId }),
 
-    updateSurveyAccess: (payload: ISurveyTypePayload): Promise<HCDTRequestResponse> => client.post(`/trust/toggle-survey-access`, { ...payload }),
+    updateSurveyAccess: (payload: ISurveyTypePayload, url: string): Promise<HCDTRequestResponse> => client.post(`/trust/toggle-survey-access`, { ...payload, url }),
 }

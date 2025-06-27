@@ -240,7 +240,7 @@ const EditTrustEstablishmentForm = observer(() => {
                       href={trustEstablishmentStore.trustEstablishmentStatus.cscDocument}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-red-500 text-gray-700 text-sm hover:underline"
+                      className="text-blue-400 text-gray-700 text-sm hover:underline"
                     >
                       Click here to preview the already uploaded file
                     </a>
@@ -421,7 +421,7 @@ const EditTrustEstablishmentForm = observer(() => {
                       href={trustEstablishmentStore.trustEstablishmentStatus.developmentPlanDocument}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-red-500 text-gray-700 text-sm hover:underline"
+                      className="text-blue-400 text-gray-700 text-sm hover:underline"
                     >
                       Click here to preview the already uploaded file
                     </a>
@@ -641,7 +641,7 @@ const EditTrustEstablishmentForm = observer(() => {
                     href={trustEstablishmentStore.trustEstablishmentStatus.trustDistributionMatrixDocument}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-red-500 text-gray-700 text-sm hover:underline"
+                    className="text-blue-400 text-gray-700 text-sm hover:underline"
                   >
                     Click here to preview the already uploaded file
                   </a>
@@ -696,7 +696,7 @@ const EditTrustEstablishmentForm = observer(() => {
                       href={trustEstablishmentStore.trustEstablishmentStatus.developmentPlanBudgetDocument}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-red-500 text-gray-700 text-sm hover:underline"
+                      className="text-blue-400 text-gray-700 text-sm hover:underline"
                     >
                       Click here to preview the already uploaded file
                     </a>

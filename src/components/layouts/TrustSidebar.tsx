@@ -50,6 +50,34 @@ const TrustSidebar = observer(() => {
       link: `/trust/${name}/${id}/settings`,
     },
   ];
+  const adminRoutes = [
+    {
+      id: 1,
+      name: "Trust Establishment and Governance Structure",
+      link: `/trust/${name}/${id}`,
+    },
+    {
+      id: 2,
+      name: "HCDT Development Projects",
+      link: `/trust/${name}/${id}/hdct-projects`,
+    },
+    {
+      id: 3,
+      name: "Conflict Resolution",
+      link: `/trust/${name}/${id}/conflict-resolution`,
+    },
+    {
+      id: 4,
+      name: "Community Satisfaction",
+      link: `/trust/${name}/${id}/community-satisfaction`,
+    },
+    {
+      id: 5,
+      name: "Economic Impact of HCDT",
+      link: `/trust/${name}/${id}/economic-impact`,
+    },
+
+  ];
   const subRoutesDRA = [
     // {
     //   id: 1,
@@ -94,7 +122,19 @@ const TrustSidebar = observer(() => {
           </Link>
           {/* Sub routes */}
           <div>
-            {(authStore.user.role == "SUPER ADMIN" || authStore.user.role == "ADMIN" ) && subRoutes.map((route) => (
+            {(authStore.user.role == "SUPER ADMIN") && subRoutes.map((route) => (
+              <Link key={route.link} to={route.link}>
+                <li
+                  className={`${pathname === route.link ? "bg-primary-200/20" : "bg-white"
+                    } hover:bg-primary-200/20  rounded transition-all px-4 py-3 flex items-center gap-x-2`}
+                >
+                  <span className="text-sm font-medium text-gray-3">
+                    {route.name}
+                  </span>
+                </li>
+              </Link>
+            ))}
+            {(authStore.user.role == "ADMIN") && adminRoutes.map((route) => (
               <Link key={route.link} to={route.link}>
                 <li
                   className={`${pathname === route.link ? "bg-primary-200/20" : "bg-white"
