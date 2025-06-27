@@ -13,6 +13,7 @@ const TrustSettingsPage = observer(() => {
   const { name } = useParams();
   const navigate = useNavigate();
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
+  const [loadingKey, setLoadingKey] = useState<boolean>(false);
 
 
   useEffect(() => {
@@ -26,6 +27,7 @@ const TrustSettingsPage = observer(() => {
 
   const onSubmit = async (accessType: ISurveyType, url: string) => {
     try {
+      setLoadingKey(true);
       const surveyAccessPayload: ISurveyTypePayload = {
         trustId: trustStore.selectedTrustId as string,
         accessName: accessType.type,
@@ -44,6 +46,8 @@ const TrustSettingsPage = observer(() => {
       } else {
         toast.error(message2);
       }
+    }finally {
+      setLoadingKey(false);
     }
   };
 
@@ -55,10 +59,12 @@ const TrustSettingsPage = observer(() => {
       value: trustStore.setConflictForm,
       url: `${window.location.protocol}//${window.location.host}/conflict/${trustStore.selectedTrustId}`,
       onChange: (value: boolean) => {
+
         trustStore.setConflictForm = value;
         const payloadType: ISurveyType = { type: "CONFLICT" };
         const hostUrl = `${window.location.protocol}//${window.location.host}/conflict/${trustStore.selectedTrustId}`;
         onSubmit(payloadType, hostUrl);
+
       }
     },
     {
@@ -68,10 +74,12 @@ const TrustSettingsPage = observer(() => {
       value: trustStore.setSatisfactionForm,
       url: `${window.location.protocol}//${window.location.host}/satisfaction/${trustStore.selectedTrustId}`,
       onChange: (value: boolean) => {
+
         trustStore.setSatisfactionForm = value;
         const payloadType: ISurveyType = { type: "SATISFACTION" };
         const hostUrl = `${window.location.protocol}//${window.location.host}/satisfaction/${trustStore.selectedTrustId}`;
         onSubmit(payloadType, hostUrl);
+
       }
     },
     {
@@ -81,10 +89,12 @@ const TrustSettingsPage = observer(() => {
       value: trustStore.setEconomicImpactForm,
       url: `${window.location.protocol}//${window.location.host}/economic-impact/${trustStore.selectedTrustId}`,
       onChange: (value: boolean) => {
+
         trustStore.setEconomicImpactForm = value;
         const payloadType: ISurveyType = { type: "ECONOMIC" };
         const hostUrl = `${window.location.protocol}//${window.location.host}/economic-impact/${trustStore.selectedTrustId}`;
         onSubmit(payloadType, hostUrl);
+
       }
     },
   ];
@@ -135,9 +145,24 @@ const TrustSettingsPage = observer(() => {
         <div className="min-h-screen bg-gray-50  ">
           <div className="p-8 ">
             {/* <h2 className="text-2xl font-bold text-blue-800 mb-2">Trust Settings</h2> */}
-            <p className="text-gray-500 mb-8">
-              Use the switches below to enable or disable survey forms for this trust.
-            </p>
+            <div className="flex items-center justify-between">
+              <p className="text-gray-500 mb-8">
+                Use the switches below to enable or disable survey forms for this trust.
+              </p>
+              {loadingKey && (
+                <span className="flex items-center justify-between left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+                  {/* Tailwind spinner */}
+                  <p className="text-gray-500 ">
+                    Loading...
+                  </p>
+                  <svg className="animate-spin h-5 w-5 text-blue-500" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                  </svg>
+                </span>
+              )}
+
+            </div>
             <div className="space-y-6">
               {settings.map((setting) => (
                 <div
@@ -187,6 +212,7 @@ const TrustSettingsPage = observer(() => {
                     />
                     <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-400 rounded-full peer peer-checked:bg-blue-600 transition-all duration-200"></div>
                     <div className="absolute ml-1 mt-1 w-4 h-4 bg-white rounded-full shadow transform peer-checked:translate-x-5 transition-all duration-200"></div>
+
                   </label>
                 </div>
               ))}
