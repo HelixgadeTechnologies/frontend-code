@@ -144,6 +144,7 @@ class TrustEstablishmentStore implements ITrustEstablishmentStore {
             YEAR_START: data.SUB_FIELDS[0]?.yearDeveloped,
             YEAR_EXPIRED: data.SUB_FIELDS[0]?.yearExpired,
             YEAR_NEEDS: data.SUB_FIELDS[0]?.yearOfNeedsAssessment,
+            STATUS_OF_NEED_ASSESSMENT: data.SUB_FIELDS[0]?.statusOfNeedAssessment,
             LEADER_CONSULTED: data.SUB_FIELDS[0]?.communityLeadershipConsulted,
             YOUTH_CONSULTED: data.SUB_FIELDS[0]?.communityYouthsConsulted,
             WOMEN_CONSULTED: data.SUB_FIELDS[0]?.communityWomenConsulted,

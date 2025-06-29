@@ -1,13 +1,13 @@
-import { makeAutoObservable } from "mobx"
+import { makeAutoObservable, toJS } from "mobx"
 import { dashboardService } from "../service/dashboardService";
 import { IDashboardStore, IFinishedDashboard, IGeneralDashboard } from "../types/interface";
 
 class DashboardStore implements IDashboardStore {
     isLoading = false;
     dashboardData: IFinishedDashboard | null = null;
-    selectedYear:number = 0;
-    selectedState:string = "ALL";
-    selectedSettlor:string = "ALL";
+    selectedYear: number = 0;
+    selectedState: string = "ALL";
+    selectedSettlor: string = "ALL";
     constructor() {
         makeAutoObservable(this);
     }
@@ -35,39 +35,40 @@ class DashboardStore implements IDashboardStore {
             EMPLOYEE_PER_PROJECT: data.EMPLOYEE_PER_PROJECT,
             STATISTICS_PERCENTAGE: data.STATISTICS_PERCENTAGE[0],
             DISTRIBUTION_MATRIX: data.DISTRIBUTION_MATRIX[0],
-            NEEDS_ASSESSMENT_COMMUNITY_COUNT:data.NEEDS_ASSESSMENT_COMMUNITY_COUNT[0],
-            BOT_DISPLAY:{
-                male:[
+            NEEDS_ASSESSMENT_COMMUNITY_COUNT: data.NEEDS_ASSESSMENT_COMMUNITY_COUNT[0],
+            BOT_DISPLAY: {
+                male: [
                     data.BOT_DISPLAY[0].totalMaleBotMembers,
                     data.BOT_DISPLAY[0].totalMaleAdvisoryCommitteeMembers,
                     data.BOT_DISPLAY[0].totalMaleManagementCommitteeMembers,
                 ],
-                female:[
+                female: [
                     data.BOT_DISPLAY[0].totalFemaleBotMembers,
                     data.BOT_DISPLAY[0].totalFemaleAdvisoryCommitteeMembers,
                     data.BOT_DISPLAY[0].totalFemaleManagementCommitteeMembers,
                 ],
-                pwd:[
+                pwd: [
                     data.BOT_DISPLAY[0].totalPwdBotMembers,
                     data.BOT_DISPLAY[0].totalPwdAdvisoryCommitteeMembers,
                     data.BOT_DISPLAY[0].totalPwdManagementCommitteeMembers,
                 ]
             },
-            CONFLICT_RESOLUTION_OVER:data.CONFLICT_RESOLUTION_OVER,
-            BOT_INAUGURATION_CHECK: data.BOT_INAUGURATION_CHECK[0]
-
+            CONFLICT_RESOLUTION_OVER: data.CONFLICT_RESOLUTION_OVER,
+            BOT_INAUGURATION_CHECK: data.BOT_INAUGURATION_CHECK[0],
+            COMMUNITY_LEADERSHIP_PERCENTAGE: data.COMMUNITY_LEADERSHIP_PERCENTAGE[0],
+            NEEDS_ASSESSMENT_PERCENTAGE:data.NEEDS_ASSESSMENT_PERCENTAGE[0]
         };
     }
 
-    async getDashboard(year:number,state:string,settlor:string): Promise<void> {
+    async getDashboard(year: number, state: string, settlor: string): Promise<void> {
         try {
             if (this.isLoading || this.dashboardData) return; // Prevent duplicate calls
             this.isLoading = true;
-            let data = await dashboardService.generalDashboard(year,state,settlor);
+            let data = await dashboardService.generalDashboard(year, state, settlor);
             if (data.success) {
                 const processedData = this.transformDashboard(data.data);
                 this.dashboardData = processedData;
-                // console.log(toJS(processedData))
+                console.log("hhhh",toJS(processedData))
             }
         } catch (error) {
             throw error;

@@ -136,6 +136,7 @@ export interface ISubFields {
     trustDistributionMatrixDocument: string,
     completionStatus: number,
     updateAt: string,
+    statusOfNeedAssessment: number,
 }
 
 export interface ITrends {
@@ -162,6 +163,7 @@ export interface IFinishedDashboard {
     YEAR_START: number,
     YEAR_EXPIRED: number,
     YEAR_NEEDS: number,
+    STATUS_OF_NEED_ASSESSMENT: number,
     LEADER_CONSULTED: number,
     YOUTH_CONSULTED: number,
     WOMEN_CONSULTED: number,

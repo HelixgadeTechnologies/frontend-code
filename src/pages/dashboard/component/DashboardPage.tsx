@@ -823,6 +823,25 @@ const DashboardPage: React.FC = observer(() => {
     }
     getInfo()
   }, [dashboardStore]);
+
+const dataM = [
+    {
+      name: "Completed",
+      percentage: dashboardStore.dashboardData?.NEEDS_ASSESSMENT_PERCENTAGE?.percentage_status_1,
+      color:doughnutColors[0],
+    },
+    {
+      name: "In progress",
+      percentage: dashboardStore.dashboardData?.NEEDS_ASSESSMENT_PERCENTAGE?.percentage_status_2,
+      color:doughnutColors[1],
+    },
+    {
+      name: "Yet to be conducted",
+      percentage: dashboardStore.dashboardData?.NEEDS_ASSESSMENT_PERCENTAGE?.percentage_status_3,
+      color:doughnutColors[2],
+    },
+  ]
+
   return (
     <div className="bg-[#F3F5F7] min-h-screen p-6">
       <div id="trust-establishment" className="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-4">
@@ -1060,6 +1079,125 @@ const DashboardPage: React.FC = observer(() => {
               }
             }}
           />
+        </div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 min-h-[220px]">
+        <div className="bg-white rounded-xl p-6 shadow flex flex-col items-center ">
+          <span className="font-semibold text-base text-gray-900 mb-4 self-start">
+            Level of Participation in Needs Assessment
+          </span>
+          <Bar
+            data={{
+              labels: [
+                "Leadership consulted",
+                "Women Consulted",
+                "Youths Consulted",
+                "PwDs Consulted"
+              ],
+              datasets: [
+                {
+                  label: "Percentage",
+                  data: [
+                    dashboardStore.dashboardData?.COMMUNITY_LEADERSHIP_PERCENTAGE?.communityLeadershipPercentage,
+                    dashboardStore.dashboardData?.COMMUNITY_LEADERSHIP_PERCENTAGE?.communityWomenPercentage,
+                    dashboardStore.dashboardData?.COMMUNITY_LEADERSHIP_PERCENTAGE?.communityYouthsPercentage,
+                    dashboardStore.dashboardData?.COMMUNITY_LEADERSHIP_PERCENTAGE?.pwDsPercentage,
+                  ],
+                  backgroundColor: [
+                    doughnutColors[0],
+                    doughnutColors[1],
+                    doughnutColors[2],
+                    doughnutColors[3]
+                  ],
+                  borderRadius: 8,
+                  barPercentage: 0.5,
+                  categoryPercentage: 0.5,
+                }
+              ]
+            }}
+            options={{
+              indexAxis: "y",
+              plugins: {
+                legend: { display: false },
+                tooltip: { enabled: true },
+                datalabels: {
+                  anchor: 'center' as const,
+                  align: 'center' as const,
+                  formatter: function (value) {
+                    return `${value}%`;
+                  },
+                  color: '#222',
+                  font: {
+                    weight: 'bold'
+                  }
+                }
+              },
+              scales: {
+                x: {
+                  min: 0,
+                  max: 100,
+                  ticks: {
+                    callback: function (tickValue) {
+                      return `${tickValue}%`;
+                    }
+                  },
+                  title: {
+                    display: false
+                  }
+                },
+                y: {
+                  title: {
+                    display: false
+                  }
+                }
+              }
+            }}
+          />
+        </div>
+        <div className="bg-white rounded-xl p-8 shadow flex flex-col md:flex-row items-center min-h-[320px]">
+          <div className="flex flex-col items-center ">
+            <span className="font-semibold text-base text-gray-900 mb-4 self-start">Status of Trust's Needs Assessment</span>
+            <div className="flex flex-row items-center ">
+              <div className="w-40 h-40">
+                <Doughnut
+                  data={{
+                    labels: ["Completed", "In progress", "Yet to be conducted"],
+                    // labels: dashboardStore.dashboardData?.QUALITY_RATINGS.map(e => e.qualityRating),
+                    datasets: [
+                      {
+                        data: [
+                          dashboardStore.dashboardData?.NEEDS_ASSESSMENT_PERCENTAGE?.percentage_status_1,
+                          dashboardStore.dashboardData?.NEEDS_ASSESSMENT_PERCENTAGE?.percentage_status_2,
+                          dashboardStore.dashboardData?.NEEDS_ASSESSMENT_PERCENTAGE?.percentage_status_3,
+                        ],
+                        backgroundColor: [
+                          doughnutColors[0],
+                          doughnutColors[1],
+                          doughnutColors[2]
+                        ],
+                        borderWidth: 0,
+                      },
+                    ],
+                  }}
+                  options={{
+                    plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                    cutout: "60%",
+                  }}
+                />
+              </div>
+              <div className="ml-6 flex flex-col gap-2">
+                {dataM.map((e, i) => (
+                  <div key={i}>
+                    <div className="flex items-center text-sm text-gray-700 gap-2">
+                      <span className="inline-block w-3 h-3 rounded-full" style={{ background: e.color }}></span>
+                      {e.name}
+                      <span className="ml-2 text-gray-500">{e.percentage}%</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 

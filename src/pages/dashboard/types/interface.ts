@@ -26,7 +26,9 @@ export interface IFinishedDashboard {
     NEEDS_ASSESSMENT_COMMUNITY_COUNT: INeedsAssessmentCommunityCount;
     BOT_DISPLAY: { male: number[]; female: number[]; pwd: number[] };
     CONFLICT_RESOLUTION_OVER: IConflictResolutionOverTime[];
-    BOT_INAUGURATION_CHECK: IBotInauguration
+    BOT_INAUGURATION_CHECK: IBotInauguration;
+    COMMUNITY_LEADERSHIP_PERCENTAGE: ICommunityLeadersP;
+    NEEDS_ASSESSMENT_PERCENTAGE: INeedsAssessmentStatusP;
 }
 
 interface ConflictStatusPercentage {
@@ -65,8 +67,21 @@ export interface IGeneralDashboard {
     BOT_DISPLAY: ICommitteeBOTMemberStats[];
     CONFLICT_RESOLUTION_OVER: IConflictResolutionOverTime[]
     BOT_INAUGURATION_CHECK: IBotInauguration[]
+    COMMUNITY_LEADERSHIP_PERCENTAGE: ICommunityLeadersP[];
+    NEEDS_ASSESSMENT_PERCENTAGE: INeedsAssessmentStatusP[];
 }
 
+export interface INeedsAssessmentStatusP {
+    percentage_status_1: number,
+    percentage_status_2: number,
+    percentage_status_3: number,
+}
+export interface ICommunityLeadersP {
+    communityLeadershipPercentage: number,
+    communityYouthsPercentage: number,
+    communityWomenPercentage: number,
+    pwDsPercentage: number,
+}
 export interface IBotInauguration {
     botYesPercentage: number,
     managementYesPercentage: number,

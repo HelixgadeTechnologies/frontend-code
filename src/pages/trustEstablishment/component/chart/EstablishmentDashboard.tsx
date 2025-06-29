@@ -119,10 +119,18 @@ const EstablishmentDashboard = observer(() => {
     return "NO UPLOAD";
   }
 
+  const translator3 = (data: number): string => {
+    if (data == 1) return "COMPLETED";
+    if (data == 2) return "IN PROGRESS";
+    if (data == 3) return "YET TO BE CONDUCTED";
+    return "NO DATA";
+  }
+
   const handelFileDelete = useCallback((url: string, type: string) => {
     setUrl(url);
     setType(type);
   }, [url, type]);
+  
   const handelClose = useCallback(() => {
     setUrl(null);
     setType(null);
@@ -309,8 +317,9 @@ const EstablishmentDashboard = observer(() => {
           <div className="bg-[#F3F5F7] flex items-center justify-between px-6 py-4">
             <div>
               <h3 className="font-semibold text-lg text-gray-900">Status of Needs Assessment</h3>
-              <p className="text-gray-500 text-sm mt-1">Status needs assessment for the trust</p>
+              <p className="text-gray-500 text-sm mt-6">Status needs assessment for the trust</p>
             </div>
+            <div>
             <div className="flex items-center gap-2">
               <label htmlFor="year-select" className="text-gray-500 text-sm mr-2">Select Year</label>
               <select
@@ -321,6 +330,10 @@ const EstablishmentDashboard = observer(() => {
               >
                 <option>{trustEstablishmentStore.dashboardData?.YEAR_NEEDS}</option>
               </select>
+              <br />
+            </div>
+            <p className="text-gray-500 text-sm mt-6"><span className={`${classColors(trustEstablishmentStore.dashboardData?.STATUS_OF_NEED_ASSESSMENT!)}`}>{translator3(trustEstablishmentStore.dashboardData?.STATUS_OF_NEED_ASSESSMENT!)}</span></p>
+
             </div>
           </div>
 

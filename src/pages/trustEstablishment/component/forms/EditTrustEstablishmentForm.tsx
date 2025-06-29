@@ -505,7 +505,7 @@ const EditTrustEstablishmentForm = observer(() => {
                 label="Status of needs assessment"
                 rules={{ required: "Please select a status" }}
                 options={[
-                  { value: "1", label: "Complete" },
+                  { value: "1", label: "Completed" },
                   { value: "2", label: "In progress" },
                   { value: "3", label: "yet to be conducted" },
                 ]}
