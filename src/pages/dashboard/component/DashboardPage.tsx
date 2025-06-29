@@ -995,11 +995,11 @@ const dataM = [
           <br />
           <br />
 
-          <span className="font-semibold text-base text-gray-900 mb-4">Number of communities where needs assessment has been full completed</span>
+          {/* <span className="font-semibold text-base text-gray-900 mb-4">Number of communities where needs assessment has been full completed</span>
           <div>
             <span className="font-bold text-3xl text-gray-900 align-middle">{dashboardStore.dashboardData?.NEEDS_ASSESSMENT_COMMUNITY_COUNT.distinct_community_count}</span>
             <span className="text-base text-gray-700 ml-2 align-middle">communities needs assessment has been full completed</span>
-          </div>
+          </div> */}
 
         </div>
       </div>
@@ -1156,7 +1156,7 @@ const dataM = [
         </div>
         <div className="bg-white rounded-xl p-8 shadow flex flex-col md:flex-row items-center min-h-[320px]">
           <div className="flex flex-col items-center ">
-            <span className="font-semibold text-base text-gray-900 mb-4 self-start">Status of Trust's Needs Assessment</span>
+            <span className="font-semibold text-base text-gray-900 mb-4 self-start">Status of Trusts Needs Assessment</span>
             <div className="flex flex-row items-center ">
               <div className="w-40 h-40">
                 <Doughnut
