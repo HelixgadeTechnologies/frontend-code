@@ -58,7 +58,10 @@ const EntryDashboard: React.FC<LayoutProps> = observer(({ children }) => {
       <header className="w-full bg-white shadow-md sticky top-0 z-50 ">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           {/* Logo */}
-          <div className="text-2xl font-bold text-black">I-HCDT-M</div>
+        <div className="text-xl lg:text-2xl font-bold relative">
+          <span className="text-2xl font-bold text-black">I-HCDT</span>
+          <span className="text-xs block text-[#003B99] absolute-bottom-2 tracking-widest">Monitor</span>
+        </div>
 
           {/* Buttons */}
           <div className="space-x-4">
