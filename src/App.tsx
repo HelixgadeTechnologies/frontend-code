@@ -11,6 +11,8 @@ import AuthMasterPage from "./pages/auth/component/AuthMasterPage";
 import ConflictDataForm from "./pages/form/ConflictDataForm";
 import SatisfactionDataForm from "./pages/form/SatisfactionDataForm";
 import EconomicImpactDataForm from "./pages/form/EconomicImpactDataForm";
+import EntryDashboard from "./pages/dashboard/component/EntryDashboard";
+import GeneralDashboard from "./pages/dashboard/component/GeneralDashboard";
 
 // Disable strict mode globally
 configure({
@@ -25,7 +27,8 @@ function App() {
         <Route path="/dashboard/*" element={<DashboardHome />} />
         <Route path="/trust/:name/:id/*" element={<TrustDashboard />} />
 
-        <Route path="/" element={<AuthMasterPage />} />
+        <Route path="/" element={<EntryDashboard><GeneralDashboard /></EntryDashboard>} />
+        <Route path="/auth/:option" element={<AuthMasterPage />} />
         <Route path="/conflict/:trustId" element={<ConflictDataForm />} />
         <Route path="/satisfaction/:trustId" element={<SatisfactionDataForm />} />
         <Route path="/economic-impact/:trustId" element={<EconomicImpactDataForm />} />

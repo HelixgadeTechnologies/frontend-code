@@ -6,14 +6,24 @@ import ForgotPassword from "./ForgotPassword";
 import Register from "./Register";
 import { trustStore as TrustStore } from "../../trust/store/trustStore"
 import { authBg } from "../../../assets/images";
+import { useParams } from "react-router-dom";
+
 const AuthStoreCTX = createContext(AuthStore)
 const TrustStoreCTX = createContext(TrustStore)
 const AuthMasterPage = observer(() => {
     const authStore = useContext(AuthStoreCTX)
     const trustStore = useContext(TrustStoreCTX)
+    const { option } = useParams();
     useEffect(() => {
         async function getInfo() {
-            await trustStore.getAllTrust()
+            if (option) {
+                await trustStore.getAllTrust()
+                authStore.pageSwitch = Number(option);
+            } else {
+                await trustStore.getAllTrust()
+                authStore.pageSwitch = 1; // Default to Login
+            }
+
         }
         getInfo();
         return () => { };

@@ -19,8 +19,8 @@ const Sidebar = () => {
 
   return (
     <div className="hidden lg:flex h-full bg-white border-r border-gray-5  flex-col w-[272px]  py-6 px-4">
-      <div className=" font-bold text-4xl text-primary-300">I-HCDT</div>
-
+      <div className=" font-bold text-4xl text-primary-300">I-HCDT-M</div>
+    {/* <p className="text-gray-500 text-lg text-[##003B99]" >monitor</p> */}
       <div className="flex-1 flex flex-col justify-between py-8">
         <div>
           {routes.slice(0, 2).map((route) => (

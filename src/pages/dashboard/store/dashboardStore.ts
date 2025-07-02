@@ -8,6 +8,7 @@ class DashboardStore implements IDashboardStore {
     selectedYear: number = 0;
     selectedState: string = "ALL";
     selectedSettlor: string = "ALL";
+    selectedTrust: string = "ALL";
     constructor() {
         makeAutoObservable(this);
     }
@@ -60,15 +61,15 @@ class DashboardStore implements IDashboardStore {
         };
     }
 
-    async getDashboard(year: number, state: string, settlor: string): Promise<void> {
+    async getDashboard(trustId:string,year: number, state: string, settlor: string): Promise<void> {
         try {
             if (this.isLoading || this.dashboardData) return; // Prevent duplicate calls
             this.isLoading = true;
-            let data = await dashboardService.generalDashboard(year, state, settlor);
+            let data = await dashboardService.generalDashboard(trustId,year, state, settlor);
             if (data.success) {
                 const processedData = this.transformDashboard(data.data);
                 this.dashboardData = processedData;
-                console.log("hhhh",toJS(processedData))
+                console.log("hhhh",toJS({trustId,year, state, settlor}))    
             }
         } catch (error) {
             throw error;

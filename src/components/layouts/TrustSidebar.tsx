@@ -1,6 +1,6 @@
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { logoutIcon, settingsIcon, trustIcon } from "../../assets/icons";
-import {authStore as AuthStore} from "../../pages/auth/store/authStore"
+import { authStore as AuthStore } from "../../pages/auth/store/authStore"
 import { useCookies } from "react-cookie";
 import { observer } from "mobx-react-lite";
 import { createContext, useContext } from "react";
@@ -108,7 +108,7 @@ const TrustSidebar = observer(() => {
 
   return (
     <div className="hidden lg:flex h-full bg-white border-r border-gray-5  flex-col w-[272px]  py-6 px-4">
-      <div className=" font-bold text-4xl text-primary-300">I-HCDT</div>
+      <div className=" font-bold text-4xl text-primary-300">I-HCDT-M</div>
 
       <div className="flex-1 flex flex-col justify-between py-8">
         <div>
@@ -146,7 +146,7 @@ const TrustSidebar = observer(() => {
                 </li>
               </Link>
             ))}
-            
+
             {authStore.user.role == "DRA" && subRoutesDRA.map((route) => (
               <Link key={route.link} to={route.link}>
                 <li
@@ -166,8 +166,8 @@ const TrustSidebar = observer(() => {
           <Link to={`/dashboard/settings`}>
             <li
               className={`${pathname === "/dashboard/settings"
-                  ? "bg-primary-200/20"
-                  : "bg-white"
+                ? "bg-primary-200/20"
+                : "bg-white"
                 } hover:bg-primary-200/20  rounded transition-all px-4 py-3 flex items-center gap-x-2`}
             >
               <img src={settingsIcon} alt={"settings"} />

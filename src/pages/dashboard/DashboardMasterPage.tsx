@@ -28,7 +28,7 @@ const DashboardMasterPage = observer(() => {
     useEffect(() => {
         async function getInfo() {
             trustStore.getAllStates()
-            await dashboardStore.getDashboard(0, "ALL","ALL")
+            await dashboardStore.getDashboard("ALL",0, "ALL","ALL")
             economicImpactStore.isDashboardLoading = false;
             economicImpactStore.dashboardData = null;
             await economicImpactStore.getEconomicImpactDashboardByTrustId("ALL",0,"ALL","ALL");
@@ -42,6 +42,7 @@ const DashboardMasterPage = observer(() => {
             projectStore.dashboardData = null;
             await projectStore.getProjectDashboardByTrustId("ALL",0,"ALL","ALL");
             await settingStore.getAllSettlor();
+            await trustStore.getAllTrust();
         }
         getInfo();
         return () => { };

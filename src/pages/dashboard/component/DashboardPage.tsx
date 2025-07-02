@@ -21,6 +21,7 @@ import { ISettlor } from "../../Settings/types/interface";
 import { settingStore as SettingStore } from "../../Settings/store/settingStore";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import FloatingStepper from "./FloatingStepper";
+import { ITrustList } from "../../trust/types/interface";
 
 const dashboardStoreCTX = createContext(DashboardStore);
 const settingStoreCTX = createContext(SettingStore);
@@ -67,12 +68,19 @@ const DashboardPage: React.FC = observer(() => {
   };
 
   const barOptions = {
-    plugins: { legend: { display: false } },
+    plugins: {
+      legend: { display: false },
+      datalabels: {
+        color: "#fff", // Set datalabels (data value text) to white
+        font: { weight: "bold" as "bold" },
+      },
+    },
     scales: {
-      x: { grid: { display: false }, ticks: { color: "#8C94A6" } },
+      x: { grid: { display: false }, ticks: { color: "#8C4A6" } },
       y: { grid: { color: "#F3F5F7" }, ticks: { color: "#8C94A6", stepSize: 20 } },
     },
     layout: { padding: 20 },
+
   };
 
   // Doughnut chart data
@@ -153,97 +161,7 @@ const DashboardPage: React.FC = observer(() => {
     ],
   };
 
-  // const conflictBarData = {
-  //   labels: dashboardStore.dashboardData?.CONFLICT_RESOLUTION_OVER_TIME.map(e => String(e.month)),
-  //   datasets: [
-  //     {
-  //       label: "Not in court",
-  //       data: dashboardStore.dashboardData?.CONFLICT_RESOLUTION_OVER_TIME.map(e => e.notInCourt),
-  //       backgroundColor: "#22C55E",
-  //       borderRadius: 4,
-  //       stack: "Stack 0",
-  //     },
-  //     {
-  //       label: "In court",
-  //       data: dashboardStore.dashboardData?.CONFLICT_RESOLUTION_OVER_TIME.map(e => e.inCourt),
-  //       backgroundColor: "#EF4444",
-  //       borderRadius: 4,
-  //       stack: "Stack 0",
-  //     },
 
-  //   ],
-  // };
-  // const conflictBarOptions = {
-  //   plugins: {
-  //     legend: {
-  //       display: true,
-  //       position: "top" as const,
-  //       align: "end" as const,
-  //       labels: {
-  //         boxWidth: 12,
-  //         boxHeight: 12,
-  //         usePointStyle: true,
-  //         padding: 20,
-  //       },
-  //     },
-  //     tooltip: { enabled: true },
-
-  //   },
-  //   responsive: true,
-  //   scales: {
-  //     x: {
-  //       stacked: true,
-  //       grid: { display: false },
-  //       ticks: { color: "#8C94A6" },
-  //     },
-  //     y: {
-  //       stacked: true,
-  //       grid: { color: "#E5E7EB" },
-  //       ticks: { color: "#8C94A6" },
-  //       beginAtZero: true,
-  //     },
-  //   },
-  // };
-
-  //   const conflictBarOptions = {
-  //   plugins: {
-  //     legend: {
-  //       display: true,
-  //       position: "top" as const,
-  //       align: "end" as const,
-  //       labels: {
-  //         boxWidth: 12,
-  //         boxHeight: 12,
-  //         usePointStyle: true,
-  //         padding: 20,
-  //       },
-  //     },
-  //     tooltip: { enabled: true },
-  //     datalabels: {
-  //       anchor: 'end',
-  //       align: 'right',
-  //       color: '#222',
-  //       font: { weight: 'bold' },
-  //       formatter: function(value: number) {
-  //         return `${value}%`;
-  //       },
-  //     },
-  //   },
-  //   responsive: true,
-  //   scales: {
-  //     x: {
-  //       stacked: true,
-  //       grid: { display: false },
-  //       ticks: { color: "#8C94A6" },
-  //     },
-  //     y: {
-  //       stacked: true,
-  //       grid: { color: "#E5E7EB" },
-  //       ticks: { color: "#8C94A6" },
-  //       beginAtZero: true,
-  //     },
-  //   },
-  // };
   const conflictBarOptions = {
     plugins: {
       legend: {
@@ -441,7 +359,7 @@ const DashboardPage: React.FC = observer(() => {
       "Portable Water",
       "Electricity",
       "Market",
-      "Favourable Business Environment",
+      "Favorable Business Environment",
     ],
     datasets: [
       {
@@ -675,20 +593,6 @@ const DashboardPage: React.FC = observer(() => {
     },
   };
 
-  // const pieChartOptions: ChartOptions<"pie"> = {
-  //   responsive: true,
-  //   maintainAspectRatio: false,
-  //   plugins: {
-  //     legend: {
-  //       position: "top" as const,
-  //       align: "end" as const, // Align legend to the end
-  //     },
-  //     title: {
-  //       display: false,
-  //       text: "Number of Trust Project by Category",
-  //     },
-  //   },
-  // };
 
   const labels = ["Males", "Females", "PwDs"];
 
@@ -765,19 +669,19 @@ const DashboardPage: React.FC = observer(() => {
     async function getInfo() {
       dashboardStore.selectedYear = Number(v)
       dashboardStore.dashboardData = null
-      await dashboardStore.getDashboard(Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor)
+      await dashboardStore.getDashboard(dashboardStore.selectedTrust == "ALL" ? "ALL" : dashboardStore.selectedTrust,Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor)
       economicImpactStore.isDashboardLoading = false;
       economicImpactStore.dashboardData = null;
-      await economicImpactStore.getEconomicImpactDashboardByTrustId("ALL", Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
+      await economicImpactStore.getEconomicImpactDashboardByTrustId(dashboardStore.selectedTrust == "ALL" ? "ALL" : dashboardStore.selectedTrust, Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
       satisfactionStore.isDashboardLoading = false;
       satisfactionStore.dashboardData = null;
-      await satisfactionStore.getSatisfactionDashboardByTrustId("ALL", Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
+      await satisfactionStore.getSatisfactionDashboardByTrustId(dashboardStore.selectedTrust == "ALL" ? "ALL" : dashboardStore.selectedTrust, Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
       conflictStore.isDashboardLoading = false;
       conflictStore.dashboardData = null;
-      await conflictStore.getConflictDashboardByTrustId("ALL", Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
+      await conflictStore.getConflictDashboardByTrustId(dashboardStore.selectedTrust == "ALL" ? "ALL" : dashboardStore.selectedTrust, Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
       projectStore.isDashboardLoading = false;
       projectStore.dashboardData = null;
-      await projectStore.getProjectDashboardByTrustId("ALL", Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
+      await projectStore.getProjectDashboardByTrustId(dashboardStore.selectedTrust == "ALL" ? "ALL" : dashboardStore.selectedTrust, Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
     }
     getInfo()
   }, [dashboardStore]);
@@ -786,19 +690,19 @@ const DashboardPage: React.FC = observer(() => {
     async function getInfo() {
       dashboardStore.selectedState = v
       dashboardStore.dashboardData = null
-      await dashboardStore.getDashboard(dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, v, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor)
+      await dashboardStore.getDashboard(dashboardStore.selectedTrust == "ALL" ? "ALL" : dashboardStore.selectedTrust,dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, v, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor)
       economicImpactStore.isDashboardLoading = false;
       economicImpactStore.dashboardData = null;
-      await economicImpactStore.getEconomicImpactDashboardByTrustId("ALL", dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, v, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
+      await economicImpactStore.getEconomicImpactDashboardByTrustId(dashboardStore.selectedTrust == "ALL" ? "ALL" : dashboardStore.selectedTrust, dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, v, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
       satisfactionStore.isDashboardLoading = false;
       satisfactionStore.dashboardData = null;
-      await satisfactionStore.getSatisfactionDashboardByTrustId("ALL", dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, v, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
+      await satisfactionStore.getSatisfactionDashboardByTrustId(dashboardStore.selectedTrust == "ALL" ? "ALL" : dashboardStore.selectedTrust, dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, v, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
       conflictStore.isDashboardLoading = false;
       conflictStore.dashboardData = null;
-      await conflictStore.getConflictDashboardByTrustId("ALL", dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, v, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
+      await conflictStore.getConflictDashboardByTrustId(dashboardStore.selectedTrust == "ALL" ? "ALL" : dashboardStore.selectedTrust, dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, v, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
       projectStore.isDashboardLoading = false;
       projectStore.dashboardData = null;
-      await projectStore.getProjectDashboardByTrustId("ALL", dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, v, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
+      await projectStore.getProjectDashboardByTrustId(dashboardStore.selectedTrust == "ALL" ? "ALL" : dashboardStore.selectedTrust, dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, v, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
     }
     getInfo()
   }, [dashboardStore]);
@@ -807,38 +711,58 @@ const DashboardPage: React.FC = observer(() => {
     async function getInfo() {
       dashboardStore.selectedSettlor = v
       dashboardStore.dashboardData = null
-      await dashboardStore.getDashboard(dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, v)
+      await dashboardStore.getDashboard(dashboardStore.selectedTrust == "ALL" ? "ALL" : dashboardStore.selectedTrust,dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, v)
       economicImpactStore.isDashboardLoading = false;
       economicImpactStore.dashboardData = null;
-      await economicImpactStore.getEconomicImpactDashboardByTrustId("ALL", dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, v);
+      await economicImpactStore.getEconomicImpactDashboardByTrustId(dashboardStore.selectedTrust == "ALL" ? "ALL" : dashboardStore.selectedTrust, dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, v);
       satisfactionStore.isDashboardLoading = false;
       satisfactionStore.dashboardData = null;
-      await satisfactionStore.getSatisfactionDashboardByTrustId("ALL", dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, v);
+      await satisfactionStore.getSatisfactionDashboardByTrustId(dashboardStore.selectedTrust == "ALL" ? "ALL" : dashboardStore.selectedTrust, dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, v);
       conflictStore.isDashboardLoading = false;
       conflictStore.dashboardData = null;
-      await conflictStore.getConflictDashboardByTrustId("ALL", dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, v);
+      await conflictStore.getConflictDashboardByTrustId(dashboardStore.selectedTrust == "ALL" ? "ALL" : dashboardStore.selectedTrust, dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, v);
       projectStore.isDashboardLoading = false;
       projectStore.dashboardData = null;
-      await projectStore.getProjectDashboardByTrustId("ALL", dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, v);
+      await projectStore.getProjectDashboardByTrustId(dashboardStore.selectedTrust == "ALL" ? "ALL" : dashboardStore.selectedTrust, dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, v);
+    }
+    getInfo()
+  }, [dashboardStore]);
+  const selectTrust = useCallback((v: string) => {
+    async function getInfo() {
+      dashboardStore.selectedTrust = v
+      dashboardStore.dashboardData = null
+      await dashboardStore.getDashboard(v,dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor)
+      economicImpactStore.isDashboardLoading = false;
+      economicImpactStore.dashboardData = null;
+      await economicImpactStore.getEconomicImpactDashboardByTrustId(v, dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
+      satisfactionStore.isDashboardLoading = false;
+      satisfactionStore.dashboardData = null;
+      await satisfactionStore.getSatisfactionDashboardByTrustId(v, dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
+      conflictStore.isDashboardLoading = false;
+      conflictStore.dashboardData = null;
+      await conflictStore.getConflictDashboardByTrustId(v, dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
+      projectStore.isDashboardLoading = false;
+      projectStore.dashboardData = null;
+      await projectStore.getProjectDashboardByTrustId(v, dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
     }
     getInfo()
   }, [dashboardStore]);
 
-const dataM = [
+  const dataM = [
     {
       name: "Completed",
       percentage: dashboardStore.dashboardData?.NEEDS_ASSESSMENT_PERCENTAGE?.percentage_status_1,
-      color:doughnutColors[0],
+      color: doughnutColors[0],
     },
     {
       name: "In progress",
       percentage: dashboardStore.dashboardData?.NEEDS_ASSESSMENT_PERCENTAGE?.percentage_status_2,
-      color:doughnutColors[1],
+      color: doughnutColors[1],
     },
     {
       name: "Yet to be conducted",
       percentage: dashboardStore.dashboardData?.NEEDS_ASSESSMENT_PERCENTAGE?.percentage_status_3,
-      color:doughnutColors[2],
+      color: doughnutColors[2],
     },
   ]
 
@@ -848,10 +772,31 @@ const dataM = [
 
         <div>
           <h2 className="font-semibold text-xl text-gray-900">Aggregated Dashboard</h2>
-          <p className="text-gray-500 text-sm">Control your profile setup and integrations</p>
+          {/* <p className="text-gray-500 text-sm">Control your profile setup and integrations</p> */}
         </div>
         <div>
           <div className="flex flex-col md:flex-row gap-4 md:gap-8 mb-8 w-full justify-end">
+            <div className="flex flex-col">
+              <Observer>
+                {() => (
+                  <>
+                    <label className="text-sm font-medium text-gray-700 mb-1">Select Trust</label>
+                    <select
+                      className="border border-gray-300 rounded px-4 py-2 min-w-[160px] focus:outline-none focus:ring-2 focus:ring-primary-200 bg-white text-gray-700"
+                      value={dashboardStore.selectedTrust}
+                      onChange={e => selectTrust(e.target.value)}
+
+                    >
+                      <option key="ALL" value="ALL">ALL</option>
+                      {[...trustStore.allTrustList.values()].map((v: ITrustList) => (
+                        <option key={v.trustName} value={v.trustId}>{v.trustName}</option>
+                      ))}
+                    </select>
+
+                  </>
+                )}
+              </Observer>
+            </div>
             <div className="flex flex-col">
               <Observer>
                 {() => (
@@ -933,7 +878,7 @@ const dataM = [
               <span className="text-xs text-gray-500 font-medium">Total Number of all Benefiting Communities | {dashboardStore.dashboardData?.COMMUNITY_BENEFIT.total.reduce((sum: any, num: any) => sum + num, 0)}</span>
             </div>
             <div className="w-full h-56 flex items-end">
-              <Bar data={barData} options={barOptions} />
+              <Bar data={barData} options={barOptions} plugins={[ChartDataLabels]} />
             </div>
           </div>
         </div>
@@ -1084,7 +1029,7 @@ const dataM = [
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 min-h-[220px]">
         <div className="bg-white rounded-xl p-6 shadow flex flex-col items-center ">
           <span className="font-semibold text-base text-gray-900 mb-4 self-start">
-            Level of Participation in Needs Assessment
+            Percentage of Trusts where host community leaders, women, youths, and PwDs were consulted during needs assessment.
           </span>
           <Bar
             data={{
@@ -1156,7 +1101,7 @@ const dataM = [
         </div>
         <div className="bg-white rounded-xl p-8 shadow flex flex-col md:flex-row items-center min-h-[320px]">
           <div className="flex flex-col items-center ">
-            <span className="font-semibold text-base text-gray-900 mb-4 self-start">Status of Trusts Needs Assessment</span>
+            <span className="font-semibold text-base text-gray-900 mb-4 self-start">Percentage of Trust where needs assessment has been conducted.</span>
             <div className="flex flex-row items-center ">
               <div className="w-40 h-40">
                 <Doughnut
