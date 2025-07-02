@@ -126,8 +126,15 @@ const EconomicImpactDashboard = observer(({ economicImpactStore }: { economicImp
                                                     },
                                                 },
                                                 legend: {
+                                                    display: true,
                                                     position: "bottom" as const,
-                                                    align: "end" as const, // Align legend to the end
+                                                    align: "center" as const,
+                                                    labels: {
+                                                        boxWidth: 18,
+                                                        boxHeight: 18,
+                                                        padding: 10,
+                                                        font: { size: 9 },
+                                                    },
                                                 },
                                             },
                                         }}
@@ -156,8 +163,15 @@ const EconomicImpactDashboard = observer(({ economicImpactStore }: { economicImp
                                                     },
                                                 },
                                                 legend: {
+                                                    display: true,
                                                     position: "bottom" as const,
-                                                    align: "end" as const, // Align legend to the end
+                                                    align: "center" as const,
+                                                    labels: {
+                                                        boxWidth: 18,
+                                                        boxHeight: 18,
+                                                        padding: 10,
+                                                        font: { size: 9 },
+                                                    },
                                                 },
                                                 // legend: { display: true },
                                             },
@@ -187,8 +201,15 @@ const EconomicImpactDashboard = observer(({ economicImpactStore }: { economicImp
                                                     },
                                                 },
                                                 legend: {
+                                                    display: true,
                                                     position: "bottom" as const,
-                                                    align: "end" as const, // Align legend to the end
+                                                    align: "center" as const,
+                                                    labels: {
+                                                        boxWidth: 18,
+                                                        boxHeight: 18,
+                                                        padding: 10,
+                                                        font: { size: 9 },
+                                                    },
                                                 },
                                             },
                                         }}

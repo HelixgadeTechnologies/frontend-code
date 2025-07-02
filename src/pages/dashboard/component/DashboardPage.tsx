@@ -669,7 +669,7 @@ const DashboardPage: React.FC = observer(() => {
     async function getInfo() {
       dashboardStore.selectedYear = Number(v)
       dashboardStore.dashboardData = null
-      await dashboardStore.getDashboard(dashboardStore.selectedTrust == "ALL" ? "ALL" : dashboardStore.selectedTrust,Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor)
+      await dashboardStore.getDashboard(dashboardStore.selectedTrust == "ALL" ? "ALL" : dashboardStore.selectedTrust, Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor)
       economicImpactStore.isDashboardLoading = false;
       economicImpactStore.dashboardData = null;
       await economicImpactStore.getEconomicImpactDashboardByTrustId(dashboardStore.selectedTrust == "ALL" ? "ALL" : dashboardStore.selectedTrust, Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
@@ -690,7 +690,7 @@ const DashboardPage: React.FC = observer(() => {
     async function getInfo() {
       dashboardStore.selectedState = v
       dashboardStore.dashboardData = null
-      await dashboardStore.getDashboard(dashboardStore.selectedTrust == "ALL" ? "ALL" : dashboardStore.selectedTrust,dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, v, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor)
+      await dashboardStore.getDashboard(dashboardStore.selectedTrust == "ALL" ? "ALL" : dashboardStore.selectedTrust, dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, v, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor)
       economicImpactStore.isDashboardLoading = false;
       economicImpactStore.dashboardData = null;
       await economicImpactStore.getEconomicImpactDashboardByTrustId(dashboardStore.selectedTrust == "ALL" ? "ALL" : dashboardStore.selectedTrust, dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, v, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
@@ -711,7 +711,7 @@ const DashboardPage: React.FC = observer(() => {
     async function getInfo() {
       dashboardStore.selectedSettlor = v
       dashboardStore.dashboardData = null
-      await dashboardStore.getDashboard(dashboardStore.selectedTrust == "ALL" ? "ALL" : dashboardStore.selectedTrust,dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, v)
+      await dashboardStore.getDashboard(dashboardStore.selectedTrust == "ALL" ? "ALL" : dashboardStore.selectedTrust, dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, v)
       economicImpactStore.isDashboardLoading = false;
       economicImpactStore.dashboardData = null;
       await economicImpactStore.getEconomicImpactDashboardByTrustId(dashboardStore.selectedTrust == "ALL" ? "ALL" : dashboardStore.selectedTrust, dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, v);
@@ -731,7 +731,7 @@ const DashboardPage: React.FC = observer(() => {
     async function getInfo() {
       dashboardStore.selectedTrust = v
       dashboardStore.dashboardData = null
-      await dashboardStore.getDashboard(v,dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor)
+      await dashboardStore.getDashboard(v, dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor)
       economicImpactStore.isDashboardLoading = false;
       economicImpactStore.dashboardData = null;
       await economicImpactStore.getEconomicImpactDashboardByTrustId(v, dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
@@ -1838,8 +1838,15 @@ const DashboardPage: React.FC = observer(() => {
                             },
                           },
                           legend: {
+                            display: true,
                             position: "bottom" as const,
-                            align: "end" as const, // Align legend to the end
+                            align: "center" as const,
+                            labels: {
+                              boxWidth: 18,
+                              boxHeight: 18,
+                              padding: 10,
+                              font: { size: 9 },
+                            },
                           },
                         },
                       }}
@@ -1868,8 +1875,15 @@ const DashboardPage: React.FC = observer(() => {
                             },
                           },
                           legend: {
+                            display: true,
                             position: "bottom" as const,
-                            align: "end" as const, // Align legend to the end
+                            align: "center" as const,
+                            labels: {
+                              boxWidth: 18,
+                              boxHeight: 18,
+                              padding: 10,
+                              font: { size: 9 },
+                            },
                           },
                         },
                       }}
@@ -1898,8 +1912,15 @@ const DashboardPage: React.FC = observer(() => {
                             },
                           },
                           legend: {
+                            display: true,
                             position: "bottom" as const,
-                            align: "end" as const, // Align legend to the end
+                            align: "center" as const,
+                            labels: {
+                              boxWidth: 18,
+                              boxHeight: 18,
+                              padding: 10,
+                              font: { size: 9 },
+                            },
                           },
                         },
                       }}

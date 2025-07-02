@@ -1810,9 +1810,16 @@ const GeneralDashboard: React.FC = observer(() => {
                                                         },
                                                     },
                                                     legend: {
-                                                        position: "bottom" as const,
-                                                        align: "end" as const, // Align legend to the end
+                                                    display: true,
+                                                    position: "bottom" as const,
+                                                    align: "center" as const,
+                                                    labels: {
+                                                        boxWidth: 18,
+                                                        boxHeight: 18,
+                                                        padding: 10,
+                                                        font: { size: 9 },
                                                     },
+                                                },
                                                 },
                                             }}
                                             plugins={[ChartDataLabels]}
@@ -1840,9 +1847,16 @@ const GeneralDashboard: React.FC = observer(() => {
                                                         },
                                                     },
                                                     legend: {
-                                                        position: "bottom" as const,
-                                                        align: "end" as const, // Align legend to the end
+                                                    display: true,
+                                                    position: "bottom" as const,
+                                                    align: "center" as const,
+                                                    labels: {
+                                                        boxWidth: 18,
+                                                        boxHeight: 18,
+                                                        padding: 10,
+                                                        font: { size: 9 },
                                                     },
+                                                },
                                                 },
                                             }}
                                             plugins={[ChartDataLabels]}
@@ -1870,9 +1884,16 @@ const GeneralDashboard: React.FC = observer(() => {
                                                         },
                                                     },
                                                     legend: {
-                                                        position: "bottom" as const,
-                                                        align: "end" as const, // Align legend to the end
+                                                    display: true,
+                                                    position: "bottom" as const,
+                                                    align: "center" as const,
+                                                    labels: {
+                                                        boxWidth: 18,
+                                                        boxHeight: 18,
+                                                        padding: 10,
+                                                        font: { size: 9 },
                                                     },
+                                                },
                                                 },
                                             }}
                                             plugins={[ChartDataLabels]}
