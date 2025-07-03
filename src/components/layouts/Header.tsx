@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom";
-import { bellIcon} from "../../assets/icons";
+import { bellIcon } from "../../assets/icons";
 import { routes } from "../../utils/data";
 import { authStore as AuthStore } from "../../pages/auth/store/authStore";
 import { observer } from "mobx-react-lite";
@@ -10,6 +10,20 @@ const AuthStoreCTX = createContext(AuthStore);
 const Header = observer(() => {
   const authStore = useContext(AuthStoreCTX);
   const { pathname } = useLocation();
+// const navigate = useNavigate();
+
+
+  // useEffect(() => {
+  //   async function getInfo() {
+  //     let token = window.sessionStorage.getItem("qrjwt");
+  //     if (!token) {
+  //       navigate("/auth/1");
+  //     }
+  //   }
+  //   getInfo();
+  //   return () => { };
+  // }, []);
+
 
   const route = routes?.find((route) => route.link === pathname);
 

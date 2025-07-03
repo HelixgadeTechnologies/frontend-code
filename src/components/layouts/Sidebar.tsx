@@ -13,8 +13,11 @@ const Sidebar = () => {
   const [open, setOpen] = useState<number | null>(null);
 
   const handleLogout = () => {
-    removeCookie("hcdt_admin", null, { path: "/" });
-    navigate("/");
+    removeCookie("hcdt_admin", null, { path: "/auth/1" });
+     sessionStorage.removeItem("qrjwt")
+     sessionStorage.removeItem("selectedTrustId")
+     
+    navigate("/auth/1");
   };
 
   return (

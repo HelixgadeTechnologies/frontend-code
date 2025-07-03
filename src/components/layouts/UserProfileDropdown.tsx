@@ -9,16 +9,16 @@ const UserProfileCard = ({ user }: { user: IUser }) => (
   <div className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-lg z-50 p-4">
     <div className="flex items-center gap-3 mb-2">
       <img
-        src={user.profilePic || userIcon}
-        alt={user.lastName}
+        src={user?.profilePic || userIcon}
+        alt={user?.lastName}
         className="w-12 h-12 rounded-full object-cover"
       />
       <div>
         <div className="flex items-center gap-1">
-          <span className="font-semibold text-lg">{user.lastName} {user.firstName}</span>
+          <span className="font-semibold text-lg">{user?.lastName} {user?.firstName}</span>
           <FaCheckCircle className="text-primary-400" />
         </div>
-        <span className="text-gray-500 text-sm">{user.email}</span>
+        <span className="text-gray-500 text-sm">{user?.email}</span>
       </div>
       <button className="ml-auto text-gray-400 hover:text-gray-600">
         <FaEllipsisV />
@@ -27,26 +27,26 @@ const UserProfileCard = ({ user }: { user: IUser }) => (
     <div className="flex flex-col gap-3 mt-2">
       <div className="flex items-center gap-2 text-gray-700 text-sm">
         <FaEnvelope className="text-gray-400" />
-        <span className="flex-1">{user.email}</span>
+        <span className="flex-1">{user?.email}</span>
         <button className="text-gray-400 hover:text-primary-400">
           <FaCopy />
         </button>
       </div>
       <div className="flex items-center gap-2 text-gray-700 text-sm">
         <FaPhone className="text-gray-400" />
-        <span className="flex-1">{user.phoneNumber}</span>
+        <span className="flex-1">{user?.phoneNumber}</span>
       </div>
       <div className="flex items-center gap-2 text-gray-700 text-sm">
         <FaMapMarkerAlt className="text-gray-400" />
-        <span className="flex-1">{user.state}</span>
+        <span className="flex-1">{user?.state}</span>
       </div>
       <div className="flex items-center gap-2 text-gray-700 text-sm">
         <FaMapMarkerAlt className="text-gray-400" />
-        <span className="flex-1">{user.localGovernmentArea}</span>
+        <span className="flex-1">{user?.localGovernmentArea}</span>
       </div>
       <div className="flex items-center gap-2 text-gray-700 text-sm">
         <FaMapMarkerAlt className="text-gray-400" />
-        <span className="flex-1">{user.community}</span>
+        <span className="flex-1">{user?.community}</span>
       </div>
       {/* <div className="flex items-center gap-2 text-gray-700 text-sm">
         <FaCalendarAlt className="text-gray-400" />
@@ -78,7 +78,7 @@ const UserProfileDropdown = ({ user }: { user: any }) => {
         onClick={() => setOpen((v) => !v)}
       >
         <img
-          src={user.profilePic || userIcon}
+          src={user?.profilePic || userIcon}
           alt="admin"
           className="h-8 w-8 rounded-full object-cover"
         />

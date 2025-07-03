@@ -31,6 +31,11 @@ const EntryDashboard: React.FC<LayoutProps> = observer(({ children }) => {
   const projectStore = useContext(projectStoreCTX)
   useEffect(() => {
     async function getInfo() {
+      dashboardStore.selectedTrust = "ALL";
+      dashboardStore.selectedSettlor = "ALL";
+      dashboardStore.selectedState = "ALL";
+      dashboardStore.selectedYear = 0;
+      dashboardStore.dashboardData = null;
       trustStore.getAllStates()
       await dashboardStore.getDashboard("ALL", 0, "ALL", "ALL")
       economicImpactStore.isDashboardLoading = false;
@@ -58,10 +63,10 @@ const EntryDashboard: React.FC<LayoutProps> = observer(({ children }) => {
       <header className="w-full bg-white shadow-md sticky top-0 z-50 ">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           {/* Logo */}
-        <div className="text-xl lg:text-2xl font-bold relative">
-          <span className="text-2xl font-bold text-black">I-HCDT</span>
-          <span className="text-xs block text-[#003B99] absolute-bottom-2 tracking-widest">Monitor</span>
-        </div>
+          <div className="text-xl lg:text-2xl font-bold relative">
+            <span className="text-2xl font-bold text-black">I-HCDT</span>
+            <span className="text-xs block text-[#003B99] absolute-bottom-2 tracking-widest">Monitor</span>
+          </div>
 
           {/* Buttons */}
           <div className="space-x-4">
@@ -85,15 +90,15 @@ const EntryDashboard: React.FC<LayoutProps> = observer(({ children }) => {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 py-2">
-      
+
         {dashboardStore.isLoading || settingStore.isLoading ? (
-          <BiggerSkeleton/>
+          <BiggerSkeleton />
         ) : (
           <>
             {children}
           </>
         )}
-        </main>
+      </main>
     </div>
   );
 });

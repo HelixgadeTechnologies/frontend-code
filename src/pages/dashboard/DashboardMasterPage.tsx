@@ -27,20 +27,25 @@ const DashboardMasterPage = observer(() => {
     const projectStore = useContext(projectStoreCTX)
     useEffect(() => {
         async function getInfo() {
+            dashboardStore.selectedTrust = "ALL";
+            dashboardStore.selectedSettlor = "ALL";
+            dashboardStore.selectedState = "ALL";
+            dashboardStore.selectedYear = 0;
+            dashboardStore.dashboardData = null;
             trustStore.getAllStates()
-            await dashboardStore.getDashboard("ALL",0, "ALL","ALL")
+            await dashboardStore.getDashboard("ALL", 0, "ALL", "ALL")
             economicImpactStore.isDashboardLoading = false;
             economicImpactStore.dashboardData = null;
-            await economicImpactStore.getEconomicImpactDashboardByTrustId("ALL",0,"ALL","ALL");
+            await economicImpactStore.getEconomicImpactDashboardByTrustId("ALL", 0, "ALL", "ALL");
             satisfactionStore.isDashboardLoading = false;
             satisfactionStore.dashboardData = null;
-            await satisfactionStore.getSatisfactionDashboardByTrustId("ALL",0,"ALL","ALL");
+            await satisfactionStore.getSatisfactionDashboardByTrustId("ALL", 0, "ALL", "ALL");
             conflictStore.isDashboardLoading = false;
             conflictStore.dashboardData = null;
-            await conflictStore.getConflictDashboardByTrustId("ALL",0,"ALL","ALL");
+            await conflictStore.getConflictDashboardByTrustId("ALL", 0, "ALL", "ALL");
             projectStore.isDashboardLoading = false;
             projectStore.dashboardData = null;
-            await projectStore.getProjectDashboardByTrustId("ALL",0,"ALL","ALL");
+            await projectStore.getProjectDashboardByTrustId("ALL", 0, "ALL", "ALL");
             await settingStore.getAllSettlor();
             await trustStore.getAllTrust();
         }

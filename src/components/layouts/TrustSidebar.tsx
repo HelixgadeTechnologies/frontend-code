@@ -15,7 +15,9 @@ const TrustSidebar = observer(() => {
 
   const handleLogout = () => {
     removeCookie("hcdt_admin", null, { path: "/" });
-    navigate("/");
+    sessionStorage.removeItem("qrjwt")
+    sessionStorage.removeItem("selectedTrustId")
+    navigate("/auth/1");
   };
 
   const subRoutes = [

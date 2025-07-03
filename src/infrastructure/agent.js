@@ -11,7 +11,7 @@ const API_ROOT = ENV.API_ROOT;
 
 const handleErrors = (err) => {
   const message2 = err?.response?.body?.error;
-  if (err.status === 401 || message2.includes("TokenExpiredError: jwt expired")) window.location.href = "/login";
+  if (err.status === 401 || message2.includes("TokenExpiredError: jwt expired")) window.location.href = "/auth/1";
   throw err;
 };
 
@@ -22,7 +22,7 @@ const tokenPlugin = (req) => {
   let token = window.sessionStorage.getItem("qrjwt");
   if (token) {
     req.set("authorization", `Bearer ${token}`);
-  }
+  } 
 };
 
 const tokenPl = (req) => {

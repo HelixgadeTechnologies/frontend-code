@@ -69,7 +69,7 @@ class DashboardStore implements IDashboardStore {
             if (data.success) {
                 const processedData = this.transformDashboard(data.data);
                 this.dashboardData = processedData;
-                console.log("hhhh",toJS({trustId,year, state, settlor}))    
+                // console.log("hhhh",toJS({trustId,year, state, settlor}))    
             }
         } catch (error) {
             throw error;

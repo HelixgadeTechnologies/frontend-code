@@ -1,6 +1,6 @@
 import "./App.css";
 
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 
 
 import DashboardHome from "./pages/dashboard/DashboardHome";
@@ -23,20 +23,25 @@ function App() {
   return (
     <div>
       <Routes>
-        {/* <Route path="/404" element={<NotFoundPage />} /> */}
-        <Route path="/dashboard/*" element={<DashboardHome />} />
-        <Route path="/trust/:name/:id/*" element={<TrustDashboard />} />
-
+        <Route element={<ProtectedRoute />} >
+          <Route path="/dashboard/*" element={<DashboardHome />} />
+          <Route path="/trust/:name/:id/*" element={<TrustDashboard />} />
+        </Route>
         <Route path="/" element={<EntryDashboard><GeneralDashboard /></EntryDashboard>} />
         <Route path="/auth/:option" element={<AuthMasterPage />} />
         <Route path="/conflict/:trustId" element={<ConflictDataForm />} />
-        <Route path="/satisfaction/:trustId" element={<SatisfactionDataForm />} />
         <Route path="/economic-impact/:trustId" element={<EconomicImpactDataForm />} />
+        <Route path="/satisfaction/:trustId" element={<SatisfactionDataForm />} />
         {/* <Route path="/forgot-password" element={<ForgotPassword />} /> */}
         <Route path="*" element={<AuthMasterPage />} />
       </Routes>
     </div>
   );
 }
+
+const ProtectedRoute = () => {
+  const token = window.sessionStorage.getItem("qrjwt");
+  return token ? <Outlet /> : <Navigate to="/auth/1" replace />;
+};
 
 export default App;
