@@ -1,4 +1,4 @@
-import { makeAutoObservable, ObservableMap, toJS } from "mobx";
+import { makeAutoObservable, ObservableMap } from "mobx";
 import { IAcsOptionOne, IAcsOptionTwo, IAverageCommunitySatisfactionDashboardData, IAverageCommunitySatisfactionView, ISatisfactionDashboardData, ISatisfactionPayload, ISatisfactionStore } from "../types/interface";
 import { satisfactionService } from "../service/communitySatisfactionService";
 
