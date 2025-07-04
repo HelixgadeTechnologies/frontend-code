@@ -130,7 +130,7 @@ class SatisfactionStore implements ISatisfactionStore {
             if (data.success) {
                 const processedData = this.extractDashboardData(data.data);
                 this.dashboardData = processedData;
-               console.log(toJS(processedData)) 
+            //    console.log(toJS(processedData)) 
             }
         } catch (error) {
             throw error;

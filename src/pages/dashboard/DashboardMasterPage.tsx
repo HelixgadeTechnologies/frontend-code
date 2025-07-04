@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect } from "react";
 import { observer } from "mobx-react-lite";
-import { DashboardSkeleton } from "../../components/elements";
 import DashboardPage from "./component/DashboardPage";
 import { dashboardStore as DashboardStore } from "./store/dashboardStore"
 import { economicImpactStore as EconomicImpactStore } from "../EconomicImpact/store/economicImpactStore";
@@ -9,6 +8,7 @@ import { conflictStore as ConflictStore } from "../conflict/store/conflictStore"
 import { projectStore as ProjectStore } from "../project/store/projectStore";
 import { trustStore as TrustStore } from "../trust/store/trustStore";
 import { settingStore as SettingStore } from "../Settings/store/settingStore";
+import BiggerSkeleton from "../../components/elements/BiggerSkeleton";
 
 const DashboardStoreCTX = createContext(DashboardStore)
 const trustStoreCTX = createContext(TrustStore)
@@ -56,10 +56,11 @@ const DashboardMasterPage = observer(() => {
 
     return (
         <>
-            {dashboardStore.isLoading ? (
-                <DashboardSkeleton />
-            ) : (<DashboardPage />
-            )}
+            {
+                dashboardStore.isLoading ? (
+                    <BiggerSkeleton />
+                ) : (<DashboardPage />
+                )}
         </>
     );
 
