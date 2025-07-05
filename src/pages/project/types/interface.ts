@@ -11,6 +11,7 @@ export interface IProjectStore {
     selectedProject: IProjectView | null;
     selectedProjectScreen: number | null;
     projects: ObservableMap<string, IProjectView>;
+    sortedProjects: ObservableMap<string, IProjectView>;
     projectCategories: ObservableMap<number, IProjectCategory>;
     qualityRating: ObservableMap<number, IQualityRating>;
     statusReport: ObservableMap<number, IStatusReport>;
@@ -18,12 +19,15 @@ export interface IProjectStore {
     formTab: ObservableMap<number, TabType>;
     activeTap: TabType | null;
     projectFormData: IProjectPayloadData;
+    selectedTrust: string;
 
     getFormSteps(): void;
     getUpdateFormSteps(n: number, id: number): void;
     setActiveTab(active: TabType): void;
     setCompletedTab(): void;
     getProjects(trustId: string): Promise<boolean>;
+    searchProject(keyword: string): void;
+    getProjectsForGeneralProject(): Promise<boolean>;
     createProject(payload: IProjectPayload): Promise<boolean>;
     getCategory(): Promise<boolean>;
     getQualityRatting(): Promise<boolean>;
@@ -31,7 +35,7 @@ export interface IProjectStore {
     getTypeOfWork(): Promise<boolean>;
     uploadFile(payload: IUploadPayload): Promise<HCDTRequestResponse>;
     transformProjectDashboard(data: IDashboard): IDashboardData;
-    getProjectDashboardByTrustId(trustId: string, selectedYear:number,selectedState:string,settlor:string): Promise<void>;
+    getProjectDashboardByTrustId(trustId: string, selectedYear: number, selectedState: string, settlor: string): Promise<void>;
 
 }
 interface BaseItem {

@@ -9,6 +9,7 @@ class DashboardStore implements IDashboardStore {
     selectedState: string = "ALL";
     selectedSettlor: string = "ALL";
     selectedTrust: string = "ALL";
+    selectedTab:number = 0;
     constructor() {
         makeAutoObservable(this);
     }

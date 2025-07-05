@@ -1,5 +1,5 @@
-import React, { createContext, ReactNode, useContext, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { createContext, ReactNode, useCallback, useContext, useEffect } from "react";
+import { Link, NavLink } from "react-router-dom";
 import { dashboardStore as DashboardStore } from "./../store/dashboardStore"
 import { economicImpactStore as EconomicImpactStore } from "../../EconomicImpact/store/economicImpactStore";
 import { satisfactionStore as SatisfactionStore } from "../../communitySatisfaction/store/satisfactionStore";
@@ -9,6 +9,10 @@ import { trustStore as TrustStore } from "../../trust/store/trustStore";
 import { settingStore as SettingStore } from "../../Settings/store/settingStore";
 import { observer } from "mobx-react-lite";
 import BiggerSkeleton from "../../../components/elements/BiggerSkeleton";
+import GeneralProjectTable from "../../project/components/table/GeneralProjectTable";
+// import ProjectView from "../../project/components/modal/ProjectView";
+import { IProjectView } from "../../project/types/interface";
+import GeneralProjectView from "../../project/components/modal/GeneralProjectView";
 interface LayoutProps {
   children: ReactNode;
 }
@@ -50,13 +54,19 @@ const EntryDashboard: React.FC<LayoutProps> = observer(({ children }) => {
       projectStore.isDashboardLoading = false;
       projectStore.dashboardData = null;
       await projectStore.getProjectDashboardByTrustId("ALL", 0, "ALL", "ALL");
+      await projectStore.getProjectsForGeneralProject();
       await settingStore.getAllSettlor();
       await trustStore.getAllTrust();
     }
     getInfo();
     return () => { };
   }, [dashboardStore, settingStore, trustStore, economicImpactStore, satisfactionStore, conflictStore, projectStore]);
-
+  const selectTab = useCallback((v: number) => {
+    async function getInfo() {
+      dashboardStore.selectedTab = v;
+    }
+    getInfo()
+  }, [projectStore]);
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -70,6 +80,28 @@ const EntryDashboard: React.FC<LayoutProps> = observer(({ children }) => {
 
           {/* Buttons */}
           <div className="space-x-4">
+            <NavLink
+              to="#"
+              className={
+                dashboardStore.selectedTab === 0
+                  ? "font-medium text-blue-700 border-b-2 border-blue-700 pb-1"
+                  : "font-medium text-black hover:text-blue-700"
+              }
+              onClick={() => selectTab(0)}
+            >
+              Dashboard
+            </NavLink>
+            <NavLink
+              to="#"
+              className={
+                (dashboardStore.selectedTab === 1 || dashboardStore.selectedTab === 2)
+                  ? "font-medium text-blue-700 border-b-2 border-blue-700 pb-1"
+                  : "font-medium text-black hover:text-blue-700"
+              }
+              onClick={() => selectTab(1)}
+            >
+              Project
+            </NavLink>
             <Link
               to={`/auth/${1}`}
               className="px-4 py-2 text-sm font-medium text-blue-600 border border-blue-600 rounded hover:bg-blue-50 transition"
@@ -90,14 +122,26 @@ const EntryDashboard: React.FC<LayoutProps> = observer(({ children }) => {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 py-2">
-
-        {dashboardStore.isLoading || settingStore.isLoading ? (
-          <BiggerSkeleton />
-        ) : (
+        {dashboardStore.selectedTab == 0 && (
           <>
-            {children}
+            {dashboardStore.isLoading || settingStore.isLoading ? (
+              <BiggerSkeleton />
+            ) : (
+              <>
+                {children}
+              </>
+            )}
           </>
         )}
+
+        {dashboardStore.selectedTab == 1 && (
+          <GeneralProjectTable />
+        )}
+
+        {dashboardStore.selectedTab == 2 && (
+          <GeneralProjectView projectData={projectStore.selectedProject as IProjectView} dashboardStore={dashboardStore} />
+        )}
+
       </main>
     </div>
   );

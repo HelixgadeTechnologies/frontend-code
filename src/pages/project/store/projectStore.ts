@@ -13,6 +13,7 @@ class ProjectStore implements IProjectStore {
     selectedProjectScreen: number | null = null;
     selectedProject: IProjectView | null = null;
     projects = new ObservableMap<string, IProjectView>();
+    sortedProjects = new ObservableMap<string, IProjectView>();
     projectCategories = new ObservableMap<number, IProjectCategory>();
     qualityRating = new ObservableMap<number, IQualityRating>();
     statusReport = new ObservableMap<number, IStatusReport>();
@@ -21,6 +22,7 @@ class ProjectStore implements IProjectStore {
     projectFormData: IProjectPayloadData = {} as IProjectPayloadData
     activeTap: TabType | null = null;
     dashboardData: IDashboardData | null = null;
+    selectedTrust: string = "ALL";
 
     constructor() {
         makeAutoObservable(this);
@@ -118,6 +120,44 @@ class ProjectStore implements IProjectStore {
             this.isLoading = false;
         }
     }
+    searchProject(keyword: string): void {
+        this.sortedProjects.clear();
+        this.isLoading = true;
+        if (keyword == "ALL") {
+            // If no keyword, show all trusts
+            [...this.projects.values()].forEach((project: IProjectView) => {
+                this.sortedProjects.set(project.projectId, project);
+            });
+            this.isLoading = false;
+        } else {
+            // Filter trusts by keyword (case-insensitive, partial match on trustName)
+
+            [...this.projects.values()].forEach((project: IProjectView) => {
+                if (project.trustId == keyword) {
+                    this.sortedProjects.set(project.projectId, project);
+                }
+            });
+            this.isLoading = false;
+        }
+    }
+    async getProjectsForGeneralProject(): Promise<boolean> {
+        try {
+            this.isLoading = true;
+            let data = await projectService.getProjects();
+            if (data.success) {
+                this.projects.clear();
+                data.data.forEach((project: IProjectView) => {
+                    this.projects.set(project.projectId, project);
+                    this.sortedProjects.set(project.projectId, project);
+                });
+            }
+            return true;
+        } catch (error) {
+            throw error;
+        } finally {
+            this.isLoading = false;
+        }
+    }
 
     async createProject(payload: IProjectPayload): Promise<boolean> {
         try {
@@ -126,7 +166,7 @@ class ProjectStore implements IProjectStore {
             this.dashboardData = null;
             await projectService.createAndUpdateProject(payload);
             await this.getProjects(payload.data.trustId || "");
-            await this.getProjectDashboardByTrustId(payload.data.trustId || "ALL", 0, "ALL","ALL")
+            await this.getProjectDashboardByTrustId(payload.data.trustId || "ALL", 0, "ALL", "ALL")
             return true;
         } catch (error) {
             throw error;
@@ -252,11 +292,11 @@ class ProjectStore implements IProjectStore {
         };
     }
 
-    async getProjectDashboardByTrustId(trustId: string, selectedYear: number, selectedState: string,settlor:string): Promise<void> {
+    async getProjectDashboardByTrustId(trustId: string, selectedYear: number, selectedState: string, settlor: string): Promise<void> {
         try {
             if (this.isDashboardLoading || this.dashboardData) return; // Prevent duplicate calls
             this.isDashboardLoading = true;
-            let data = await projectService.getDashboard(trustId, selectedYear, selectedState,settlor);
+            let data = await projectService.getDashboard(trustId, selectedYear, selectedState, settlor);
             if (data.success) {
                 const processedData = this.transformProjectDashboard(data.data);
                 this.dashboardData = processedData;

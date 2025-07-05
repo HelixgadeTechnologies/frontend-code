@@ -5,8 +5,9 @@ export interface IDashboardStore {
     selectedState: string;
     selectedSettlor: string;
     selectedTrust: string;
+    selectedTab: number;
     transformDashboard(data: IGeneralDashboard): IFinishedDashboard;
-    getDashboard(trustId:string,year: number, state: string, settlor: string): Promise<void>;
+    getDashboard(trustId: string, year: number, state: string, settlor: string): Promise<void>;
 }
 export interface IFinishedDashboard {
     FIELDS_COMPLETION: number;
