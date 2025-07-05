@@ -70,15 +70,15 @@ const EntryDashboard: React.FC<LayoutProps> = observer(({ children }) => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="w-full bg-white shadow-md sticky top-0 z-50 ">
+      {/* <header className="w-full bg-white shadow-md sticky top-0 z-50 ">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          {/* Logo */}
+        
           <div className="text-xl lg:text-2xl font-bold relative">
             <span className="text-2xl font-bold text-black">I-HCDT</span>
             <span className="text-xs block text-[#003B99] absolute-bottom-2 tracking-widest">Monitor</span>
           </div>
 
-          {/* Buttons */}
+         
           <div className="space-x-4">
             <NavLink
               to="#"
@@ -116,6 +116,59 @@ const EntryDashboard: React.FC<LayoutProps> = observer(({ children }) => {
               Sign Up
             </Link>
 
+          </div>
+        </div>
+      </header> */}
+      <header className="w-full bg-white shadow-md sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          {/* Left: Logo */}
+          <div className="flex-1">
+            <div className="text-xl lg:text-2xl font-bold relative w-fit">
+              <span className="text-2xl font-bold text-black">I-HCDT</span>
+              <span className="text-xs block text-[#003B99] absolute -bottom-2 left-0 tracking-widest">Monitor</span>
+            </div>
+          </div>
+
+          {/* Center: Nav */}
+          <div className="flex-1 flex justify-center space-x-8">
+            <NavLink
+              to="#"
+              className={
+                dashboardStore.selectedTab === 0
+                  ? "font-medium text-blue-700 border-b-2 border-blue-700 pb-1"
+                  : "font-medium text-black hover:text-blue-700"
+              }
+              onClick={() => selectTab(0)}
+            >
+              Dashboard
+            </NavLink>
+            <NavLink
+              to="#"
+              className={
+                (dashboardStore.selectedTab === 1 || dashboardStore.selectedTab === 2)
+                  ? "font-medium text-blue-700 border-b-2 border-blue-700 pb-1"
+                  : "font-medium text-black hover:text-blue-700"
+              }
+              onClick={() => selectTab(1)}
+            >
+              Project
+            </NavLink>
+          </div>
+
+          {/* Right: Auth Buttons */}
+          <div className="flex-1 flex justify-end space-x-4">
+            <Link
+              to={`/auth/${1}`}
+              className="px-4 py-2 text-sm font-medium text-blue-600 border border-blue-600 rounded hover:bg-blue-50 transition"
+            >
+              Login
+            </Link>
+            <Link
+              to={`/auth/${2}`}
+              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded hover:bg-blue-700 transition"
+            >
+              Sign Up
+            </Link>
           </div>
         </div>
       </header>

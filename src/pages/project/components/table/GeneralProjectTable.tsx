@@ -103,8 +103,8 @@ const GeneralProjectTable = observer(() => {
     return (
         <div className="mt-10  p-4  ">
             <div>
-                <h2 className="font-semibold text-xl text-gray-900">Project</h2>
-                <p className="text-gray-500 text-sm">View projects created on a specific trust.</p>
+                <h2 className="font-semibold text-xl text-gray-900">All Project</h2>
+                <p className="text-gray-500 text-sm">View Projects created on a specific Trust.</p>
             </div>
             <section className="mb-4 flex items-center justify-end gap-x-3">
                 <div>
