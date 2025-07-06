@@ -143,13 +143,15 @@ const Login = observer(() => {
               Recover
             </button>
             {" "}
-            {/* SignUp?{" "}
+            ||
+            {" "}
+            SignUp?{" "}
             <button
               className="text-primary-200 font-semibold"
               onClick={() => changeForm(2)}
             >
               Register
-            </button> */}
+            </button>
           </span>
         </div>
       )}</Observer>
