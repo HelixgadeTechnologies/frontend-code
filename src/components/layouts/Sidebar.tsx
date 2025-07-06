@@ -5,8 +5,12 @@ import { routes } from "../../utils/data";
 
 import { useCookies } from "react-cookie";
 import { useState } from "react";
+import { authStore as AuthStore } from "../../pages/auth/store/authStore";
+import { observer } from "mobx-react-lite";
 
-const Sidebar = () => {
+const AuthStoreCTX = createContext(AuthStore);
+const Sidebar = observer(() => {
+  const authStore = useContext(AuthStoreCTX);
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const [, removeCookie] = useCookies(["hcdt_admin"]);
@@ -16,8 +20,11 @@ const Sidebar = () => {
     removeCookie("hcdt_admin", null, { path: "/auth/1" });
      sessionStorage.removeItem("qrjwt")
      sessionStorage.removeItem("selectedTrustId")
-     
-    navigate("/auth/1");
+      if (authStore.user.role === "SUPER ADMIN") {
+      navigate("/auth/admin");
+    } else {
+      navigate("/auth/1");
+    }
   };
 
   return (
@@ -111,6 +118,6 @@ const Sidebar = () => {
       </div>
     </div>
   );
-};
+});
 
 export default Sidebar;
