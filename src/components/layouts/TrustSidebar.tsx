@@ -17,7 +17,11 @@ const TrustSidebar = observer(() => {
     removeCookie("hcdt_admin", null, { path: "/" });
     sessionStorage.removeItem("qrjwt")
     sessionStorage.removeItem("selectedTrustId")
-    navigate("/auth/1");
+    if (authStore.user.role === "SUPER ADMIN") {
+      navigate("/auth/admin");
+    } else {
+      navigate("/auth/1");
+    }
   };
 
   const subRoutes = [
