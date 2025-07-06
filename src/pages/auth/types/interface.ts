@@ -5,6 +5,7 @@ export interface IAuthStore {
     isLoading: boolean;
     isSubmitting: boolean;
     pageSwitch: number;
+    pageSwitchA: number;
     user: IUser;
 
     login(credentials: ILoginCredentials): Promise<HCDTRequestResponse>;
