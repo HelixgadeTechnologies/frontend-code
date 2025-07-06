@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import { GoBack } from "../../../../components/elements";
 import { useCallback } from "react";
 import { useParams } from "react-router-dom";
+import IMG from "../../../../assets/svgs/fileNotFound.svg"
 
 const ProjectView = observer(({ projectData, projectStore }: { projectData: IProjectView, projectStore: IProjectStore }) => {
     const { name } = useParams();
@@ -122,7 +123,7 @@ const ProjectView = observer(({ projectData, projectStore }: { projectData: IPro
                     {/* Right Column */}
 
                     <div className="space-y-4">
-                        <div className="w-full bg-gray-200 rounded-lg overflow-hidden">
+                        <div className="w-full rounded-lg overflow-hidden">
                             {projectData.projectVideoMimeType?.startsWith("image/") && (
                                 <a href={projectData.projectVideo as string} target="_blank" rel="noopener noreferrer">
                                     <img
@@ -147,7 +148,14 @@ const ProjectView = observer(({ projectData, projectStore }: { projectData: IPro
                                 />
                             )}
                             {!projectData.projectVideoMimeType && (
-                                <p className="text-sm text-gray-600">No media available</p>
+                                 <div className="w-full h-64 flex items-center justify-center rounded-lg shadow-md">
+                                    <img
+                                        src={IMG}
+                                        alt="No Media Available"
+                                        width={150}
+                                    />
+                                    <p className="text-sm text-gray-600">No media available</p>
+                                  </div>
                             )}
                         </div>
                         <div className="grid grid-cols-2 gap-4">
