@@ -4,7 +4,7 @@ import { logoutIcon } from "../../assets/icons";
 import { routes } from "../../utils/data";
 
 import { useCookies } from "react-cookie";
-import { useState } from "react";
+import { createContext, useContext,useState } from "react";
 import { authStore as AuthStore } from "../../pages/auth/store/authStore";
 import { observer } from "mobx-react-lite";
 
