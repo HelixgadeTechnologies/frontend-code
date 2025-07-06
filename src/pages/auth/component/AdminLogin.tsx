@@ -81,11 +81,7 @@ const AdminLogin = observer(() => {
     }
   });
   const changeForm = useCallback((page: number) => {
-    if (page == 2) {
-      authStore.pageSwitch = 2;
-    } else {
-      authStore.pageSwitch = 3;
-    }
+      authStore.pageSwitchA = page;
   }, [authStore]);
   return (
     <form onSubmit={handleLogin} className="w-full lg:w-2/3">
@@ -137,8 +133,9 @@ const AdminLogin = observer(() => {
           <span className="block text-center mt-6 text-gray-2 text-sm">
             Forgot Password?{" "}
             <button
+              type="button"
               className="text-primary-200 font-semibold"
-              onClick={() => changeForm(3)}
+              onClick={() => changeForm(2)}
             >
               Recover
             </button>
