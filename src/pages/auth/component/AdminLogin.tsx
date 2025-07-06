@@ -1,4 +1,4 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext,useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 // import { authBg } from "../../../assets/images";
 
@@ -80,13 +80,13 @@ const AdminLogin = observer(() => {
       }
     }
   });
-//   const changeForm = useCallback((page: number) => {
-//     if (page == 2) {
-//       authStore.pageSwitch = 2;
-//     } else {
-//       authStore.pageSwitch = 3;
-//     }
-//   }, [authStore]);
+  const changeForm = useCallback((page: number) => {
+    if (page == 2) {
+      authStore.pageSwitch = 2;
+    } else {
+      authStore.pageSwitch = 3;
+    }
+  }, [authStore]);
   return (
     <form onSubmit={handleLogin} className="w-full lg:w-2/3">
       <h1 className="mb-8 font-semibold text-lg lg:text-4xl">
@@ -135,7 +135,7 @@ const AdminLogin = observer(() => {
           />
 
           <span className="block text-center mt-6 text-gray-2 text-sm">
-            {/* Forgot Password?{" "}
+            Forgot Password?{" "}
             <button
               className="text-primary-200 font-semibold"
               onClick={() => changeForm(3)}
@@ -143,15 +143,6 @@ const AdminLogin = observer(() => {
               Recover
             </button>
             {" "}
-            ||
-            {" "}
-            SignUp?{" "}
-            <button
-              className="text-primary-200 font-semibold"
-              onClick={() => changeForm(2)}
-            >
-              Register
-            </button> */}
           </span>
         </div>
       )}</Observer>
