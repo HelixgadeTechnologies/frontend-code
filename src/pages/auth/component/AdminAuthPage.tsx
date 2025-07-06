@@ -1,32 +1,13 @@
-import { createContext, useContext, useEffect } from "react";
+import { createContext, useContext } from "react";
 import { observer } from "mobx-react-lite";
 import { authStore as AuthStore } from "../store/authStore"
-import { trustStore as TrustStore } from "../../trust/store/trustStore"
 import { authBg } from "../../../assets/images";
-import { useParams } from "react-router-dom";
 import AdminLogin from "./AdminLogin";
+import ForgotPasswordA from "./ForgotPasswordA";
 
 const AuthStoreCTX = createContext(AuthStore)
-const TrustStoreCTX = createContext(TrustStore)
 const AdminAuthPage = observer(() => {
     const authStore = useContext(AuthStoreCTX)
-    const trustStore = useContext(TrustStoreCTX)
-    const { option } = useParams();
-    useEffect(() => {
-        async function getInfo() {
-            if (option) {
-                await trustStore.getAllTrust()
-                authStore.pageSwitch = Number(option);
-            } else {
-                await trustStore.getAllTrust()
-                authStore.pageSwitch = 1; // Default to Login
-            }
-
-        }
-        getInfo();
-        return () => { };
-    }, []);
-
 
     return (
         <div className=" h-screen  bg-white grid grid-cols-1 lg:grid-cols-2">
@@ -34,7 +15,8 @@ const AdminAuthPage = observer(() => {
                 <img className="w-full h-full" src={authBg} alt="auth" />
             </section>
             <section className="px-4 lg:px-0 flex items-center justify-center">
-                <AdminLogin />
+                {authStore.pageSwitchA == 1 && <AdminLogin />}
+                {authStore.pageSwitchA == 2 && <ForgotPasswordA />}
             </section>
         </div>
     );
