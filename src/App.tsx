@@ -13,6 +13,7 @@ import SatisfactionDataForm from "./pages/form/SatisfactionDataForm";
 import EconomicImpactDataForm from "./pages/form/EconomicImpactDataForm";
 import EntryDashboard from "./pages/dashboard/component/EntryDashboard";
 import GeneralDashboard from "./pages/dashboard/component/GeneralDashboard";
+import AdminAuthPage from "./pages/auth/component/AdminAuthPage";
 
 // Disable strict mode globally
 configure({
@@ -29,6 +30,7 @@ function App() {
         </Route>
         <Route path="/" element={<EntryDashboard><GeneralDashboard /></EntryDashboard>} />
         <Route path="/auth/:option" element={<AuthMasterPage />} />
+        <Route path="/auth/admin" element={<AdminAuthPage />} />
         <Route path="/conflict/:trustId" element={<ConflictDataForm />} />
         <Route path="/economic-impact/:trustId" element={<EconomicImpactDataForm />} />
         <Route path="/satisfaction/:trustId" element={<SatisfactionDataForm />} />
