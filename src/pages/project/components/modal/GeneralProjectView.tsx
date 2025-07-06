@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import { useCallback } from "react";
 import { IDashboardStore } from "../../../dashboard/types/interface";
 import GoBackT from "../../../../components/elements/GoBackT";
+import IMG from "../../../../assets/svgs/fileNotFound.svg"
 
 const GeneralProjectView = observer(({ projectData, dashboardStore }: { projectData: IProjectView; dashboardStore: IDashboardStore }) => {
   
@@ -120,7 +121,7 @@ const GeneralProjectView = observer(({ projectData, dashboardStore }: { projectD
                     {/* Right Column */}
 
                     <div className="space-y-4">
-                        <div className="w-full bg-gray-200 rounded-lg overflow-hidden">
+                        <div className="w-full rounded-lg overflow-hidden">
                             {projectData.projectVideoMimeType?.startsWith("image/") && (
                                 <a href={projectData.projectVideo as string} target="_blank" rel="noopener noreferrer">
                                     <img
@@ -145,7 +146,14 @@ const GeneralProjectView = observer(({ projectData, dashboardStore }: { projectD
                                 />
                             )}
                             {!projectData.projectVideoMimeType && (
-                                <p className="text-sm text-gray-600">No media available</p>
+                                <div className="w-full h-64 flex items-center justify-center rounded-lg shadow-md">
+                                    <img
+                                        src={IMG}
+                                        alt="No Media Available"
+                                        width={150}
+                                    />
+                                    <p className="text-sm text-gray-600">No media available</p>
+                                </div>
                             )}
                         </div>
                         <div className="grid grid-cols-2 gap-4">
