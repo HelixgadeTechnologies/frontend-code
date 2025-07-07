@@ -8,6 +8,8 @@ export interface IDashboardStore {
     selectedTab: number;
     projectSwitch: boolean;
     conflictSwitch: boolean;
+    satisfactionSwitch: boolean;
+    impactSwitch: boolean;
     transformDashboard(data: IGeneralDashboard): IFinishedDashboard;
     getDashboard(trustId: string, year: number, state: string, settlor: string): Promise<void>;
 }

@@ -12,6 +12,8 @@ class DashboardStore implements IDashboardStore {
     selectedTab:number = 0;
     projectSwitch:boolean = false
     conflictSwitch:boolean = false
+    satisfactionSwitch:boolean = false
+    impactSwitch:boolean = false
     constructor() {
         makeAutoObservable(this);
     }

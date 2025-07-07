@@ -1,25 +1,25 @@
 import { RowSelectionState } from "@tanstack/react-table";
 import { observer } from "mobx-react-lite";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { caretDownIcon, filterIcon, sortIcon, checkIcon } from "../../../../assets/icons";
-import { EmptyTable, LoadingTable, Modal, Table } from "../../../../components/elements";
+import { checkIcon } from "../../../../assets/icons";
+import { EmptyTable, LoadingTable, Table } from "../../../../components/elements";
 // import { trustStore as TrustStore } from "../../../trust/store/trustStore";
 import Tag from "../../../../components/elements/Tag";
 import { satisfactionStore as SatisfactionStore } from "../../store/satisfactionStore";
 import { IAverageCommunitySatisfactionView } from "../../types/interface";
-import CommunitySatisfactionView from "../modal/CommunitysatisfactionView";
+import { dashboardStore as DashboardStore } from "../../../dashboard/store/dashboardStore";
 
 
 const SatisfactionStoreCtx = createContext(SatisfactionStore);
-// const TrustStoreCtx = createContext(TrustStore);
+const dashboardStoreCtx = createContext(DashboardStore);
 
-export const CommunitySatisfactionTable = observer(() => {
+export const GeneralSatisfactionTable = observer(() => {
     const satisfactionStore = useContext(SatisfactionStoreCtx);
-    // const trustStore = useContext(TrustStoreCtx);
+    const dashboardStore = useContext(dashboardStoreCtx);
 
     useEffect(() => {
         async function loadRequests() {
-            let selectedTrustId = window.sessionStorage.getItem("selectedTrustId")
+            let selectedTrustId = window.sessionStorage.getItem("selectedTrustIdG")
             await satisfactionStore.getSatisfactionByTrustId(selectedTrustId as string);
             satisfactionStore.selectedSatisfaction = null;
         }
@@ -30,6 +30,7 @@ export const CommunitySatisfactionTable = observer(() => {
     const handleView = useCallback(async (satisfaction: IAverageCommunitySatisfactionView) => {
         // console.log(`View user : ${satisfaction}`);
         satisfactionStore.selectedSatisfaction = satisfaction
+        dashboardStore.selectedTab = 55;
         // Add your logic here
     }, [satisfactionStore]);
 
@@ -57,16 +58,6 @@ export const CommunitySatisfactionTable = observer(() => {
                 header: "Community Consult",
                 accessorKey: "communityConsultStatus",
             },
-            // {
-            //     id: "localParticipationStatus",
-            //     header: "Local Participation",
-            //     accessorKey: "localParticipationStatus",
-            // },
-            // {
-            //     id: "reportMechanismStatus",
-            //     header: "Report Mechanism",
-            //     accessorKey: "reportMechanismStatus",
-            // },
             {
                 id: "actions",
                 header: "",
@@ -92,20 +83,7 @@ export const CommunitySatisfactionTable = observer(() => {
     const tableHead = ["Info Projects", "Community Consult", "Local Participation", "Report Mechanism", "Action"];
 
     return (
-        <div className="mt-10 bg-white p-4 rounded-2xl border border-gray-8 ">
-            <section className="mb-4 flex items-center justify-end gap-x-3">
-                <button className=" shadow-sm border border-gray-10 px-3 py-2  rounded-xl flex items-center gap-x-2">
-                    <img src={filterIcon} alt="filter admin table" />
-                    <span className="font-medium text-sm  text-[#525866]">Filter</span>
-                </button>
-
-                <button className="shadow-sm border border-gray-10 px-3 py-2  rounded-xl flex items-center gap-x-2">
-                    <img src={sortIcon} alt="filter admin table" />
-                    <span className="font-medium text-sm  text-[#525866]">Sort</span>
-                    <img src={caretDownIcon} alt="filter admin table" />
-                </button>
-            </section>
-
+        <div className="mt-4 p-4">
             <>
                 {satisfactionStore.isLoading ? (
                     <LoadingTable headArr={tableHead} />
@@ -119,6 +97,7 @@ export const CommunitySatisfactionTable = observer(() => {
                         count={satisfactionStore.satisfactionByTrust.size}
                         rowSelection={rowSelection}
                         setRowSelection={setRowSelection}
+                        totalPage={satisfactionStore.satisfactionByTrust.size}
                     // refresh={()=>economicImpactStore.getEconomicImpactByTrustId(trustStore.selectedTrustId)}
                     />
                 ) : (
@@ -129,18 +108,7 @@ export const CommunitySatisfactionTable = observer(() => {
                     />
                 )}
             </>
-            {/* Modals */}
-            {satisfactionStore.selectedSatisfaction && (
-                <Modal
-                    body={
-                        <CommunitySatisfactionView
-                            close={() => satisfactionStore.selectedSatisfaction = null}
-                            satisfactionStore={satisfactionStore}
-                        />
-                    }
-                    close={() => satisfactionStore.selectedSatisfaction = null}
-                />
-            )}
+
         </div>
     );
 });

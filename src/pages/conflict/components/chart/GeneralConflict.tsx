@@ -105,6 +105,7 @@ const GeneralConflict = observer(() => {
     return (
         <div className="p-6 bg-gray-100 min-h-screen">
             <GoBackT action={closeTable} page="Trust table" />
+            <br />
             {/* Header Section */}
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-xl font-bold text-gray-800">Conflict Resolution  {dashboardStore.conflictSwitch ? "Table" : "Dashboard"}</h1>

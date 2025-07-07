@@ -35,7 +35,7 @@ const EconomicImpactDashboard = observer(({ economicImpactStore }: { economicImp
         async function getData() {
             let selectedTrustId = window.sessionStorage.getItem("selectedTrustId")
             await economicImpactStore.getEconomicImpactDashboardByTrustId(selectedTrustId as string, 0, "ALL", "ALL");
-            console.log("hello");
+            // console.log("hello");
 
         }
         getData();

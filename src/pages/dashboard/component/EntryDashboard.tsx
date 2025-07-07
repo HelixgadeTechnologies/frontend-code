@@ -18,6 +18,9 @@ import { INavData, routes2, routes2T } from "../../../utils/data";
 import GeneralTEstablishment from "../../trustEstablishment/component/chart/GeneralTEstablishment";
 import GeneralConflict from "../../conflict/components/chart/GeneralConflict";
 import GeneralConflictView from "../../conflict/components/modal/GeneralConflictView";
+import GeneralSatisfactionChart from "../../communitySatisfaction/components/chart/GeneralSatisfactionChart";
+import GeneralSatisfactionModel from "../../communitySatisfaction/components/modal/GeneralSatisfactionModel";
+import GeneralImpact from "../../EconomicImpact/components/chart/GeneralImpact";
 
 interface LayoutProps {
   children: ReactNode;
@@ -87,7 +90,7 @@ const EntryDashboard: React.FC<LayoutProps> = observer(({ children }) => {
         open={open}
         setOpen={setOpen}
         location={location}
-        navData={ dashboardStore.selectedTab > 1?routes2T:routes2}
+        navData={dashboardStore.selectedTab > 1 ? routes2T : routes2}
       />
 
       {/* Main content wrapper */}
@@ -145,12 +148,17 @@ const EntryDashboard: React.FC<LayoutProps> = observer(({ children }) => {
           {dashboardStore.selectedTab === 3 && (<GeneralProjectDashboard />)}
           {dashboardStore.selectedTab === 33 && (
             <GeneralProjectView
-            dashboardStore={dashboardStore}
-            projectData={projectStore.selectedProject as IProjectView}
+              dashboardStore={dashboardStore}
+              projectData={projectStore.selectedProject as IProjectView}
             />
           )}
           {dashboardStore.selectedTab === 4 && (<GeneralConflict />)}
           {dashboardStore.selectedTab === 44 && (<GeneralConflictView />)}
+
+          {dashboardStore.selectedTab === 5 && (<GeneralSatisfactionChart satisfactionStore={satisfactionStore} />)}
+          {dashboardStore.selectedTab === 55 && (<GeneralSatisfactionModel satisfactionStore={satisfactionStore} />)}
+
+          {dashboardStore.selectedTab === 6 && (<GeneralImpact economicImpactStore={economicImpactStore} />)}
         </main>
       </div>
 
@@ -174,7 +182,7 @@ interface SidebarProps {
   open: number | null;
   setOpen: (v: number | null) => void;
   location: Location;
-  navData:Array<INavData>
+  navData: Array<INavData>
 }
 
 const Sidebar: React.FC<SidebarProps> = ({

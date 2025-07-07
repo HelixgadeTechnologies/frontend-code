@@ -157,6 +157,7 @@ const GeneralTEstablishment = observer(() => {
 
   return (
     <>
+    <br />
       <GoBackT action={closeTable} page="Trust table" />
       <br />
 
