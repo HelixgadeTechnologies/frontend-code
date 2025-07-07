@@ -14,7 +14,10 @@ import { IProjectView } from "../../project/types/interface";
 import GeneralProjectView from "../../project/components/modal/GeneralProjectView";
 import GeneralTrust from "../../trust/components/table/GeneralTrust";
 import GeneralProjectDashboard from "../../project/components/chat/GeneralProjectDashboard";
-import { routes2 } from "../../../utils/data";
+import { INavData, routes2, routes2T } from "../../../utils/data";
+import GeneralTEstablishment from "../../trustEstablishment/component/chart/GeneralTEstablishment";
+import GeneralConflict from "../../conflict/components/chart/GeneralConflict";
+import GeneralConflictView from "../../conflict/components/modal/GeneralConflictView";
 
 interface LayoutProps {
   children: ReactNode;
@@ -76,96 +79,19 @@ const EntryDashboard: React.FC<LayoutProps> = observer(({ children }) => {
   return (
     <div className="min-h-screen bg-gray-50 flex">
       {/* Sidebar */}
-      <aside
-        className={`
-    ${!sidebarOpen ? "hidden lg:block" : ""}
-    z-40 bg-white shadow-lg 
-    lg:fixed lg:inset-y-0 lg:left-0 lg:w-36
-    transform transition-transform duration-200 ease-in-out
-    ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
-    lg:translate-x-0
-  `}
-      >
-        <div className="flex flex-col h-full">
-          <div className="flex items-center justify-between px-6 py-4 border-b">
-            <div
-              onClick={() => window.location.href = "https://hcdtmonitor.org"}
-              className="text-xl lg:text-2xl font-bold relative w-fit cursor-pointer"
-            >
-              <span className="text-2xl font-bold text-black block">I-HCDT</span>
-              <span className="text-xs block text-[#003B99] mt-1 tracking-widest">
-                Monitor
-              </span>
-            </div>
-            <button
-              className="lg:hidden text-gray-500"
-              onClick={() => setSidebarOpen(false)}
-            >
-              ✕
-            </button>
-          </div>
-          <div className="flex-1 flex flex-col py-8">
-            <nav className="flex flex-col gap-1 px-4">
-              {routes2.slice(0, 2).map((route) => (
-                <div key={route.link}>
-                  <NavLink
-                    to="#"
-                    className={
-                      dashboardStore.selectedTab === route.link
-                        ? "flex items-center px-4 py-2 rounded bg-blue-50 text-blue-700 font-semibold transition"
-                        : "flex items-center px-4 py-2 rounded text-gray-700 hover:bg-gray-100 transition"
-                    }
-                    onClick={() => {
-                      selectTab(route.link);
-                      setSidebarOpen(false);
-                      setOpen(open === route.id ? null : route.id);
-                    }}
-                  >
-                    {/* Optional: <img src={route.icon} alt={route.name} className="mr-2 w-4 h-4" /> */}
-                    <span className="text-sm font-medium">{route.name}</span>
-                    {route.children && route.children.length > 0 && (
-                      <svg
-                        className={`ml-auto w-4 h-4 transition-transform ${open === route.id ? "rotate-90" : ""}`}
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    )}
-                  </NavLink>
-                  {/* Children */}
-                  {route.children && route.children.length > 0 && open === route.id && (
-                    <ul className="ml-6 mt-1 flex flex-col gap-1">
-                      {route.children.map(child => (
-                        <li key={child.id}>
-                          <button
-                            className={`w-full text-left px-3 py-1 rounded text-sm transition ${location.pathname.includes(child.link)
-                                ? "bg-blue-50 text-blue-700 font-semibold"
-                                : "hover:bg-gray-50 text-gray-600"
-                              }`}
-                            onClick={() => {
-                              const el = document.getElementById(child.link);
-                              if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-                            }}
-                            type="button"
-                          >
-                            <span className="font-medium text-xs text-gray-600">{child.name}</span>
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              ))}
-            </nav>
-          </div>
-
-        </div>
-      </aside>
+      <Sidebar
+        sidebarOpen={sidebarOpen}
+        setSidebarOpen={setSidebarOpen}
+        dashboardStore={dashboardStore}
+        selectTab={selectTab}
+        open={open}
+        setOpen={setOpen}
+        location={location}
+        navData={ dashboardStore.selectedTab > 1?routes2T:routes2}
+      />
 
       {/* Main content wrapper */}
-      <div className="flex-1 flex flex-col min-h-screen ml-0 lg:ml-36">
+      <div className="flex-1 flex flex-col min-h-screen ml-0 lg:ml-52">
         {/* Header */}
         <header className="w-full bg-white shadow-md sticky top-0 z-30 flex items-center px-4 py-3" style={{ height: "85px" }}>
           <button
@@ -215,13 +141,16 @@ const EntryDashboard: React.FC<LayoutProps> = observer(({ children }) => {
             </>
           )}
           {dashboardStore.selectedTab === 1 && <GeneralTrust />}
-          {dashboardStore.selectedTab === 2 && (<GeneralProjectDashboard />)}
-          {dashboardStore.selectedTab === 3 && (
+          {dashboardStore.selectedTab === 2 && <GeneralTEstablishment />}
+          {dashboardStore.selectedTab === 3 && (<GeneralProjectDashboard />)}
+          {dashboardStore.selectedTab === 33 && (
             <GeneralProjectView
-              dashboardStore={dashboardStore}
-              projectData={projectStore.selectedProject as IProjectView}
+            dashboardStore={dashboardStore}
+            projectData={projectStore.selectedProject as IProjectView}
             />
           )}
+          {dashboardStore.selectedTab === 4 && (<GeneralConflict />)}
+          {dashboardStore.selectedTab === 44 && (<GeneralConflictView />)}
         </main>
       </div>
 
@@ -235,5 +164,116 @@ const EntryDashboard: React.FC<LayoutProps> = observer(({ children }) => {
     </div>
   );
 });
+
+
+interface SidebarProps {
+  sidebarOpen: boolean;
+  setSidebarOpen: (open: boolean) => void;
+  dashboardStore: any;
+  selectTab: (v: number) => void;
+  open: number | null;
+  setOpen: (v: number | null) => void;
+  location: Location;
+  navData:Array<INavData>
+}
+
+const Sidebar: React.FC<SidebarProps> = ({
+  sidebarOpen,
+  setSidebarOpen,
+  dashboardStore,
+  selectTab,
+  open,
+  setOpen,
+  location,
+  navData
+}) => (
+  <aside
+    className={`
+      ${!sidebarOpen ? "hidden lg:block" : ""}
+      z-40 bg-white shadow-lg 
+      lg:fixed lg:inset-y-0 lg:left-0 lg:w-52
+      transform transition-transform duration-200 ease-in-out
+      ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
+      lg:translate-x-0
+    `}
+  >
+    <div className="flex flex-col h-full">
+      <div className="flex items-center justify-between px-6 py-4 border-b">
+        <div
+          onClick={() => window.location.href = "https://hcdtmonitor.org"}
+          className="text-xl lg:text-2xl font-bold relative w-fit cursor-pointer"
+        >
+          <span className="text-2xl font-bold text-black block">I-HCDT</span>
+          <span className="text-xs block text-[#003B99] mt-1 tracking-widest">
+            Monitor
+          </span>
+        </div>
+        <button
+          className="lg:hidden text-gray-500"
+          onClick={() => setSidebarOpen(false)}
+        >
+          ✕
+        </button>
+      </div>
+      <div className="flex-1 flex flex-col py-8">
+        <nav className="flex flex-col gap-1 px-4">
+          {navData.map((route) => (
+            <div key={route.link}>
+              <NavLink
+                to="#"
+                className={
+                  dashboardStore.selectedTab === route.link
+                    ? "flex items-center px-4 py-2 rounded bg-blue-50 text-blue-700 font-semibold transition"
+                    : "flex items-center px-4 py-2 rounded text-gray-700 hover:bg-gray-100 transition"
+                }
+                onClick={() => {
+                  selectTab(route.link);
+                  setSidebarOpen(false);
+                  setOpen(open === route.id ? null : route.id);
+                }}
+              >
+                <span className="text-sm font-medium">{route.name}</span>
+                {route.children && route.children.length > 0 && (
+                  <svg
+                    className={`ml-auto w-4 h-4 transition-transform ${open === route.id ? "rotate-90" : ""}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                )}
+              </NavLink>
+              {/* Children */}
+              {route.children && route.children.length > 0 && open === route.id && (
+                <ul className="ml-6 mt-1 flex flex-col gap-1">
+                  {route.children.map(child => (
+                    <li key={child.id}>
+                      <button
+                        className={`w-full text-left px-3 py-1 rounded text-sm transition ${location.pathname.includes(child.link)
+                          ? "bg-blue-50 text-blue-700 font-semibold"
+                          : "hover:bg-gray-50 text-gray-600"
+                          }`}
+                        onClick={() => {
+                          const el = document.getElementById(child.link);
+                          if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+                        }}
+                        type="button"
+                      >
+                        <span className="font-medium text-xs text-gray-600">{child.name}</span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          ))}
+        </nav>
+      </div>
+    </div>
+  </aside>
+);
+
+
 
 export default EntryDashboard;

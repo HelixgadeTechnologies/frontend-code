@@ -21,7 +21,7 @@ const GeneralProjectTable = observer(() => {
 
     const handleView = useCallback(async (project: IProjectView) => {
         projectStore.selectedProject = project
-        dashboardStore.selectedTab = 3;
+        dashboardStore.selectedTab = 33;
         // Add your logic here
     }, []);
 

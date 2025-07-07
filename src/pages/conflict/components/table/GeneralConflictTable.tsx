@@ -1,27 +1,25 @@
 import { RowSelectionState } from "@tanstack/react-table";
 import { Observer, observer } from "mobx-react-lite";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { EmptyTable, LoadingTable, Modal, Table } from "../../../../components/elements";
+import { CustomSelect, EmptyTable, LoadingTable, Table } from "../../../../components/elements";
 import { conflictStore as ConflictStore } from "../../store/conflictStore"
-import { trustStore as TrustStore } from "../../../trust/store/trustStore"
 import { IConflictView } from "../../types/interface";
 import Tag from "../../../../components/elements/Tag";
-import ConflictTableHeader from "./ConflictTableHeader";
-// import ConflictView from "../modal/ConflictView";
-import EditConflict from "../form/EditConflict";
+
 import IMG from "../../../../assets/svgs/dashboardConflictNotFound.svg"
-import ConflictForm from "../form/ConflictForm";
+import { dashboardStore as DashboardStore } from "../../../dashboard/store/dashboardStore";
+import { Controller, useForm } from "react-hook-form";
 
+const dashboardStoreCtx = createContext(DashboardStore);
 const ConflictStoreCtx = createContext(ConflictStore);
-const TrustStoreCtx = createContext(TrustStore);
 
-export const ConflictTable = observer(() => {
+export const GeneralConflictTable = observer(() => {
+    const dashboardStore = useContext(dashboardStoreCtx);
     const conflictStore = useContext(ConflictStoreCtx);
-    const trustStore = useContext(TrustStoreCtx);
-
+    const { control } = useForm();
     useEffect(() => {
         async function loadRequests() {
-            let selectedTrustId = window.sessionStorage.getItem("selectedTrustId")
+            let selectedTrustId = window.sessionStorage.getItem("selectedTrustIdG")
             await conflictStore.getConflicts(selectedTrustId as string);
             conflictStore.selectedConflict = null;
         }
@@ -29,23 +27,11 @@ export const ConflictTable = observer(() => {
     }, []);
     const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
-
-
-    const handleCreate = useCallback(() => {
-        conflictStore.isReportDialogVisible = true
-    }, [conflictStore]);
-
     const handleView = useCallback(async (conflict: IConflictView) => {
         // console.log(`Approved user : ${conflict}`);
         conflictStore.selectedConflict = conflict
-        conflictStore.conflictBaseView = 3
+        dashboardStore.selectedTab = 44;
     }, [conflictStore]);
-
-    const handleEdit = useCallback(async (conflict: IConflictView) => {
-        conflictStore.selectedConflict = conflict;
-        conflictStore.isEditDialogVisible = true;
-    }, [conflictStore]);
-
 
     // Define columns with memoization
     const columns = useMemo(
@@ -66,7 +52,7 @@ export const ConflictTable = observer(() => {
                 accessorKey: "userFirstName",
                 cell: ({ row }: { row: { original: IConflictView } }) => {
                     const conflict = row.original;
-                    const data = `${conflict?.userLastName == null ? "" : conflict?.userLastName} ${conflict?.userFirstName == null ? "" : conflict?.userFirstName}`;
+                    const data = `${conflict?.userLastName == null?"":conflict?.userLastName} ${conflict?.userFirstName == null?"":conflict?.userFirstName}`;
                     return <span>{data}</span>;
                 },
             },
@@ -91,12 +77,6 @@ export const ConflictTable = observer(() => {
                                         // icon={checkIcon}
                                         onClick={() => handleView(conflict)} // Add your view handler
                                     />
-                                    <Tag
-                                        label="Edit"
-                                        type="default"
-                                        // icon={editIcon}
-                                        onClick={() => handleEdit(conflict)} // Add your view handler
-                                    />
                                 </div>
                             )}
                         </Observer>
@@ -109,10 +89,52 @@ export const ConflictTable = observer(() => {
 
     const tableHead = ["Project Title", "Cause Of Conflict", "Issues Address By", "Action"];
 
+    const handleFilterChange = (selectedOption: any) => {
+        conflictStore.filterConflict(selectedOption?.value); // Example: Update the store with the selected status
+    };
     return (
         <>
-            <ConflictTableHeader conflictStore={conflictStore} />
-            <div className="mt-10 bg-white p-4  border border-gray-8 ">
+            <div className="p-4">
+                <div className="flex items-center justify-between">
+                    {/* Title */}
+                    <h1></h1>
+                    {/* Filter Dropdown */}
+                    <div className="flex items-center gap-4" >
+                        {/* <label className="text-sm font-medium text-gray-700">Filter By</label> */}
+                        <Controller
+
+                            control={control}
+                            name="filterStatus"
+                            render={({ field }) => (
+                                <CustomSelect
+
+                                    id="filter-status-select"
+                                    {...field}
+                                    options={
+                                        [
+                                            { label: "All Conflict", value: 0 },
+                                            { label: "Resolved Conflict", value: 1 },
+                                            { label: "Pending Conflict", value: 2 },
+                                            { label: "Conflict In Court", value: 3 },
+                                            { label: "State Government", value: 4 }
+                                        ]
+                                    }
+                                    onChange={(selectedOption) => {
+                                        field.onChange(selectedOption); // Update the form state
+                                        handleFilterChange(selectedOption); // Perform the action
+                                    }}
+                                    label="Filter By"
+                                    // isLoading={conflictStore.isLoading}
+                                    placeholder="Conflict Status"
+                                />
+                            )}
+                        />
+                    </div>
+
+                </div>
+
+            </div>
+            <div className="p-4">
                 <>
                     {conflictStore.isLoading ? (
                         <LoadingTable headArr={tableHead} />
@@ -126,54 +148,19 @@ export const ConflictTable = observer(() => {
                             count={conflictStore.filteredConflicts.size}
                             rowSelection={rowSelection}
                             setRowSelection={setRowSelection}
+                            totalPage={conflictStore.filteredConflicts.size}
                         // refresh={()=>economicImpactStore.getEconomicImpactByTrustId(trustStore.selectedTrustId)}
                         />
                     ) : (
                         <EmptyTable
                             headArr={tableHead}
                             heading="No Conflict data available."
-                            text={<span>You can  <button className="text-blue-600 text-md font-medium hover:underline" onClick={handleCreate}>click here</button> to make a report</span>}
+                            // text={<span>You can  <button className="text-blue-600 text-md font-medium hover:underline" onClick={handleCreate}>click here</button> to make a report</span>}
                             img={IMG}
                         />
                     )}
                 </>
                 {/* Modals */}
-                {/* {conflictStore.selectedConflict && !conflictStore.isEditDialogVisible && (
-                    <Modal
-                        body={
-                            <ConflictView
-                                close={() => conflictStore.selectedConflict = null}
-                                conflictStore={conflictStore}
-                            />
-                        }
-                        close={() => conflictStore.selectedConflict = null}
-                    />
-                )} */}
-                {conflictStore.isEditDialogVisible && conflictStore.isEditDialogVisible && (
-                    <Modal
-                        body={
-                            <EditConflict
-                                conflictStore={conflictStore}
-                                selectedTrust={trustStore.selectedTrustId as string}
-                                close={() => { conflictStore.isEditDialogVisible = false; conflictStore.selectedConflict = null }}
-                            />
-                        }
-                        close={() => { conflictStore.isEditDialogVisible = false; conflictStore.selectedConflict = null }}
-                    />
-                )}
-
-                {conflictStore.isReportDialogVisible && (
-                    <Modal
-                        body={
-                            <ConflictForm
-                                conflictStore={conflictStore}
-                                selectedTrust={trustStore.selectedTrustId as string}
-                                close={() => conflictStore.isReportDialogVisible = false}
-                            />
-                        }
-                        close={() => conflictStore.isReportDialogVisible = false}
-                    />
-                )}
             </div>
         </>
     );

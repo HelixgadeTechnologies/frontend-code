@@ -14,7 +14,7 @@ import { ITrustList } from "../../types/interface";
 import { trustEstablishmentStore as TrustEstablishmentStore } from "../../../trustEstablishment/store/trustEstablishmentStore";
 // import { authStore as AuthStore } from "../../../auth/store/authStore";
 import { projectStore as ProjectStore } from "../../../project/store/projectStore";
-import { dashboardStore as DashboardStore} from "../../../dashboard/store/dashboardStore";
+import { dashboardStore as DashboardStore } from "../../../dashboard/store/dashboardStore";
 
 
 const projectStoreCTX = createContext(ProjectStore);
@@ -45,10 +45,13 @@ const GeneralTrust = observer(() => {
       sessionStorage.setItem("selectedTrustIdG", trustId); // Store selected trust ID in sessionStorage
       projectStore.dashboardData = null;
       await projectStore.getProjectDashboardByTrustId(trustId, 0, "ALL", "ALL")
+      await trustEstablishmentStore.getFundsDashboardByTrustIdAndYear(trustId, 0)
+      trustEstablishmentStore.dashboardData = null;
+      await trustEstablishmentStore.getEstablishmentDashboardByTrustId(trustId)
       dashboardStore.selectedTab = 2;
     }
     loadRequests();
-  }, [trustEstablishmentStore]);
+  }, [projectStore, trustEstablishmentStore]);
 
   // Define columns with memoization
   const columns = useMemo(

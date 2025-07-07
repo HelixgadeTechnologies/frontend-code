@@ -11,6 +11,7 @@ class DashboardStore implements IDashboardStore {
     selectedTrust: string = "ALL";
     selectedTab:number = 0;
     projectSwitch:boolean = false
+    conflictSwitch:boolean = false
     constructor() {
         makeAutoObservable(this);
     }

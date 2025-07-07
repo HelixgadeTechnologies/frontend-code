@@ -10,7 +10,7 @@ export const routes = [
     title: "Dashboard",
     link: "/dashboard",
     icon: dashboardIcon,
-    children:[
+    children: [
       {
         id: 1,
         name: "Trust Establishment",
@@ -44,7 +44,7 @@ export const routes = [
     title: "Trusts",
     link: "/dashboard/trusts",
     icon: trustIcon,
-    children:[]
+    children: []
   },
   {
     id: 3,
@@ -52,17 +52,17 @@ export const routes = [
     title: "Settings",
     link: "/dashboard/settings",
     icon: settingsIcon,
-    children:[]
+    children: []
   },
 ];
-export const routes2 = [
+export const routes2:Array<INavData> = [
   {
     id: 1,
     name: "Dashboard",
     title: "Dashboard",
     link: 0,
     icon: dashboardIcon,
-    children:[
+    children: [
       {
         id: 1,
         name: "Trust Establishment",
@@ -96,7 +96,49 @@ export const routes2 = [
     title: "Trusts",
     link: 1,
     icon: trustIcon,
-    children:[]
+    children: []
+  },
+];
+export const routes2T:Array<INavData> = [
+  {
+    id: 2,
+    name: "Trust Establishment",
+    title: "Trust Establishment",
+    link: 2,
+    icon: "",
+    children: []
+  },
+  {
+    id: 3,
+    name: "Project",
+    title: "Project",
+    link: 3,
+    icon: "",
+    children: []
+  },
+  {
+    id: 4,
+    name: "Conflict",
+    title: "Conflict",
+    link: 4,
+    icon: "",
+    children: []
+  },
+  {
+    id: 5,
+    name: "Community Satisfaction",
+    title: "Community Satisfaction",
+    link: 5,
+    icon: "",
+    children: []
+  },
+  {
+    id: 6,
+    name: "Economic Impact",
+    title: "Economic Impact",
+    link: 6,
+    icon: "",
+    children: []
   },
 ];
 
@@ -158,3 +200,18 @@ export const currencyOptions = [
   { value: "EUR", label: "EUR" },
   { value: "GBP", label: "GBP" },
 ];
+
+export interface INavData {
+  id: number;
+  name: string;
+  title: string;
+  link: number;
+  icon: string;
+  children: Array<IChildrenData>
+}
+
+interface IChildrenData {
+  id: number;
+  name: string;
+  link: string;
+}

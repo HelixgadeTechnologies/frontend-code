@@ -6,7 +6,8 @@ export interface IDashboardStore {
     selectedSettlor: string;
     selectedTrust: string;
     selectedTab: number;
-    projectSwitch:boolean;
+    projectSwitch: boolean;
+    conflictSwitch: boolean;
     transformDashboard(data: IGeneralDashboard): IFinishedDashboard;
     getDashboard(trustId: string, year: number, state: string, settlor: string): Promise<void>;
 }

@@ -9,7 +9,7 @@ import IMG from "../../../../assets/svgs/fileNotFound.svg"
 const GeneralProjectView = observer(({ projectData, dashboardStore }: { projectData: IProjectView; dashboardStore: IDashboardStore }) => {
 
     const closeTable = useCallback(() => {
-        dashboardStore.selectedTab = 2;
+        dashboardStore.selectedTab = 3;
     }, [dashboardStore]);
     const getStatusColor = (status: string | undefined) => {
         switch (status) {
@@ -43,30 +43,30 @@ const GeneralProjectView = observer(({ projectData, dashboardStore }: { projectD
                 {/* Project Overview */}
                 <div className="flex justify-between items-center mb-6 ">
                     <div>
-                        <h2 className="text-lg font-bold text-gray-800">{projectData.projectTitle || "Project Title"}</h2>
+                        <h2 className="text-lg font-bold text-gray-800">{projectData?.projectTitle || "Project Title"}</h2>
                         {/* <p className="text-sm text-gray-600">Project ID: {projectData.projectId || "N/A"}</p> */}
                     </div>
-                    <span className={`px-4 py-2 text-sm font-medium rounded-full ${getStatusColor(projectData.projectStatusName as string)}`}>
-                        {projectData.projectStatusName || "N/A"}
+                    <span className={`px-4 py-2 text-sm font-medium rounded-full ${getStatusColor(projectData?.projectStatusName as string)}`}>
+                        {projectData?.projectStatusName || "N/A"}
                     </span>
                 </div>
 
                 {/* Project Details */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
                     <p className="text-sm text-gray-600">
-                        <strong>Project Category:</strong> {projectData.projectCategory || "N/A"}
+                        <strong>Project Category:</strong> {projectData?.projectCategory || "N/A"}
                     </p>
                     <p className="text-sm text-gray-600">
-                        <strong>Total Project Budget:</strong> {projectData.totalBudget || "N/A"}
+                        <strong>Total Project Budget:</strong> {projectData?.totalBudget || "N/A"}
                     </p>
                     <p className="text-sm text-gray-600">
-                        <strong>Award Date:</strong> {dayjs(projectData.awardDate).format("DD-MM-YYYY") || "N/A"}
+                        <strong>Award Date:</strong> {dayjs(projectData?.awardDate).format("DD-MM-YYYY") || "N/A"}
                     </p>
                     <p className="text-sm text-gray-600">
-                        <strong>Contractor:</strong> {projectData.nameOfContractor || "N/A"}
+                        <strong>Contractor:</strong> {projectData?.nameOfContractor || "N/A"}
                     </p>
                     <p className="text-sm text-gray-600">
-                        <strong>Community:</strong> {projectData.community || "N/A"}
+                        <strong>Community:</strong> {projectData?.community || "N/A"}
                     </p>
 
                 </div>
@@ -88,23 +88,23 @@ const GeneralProjectView = observer(({ projectData, dashboardStore }: { projectD
                     {/* Left Column */}
                     <div className="space-y-6">
                         <p className="text-sm text-gray-600">
-                            <strong>Number of Males Employed by Contractor:</strong> {projectData.numberOfMaleEmployedByContractor || "N/A"}
+                            <strong>Number of Males Employed by Contractor:</strong> {projectData?.numberOfMaleEmployedByContractor || "N/A"}
                         </p>
                         <p className="text-sm text-gray-600">
-                            <strong>Number of Females Employed by Contractor:</strong> {projectData.numberOfFemaleEmployedByContractor || "N/A"}
+                            <strong>Number of Females Employed by Contractor:</strong> {projectData?.numberOfFemaleEmployedByContractor || "N/A"}
                         </p>
                         <p className="text-sm text-gray-600">
-                            <strong>Number of PwDs Employed by Contractor:</strong> {projectData.numberOfPwDsEmployedByContractor || "N/A"}
+                            <strong>Number of PwDs Employed by Contractor:</strong> {projectData?.numberOfPwDsEmployedByContractor || "N/A"}
                         </p>
                         <p className="text-sm text-gray-600">
-                            <strong>Number of Host Community Members Contracted:</strong> {projectData.numberOfHostCommunityMemberContracted || "N/A"}
+                            <strong>Number of Host Community Members Contracted:</strong> {projectData?.numberOfHostCommunityMemberContracted || "N/A"}
                         </p>
                         <div>
                             <p className="text-sm text-gray-600 mb-2">
                                 <strong>Type of Work:</strong>
                             </p>
                             <div className="flex flex-wrap gap-2">
-                                {projectData.typeOfWork
+                                {projectData?.typeOfWork
                                     ? projectData.typeOfWork.split(",").map((work: string, index: number) => (
                                         <span
                                             key={index}
@@ -122,30 +122,30 @@ const GeneralProjectView = observer(({ projectData, dashboardStore }: { projectD
 
                     <div className="space-y-4">
                         <div className="w-full rounded-lg overflow-hidden">
-                            {projectData.projectVideoMimeType?.startsWith("image/") && (
-                                <a href={projectData.projectVideo as string} target="_blank" rel="noopener noreferrer">
+                            {projectData?.projectVideoMimeType?.startsWith("image/") && (
+                                <a href={projectData?.projectVideo as string} target="_blank" rel="noopener noreferrer">
                                     <img
-                                        src={projectData.projectVideo as string}
+                                        src={projectData?.projectVideo as string}
                                         alt="Project Media"
                                         className="w-full h-64 object-cover rounded-lg shadow-md"
                                     />
                                 </a>
                             )}
-                            {projectData.projectVideoMimeType?.startsWith("video/") && (
+                            {projectData?.projectVideoMimeType?.startsWith("video/") && (
                                 <video
-                                    src={projectData.projectVideo as string}
+                                    src={projectData?.projectVideo as string}
                                     controls
                                     className="w-full h-64 object-cover rounded-lg shadow-md"
                                 />
                             )}
-                            {projectData.projectVideoMimeType === "application/pdf" && (
+                            {projectData?.projectVideoMimeType === "application/pdf" && (
                                 <iframe
-                                    src={projectData.projectVideo as string}
+                                    src={projectData?.projectVideo as string}
                                     title="Project PDF"
                                     className="w-full h-64 rounded-lg shadow-md"
                                 />
                             )}
-                            {!projectData.projectVideoMimeType && (
+                            {!projectData?.projectVideoMimeType && (
                                 <div className="w-full h-64 flex items-center justify-center rounded-lg shadow-md">
                                     <img
                                         src={IMG}
@@ -158,10 +158,10 @@ const GeneralProjectView = observer(({ projectData, dashboardStore }: { projectD
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                             <p className="text-sm text-gray-600">
-                                <strong>Annual Approved Budget:</strong> {projectData.annualApprovedBudget || "N/A"}
+                                <strong>Annual Approved Budget:</strong> {projectData?.annualApprovedBudget || "N/A"}
                             </p>
                             <p className="text-sm text-gray-600">
-                                <strong>Project Name:</strong> {projectData.projectTitle || "N/A"}
+                                <strong>Project Name:</strong> {projectData?.projectTitle || "N/A"}
                             </p>
                         </div>
                     </div>

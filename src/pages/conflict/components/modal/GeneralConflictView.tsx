@@ -5,24 +5,27 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { conflictStore as ConflictStore } from "../../store/conflictStore"
 import { createContext, useCallback, useContext } from "react";
 import IMG from "../../../../assets/images/download.jpeg"
-import { useParams } from "react-router-dom";
-import { GoBack } from "../../../../components/elements";
+import { dashboardStore as DashboardStore } from "../../../dashboard/store/dashboardStore";
+import GoBackT from "../../../../components/elements/GoBackT";
 // Enable the plugin
 dayjs.extend(relativeTime);
+const dashboardStoreCTX = createContext(DashboardStore)
 const ConflictStoreCTX = createContext(ConflictStore)
-const ConflictView = observer(() => {
-    const { name } = useParams();
+const GeneralConflictView = observer(() => {
+    const dashboardStore = useContext(dashboardStoreCTX)
     const conflictStore = useContext(ConflictStoreCTX)
     const conflictData: IConflictView | null = conflictStore.selectedConflict;
 
+   
     const closeTable = useCallback(() => {
-        conflictStore.conflictBaseView = 2;
-    }, [conflictStore]);
+        dashboardStore.selectedTab = 4;
+    }, [dashboardStore]);
 
     return (
         <div className="p-6 bg-gray-100 min-h-screen">
             {/* Header Section */}
-            <GoBack action={closeTable} trustName={name || ""} page="conflict" />
+            <GoBackT action={closeTable} page="Conflict table" />
+            <br />
             <h1 className="text-xl font-bold text-gray-800">
                 Conflict View
             </h1>
@@ -42,16 +45,9 @@ const ConflictView = observer(() => {
                     <p className="text-sm text-gray-600">
                         <strong>Phone Number:</strong> {conflictData?.userPhoneNumber}
                     </p>
-                    {/* <p className="text-sm text-gray-600">
-                        <strong>Community:</strong> community
-                    </p>
-                    <p className="text-sm text-gray-600">
-                        <strong>No. of Reports made:</strong> 557
-                    </p> */}
+             
                 </div>
-                {/* <div className="mt-4">
-                    <button className="text-blue-600 text-sm font-medium hover:underline">View Project Report</button>
-                </div> */}
+           
             </div>
 
             {/* Conflict Details Section */}
@@ -109,4 +105,4 @@ const ConflictView = observer(() => {
     );
 });
 
-export default ConflictView;
+export default GeneralConflictView;

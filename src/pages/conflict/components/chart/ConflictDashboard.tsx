@@ -38,6 +38,7 @@ const ConflictDashboard = observer(() => {
     useEffect(() => {
         async function fetchData() {
             let selectedTrustId = window.sessionStorage.getItem("selectedTrustId");
+            conflictStore.dashboardData = null;
             await conflictStore.getConflictDashboardByTrustId(
                 selectedTrustId as string,
                 0,
