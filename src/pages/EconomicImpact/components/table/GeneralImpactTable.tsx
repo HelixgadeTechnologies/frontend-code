@@ -1,7 +1,7 @@
 import { RowSelectionState } from "@tanstack/react-table";
 import { Observer, observer } from "mobx-react-lite";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { caretDownIcon, filterIcon, sortIcon, checkIcon } from "../../../../assets/icons";
+import {checkIcon } from "../../../../assets/icons";
 import { EmptyTable, LoadingTable, Modal, Table } from "../../../../components/elements";
 import { economicImpactStore as EconomicImpactStore } from "../../store/economicImpactStore"
 // import { trustStore as TrustStore } from "../../../trust/store/trustStore";
