@@ -53,6 +53,11 @@ class TrustEstablishmentStore implements ITrustEstablishmentStore {
         const filledFields = relevantKeys.reduce((count, key) => {
             const value = data[key];
 
+            // Custom logic: only count trustRegisteredWithCAC if its value is exactly 1
+            if (key === 'trustRegisteredWithCAC') {
+                return count + (value === 1 ? 1 : 0);
+            }
+
             const isFilled =
                 value !== null &&
                 value !== undefined &&

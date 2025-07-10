@@ -13,6 +13,7 @@ import { jwtDecode } from "jwt-decode";
 import { authStore as AthStore } from "../store/authStore"
 import { Observer, observer } from "mobx-react-lite";
 import { ILoginCredentials, IUser } from "../types/interface";
+import GoBackT from "../../../components/elements/GoBackT";
 
 const AuthStoreCtx = createContext(AthStore);
 
@@ -85,6 +86,9 @@ const AdminLogin = observer(() => {
     }, [authStore]);
     return (
         <form onSubmit={handleLogin} className="w-full lg:w-2/3">
+            <div className="mb-4">
+                <GoBackT action={() => navigate(`/`)} page="General Dashboard" />
+            </div>
             <div className="flex items-center justify-center px-6 py-4 ">
                 <div
                     onClick={() => navigate(`/`)}
