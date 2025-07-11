@@ -34,8 +34,6 @@ class TrustEstablishmentStore implements ITrustEstablishmentStore {
             this.isSubmitting = false;
         }
     }
-
-
     calculateTrustEstablishmentCompletion(data: ITrustEstablishmentPayload): number {
         const keys = Object.keys(data) as (keyof ITrustEstablishmentPayload)[];
 
