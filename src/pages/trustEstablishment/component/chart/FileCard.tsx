@@ -5,7 +5,7 @@ interface FileCardProps {
   fileUrl: string;
   uploadedAt: string;
   fileSize: string;
-  onDelete: () => void;
+  onDelete?: () => void;
 }
 
 const FileCard = ({ fileName, fileUrl, uploadedAt, fileSize, onDelete }: FileCardProps) => (

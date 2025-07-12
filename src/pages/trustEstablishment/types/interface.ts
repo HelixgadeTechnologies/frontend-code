@@ -9,11 +9,13 @@ export interface ITrustEstablishmentStore {
     pageSwitch: number;
     isDashboardLoading: boolean;
     isDeleting: boolean;
+    summarySwitch: boolean;
     operationCount: ObservableMap<string, number>;
     fundsDashboardData: IFundsDashboardData;
     trustEstablishmentStatus: ITrustEstablishmentStatus | null;
     dashboardData: IFinishedDashboard | null;
     selectedYear: number;
+    fundsStatusDashboard: Array<IFundsStatusDashboardData>;
     createTrustEstablishment(payload: ITrustEstablishmentPayload): Promise<boolean>;
     calculateTrustEstablishmentCompletion(data: ITrustEstablishmentPayload): number;
     getSingleTrustEstablishmentStatus(trustId: string): Promise<void>;
@@ -75,6 +77,14 @@ export interface IFundsDashboardData {
     capitalPercentage: number,
     reservePercentage: number
 }
+export interface IFundsStatusDashboardData{
+    yearReceived: number,
+    paymentCheck: number
+
+}
+export interface IFundsStatusDashboard {
+    FINANCIAL_SUMMARY: Array<IFundsStatusDashboardData>
+}
 export interface IFundsDashboard {
     FINANCIAL_SUMMARY: Array<IFundsDashboardData>
 }
@@ -126,6 +136,7 @@ export interface ISubFields {
     reserve: number,
     trustRegisteredWithCAC: number,
     cscDocument: string,
+    yearIncorporated: number,
     yearDeveloped: number,
     yearExpired: number,
     communityLeadershipConsulted: number,
@@ -160,6 +171,7 @@ export interface IFinishedDashboard {
     RESERVE: number,
     CAC_STATUS: number,
     CAC_DOCUMENT: string,
+    CAC_YEAR: number,
     YEAR_START: number,
     YEAR_EXPIRED: number,
     YEAR_NEEDS: number,

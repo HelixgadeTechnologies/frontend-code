@@ -11,17 +11,18 @@ import {
   ChartOptions,
   ArcElement,
 } from "chart.js";
-import { Doughnut, Line, Pie } from "react-chartjs-2";
+import { Doughnut, Line } from "react-chartjs-2";
 import { trustEstablishmentStore as TrustEstablishmentStore } from "../../store/trustEstablishmentStore"
 import { observer } from "mobx-react-lite";
 import FileCard from "./FileCard";
 import dayjs from "dayjs";
-import { CustomSelect, Modal } from "../../../../components/elements";
+import { Modal } from "../../../../components/elements";
 import { DeleteFile } from "../modal/DeleteFile";
-import { Controller, useForm } from "react-hook-form";
-import { year } from "../../../../utils/data";
+// import { Controller, useForm } from "react-hook-form";
+// import { year } from "../../../../utils/data";
 import GoBackT from "../../../../components/elements/GoBackT";
 import { dashboardStore as DashboardStore } from "../../../dashboard/store/dashboardStore";
+import { IFundsStatusDashboardData } from "../../types/interface";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -38,7 +39,7 @@ const TrustEstablishmentStoreCTX = createContext(TrustEstablishmentStore);
 const GeneralTEstablishment = observer(() => {
   const dashboardStore = useContext(dashboardStoreCTX);
   const trustEstablishmentStore = useContext(TrustEstablishmentStoreCTX);
-  const { control } = useForm();
+  // const { control } = useForm();
 
   const [type, setType] = useState<string | null>(null);
   const [url, setUrl] = useState<string | null>(null);
@@ -130,25 +131,32 @@ const GeneralTEstablishment = observer(() => {
     return "NO DATA";
   }
 
-  const handelFileDelete = useCallback((url: string, type: string) => {
-    setUrl(url);
-    setType(type);
-  }, [url, type]);
+  const translator4 = (data: number): string => {
+    if (data == 1) return "FULLY RECEIVED";
+    if (data == 2) return "PARTLY RECEIVED";
+    if (data == 3) return "NOT RECEIVED";
+    return "NO DATA";
+  }
+
+  // const handelFileDelete = useCallback((url: string, type: string) => {
+  //   setUrl(url);
+  //   setType(type);
+  // }, [url, type]);
 
   const handelClose = useCallback(() => {
     setUrl(null);
     setType(null);
   }, [url, type]);
 
-  const changeYear = useCallback((year: number) => {
-    async function getInfo() {
-      trustEstablishmentStore.selectedYear = year;
-      let selectedTrustId = window.sessionStorage.getItem("selectedTrustIdG")
-      await trustEstablishmentStore.getFundsDashboardByTrustIdAndYear(selectedTrustId as string, year);
-    }
-    getInfo()
+  // const changeYear = useCallback((year: number) => {
+  //   async function getInfo() {
+  //     trustEstablishmentStore.selectedYear = year;
+  //     let selectedTrustId = window.sessionStorage.getItem("selectedTrustIdG")
+  //     await trustEstablishmentStore.getFundsDashboardByTrustIdAndYear(selectedTrustId as string, year);
+  //   }
+  //   getInfo()
 
-  }, [trustEstablishmentStore]);
+  // }, [trustEstablishmentStore]);
 
   const closeTable = useCallback(() => {
     dashboardStore.selectedTab = 1;
@@ -157,7 +165,7 @@ const GeneralTEstablishment = observer(() => {
 
   return (
     <>
-    <br />
+      <br />
       <GoBackT action={closeTable} page="Trust table" />
       <br />
 
@@ -168,9 +176,8 @@ const GeneralTEstablishment = observer(() => {
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         {/* Financial Summary */}
         <div className="bg-white rounded-xl p-5 flex flex-col gap-4 shadow min-h-[320px]">
-          <div className="flex items-center justify-between mb-2">
+          {/* <div className="flex items-center justify-between mb-2">
             <h3 className="font-semibold text-lg mb-2">Funds received by trust</h3>
-            {/* Year Filter */}
             <div>
               <Controller
                 control={control}
@@ -241,13 +248,35 @@ const GeneralTEstablishment = observer(() => {
                 <span className="font-medium text-gray-900">NGN {trustEstablishmentStore.fundsDashboardData?.totalFundsReceived?.toLocaleString() || 0}</span>
               </li>
             </ul>
+          </div> */}
+          <div className="rounded-xl mt-2 col-span-2 overflow-hidden">
+            <div className="flex items-center justify-between px-6 py-4">
+              <h3 className="font-semibold text-lg text-gray-900">Funds received by trust</h3>
+            </div>
+            <div className="bg-white px-4 py-2">
+              <ul className="divide-y divide-gray-100">
+                {trustEstablishmentStore.fundsStatusDashboard.map((value: IFundsStatusDashboardData) => (
+                  <li
+                    key={value.yearReceived}
+                    className="flex items-center justify-between py-3 px-2 hover:bg-gray-50 rounded transition"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="font-medium text-gray-800">{value.yearReceived}</span>
+                    </div>
+                    <span className={classColors(value.paymentCheck)}>
+                      {translator4(value.paymentCheck)}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
 
         {/* Trust Establishment and Governance */}
         <div className="bg-white rounded-lg p-5 flex flex-col gap-4 shadow col-span-2">
           <h3 className="font-semibold text-lg mb-2">Trust Establishment and Governance</h3>
-          <div>
+          {/* <div>
             <div className="flex justify-between items-center mb-1">
               <span className="text-gray-600">Trust Setup</span>
               <span className="text-gray-600">{trustEstablishmentStore.dashboardData?.COMPLETION_STATUS ? trustEstablishmentStore.dashboardData?.COMPLETION_STATUS : 0}%</span>
@@ -255,11 +284,21 @@ const GeneralTEstablishment = observer(() => {
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div className="bg-green-500 h-2 rounded-full" style={{ width: `${trustEstablishmentStore.dashboardData?.COMPLETION_STATUS ? trustEstablishmentStore.dashboardData?.COMPLETION_STATUS : 0}%` }} />
             </div>
+          </div> */}
+          <div className="flex items-center gap-2">
+            <label htmlFor="year-select" className="text-gray-500 text-sm mr-2">Registered Year</label>
+            <div
+              id="year-select"
+              className="border rounded px-3 py-1 text-sm bg-white focus:outline-none"
+            >
+              {trustEstablishmentStore.dashboardData?.CAC_YEAR}
+            </div>
+            <br />
           </div>
           <div>
             <div className="flex justify-between items-center">
-              <span className="text-gray-600">CAC Registration</span>
-              <span className={classColors(trustEstablishmentStore.dashboardData?.CAC_STATUS!)}>{translator2(trustEstablishmentStore.dashboardData?.CAC_STATUS!)}</span>
+              <span className="text-gray-600">Trust Registered with CAC</span>
+              <span className={classColors(trustEstablishmentStore.dashboardData?.CAC_STATUS!)}>{translator1(trustEstablishmentStore.dashboardData?.CAC_STATUS!)}</span>
             </div>
           </div>
           <div className="flex items-center gap-2  p-2 rounded">
@@ -269,7 +308,7 @@ const GeneralTEstablishment = observer(() => {
                 fileUrl={trustEstablishmentStore.dashboardData?.CAC_DOCUMENT ? trustEstablishmentStore.dashboardData?.CAC_DOCUMENT : "#"}
                 uploadedAt={dayjs(trustEstablishmentStore.dashboardData?.DATE_UPDATED as string).format("DD MMM, YYYY  h:mmA")}
                 fileSize="1.3MB"
-                onDelete={() => handelFileDelete(trustEstablishmentStore.dashboardData?.CAC_DOCUMENT!, "CAC")}
+              // onDelete={() => handelFileDelete(trustEstablishmentStore.dashboardData?.CAC_DOCUMENT!, "CAC")}
               />
             ) : "No CAC Registration Uploaded"}
           </div>
@@ -421,7 +460,7 @@ const GeneralTEstablishment = observer(() => {
                       fileUrl={trustEstablishmentStore.dashboardData?.DISTRIBUTION_MATRIX || "#"}
                       uploadedAt={dayjs(trustEstablishmentStore.dashboardData?.DATE_UPDATED as string).format("DD MMM, YYYY  h:mmA")}
                       fileSize="1.3MB"
-                      onDelete={() => handelFileDelete(trustEstablishmentStore.dashboardData?.DISTRIBUTION_MATRIX!, "Matrix")}
+                    // onDelete={() => handelFileDelete(trustEstablishmentStore.dashboardData?.DISTRIBUTION_MATRIX!, "Matrix")}
                     />
                   </div>
                 </div>

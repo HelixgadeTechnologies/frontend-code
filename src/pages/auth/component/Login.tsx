@@ -91,12 +91,12 @@ const Login = observer(() => {
   return (
     <>
       <form onSubmit={handleLogin} className="w-full lg:w-2/3">
-      <div className="mb-4">
-        <GoBackT action={() => navigate(`/`)} page="General Dashboard" />
-      </div>
+        <div className="mb-4">
+          <GoBackT action={() => window.location.href = "/"} page="General Dashboard" />
+        </div>
         <div className="flex items-center justify-center px-6 py-4 ">
           <div
-            onClick={() => navigate(`/`)}
+            onClick={() => window.location.href = "/"}
             className="text-xl lg:text-2xl font-bold relative w-fit cursor-pointer"
           >
             <span className="text-2xl font-bold text-black block">I-HCDT</span>

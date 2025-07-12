@@ -1,5 +1,5 @@
 import { makeAutoObservable, ObservableMap } from "mobx"
-import { IEstablishmentDashboard, IFinishedDashboard, IFundsDashboard, IFundsDashboardData, IOperationalExpenditure, ITrustEstablishmentPayload, ITrustEstablishmentStatus, ITrustEstablishmentStore } from "../types/interface";
+import { IEstablishmentDashboard, IFinishedDashboard, IFundsDashboard, IFundsDashboardData, IFundsStatusDashboard, IFundsStatusDashboardData, IOperationalExpenditure, ITrustEstablishmentPayload, ITrustEstablishmentStatus, ITrustEstablishmentStore } from "../types/interface";
 import { trustEstablishmentService } from "../service/trustEstablishmentService";
 import { IUploadPayload } from "../../project/types/interface";
 import { HCDTRequestResponse } from "../../../infrastructure/HCDTRequestResponse";
@@ -10,11 +10,13 @@ class TrustEstablishmentStore implements ITrustEstablishmentStore {
     isDashboardLoading = false;
     isEstablishmentCreated = false;
     isDeleting = false
+    summarySwitch = false
     selectedYear: number = 0;
     pageSwitch: number = 1;
     dashboardData: IFinishedDashboard | null = null;
     operationCount = new ObservableMap<string, number>();
     fundsDashboardData: IFundsDashboardData = {} as IFundsDashboardData;
+    fundsStatusDashboard: Array<IFundsStatusDashboardData> = [];
     trustEstablishmentStatus: ITrustEstablishmentStatus | null = null;
     constructor() {
         makeAutoObservable(this);
@@ -144,6 +146,7 @@ class TrustEstablishmentStore implements ITrustEstablishmentStore {
             RESERVE: data.SUB_FIELDS[0]?.reserve,
             CAC_STATUS: data.SUB_FIELDS[0]?.trustRegisteredWithCAC,
             CAC_DOCUMENT: data.SUB_FIELDS[0]?.cscDocument,
+            CAC_YEAR: data.SUB_FIELDS[0]?.yearIncorporated,
             YEAR_START: data.SUB_FIELDS[0]?.yearDeveloped,
             YEAR_EXPIRED: data.SUB_FIELDS[0]?.yearExpired,
             YEAR_NEEDS: data.SUB_FIELDS[0]?.yearOfNeedsAssessment,
@@ -184,8 +187,11 @@ class TrustEstablishmentStore implements ITrustEstablishmentStore {
             let data = await trustEstablishmentService.getFundsDashboard(trustId, year);
             if (data.success) {
                 this.fundsDashboardData = {} as IFundsDashboardData
-                const processedData: IFundsDashboard = data.data;
+                this.fundsStatusDashboard = []
+                const processedData: IFundsDashboard = data.data.data;
+                const processedData2: IFundsStatusDashboard = data.data.data2;
                 this.fundsDashboardData = processedData.FINANCIAL_SUMMARY[0]
+                this.fundsStatusDashboard = processedData2.FINANCIAL_SUMMARY
             }
         } catch (error) {
             throw error;
