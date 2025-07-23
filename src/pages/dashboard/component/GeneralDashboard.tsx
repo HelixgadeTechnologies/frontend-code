@@ -921,7 +921,7 @@ const GeneralDashboard: React.FC = observer(() => {
                     </div>
                 </div>
                 <div className="bg-white rounded-xl p-8 shadow">
-                    <div className="font-semibold text-base text-gray-900 mb-4">Percentage status of funds received by Trust per year</div>
+                    <div className="font-semibold text-base text-gray-900 mb-4">Status of HCDT Funding by the Settlor</div>
                     <div className="w-full max-w-4xl mx-auto" style={{ minHeight: "220px" }}>
                         <Bar data={FundsData} options={conflictBarOptions} />
                     </div>
