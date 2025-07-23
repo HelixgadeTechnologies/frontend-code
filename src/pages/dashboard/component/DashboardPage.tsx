@@ -900,7 +900,7 @@ const DashboardPage: React.FC = observer(() => {
           {/* Communities benefiting by state */}
           <div className="bg-white rounded-xl p-6 shadow flex flex-col gap-4 flex-1 justify-between">
             <div className="flex items-center justify-between mb-4">
-              <span className="text-sm text-gray-700 font-medium">Total number of host communities involved with the HCDTs</span>
+              <span className="text-sm text-gray-700 font-medium">Number of HCDT established by NUPRC</span>
               <span className="text-xs text-gray-500 font-medium">Total Number of all Benefiting Communities | {dashboardStore.dashboardData?.COMMUNITY_BENEFIT.total.reduce((sum: any, num: any) => sum + num, 0)}</span>
             </div>
             <div className="w-full h-56 flex items-end">
@@ -950,7 +950,7 @@ const DashboardPage: React.FC = observer(() => {
           </div>
         </div>
         <div className="bg-white rounded-xl p-8 shadow">
-          <div className="font-semibold text-base text-gray-900 mb-4">Status of HCDT Funding by the Settlor</div>
+          <div className="font-semibold text-base text-gray-900 mb-4">Status of HCDT Funding by the Settlor: Percent of Trust that have received their annual OPEX funding from the Settlors</div>
           <div className="w-full max-w-4xl mx-auto" style={{ minHeight: "220px" }}>
             <Bar data={FundsData} options={conflictBarOptions} />
           </div>
