@@ -888,7 +888,7 @@ const DashboardPage: React.FC = observer(() => {
         <div className="flex flex-col gap-5 h-full">
           {/* HCDT Establishment and Governance */}
           <div className="bg-white rounded-xl p-4 shadow flex flex-col gap-2">
-            <div className="text-xs text-gray-700 mb-1">Percentage of HCDT establishment and governance</div>
+            <div className="text-xs text-gray-700 mb-1">Number/Percent of HCDT established by NUPRC</div>
             <div className="flex items-center gap-2">
               <div className="flex-1 h-2 bg-[#E5E7EB] rounded-full overflow-hidden">
                 <div className="h-full bg-[#22C55E]" style={{ width: `${dashboardStore.dashboardData?.FIELDS_COMPLETION}%` }}></div>
@@ -900,7 +900,7 @@ const DashboardPage: React.FC = observer(() => {
           {/* Communities benefiting by state */}
           <div className="bg-white rounded-xl p-6 shadow flex flex-col gap-4 flex-1 justify-between">
             <div className="flex items-center justify-between mb-4">
-              <span className="text-sm text-gray-700 font-medium">Number of HCDT established by NUPRC</span>
+              <span className="text-sm text-gray-700 font-medium">Total number of host communities involved with the HCDTs</span>
               <span className="text-xs text-gray-500 font-medium">Total Number of all Benefiting Communities | {dashboardStore.dashboardData?.COMMUNITY_BENEFIT.total.reduce((sum: any, num: any) => sum + num, 0)}</span>
             </div>
             <div className="w-full h-56 flex items-end">
