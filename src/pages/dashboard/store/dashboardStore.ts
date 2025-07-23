@@ -1,4 +1,4 @@
-import { makeAutoObservable } from "mobx"
+import { makeAutoObservable, toJS } from "mobx"
 import { dashboardService } from "../service/dashboardService";
 import { IDashboardStore, IFinishedDashboard, IGeneralDashboard } from "../types/interface";
 
@@ -62,7 +62,13 @@ class DashboardStore implements IDashboardStore {
             CONFLICT_RESOLUTION_OVER: data.CONFLICT_RESOLUTION_OVER,
             BOT_INAUGURATION_CHECK: data.BOT_INAUGURATION_CHECK[0],
             COMMUNITY_LEADERSHIP_PERCENTAGE: data.COMMUNITY_LEADERSHIP_PERCENTAGE[0],
-            NEEDS_ASSESSMENT_PERCENTAGE:data.NEEDS_ASSESSMENT_PERCENTAGE[0]
+            NEEDS_ASSESSMENT_PERCENTAGE:data.NEEDS_ASSESSMENT_PERCENTAGE[0],
+            FUNDS_DISTRIBUTION_PERCENTAGE: {
+                yearReceived: data.FUNDS_DISTRIBUTION_PERCENTAGE.map(item => item.yearReceived),
+                pct_paymentCheck_1: data.FUNDS_DISTRIBUTION_PERCENTAGE.map(item => item.pct_paymentCheck_1),
+                pct_paymentCheck_2: data.FUNDS_DISTRIBUTION_PERCENTAGE.map(item => item.pct_paymentCheck_2),
+                pct_paymentCheck_3: data.FUNDS_DISTRIBUTION_PERCENTAGE.map(item => item.pct_paymentCheck_3),
+            }
         };
     }
 
@@ -74,7 +80,7 @@ class DashboardStore implements IDashboardStore {
             if (data.success) {
                 const processedData = this.transformDashboard(data.data);
                 this.dashboardData = processedData;
-                // console.log("hhhh",toJS({trustId,year, state, settlor}))    
+                toJS(console.log(processedData.FUNDS_DISTRIBUTION_PERCENTAGE));    
             }
         } catch (error) {
             throw error;

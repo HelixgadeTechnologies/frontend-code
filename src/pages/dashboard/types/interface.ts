@@ -35,6 +35,7 @@ export interface IFinishedDashboard {
     BOT_INAUGURATION_CHECK: IBotInauguration;
     COMMUNITY_LEADERSHIP_PERCENTAGE: ICommunityLeadersP;
     NEEDS_ASSESSMENT_PERCENTAGE: INeedsAssessmentStatusP;
+    FUNDS_DISTRIBUTION_PERCENTAGE: { yearReceived: Array<number>; pct_paymentCheck_1: Array<number>; pct_paymentCheck_2: Array<number>; pct_paymentCheck_3: Array<number>; };
 }
 
 interface ConflictStatusPercentage {
@@ -75,8 +76,14 @@ export interface IGeneralDashboard {
     BOT_INAUGURATION_CHECK: IBotInauguration[]
     COMMUNITY_LEADERSHIP_PERCENTAGE: ICommunityLeadersP[];
     NEEDS_ASSESSMENT_PERCENTAGE: INeedsAssessmentStatusP[];
+    FUNDS_DISTRIBUTION_PERCENTAGE: IFundsReceivedG[];
 }
-
+export interface IFundsReceivedG{
+    yearReceived: number;
+    pct_paymentCheck_1: number;
+    pct_paymentCheck_2: number;
+    pct_paymentCheck_3: number;
+}
 export interface INeedsAssessmentStatusP {
     percentage_status_1: number,
     percentage_status_2: number,

@@ -161,7 +161,32 @@ const GeneralDashboard: React.FC = observer(() => {
         ],
     };
 
-
+    const FundsData = {
+        labels: dashboardStore.dashboardData?.FUNDS_DISTRIBUTION_PERCENTAGE.yearReceived,
+        datasets: [
+            {
+                label: "Fully Received",
+                data: dashboardStore.dashboardData?.FUNDS_DISTRIBUTION_PERCENTAGE.pct_paymentCheck_1,
+                backgroundColor: "#22C55E",
+                borderRadius: 4,
+                stack: "Stack 0",
+            },
+            {
+                label: "Partly Received",
+                data: dashboardStore.dashboardData?.FUNDS_DISTRIBUTION_PERCENTAGE.pct_paymentCheck_2,
+                backgroundColor: "#EF8",
+                borderRadius: 4,
+                stack: "Stack 0",
+            },
+            {
+                label: "Not Received",
+                data: dashboardStore.dashboardData?.FUNDS_DISTRIBUTION_PERCENTAGE.pct_paymentCheck_3,
+                backgroundColor: "#EF4444",
+                borderRadius: 4,
+                stack: "Stack 0",
+            },
+        ],
+    };
     const conflictBarOptions = {
         plugins: {
             legend: {
@@ -887,21 +912,6 @@ const GeneralDashboard: React.FC = observer(() => {
             {/* Statistics and Expenditure Row */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                 {/* HCDT Statistics */}
-                <div className="bg-white rounded-xl p-8 shadow flex flex-col justify-center min-h-[220px]">
-                    <span className="font-semibold text-base text-gray-900 mb-4">HCDT Statistics</span>
-                    <div className="mb-3">
-                        <span className="font-bold text-3xl text-gray-900 align-middle">{dashboardStore.dashboardData?.STATISTICS_PERCENTAGE.fully_received_percentage}%</span>
-                        <span className="text-base text-gray-700 ml-2 align-middle">Trusts have reported to have received their approved funds</span>
-                    </div>
-                    <br />
-                    <br />
-                    {/* <div className="text-base text-gray-700 mb-3 ml-1">reported to have received their approved funds</div> */}
-                    <div>
-                        <span className="font-bold text-3xl text-gray-900 align-middle">{dashboardStore.dashboardData?.STATISTICS.community_count}</span>
-                        <span className="text-base text-gray-700 ml-2 align-middle">host communities are benefiting from the trust</span>
-                    </div>
-                    {/* <div className="text-base text-gray-700 ml-1">are benefiting from the trust</div> */}
-                </div>
                 {/* Settlors Operational Expenditure */}
                 <div className="bg-white rounded-xl p-8 shadow flex flex-col justify-center min-h-[220px]">
                     <span className="font-semibold text-base text-gray-900 mb-4">Number of Trust with agreed distribution matrix</span>
@@ -909,15 +919,12 @@ const GeneralDashboard: React.FC = observer(() => {
                         <span className="font-bold text-3xl text-gray-900 align-middle">{dashboardStore.dashboardData?.DISTRIBUTION_MATRIX.total_complete}</span>
                         <span className="text-base text-gray-700 ml-2 align-middle">Trust with agreed distribution matrix</span>
                     </div>
-                    <br />
-                    <br />
-
-                    {/* <span className="font-semibold text-base text-gray-900 mb-4">Number of communities where needs assessment has been full completed</span>
-          <div>
-            <span className="font-bold text-3xl text-gray-900 align-middle">{dashboardStore.dashboardData?.NEEDS_ASSESSMENT_COMMUNITY_COUNT.distinct_community_count}</span>
-            <span className="text-base text-gray-700 ml-2 align-middle">communities needs assessment has been full completed</span>
-          </div> */}
-
+                </div>
+                <div className="bg-white rounded-xl p-8 shadow">
+                    <div className="font-semibold text-base text-gray-900 mb-4">Percentage status of funds received by Trust per year</div>
+                    <div className="w-full max-w-4xl mx-auto" style={{ minHeight: "220px" }}>
+                        <Bar data={FundsData} options={conflictBarOptions} />
+                    </div>
                 </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 min-h-[220px]">
@@ -1810,16 +1817,16 @@ const GeneralDashboard: React.FC = observer(() => {
                                                         },
                                                     },
                                                     legend: {
-                                                    display: true,
-                                                    position: "bottom" as const,
-                                                    align: "center" as const,
-                                                    labels: {
-                                                        boxWidth: 18,
-                                                        boxHeight: 18,
-                                                        padding: 10,
-                                                        font: { size: 9 },
+                                                        display: true,
+                                                        position: "bottom" as const,
+                                                        align: "center" as const,
+                                                        labels: {
+                                                            boxWidth: 18,
+                                                            boxHeight: 18,
+                                                            padding: 10,
+                                                            font: { size: 9 },
+                                                        },
                                                     },
-                                                },
                                                 },
                                             }}
                                             plugins={[ChartDataLabels]}
@@ -1847,16 +1854,16 @@ const GeneralDashboard: React.FC = observer(() => {
                                                         },
                                                     },
                                                     legend: {
-                                                    display: true,
-                                                    position: "bottom" as const,
-                                                    align: "center" as const,
-                                                    labels: {
-                                                        boxWidth: 18,
-                                                        boxHeight: 18,
-                                                        padding: 10,
-                                                        font: { size: 9 },
+                                                        display: true,
+                                                        position: "bottom" as const,
+                                                        align: "center" as const,
+                                                        labels: {
+                                                            boxWidth: 18,
+                                                            boxHeight: 18,
+                                                            padding: 10,
+                                                            font: { size: 9 },
+                                                        },
                                                     },
-                                                },
                                                 },
                                             }}
                                             plugins={[ChartDataLabels]}
@@ -1884,16 +1891,16 @@ const GeneralDashboard: React.FC = observer(() => {
                                                         },
                                                     },
                                                     legend: {
-                                                    display: true,
-                                                    position: "bottom" as const,
-                                                    align: "center" as const,
-                                                    labels: {
-                                                        boxWidth: 18,
-                                                        boxHeight: 18,
-                                                        padding: 10,
-                                                        font: { size: 9 },
+                                                        display: true,
+                                                        position: "bottom" as const,
+                                                        align: "center" as const,
+                                                        labels: {
+                                                            boxWidth: 18,
+                                                            boxHeight: 18,
+                                                            padding: 10,
+                                                            font: { size: 9 },
+                                                        },
                                                     },
-                                                },
                                                 },
                                             }}
                                             plugins={[ChartDataLabels]}

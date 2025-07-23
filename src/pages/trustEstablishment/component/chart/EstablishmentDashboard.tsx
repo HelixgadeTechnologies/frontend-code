@@ -260,7 +260,7 @@ const EstablishmentDashboard = observer(() => {
           ) : (
             <div className="rounded-xl mt-2 col-span-2 overflow-hidden">
               <div className="flex items-center justify-between px-6 py-4">
-                <h3 className="font-semibold text-lg text-gray-900">Funds received by trust</h3>
+                <h3 className="font-semibold text-lg text-gray-900">Status of Trust Funding</h3>
               </div>
               <div className="bg-white px-4 py-2">
                 <ul className="divide-y divide-gray-100">
@@ -295,21 +295,22 @@ const EstablishmentDashboard = observer(() => {
               <div className="bg-green-500 h-2 rounded-full" style={{ width: `${trustEstablishmentStore.dashboardData?.COMPLETION_STATUS ? trustEstablishmentStore.dashboardData?.COMPLETION_STATUS : 0}%` }} />
             </div>
           </div> */}
-          <div className="flex items-center gap-2">
-            <label htmlFor="year-select" className="text-gray-500 text-sm mr-2">Registered Year</label>
-            <div
-              id="year-select"
-              className="border rounded px-3 py-1 text-sm bg-white focus:outline-none"
-            >
-              {trustEstablishmentStore.dashboardData?.CAC_YEAR}
-            </div>
-            <br />
-          </div>
           <div>
             <div className="flex justify-between items-center">
               <span className="text-gray-600">Trust Registered with CAC</span>
               <span className={classColors(trustEstablishmentStore.dashboardData?.CAC_STATUS!)}>{translator1(trustEstablishmentStore.dashboardData?.CAC_STATUS!)}</span>
             </div>
+            <div className="flex items-center gap-2 mt-4">
+              <label htmlFor="year-select" className="text-gray-500 text-sm mr-2"> Year Registered</label>
+              <div
+                id="year-select"
+                className="border rounded px-3 py-1 text-sm bg-white focus:outline-none"
+              >
+                {trustEstablishmentStore.dashboardData?.CAC_YEAR}
+              </div>
+              <br />
+            </div>
+
           </div>
           <div className="flex items-center gap-2  p-2 rounded">
             {trustEstablishmentStore.dashboardData?.CAC_DOCUMENT ? (
