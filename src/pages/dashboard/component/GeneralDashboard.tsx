@@ -762,7 +762,10 @@ const GeneralDashboard: React.FC = observer(() => {
             color: doughnutColors[2],
         },
     ]
-
+    const calculateEstablishedTrusts = (percentage: number, totalTrusts: number) => {
+        const establishedTrusts = Math.round((percentage / 100) * totalTrusts);
+        return establishedTrusts;
+    }
     return (
         <div className="bg-[#F3F5F7] min-h-screen p-6">
             <div id="trust-establishment" className="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-4">
@@ -866,7 +869,7 @@ const GeneralDashboard: React.FC = observer(() => {
                             </div>
                             <span className="text-xs text-gray-700 font-semibold">{dashboardStore.dashboardData?.FIELDS_COMPLETION}%</span>
                         </div>
-                        <div className="text-xs text-gray-500 mt-1">{dashboardStore.dashboardData?.FIELDS_COMPLETION} out of 100 Trusts is fully Established</div>
+                        <div className="text-xs text-gray-500 mt-1">{calculateEstablishedTrusts(dashboardStore.dashboardData?.FIELDS_COMPLETION as number, dashboardStore.dashboardData?.COMPLETION_STATUS.totalTrust as number)} out of {dashboardStore.dashboardData?.COMPLETION_STATUS.totalTrust} Trusts is fully Established</div>
                     </div>
                     {/* Communities benefiting by state */}
                     <div className="bg-white rounded-xl p-6 shadow flex flex-col gap-4 flex-1 justify-between">
