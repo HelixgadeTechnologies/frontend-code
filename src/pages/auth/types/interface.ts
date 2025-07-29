@@ -4,6 +4,8 @@ import { HCDTRequestResponse } from "../../../infrastructure/HCDTRequestResponse
 export interface IAuthStore {
     isLoading: boolean;
     isSubmitting: boolean;
+    sidebarOpen: boolean;
+    trustSidebarOpen: boolean;
     pageSwitch: number;
     pageSwitchA:number;
     user: IUser;

@@ -18,8 +18,8 @@ const Sidebar = observer(() => {
 
   const handleLogout = () => {
     removeCookie("hcdt_admin", null, { path: "/auth/1" });
-    sessionStorage.removeItem("qrjwt")
-    sessionStorage.removeItem("selectedTrustId")
+    sessionStorage.removeItem("qrjwt");
+    sessionStorage.removeItem("selectedTrustId");
     if (authStore.user.role === "SUPER ADMIN") {
       navigate("/auth/admin");
     } else {
@@ -28,11 +28,33 @@ const Sidebar = observer(() => {
   };
 
   return (
-    <div className="hidden lg:flex h-full bg-white border-r border-gray-5  flex-col w-[272px]  py-6 px-4">
+    <div
+      //className="hidden lg:flex h-full bg-white border-r border-gray-5  flex-col w-[272px]  py-6 px-4"
+      className={`
+      ${authStore.sidebarOpen ? "fixed inset-0 z-50 flex" : "hidden"}
+      lg:flex
+      h-full bg-white border-r border-gray-5 flex-col w-[272px] py-6 px-4
+      transition-transform duration-200
+    `}
+      style={{ minHeight: "100vh" }}
+
+    >
       {/* <div className=" font-bold text-4xl text-primary-300">I-HCDT-M</div> */}
-      <div className="text-xl lg:text-2xl font-bold relative">
-        <span className="text-2xl font-bold text-black">I-HCDT</span>
-        <span className="text-xs block text-[#003B99] absolute-bottom-2 tracking-widest">Monitor</span>
+      <div className="flex items-center justify-between px-6 py-4 border-b">
+        <div
+          className="text-xl lg:text-2xl font-bold relative w-fit cursor-pointer"
+        >
+          <span className="text-2xl font-bold text-black block">I-HCDT</span>
+          <span className="text-xs block text-[#003B99] mt-1 tracking-widest">
+            Monitor
+          </span>
+        </div>
+        <button
+          className="lg:hidden text-gray-500"
+          onClick={() => authStore.sidebarOpen = false}
+        >
+          ✕
+        </button>
       </div>
       {/* <p className="text-gray-500 text-lg text-[##003B99]" >monitor</p> */}
       <div className="flex-1 flex flex-col justify-between py-8">

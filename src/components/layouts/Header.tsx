@@ -32,7 +32,7 @@ const Header = observer(() => {
       <h1 className="font-semibold  text-black text-lg lg:text-3xl">
         <button
           className="lg:hidden mr-4 text-2xl"
-        // onClick={() => setSidebarOpen(true)}
+        onClick={() => authStore.sidebarOpen = !authStore.sidebarOpen}
         >
           ☰
         </button>
