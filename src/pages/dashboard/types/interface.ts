@@ -16,7 +16,7 @@ export interface IDashboardStore {
 export interface IFinishedDashboard {
     FIELDS_COMPLETION: number;
     COMPLETION_STATUS: CompletionStatus;
-    COMMUNITY_BENEFIT: { state: string[]; total: number[], numberOfTrustCommunities: number[] };
+    COMMUNITY_BENEFIT: { state: string[]; numberOfTrustCommunities: number[] };
     STATISTICS: Statists;
     OPERATIONAL_EXPENDITURE: OperationalExpenditure;
     QUALITY_RATINGS: QualityRating[];
@@ -144,7 +144,6 @@ interface CompletionStatus {
 
 interface CommunityBenefit {
     state: string;
-    community_count: number;
     numberOfTrustCommunities: number;
 }
 

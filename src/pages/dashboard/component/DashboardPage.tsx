@@ -59,7 +59,7 @@ const DashboardPage: React.FC = observer(() => {
     datasets: [
       {
         label: "Communities",
-        data: dashboardStore.dashboardData?.COMMUNITY_BENEFIT.total,
+        data: dashboardStore.dashboardData?.COMMUNITY_BENEFIT.numberOfTrustCommunities,
         backgroundColor: "#3366CC",
         borderRadius: 6,
         barThickness: 24,
@@ -906,7 +906,7 @@ const DashboardPage: React.FC = observer(() => {
           <div className="bg-white rounded-xl p-6 shadow flex flex-col gap-4 flex-1 justify-between">
             <div className="flex items-center justify-between mb-4">
               <span className="text-sm text-gray-700 font-medium">Total number of host communities involved with the HCDTs</span>
-              <span className="text-xs text-gray-500 font-medium">Total Number of all Benefiting Communities | {dashboardStore.dashboardData?.COMMUNITY_BENEFIT.total.reduce((sum: any, num: any) => sum + num, 0)}</span>
+              <span className="text-xs text-gray-500 font-medium">Total Number of all Benefiting Communities | {dashboardStore.dashboardData?.COMMUNITY_BENEFIT.numberOfTrustCommunities.reduce((sum: any, num: any) => sum + num, 0)}</span>
             </div>
             <div className="w-full h-56 flex items-end">
               <Bar data={barData} options={barOptions} plugins={[ChartDataLabels]} />
