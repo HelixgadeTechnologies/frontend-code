@@ -118,22 +118,22 @@ const TrustTable = observer(() => {
         },
       },
       {
-        id: "country",
-        header: "Country",
-        accessorKey: "country",
+        id: "state",
+        header: "State",
+        accessorKey: "state",
       },
       {
-        id: "communities",
+        id: "numberOfTrustCommunities",
         header: "Community",
-        accessorKey: "trustCommunities",
-        cell: ({ row }: { row: { original: ITrustList } }) => {
-          const communities = row.original.trustCommunities;
-          return (
-            <span>
-              {communities}
-            </span>
-          );
-        },
+        accessorKey: "numberOfTrustCommunities",
+        // cell: ({ row }: { row: { original: ITrustList } }) => {
+        //   const communities = row.original.trustCommunities;
+        //   return (
+        //     <span>
+        //       {communities}
+        //     </span>
+        //   );
+        // },
       },
       {
         id: "actions",
@@ -176,7 +176,7 @@ const TrustTable = observer(() => {
         ) : trustStore.allTrust.size > 0 ? (
           <Table
             columns={columns}
-            data={(authStore.user.role == "DRA"?[...trustStore.allTrust.values()].filter(e=> e.trustId == authStore.user?.trusts!):[...trustStore.allTrust.values()]).map((trust: ITrustList, i: number) => ({
+            data={(authStore.user.role == "DRA" ? [...trustStore.allTrust.values()].filter(e => e.trustId == authStore.user?.trusts!) : [...trustStore.allTrust.values()]).map((trust: ITrustList, i: number) => ({
               ...trust, id: i.toString()
             } as ITrustList))
             }

@@ -16,7 +16,7 @@ export interface IDashboardStore {
 export interface IFinishedDashboard {
     FIELDS_COMPLETION: number;
     COMPLETION_STATUS: CompletionStatus;
-    COMMUNITY_BENEFIT: { state: string[]; total: number[] };
+    COMMUNITY_BENEFIT: { state: string[]; total: number[], numberOfTrustCommunities: number[] };
     STATISTICS: Statists;
     OPERATIONAL_EXPENDITURE: OperationalExpenditure;
     QUALITY_RATINGS: QualityRating[];
@@ -78,7 +78,7 @@ export interface IGeneralDashboard {
     NEEDS_ASSESSMENT_PERCENTAGE: INeedsAssessmentStatusP[];
     FUNDS_DISTRIBUTION_PERCENTAGE: IFundsReceivedG[];
 }
-export interface IFundsReceivedG{
+export interface IFundsReceivedG {
     yearReceived: number;
     pct_paymentCheck_1: number;
     pct_paymentCheck_2: number;
@@ -145,6 +145,7 @@ interface CompletionStatus {
 interface CommunityBenefit {
     state: string;
     community_count: number;
+    numberOfTrustCommunities: number;
 }
 
 interface OperationalExpenditure {

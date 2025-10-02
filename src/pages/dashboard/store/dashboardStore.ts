@@ -25,6 +25,7 @@ class DashboardStore implements IDashboardStore {
             COMMUNITY_BENEFIT: {
                 state: data.COMMUNITY_BENEFIT.map(item => item.state),
                 total: data.COMMUNITY_BENEFIT.map(item => item.community_count),
+                numberOfTrustCommunities: data.COMMUNITY_BENEFIT.map(item => item.numberOfTrustCommunities),
             },
             STATISTICS: data.STATISTICS[0],
             OPERATIONAL_EXPENDITURE: data.OPERATIONAL_EXPENDITURE[0],

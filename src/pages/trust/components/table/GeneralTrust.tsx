@@ -79,22 +79,22 @@ const GeneralTrust = observer(() => {
         },
       },
       {
-        id: "country",
-        header: "Country",
-        accessorKey: "country",
+        id: "state",
+        header: "state",
+        accessorKey: "state",
       },
       {
-        id: "communities",
+        id: "numberOfTrustCommunities",
         header: "Community",
-        accessorKey: "trustCommunities",
-        cell: ({ row }: { row: { original: ITrustList } }) => {
-          const communities = row.original.trustCommunities;
-          return (
-            <span>
-              {communities}
-            </span>
-          );
-        },
+        accessorKey: "numberOfTrustCommunities",
+        // cell: ({ row }: { row: { original: ITrustList } }) => {
+        //   const communities = row.original.trustCommunities;
+        //   return (
+        //     <span>
+        //       {communities}
+        //     </span>
+        //   );
+        // },
       },
     ],
     [],

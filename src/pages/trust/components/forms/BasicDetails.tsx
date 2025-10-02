@@ -32,6 +32,7 @@ const BasicDetails = observer(({ method }: { method: any }) => {
       state: data.state.value,
       localGovernmentArea: data.localGovernmentArea.value,
       trustCommunities: data.trustCommunities.join(","),
+      numberOfTrustCommunities: data.numberOfTrustCommunities
     }
 
 
@@ -211,7 +212,7 @@ const BasicDetails = observer(({ method }: { method: any }) => {
           </Observer>
         </div>
 
-        <div>
+        <div className="lg:flex-row flex flex-col  lg:items-center gap-x-4 gap-y-6">
           {/* <FormInput
             label="Trust Communities"
             name="trustCommunities"
@@ -225,19 +226,32 @@ const BasicDetails = observer(({ method }: { method: any }) => {
             errorMessage={`This field  is required`}
             required
           /> */}
-          <Controller
-            name="trustCommunities"
-            control={control}
-            // defaultValue={[]}
-            render={({ field }) => (
-              <MultiTextInput
-                label="Trust Communities"
-                value={field.value}
-                onChange={field.onChange}
-                placeholder="Type and press Enter"
-              />           
-            )}
-          />
+          <div className="flex-1">
+            <FormInput
+              label="Total communities"
+              name="numberOfTrustCommunities"
+              type="number"
+              placeholder="Enter total communities"
+              register={register}
+              registerOptions={{ required: "Total communities is required." }}
+              error={errors.totalBudget}
+            />
+          </div>
+          <div className="flex-1">
+            <Controller
+              name="trustCommunities"
+              control={control}
+              // defaultValue={[]}
+              render={({ field }) => (
+                <MultiTextInput
+                  label="Trust Communities"
+                  value={field.value}
+                  onChange={field.onChange}
+                  placeholder="Type and press Enter"
+                />
+              )}
+            />
+          </div>
         </div>
       </div>
 

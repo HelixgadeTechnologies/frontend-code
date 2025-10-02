@@ -51,6 +51,7 @@ export interface ITrust extends BaseItem {
     state: string;
     localGovernmentArea: string;
     trustCommunities: string;
+    numberOfTrustCommunities: number,
     botDetailsOneFirstName: string;
     botDetailsOneLastName: string;
     botDetailsOneEmail: string;
@@ -90,6 +91,7 @@ export interface ITrustList extends BaseItem {
     state: string;
     localGovernmentArea: string;
     trustCommunities: string;
+    numberOfTrustCommunities: number,
     totalMaleBotMembers: number;
     totalFemaleBotMembers: number;
     totalPwdBotMembers: number;
@@ -123,7 +125,8 @@ export interface ITrustPayloadData {
     country: string,
     state: string,
     localGovernmentArea: string,
-    trustCommunities: string,
+    trustCommunities?: string,
+    numberOfTrustCommunities: number,
 
     botDetailsOneFirstName: string;
     botDetailsOneLastName: string;
