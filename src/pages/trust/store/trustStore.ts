@@ -1,5 +1,5 @@
 import { makeAutoObservable, ObservableMap, toJS } from "mobx"
-import { IStateAndLGA, ISurveyTypePayload, ITrust, ITrustList, ITrustPayload, ITrustPayloadData, ITrustStore } from "../types/interface";
+import { IStateAndLGA, ISurveyTypePayload, ITrust, ITrustList, ITrustPayload, ITrustPayloadData, ITrustStore, IUploadResponse, IUploadValidationResponse, IValidatedTrust } from "../types/interface";
 import { trustService } from "../service/trustService";
 import { TabType } from "../../project/types/interface";
 import data from "../../../utils/stateAndLg.json"
@@ -26,6 +26,11 @@ class TrustStore implements ITrustStore {
     selectedLGA: string = "";
     allStates = new ObservableMap<string, string>();
     allLGA = new ObservableMap<string, string>();
+    uploadValidationResult: IUploadValidationResponse = {} as IUploadValidationResponse;
+    uploadResponse: IUploadResponse = {} as IUploadResponse;
+    activeUploadTab: number = 0;
+    uploadErrorCount: number = 0;
+    isValidate:boolean = true
     constructor() {
         makeAutoObservable(this);
     }
@@ -257,15 +262,59 @@ class TrustStore implements ITrustStore {
             this.isDeleting = false;
         }
     }
-    async surveyAccess(payload: ISurveyTypePayload,url:string): Promise<boolean> {
+    async surveyAccess(payload: ISurveyTypePayload, url: string): Promise<boolean> {
         try {
             this.isLoading = true;
-            await trustService.updateSurveyAccess(payload,url)
+            await trustService.updateSurveyAccess(payload, url)
             return true
         } catch (error) {
             throw error
         } finally {
             this.isLoading = false;
+        }
+    }
+    async validateTrustExcel(payload: File): Promise<void> {
+        try {
+            this.isLoading = true;
+            // convert File to base64 string
+            const base64 = await new Promise<string>((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const result = reader.result as string;
+                    // result is data:<mime>;base64,<base64data>
+                    const commaIndex = result.indexOf(',');
+                    const onlyBase64 = commaIndex >= 0 ? result.slice(commaIndex + 1) : result;
+                    resolve(onlyBase64);
+                };
+                reader.onerror = (err) => reject(err);
+                reader.readAsDataURL(payload);
+            });
+
+            const res = await trustService.uploadTrustFroValidationBase64(base64);
+            let data: IUploadValidationResponse = res.data
+            if (data.validationSummary.length > 0) {
+                this.activeUploadTab = 1;
+                this.uploadErrorCount = data.validationSummary.length;
+            }
+            this.uploadValidationResult = res.data;
+        } catch (error) {
+            throw error
+        } finally {
+            this.isLoading = false;
+        }
+    }
+    async uploadValidatedTrust(): Promise<boolean> {
+        try {
+            this.isSaving = true;
+            const res = await trustService.saveValidData(this.uploadValidationResult.allTrustData);
+            const data:IUploadResponse= res.data
+            this.uploadResponse = data;
+            this.uploadErrorCount = data.totalFailed
+            return true
+        } catch (error) {
+            throw error
+        } finally {
+            this.isSaving = false;
         }
     }
 }

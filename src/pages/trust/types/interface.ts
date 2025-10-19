@@ -23,6 +23,11 @@ export interface ITrustStore {
     selectedLGA: string;
     allStates: ObservableMap<string, string>;
     allLGA: ObservableMap<string, string>;
+    uploadValidationResult: IUploadValidationResponse;
+    uploadResponse: IUploadResponse;
+    activeUploadTab: number;
+    uploadErrorCount: number;
+    isValidate:boolean ;
     calculateTrustCompletion(data: ITrustPayloadData): number;
     getFormSteps(): void;
     setActiveTab(active: TabType): void;
@@ -118,34 +123,34 @@ export interface ITrustList extends BaseItem {
 
 export interface ITrustPayloadData {
     trustId?: string,
-    trustName: string,
-    settlor: string,
-    nameOfOmls: string,
-    userId: string,
-    country: string,
-    state: string,
-    localGovernmentArea: string,
+    trustName?: string,
+    settlor?: string,
+    nameOfOmls?: string,
+    userId?: string,
+    country?: string,
+    state?: string,
+    localGovernmentArea?: string,
     trustCommunities?: string,
-    numberOfTrustCommunities: number,
+    numberOfTrustCommunities?: number,
 
-    botDetailsOneFirstName: string;
-    botDetailsOneLastName: string;
-    botDetailsOneEmail: string;
-    botDetailsOnePhoneNumber: string;
-    botDetailsTwoFirstName: string;
-    botDetailsTwoLastName: string;
-    botDetailsTwoEmail: string;
-    botDetailsTwoPhoneNumber: string;
+    botDetailsOneFirstName?: string;
+    botDetailsOneLastName?: string;
+    botDetailsOneEmail?: string;
+    botDetailsOnePhoneNumber?: string;
+    botDetailsTwoFirstName?: string;
+    botDetailsTwoLastName?: string;
+    botDetailsTwoEmail?: string;
+    botDetailsTwoPhoneNumber?: string;
 
-    totalMaleBotMembers: number,
-    totalFemaleBotMembers: number,
-    totalPwdBotMembers: number,
-    totalMaleAdvisoryCommitteeMembers: number,
-    totalFemaleAdvisoryCommitteeMembers: number,
-    totalPwdAdvisoryCommitteeMembers: number,
-    totalMaleManagementCommitteeMembers: number,
-    totalFemaleManagementCommitteeMembers: number,
-    totalPwdManagementCommitteeMembers: number,
+    totalMaleBotMembers?: number,
+    totalFemaleBotMembers?: number,
+    totalPwdBotMembers?: number,
+    totalMaleAdvisoryCommitteeMembers?: number,
+    totalFemaleAdvisoryCommitteeMembers?: number,
+    totalPwdAdvisoryCommitteeMembers?: number,
+    totalMaleManagementCommitteeMembers?: number,
+    totalFemaleManagementCommitteeMembers?: number,
+    totalPwdManagementCommitteeMembers?: number,
     completionStatus?: number,
 }
 
@@ -168,4 +173,67 @@ export interface ISurveyType {
 export interface ISurveyTypePayload {
     trustId: string;
     accessName: string; // "CONFLICT" | "SATISFACTION" | "ECONOMIC"
+}
+
+
+export interface IValidationSummary {
+    rowNumber: number;
+    message: string;
+    data: IValidatedTrust
+}
+
+
+export interface IUploadResponse {
+    totalRecords: number;
+    totalSuccess: number;
+    totalFailed: number;
+    success: Array<ISuccessUploadSummary>;
+    failed: Array<IFailedUploadSummary>;
+}
+export interface IFailedUploadSummary {
+    index: number;
+    trustName: string;
+    message: string;
+    data: IValidatedTrust
+}
+
+export interface ISuccessUploadSummary {
+    index: number;
+    trustId: string;
+    trustName: string;
+}
+
+export interface IValidatedTrust {
+    trustName: string,
+    settlor: string,
+    country: string,
+    state: string,
+    localGovernmentArea: string,
+    trustCommunities: string,
+    numberOfTrustCommunities: number,
+    totalMaleBotMembers: number,
+    totalFemaleBotMembers: number,
+    totalPwdBotMembers: number,
+    nameOfOmls: string,
+    totalFemaleAdvisoryCommitteeMembers: number,
+    totalFemaleManagementCommitteeMembers: number,
+    totalMaleAdvisoryCommitteeMembers: number,
+    totalMaleManagementCommitteeMembers: number,
+    totalPwdAdvisoryCommitteeMembers: number,
+    totalPwdManagementCommitteeMembers: number,
+    botDetailsOneFirstName: string,
+    botDetailsOneLastName: string,
+    botDetailsOneEmail: string,
+    botDetailsOnePhoneNumber: string,
+    botDetailsTwoFirstName: string,
+    botDetailsTwoLastName: string,
+    botDetailsTwoEmail: string,
+    botDetailsTwoPhoneNumber: string
+
+}
+export interface IUploadValidationResponse {
+    totalRecords: number;
+    totalInvalid: number;
+    allTrustData: Array<IValidatedTrust>;
+    validationSummary: Array<IValidationSummary>;
 }

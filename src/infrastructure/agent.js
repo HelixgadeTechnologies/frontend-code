@@ -22,7 +22,7 @@ const tokenPlugin = (req) => {
   let token = window.sessionStorage.getItem("qrjwt");
   if (token) {
     req.set("authorization", `Bearer ${token}`);
-  } 
+  }
 };
 
 const tokenPl = (req) => {
@@ -88,14 +88,30 @@ const client = {
       .then(responseBody);
   },
   postFile: (url, body) => {
-    return superagent
-      .post(`${API_ROOT}${url}`, body)
-
-      .responseType("blob")
-      .withCredentials()
+    // Expect `body` to be either a File or an object with file and other fields.
+    const req = superagent.post(`${API_ROOT}${url}`)
+      // .withCredentials() // enable only if your server requires cookies/auth via CORS and server allows credentials
       .use(tokenPlugin)
-      .catch(handleErrors)
-      .then(responseBody);
+      .catch(handleErrors);
+
+    // If body is a File instance, attach directly; if object, attach fields
+    if (body instanceof File) {
+      req.attach('file', body, body.name);
+    } else if (body && body.file) {
+      // support previous call style: { file: File, ...fields }
+      const f = body.file;
+      if (f instanceof File) {
+        req.attach('file', f, f.name);
+      }
+      // attach other fields if present
+      Object.keys(body).forEach(key => {
+        if (key === 'file') return;
+        const val = body[key];
+        if (val !== undefined && val !== null) req.field(key, String(val));
+      });
+    }
+
+    return req.then(responseBody);
   },
   put: (url, body) =>
     superagent

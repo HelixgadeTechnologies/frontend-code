@@ -6,6 +6,7 @@ import { observer } from "mobx-react-lite";
 import CreateTrust from "./forms/CreateTrust";
 import EditTrust from "./forms/EditTrust";
 import { authStore as AuthStore} from "../../auth/store/authStore";
+import TrustUpload from "./upload/TrustUpload";
 
 const trustStoreCTX = createContext(TrustStore);
 const AuthStoreCTX = createContext(AuthStore);
@@ -19,6 +20,11 @@ const Trusts = observer(() => {
   const switchPage = useCallback(() => {
     trustStore.trustFormData = {} as any;
     trustStore.pageSwitched = 2;
+  }, [trustStore]);
+ 
+  const switchUploadPage = useCallback(() => {
+    trustStore.trustFormData = {} as any;
+    trustStore.pageSwitched = 4;
   }, [trustStore]);
   return (
     <>
@@ -49,6 +55,15 @@ const Trusts = observer(() => {
                 />
                 )}
               </div>
+              <div>
+                {(authStore.user.role == "SUPER ADMIN" || authStore.user.role == "ADMIN" ) &&(
+                <Button
+                  onClick={switchUploadPage}
+                  padding="py-2 px-6"
+                  buttonText="Upload Trust"
+                />
+                )}
+              </div>
             </div>
           </section>
 
@@ -65,6 +80,10 @@ const Trusts = observer(() => {
 
       {trustStore.pageSwitched == 3 && (
         <EditTrust />
+      )}
+
+      {trustStore.pageSwitched == 4 && (
+        <TrustUpload />
       )}
     </>
   );
