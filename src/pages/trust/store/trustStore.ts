@@ -1,5 +1,5 @@
 import { makeAutoObservable, ObservableMap, toJS } from "mobx"
-import { IStateAndLGA, ISurveyTypePayload, ITrust, ITrustList, ITrustPayload, ITrustPayloadData, ITrustStore, IUploadResponse, IUploadValidationResponse, IValidatedTrust } from "../types/interface";
+import { IStateAndLGA, ISurveyTypePayload, ITrust, ITrustList, ITrustPayload, ITrustPayloadData, ITrustStore, IUploadResponse, IUploadValidationResponse} from "../types/interface";
 import { trustService } from "../service/trustService";
 import { TabType } from "../../project/types/interface";
 import data from "../../../utils/stateAndLg.json"
