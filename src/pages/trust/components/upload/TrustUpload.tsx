@@ -205,6 +205,7 @@ const TrustUpload = observer(() => {
                         setFileName('');
                         setSelected({});
                         trustStore.uploadValidationResult = {} as IUploadValidationResponse;
+                        trustStore.uploadErrorCount = 0;
                         if (fileInputRef.current) {
                             // clear the file input selection
                             fileInputRef.current.value = '';
@@ -286,13 +287,13 @@ const TrustUpload = observer(() => {
                             <div className="text-gray-500">No validation messages yet. Upload a file to validate.</div>
                         ) : (
                             trustStore.isValidate ? (
-                                trustStore.uploadValidationResult.validationSummary.map((m, i) => (
+                                trustStore.uploadValidationResult?.validationSummary?.map((m, i) => (
                                     <div key={i} className={`mb-2 p-2 rounded bg-red-50 border border-red-200 text-red-800`}>
                                         {`${m.message} at row number ${m.rowNumber}`}
                                     </div>
                                 ))
                             ) : (
-                                trustStore.uploadResponse.failed.map((m, i) => (
+                                trustStore.uploadResponse?.failed?.map((m, i) => (
                                     <div key={i} className={`mb-2 p-2 rounded bg-red-50 border border-red-200 text-red-800`}>
                                         {`${m.message} Trust Name ${m.trustName}`}
                                     </div>
