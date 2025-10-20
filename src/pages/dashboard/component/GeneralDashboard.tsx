@@ -803,6 +803,7 @@ const GeneralDashboard: React.FC = observer(() => {
                                     <>
                                         <label className="text-sm font-medium text-gray-700 mb-1">Select Settlor</label>
                                         <select
+                                            style={{ width: '160px' }}
                                             className="border border-gray-300 rounded px-4 py-2 min-w-[160px] focus:outline-none focus:ring-2 focus:ring-primary-200 bg-white text-gray-700"
                                             value={dashboardStore.selectedSettlor}
                                             onChange={e => selectSettlor(e.target.value)}
