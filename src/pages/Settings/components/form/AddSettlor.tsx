@@ -71,14 +71,12 @@ export const AddSettlor = observer(({ close, settingStore }: { close: () => void
                     <FormInput
                         name="rcNumber"
                         type="text"
-                        placeholder="Enter OML Code"
+                        placeholder="Enter RC Number"
                         register={register}
-                        registerOptions={{
-                            required: "OML code field is required.",
-                        }}
+                       
                         error={errors.rcNumber}
-                        errorMessage={`OML code is required`}
-                        required
+                        errorMessage={`rc number is required`}
+                        
                     />
                 </div>
 
