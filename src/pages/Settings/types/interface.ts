@@ -178,7 +178,7 @@ export interface ActiveMenuProps {
 export interface ISettlorPayloadData {
     settlorId?: string;
     settlorName: string;
-    omlCode: string;
+    rcNumber: string;
     contactName: string;
     contactEmail: string;
     contactPhoneNumber: string;
@@ -190,7 +190,7 @@ export interface CreateSettlorPayload {
 export interface ISettlor extends BaseItem {
     settlorId: string;
     settlorName: string;
-    omlCode: string;
+    rcNumber: string;
     contactName: string;
     contactEmail: string;
     contactPhoneNumber: string;

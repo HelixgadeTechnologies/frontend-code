@@ -289,7 +289,7 @@ const TrustUpload = observer(() => {
                             trustStore.isValidate ? (
                                 trustStore.uploadValidationResult?.validationSummary?.map((m, i) => (
                                     <div key={i} className={`mb-2 p-2 rounded bg-red-50 border border-red-200 text-red-800`}>
-                                        {`${m.message} at row number ${m.rowNumber}`}
+                                        {`${m.message} at row number ${m.rowNumber} column ${m.field} with value "${m.value}"`}
                                     </div>
                                 ))
                             ) : (

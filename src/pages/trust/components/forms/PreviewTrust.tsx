@@ -59,6 +59,14 @@ const PreviewTrust = observer(({ onSave, trustStore }: { onSave: () => void; tru
             {fields?.trustCommunities || ""}
           </span>
         </div>
+        <div className="flex gap-2 py-5 border-b border-t border-gray-11">
+          <h3 className="text-primary-100 font-bold text-sm">
+            Total Communities:
+          </h3>
+          <span className="font-medium text-sm text-[#1D2739]">
+            {fields?.numberOfTrustCommunities || ""}
+          </span>
+        </div>
 
         <div className="border-t border-b border-gray-11 py-3">
           <div className=" space-y-4">
@@ -156,7 +164,7 @@ const PreviewTrust = observer(({ onSave, trustStore }: { onSave: () => void; tru
 
         <div className="flex gap-2 py-5 border-b border-t border-gray-11">
           <h3 className="text-primary-100 font-bold text-sm">
-          Total Female Advisory Committee Members:
+            Total Female Advisory Committee Members:
           </h3>
           <span className="font-medium text-sm text-[#1D2739]">
             {fields?.totalFemaleAdvisoryCommitteeMembers || ""}
@@ -165,7 +173,7 @@ const PreviewTrust = observer(({ onSave, trustStore }: { onSave: () => void; tru
 
         <div className="flex gap-2 py-5 border-b border-t border-gray-11">
           <h3 className="text-primary-100 font-bold text-sm">
-          Total Pwd Advisory Committee Members:
+            Total Pwd Advisory Committee Members:
           </h3>
           <span className="font-medium text-sm text-[#1D2739]">
             {fields?.totalPwdAdvisoryCommitteeMembers || ""}
@@ -174,7 +182,7 @@ const PreviewTrust = observer(({ onSave, trustStore }: { onSave: () => void; tru
 
         <div className="flex gap-2 py-5 border-b border-t border-gray-11">
           <h3 className="text-primary-100 font-bold text-sm">
-          Total Male Management Committee Members:
+            Total Male Management Committee Members:
           </h3>
           <span className="font-medium text-sm text-[#1D2739]">
             {fields?.totalMaleManagementCommitteeMembers || ""}
@@ -183,7 +191,7 @@ const PreviewTrust = observer(({ onSave, trustStore }: { onSave: () => void; tru
 
         <div className="flex gap-2 py-5 border-b border-t border-gray-11">
           <h3 className="text-primary-100 font-bold text-sm">
-          Total Female Management Committee Members:
+            Total Female Management Committee Members:
           </h3>
           <span className="font-medium text-sm text-[#1D2739]">
             {fields?.totalFemaleManagementCommitteeMembers || ""}
@@ -192,7 +200,7 @@ const PreviewTrust = observer(({ onSave, trustStore }: { onSave: () => void; tru
 
         <div className="flex gap-2 py-5 border-b border-t border-gray-11">
           <h3 className="text-primary-100 font-bold text-sm">
-          Total Pwd Management Committee Members:
+            Total Pwd Management Committee Members:
           </h3>
           <span className="font-medium text-sm text-[#1D2739]">
             {fields?.totalPwdManagementCommitteeMembers || ""}

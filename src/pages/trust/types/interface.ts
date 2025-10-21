@@ -179,6 +179,8 @@ export interface ISurveyTypePayload {
 export interface IValidationSummary {
     rowNumber: number;
     message: string;
+    field: string;
+    value: any;
     data: IValidatedTrust
 }
 
@@ -187,7 +189,6 @@ export interface IUploadResponse {
     totalRecords: number;
     totalSuccess: number;
     totalFailed: number;
-    success: Array<ISuccessUploadSummary>;
     failed: Array<IFailedUploadSummary>;
 }
 export interface IFailedUploadSummary {

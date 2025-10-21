@@ -23,7 +23,7 @@ export const EditSettlor = observer(({ close, settlor, settingStore }: { close: 
                 contactName: settlor.contactName || "",
                 contactEmail: settlor.contactEmail || "",
                 contactPhoneNumber: settlor?.contactPhoneNumber || "",
-                omlCode: settlor?.omlCode || "",
+                rcNumber: settlor?.rcNumber || "",
             });
         }
     }, [settlor, reset]);
@@ -84,14 +84,14 @@ export const EditSettlor = observer(({ close, settlor, settingStore }: { close: 
 
                 <div>
                     <FormInput
-                        name="omlCode"
+                        name="rcNumber"
                         type="text"
                         placeholder="Enter OML Code"
                         register={register}
                         registerOptions={{
                             required: "OML code field is required.",
                         }}
-                        error={errors.omlCode}
+                        error={errors.rcNumber}
                         errorMessage={`OML code is required`}
                         required
                     />
