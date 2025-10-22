@@ -14,7 +14,7 @@ import { economicImpactStore as EconomicImpactStore } from "../../EconomicImpact
 import { satisfactionStore as SatisfactionStore } from "../../communitySatisfaction/store/satisfactionStore";
 import { conflictStore as ConflictStore } from "../../conflict/store/conflictStore";
 import { projectStore as ProjectStore } from "../../project/store/projectStore";
-import { IConflictResolutionOverTime } from "../types/interface";
+// import { IConflictResolutionOverTime } from "../types/interface";
 import { year } from "../../../utils/data";
 import { trustStore as TrustStore } from "../../trust/store/trustStore";
 import { ISettlor } from "../../Settings/types/interface";
@@ -1338,7 +1338,7 @@ const GeneralDashboard: React.FC = observer(() => {
                         </div>
                     ))}
                 </div>
-                <div className="bg-white rounded-xl p-8 shadow flex flex-col md:flex-row items-center min-h-[320px]">
+                {/* <div className="bg-white rounded-xl p-8 shadow flex flex-col md:flex-row items-center min-h-[320px]">
                     <div className="flex flex-col items-center w-full">
                         <span className="font-semibold text-base text-gray-900 mb-4 self-start">Percentage of issues being addressed by the different stakeholder</span>
                         <div className="flex flex-row items-center justify-center w-full">
@@ -1373,7 +1373,7 @@ const GeneralDashboard: React.FC = observer(() => {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> */}
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10 pb-6">
                     {/* Conflict resolution status chart */}

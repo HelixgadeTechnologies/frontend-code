@@ -9,11 +9,11 @@ class DashboardStore implements IDashboardStore {
     selectedState: string = "ALL";
     selectedSettlor: string = "ALL";
     selectedTrust: string = "ALL";
-    selectedTab:number = 0;
-    projectSwitch:boolean = false
-    conflictSwitch:boolean = false
-    satisfactionSwitch:boolean = false
-    impactSwitch:boolean = false
+    selectedTab: number = 0;
+    projectSwitch: boolean = false
+    conflictSwitch: boolean = false
+    satisfactionSwitch: boolean = false
+    impactSwitch: boolean = false
     constructor() {
         makeAutoObservable(this);
     }
@@ -59,10 +59,10 @@ class DashboardStore implements IDashboardStore {
                     data.BOT_DISPLAY[0].totalPwdManagementCommitteeMembers,
                 ]
             },
-            CONFLICT_RESOLUTION_OVER: data.CONFLICT_RESOLUTION_OVER,
+            // CONFLICT_RESOLUTION_OVER: data.CONFLICT_RESOLUTION_OVER,
             BOT_INAUGURATION_CHECK: data.BOT_INAUGURATION_CHECK[0],
             COMMUNITY_LEADERSHIP_PERCENTAGE: data.COMMUNITY_LEADERSHIP_PERCENTAGE[0],
-            NEEDS_ASSESSMENT_PERCENTAGE:data.NEEDS_ASSESSMENT_PERCENTAGE[0],
+            NEEDS_ASSESSMENT_PERCENTAGE: data.NEEDS_ASSESSMENT_PERCENTAGE[0],
             FUNDS_DISTRIBUTION_PERCENTAGE: {
                 yearReceived: data.FUNDS_DISTRIBUTION_PERCENTAGE.map(item => item.yearReceived),
                 pct_paymentCheck_1: data.FUNDS_DISTRIBUTION_PERCENTAGE.map(item => item.pct_paymentCheck_1),
@@ -72,15 +72,15 @@ class DashboardStore implements IDashboardStore {
         };
     }
 
-    async getDashboard(trustId:string,year: number, state: string, settlor: string): Promise<void> {
+    async getDashboard(trustId: string, year: number, state: string, settlor: string): Promise<void> {
         try {
             if (this.isLoading || this.dashboardData) return; // Prevent duplicate calls
             this.isLoading = true;
-            let data = await dashboardService.generalDashboard(trustId,year, state, settlor);
+            let data = await dashboardService.generalDashboard(trustId, year, state, settlor);
             if (data.success) {
                 const processedData = this.transformDashboard(data.data);
                 this.dashboardData = processedData;
-                toJS(console.log(processedData.FUNDS_DISTRIBUTION_PERCENTAGE));    
+                toJS(console.log(processedData.FUNDS_DISTRIBUTION_PERCENTAGE));
             }
         } catch (error) {
             throw error;

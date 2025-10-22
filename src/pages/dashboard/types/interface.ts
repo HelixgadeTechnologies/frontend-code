@@ -31,7 +31,7 @@ export interface IFinishedDashboard {
     DISTRIBUTION_MATRIX: IDistributionMatrix;
     NEEDS_ASSESSMENT_COMMUNITY_COUNT: INeedsAssessmentCommunityCount;
     BOT_DISPLAY: { male: number[]; female: number[]; pwd: number[] };
-    CONFLICT_RESOLUTION_OVER: IConflictResolutionOverTime[];
+    // CONFLICT_RESOLUTION_OVER: IConflictResolutionOverTime[];
     BOT_INAUGURATION_CHECK: IBotInauguration;
     COMMUNITY_LEADERSHIP_PERCENTAGE: ICommunityLeadersP;
     NEEDS_ASSESSMENT_PERCENTAGE: INeedsAssessmentStatusP;
