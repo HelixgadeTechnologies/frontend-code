@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { ICauseOfConflict, IConflictPayload, IConflictPayloadData, IConflictStatus, IConflictStore, ICourtLitigationStatus, IIssuesAddressBy, IPartiesInvolve } from "../../types/interface";
 import { IDropdownProp } from "../../../Settings/types/interface";
 import { observer } from "mobx-react-lite";
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 
 const ConflictForm = observer(({ close, conflictStore, selectedTrust }: { close: () => void, conflictStore: IConflictStore, selectedTrust: string }) => {
   const { control, reset, register, handleSubmit, watch, setValue, formState: { errors } } = useForm();
@@ -27,7 +27,7 @@ const ConflictForm = observer(({ close, conflictStore, selectedTrust }: { close:
         narrateIssues: data.narrateIssues,
         partiesInvolve: partiesInvolved.map(e => e.label).join(","),
         issuesAddressById: Number(issuesAddressBy.value),
-        courtLitigationStatusId: Number(issuesAddressBy.value) == 5 ?Number(courtLitigationStatus.value) : null ,
+        courtLitigationStatusId: Number(issuesAddressBy.value) == 5 ? Number(courtLitigationStatus.value) : null,
         trustId: selectedTrust,
       };
 
