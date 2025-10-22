@@ -41,7 +41,7 @@ export interface IConflict {
   trustId?: string | null;
   userId?: string | null;
   causeOfConflictId?: number | null;
-  partiesInvolveId?: number | null;
+  partiesInvolve?: string | null;
   narrateIssues?: string | null;
   conflictStatusId?: number | null;
   issuesAddressById?: number | null;
@@ -62,8 +62,7 @@ export interface IConflictView extends BaseItem {
   userPhoneNumber: string | null;
   causeOfConflictId: number | null;
   causeOfConflictName: string | null;
-  partiesInvolveId: number | null;
-  partiesInvolveName: string | null;
+  partiesInvolve: string | null;
   narrateIssues: string | null;
   conflictStatusId: number | null;
   conflictStatusName: string | null;
@@ -107,13 +106,13 @@ export interface IConflictPayloadData {
   conflictId?: string;
   trustId: string;
   causeOfConflictId: number;
-  partiesInvolveId: number;
+  partiesInvolve: string;
   narrateIssues: string;
   conflictStatusId: number;
   issuesAddressById: number;
-  courtLitigationStatusId: number;
-
+  courtLitigationStatusId: number | null;
 }
+
 export interface IConflictPayload {
   isCreate: boolean,
   data: IConflictPayloadData

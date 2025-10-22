@@ -6,13 +6,16 @@ import { IDropdownProp } from "../../../Settings/types/interface";
 // import { useCallback } from "react";
 import { observer } from "mobx-react-lite";
 import { useEffect } from "react";
+import { toJS } from "mobx";
 // import { useParams } from "react-router-dom";
 
 const EditConflict = observer(({ close, conflictStore, selectedTrust }: { close: () => void, conflictStore: IConflictStore, selectedTrust: string }) => {
-    const { control, reset, register, handleSubmit, formState: { errors } } = useForm();
+    const { control, reset, register, watch, setValue, handleSubmit, formState: { errors } } = useForm();
+    const watchedIssuesAddressBy = watch('issuesAddressBy');
     useEffect(() => {
         async function loadRequests() {
             if (conflictStore.selectedConflict) {
+                console.log("Selected Conflict Data:", toJS(conflictStore.selectedConflict));
                 let data = conflictStore.selectedConflict as IConflictView
 
                 reset({
@@ -20,10 +23,9 @@ const EditConflict = observer(({ close, conflictStore, selectedTrust }: { close:
                         label: data?.causeOfConflictName,
                         value: String(data?.causeOfConflictId)
                     } as IDropdownProp,
-                    partiesInvolved: {
-                        label: data.partiesInvolveName,
-                        value: String(data.partiesInvolveId)
-                    } as IDropdownProp,
+                    partiesInvolved: [...conflictStore.partiesInvolve.values()]
+                        .filter(e => data.partiesInvolve?.split(",").includes(e.partiesInvolve as string))
+                        .map(e => ({ label: e.partiesInvolve, value: e.partiesInvolveId })),
                     conflictStatus: {
                         label: data.conflictStatusName,
                         value: String(data.conflictStatusId)
@@ -33,7 +35,7 @@ const EditConflict = observer(({ close, conflictStore, selectedTrust }: { close:
                         value: String(data.issuesAddressById)
                     } as IDropdownProp,
                     courtLitigationStatus: {
-                        label: data.courtLitigationStatusName,
+                        label: data.courtLitigationStatusName as string,
                         value: String(data.courtLitigationStatusId)
                     } as IDropdownProp,
                     narrateIssues: data.narrateIssues || "",
@@ -47,7 +49,7 @@ const EditConflict = observer(({ close, conflictStore, selectedTrust }: { close:
         try {
             // console.log("Form Data:", data);
             const causeOfConflict = data.causeOfConflict as IDropdownProp
-            const partiesInvolved = data.partiesInvolved as IDropdownProp
+            const partiesInvolved: Array<IDropdownProp> = data.partiesInvolved
             const conflictStatus = data.conflictStatus as IDropdownProp
             const issuesAddressBy = data.issuesAddressBy as IDropdownProp
             const courtLitigationStatus = data.courtLitigationStatus as IDropdownProp
@@ -56,9 +58,9 @@ const EditConflict = observer(({ close, conflictStore, selectedTrust }: { close:
                 causeOfConflictId: Number(causeOfConflict.value),
                 conflictStatusId: Number(conflictStatus.value),
                 narrateIssues: data.narrateIssues,
-                partiesInvolveId: Number(partiesInvolved.value),
+                partiesInvolve: partiesInvolved.map(e => e.label).join(","),
                 issuesAddressById: Number(issuesAddressBy.value),
-                courtLitigationStatusId: Number(courtLitigationStatus.value),
+                courtLitigationStatusId: Number(issuesAddressBy.value) == 5 ? Number(courtLitigationStatus.value) : null,
                 trustId: selectedTrust,
                 conflictId: conflictStore.selectedConflict?.conflictId
             };
@@ -140,6 +142,7 @@ const EditConflict = observer(({ close, conflictStore, selectedTrust }: { close:
                                 render={({ field }) => (
                                     <CustomSelect
                                         id="parties-involved-select"
+                                        isMulti
                                         {...field}
                                         options={[...conflictStore.partiesInvolve.values()].map((v: IPartiesInvolve) => ({
                                             label: v?.partiesInvolve as string,
@@ -198,6 +201,20 @@ const EditConflict = observer(({ close, conflictStore, selectedTrust }: { close:
                                         isLoading={conflictStore.isLoading}
                                         label="Issue addressed by"
                                         placeholder="Issue addressed by"
+                                        onChange={(val: any) => {
+                                            // propagate change to RHF
+                                            field.onChange(val);
+                                            // if selected value is 5, set an initial courtLitigationStatus
+                                            if (Number(val?.value) !== 5) {
+                                                // clear when not applicable
+                                                setValue('courtLitigationStatus', { label: '', value: '' });
+                                            } else {
+                                                // ensure a default is set when issuesAddressBy === 5
+                                                const options = [...conflictStore.courtLitigationStatus.values()].map((v: ICourtLitigationStatus) => ({ label: v?.courtLitigationStatus as string, value: v?.courtLitigationStatusId }));
+                                                const first = options.find(o => o.value !== undefined && o.value !== null) || { label: '', value: '' };
+                                                setValue('courtLitigationStatus', first);
+                                            }
+                                        }}
                                     />
                                 )}
                             />
@@ -206,30 +223,32 @@ const EditConflict = observer(({ close, conflictStore, selectedTrust }: { close:
                             )}
                         </div>
                     </div>
-                    {/* Status of Court Litigation */}
-                    <div>
-                        <Controller
-                            control={control}
-                            name="courtLitigationStatus"
-                            rules={{ required: true }}
-                            render={({ field }) => (
-                                <CustomSelect
-                                    id="court-litigation-status-select"
-                                    {...field}
-                                    options={[...conflictStore.courtLitigationStatus.values()].map((v: ICourtLitigationStatus) => ({
-                                        label: v?.courtLitigationStatus as string,
-                                        value: v?.courtLitigationStatusId,
-                                    }))}
-                                    isLoading={conflictStore.isLoading}
-                                    label="Status of the court litigation"
-                                    placeholder="Status of the court litigation"
-                                />
+                    {/* Status of Court Litigation (shown only when issuesAddressBy.value === 5) */}
+                    {Number(watchedIssuesAddressBy?.value) === 5 && (
+                        <div>
+                            <Controller
+                                control={control}
+                                name="courtLitigationStatus"
+                                rules={{ required: true }}
+                                render={({ field }) => (
+                                    <CustomSelect
+                                        id="court-litigation-status-select"
+                                        {...field}
+                                        options={[...conflictStore.courtLitigationStatus.values()].map((v: ICourtLitigationStatus) => ({
+                                            label: v?.courtLitigationStatus as string,
+                                            value: v?.courtLitigationStatusId,
+                                        }))}
+                                        isLoading={conflictStore.isLoading}
+                                        label="Status of the court litigation"
+                                        placeholder="Status of the court litigation"
+                                    />
+                                )}
+                            />
+                            {errors.courtLitigationStatus && (
+                                <p className="mt-2 text-xs text-red-400">Select a court litigation status</p>
                             )}
-                        />
-                        {errors.courtLitigationStatus && (
-                            <p className="mt-2 text-xs text-red-400">Select a court litigation status</p>
-                        )}
-                    </div>
+                        </div>
+                    )}
 
                     {/* Narrate Issues */}
                     <div>

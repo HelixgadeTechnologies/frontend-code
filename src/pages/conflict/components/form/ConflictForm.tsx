@@ -1,32 +1,33 @@
 import { useForm, Controller } from "react-hook-form";
-import { CustomSelect, Button, FormInput} from "../../../../components/elements";
+import { CustomSelect, Button, FormInput } from "../../../../components/elements";
 import { toast } from "react-toastify";
 import { ICauseOfConflict, IConflictPayload, IConflictPayloadData, IConflictStatus, IConflictStore, ICourtLitigationStatus, IIssuesAddressBy, IPartiesInvolve } from "../../types/interface";
 import { IDropdownProp } from "../../../Settings/types/interface";
 import { observer } from "mobx-react-lite";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 
-const ConflictForm = observer(({close, conflictStore, selectedTrust }: {close: () => void, conflictStore: IConflictStore, selectedTrust: string}) => {
-  const { control, reset, register, handleSubmit, formState: { errors } } = useForm();
+const ConflictForm = observer(({ close, conflictStore, selectedTrust }: { close: () => void, conflictStore: IConflictStore, selectedTrust: string }) => {
+  const { control, reset, register, handleSubmit, watch, setValue, formState: { errors } } = useForm();
+  const watchedIssuesAddressBy = watch('issuesAddressBy');
 
 
   const onSubmit = async (data: any) => {
     try {
-      // console.log("Form Data:", data);
+      // console.log("Form Data:", partiesInvolved.map(e=>e.label).join(","));
       const causeOfConflict = data.causeOfConflict as IDropdownProp
-      const partiesInvolved = data.partiesInvolved as IDropdownProp
       const conflictStatus = data.conflictStatus as IDropdownProp
+      const partiesInvolved: Array<IDropdownProp> = data.partiesInvolved
       const issuesAddressBy = data.issuesAddressBy as IDropdownProp
       const courtLitigationStatus = data.courtLitigationStatus as IDropdownProp
-      // const project = data.project as IDropdownProp
+
 
       const conflictPayloadData: IConflictPayloadData = {
         causeOfConflictId: Number(causeOfConflict.value),
         conflictStatusId: Number(conflictStatus.value),
         narrateIssues: data.narrateIssues,
-        partiesInvolveId: Number(partiesInvolved.value),
+        partiesInvolve: partiesInvolved.map(e => e.label).join(","),
         issuesAddressById: Number(issuesAddressBy.value),
-        courtLitigationStatusId: Number(courtLitigationStatus.value),
+        courtLitigationStatusId: Number(issuesAddressBy.value) == 5 ?Number(courtLitigationStatus.value) : null ,
         trustId: selectedTrust,
       };
 
@@ -53,33 +54,33 @@ const ConflictForm = observer(({close, conflictStore, selectedTrust }: {close: (
   };
   const handleReset = useCallback(() => {
     reset({
-        causeOfConflict: {
-            label: "",
-            value: ""
-        } as IDropdownProp,
-        partiesInvolved: {
-            label:"",
-            value: ""
-        } as IDropdownProp,
-        conflictStatus: {
-            label: "",
-            value: ""
-        } as IDropdownProp,
-        issuesAddressBy: {
-            label: "",
-            value:""
-        } as IDropdownProp,
-        courtLitigationStatus: {
-            label: "",
-            value: ""
-        } as IDropdownProp,
-        project: {
-            label: "",
-            value: ""
-        } as IDropdownProp,
-        narrateIssues: "",
+      causeOfConflict: {
+        label: "",
+        value: ""
+      } as IDropdownProp,
+      partiesInvolved: [{
+        label: "",
+        value: ""
+      }] as Array<IDropdownProp>,
+      conflictStatus: {
+        label: "",
+        value: ""
+      } as IDropdownProp,
+      issuesAddressBy: {
+        label: "",
+        value: ""
+      } as IDropdownProp,
+      courtLitigationStatus: {
+        label: "",
+        value: ""
+      } as IDropdownProp,
+      project: {
+        label: "",
+        value: ""
+      } as IDropdownProp,
+      narrateIssues: "",
     });
-}, [reset]);
+  }, [reset]);
   return (
     <div className=" flex ">
       <div className=" relative w-full max-w-3xl mx-auto bg-white shadow-md rounded-lg p-6 sm:p-8">
@@ -135,6 +136,7 @@ const ConflictForm = observer(({close, conflictStore, selectedTrust }: {close: (
                 render={({ field }) => (
                   <CustomSelect
                     id="parties-involved-select"
+                    isMulti
                     {...field}
                     options={[...conflictStore.partiesInvolve.values()].map((v: IPartiesInvolve) => ({
                       label: v?.partiesInvolve as string,
@@ -193,6 +195,15 @@ const ConflictForm = observer(({close, conflictStore, selectedTrust }: {close: (
                     isLoading={conflictStore.isLoading}
                     label="Issue addressed by"
                     placeholder="Issue addressed by"
+                    onChange={(val: any) => {
+                      // propagate change to RHF
+                      field.onChange(val);
+                      // if selected value is 5, set an initial courtLitigationStatus
+                      if (Number(val?.value) !== 5) {
+                        console.log("Clearing courtLitigationStatus as it's not applicable");
+                        setValue('courtLitigationStatus', { label: '', value: '' }, { shouldValidate: false, shouldDirty: true });
+                      }
+                    }}
                   />
                 )}
               />
@@ -201,7 +212,8 @@ const ConflictForm = observer(({close, conflictStore, selectedTrust }: {close: (
               )}
             </div>
           </div>
-            {/* Status of Court Litigation */}
+          {/* Status of Court Litigation (shown only when issuesAddressBy.value === 5) */}
+          {Number(watchedIssuesAddressBy?.value) === 5 && (
             <div>
               <Controller
                 control={control}
@@ -225,6 +237,7 @@ const ConflictForm = observer(({close, conflictStore, selectedTrust }: {close: (
                 <p className="mt-2 text-xs text-red-400">Select a court litigation status</p>
               )}
             </div>
+          )}
 
           {/* Narrate Issues */}
           <div>

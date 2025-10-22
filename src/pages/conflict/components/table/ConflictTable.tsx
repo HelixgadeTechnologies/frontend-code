@@ -28,6 +28,8 @@ export const ConflictTable = observer(() => {
         loadRequests();
     }, []);
     const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [pageSize] = useState<number>(10); // items per page
 
 
 
@@ -48,66 +50,74 @@ export const ConflictTable = observer(() => {
 
 
     // Define columns with memoization
-    const columns = useMemo(
-        () => [
-            {
-                id: "trustName",
-                header: "Trust Name",
-                accessorKey: "trustName",
+    const columns = useMemo(() => [
+        {
+            id: "trustName",
+            header: "Trust Name",
+            accessorKey: "trustName",
+        },
+        {
+            id: "causeOfConflictName",
+            header: "Cause Of Conflict",
+            accessorKey: "causeOfConflictName",
+        },
+        {
+            id: "userFirstName",
+            header: "Name of agent",
+            accessorKey: "userFirstName",
+            cell: ({ row }: { row: { original: IConflictView } }) => {
+                const conflict = row.original;
+                const data = `${conflict?.userLastName == null ? "" : conflict?.userLastName} ${conflict?.userFirstName == null ? "" : conflict?.userFirstName}`;
+                return <span>{data}</span>;
             },
-            {
-                id: "causeOfConflictName",
-                header: "Cause Of Conflict",
-                accessorKey: "causeOfConflictName",
-            },
-            {
-                id: "userFirstName",
-                header: "Name of agent",
-                accessorKey: "userFirstName",
-                cell: ({ row }: { row: { original: IConflictView } }) => {
-                    const conflict = row.original;
-                    const data = `${conflict?.userLastName == null ? "" : conflict?.userLastName} ${conflict?.userFirstName == null ? "" : conflict?.userFirstName}`;
-                    return <span>{data}</span>;
-                },
-            },
-            {
-                id: "issuesAddressByName",
-                header: "Issues Address By",
-                accessorKey: "issuesAddressByName",
-            },
-            {
-                id: "actions",
-                header: "",
-                cell: ({ row }: { row: { original: IConflictView } }) => {
-                    const conflict = row.original;
+        },
+        {
+            id: "issuesAddressByName",
+            header: "Issues Address By",
+            accessorKey: "issuesAddressByName",
+        },
+        {
+            id: "actions",
+            header: "",
+            cell: ({ row }: { row: { original: IConflictView } }) => {
+                const conflict = row.original;
 
-                    return (
-                        <Observer>
-                            {() => (
-                                <div className="flex gap-2">
-                                    <Tag
-                                        label="View"
-                                        type="default"
-                                        // icon={checkIcon}
-                                        onClick={() => handleView(conflict)} // Add your view handler
-                                    />
-                                    <Tag
-                                        label="Edit"
-                                        type="default"
-                                        // icon={editIcon}
-                                        onClick={() => handleEdit(conflict)} // Add your view handler
-                                    />
-                                </div>
-                            )}
-                        </Observer>
-                    );
-                },
+                return (
+                    <Observer>
+                        {() => (
+                            <div className="flex gap-2">
+                                <Tag
+                                    label="View"
+                                    type="default"
+                                    onClick={() => handleView(conflict)}
+                                />
+                                <Tag
+                                    label="Edit"
+                                    type="default"
+                                    onClick={() => handleEdit(conflict)}
+                                />
+                            </div>
+                        )}
+                    </Observer>
+                );
             },
-        ],
-        [handleView],
-    );
+        },
+    ], [handleView, handleEdit]);
 
     const tableHead = ["Project Title", "Cause Of Conflict", "Issues Address By", "Action"];
+
+    // Prepare paginated data
+    const allData = [...conflictStore.filteredConflicts.values()].map((conflict, i: number) => ({ ...conflict, id: i.toString() } as IConflictView));
+    const totalCount = allData.length;
+    const totalPage = Math.max(1, Math.ceil(totalCount / pageSize));
+    const cp = Math.min(Math.max(1, currentPage), totalPage);
+    const start = (cp - 1) * pageSize;
+    const paged = allData.slice(start, start + pageSize);
+
+    // reset to first page when the filtered list changes (e.g., after filtering/search)
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [conflictStore.filteredConflicts.size]);
 
     return (
         <>
@@ -116,17 +126,16 @@ export const ConflictTable = observer(() => {
                 <>
                     {conflictStore.isLoading ? (
                         <LoadingTable headArr={tableHead} />
-                    ) : conflictStore.filteredConflicts.size > 0 ? (
+                    ) : totalCount > 0 ? (
                         <Table
                             columns={columns}
-                            data={[...conflictStore.filteredConflicts.values()].map((conflict, i: number) => ({
-                                ...conflict, id: i.toString()
-                            } as IConflictView))
-                            }
-                            count={conflictStore.filteredConflicts.size}
+                            data={paged}
+                            count={totalCount}
+                            currentPage={cp}
+                            setCurrentPage={setCurrentPage}
+                            totalPage={totalPage}
                             rowSelection={rowSelection}
                             setRowSelection={setRowSelection}
-                        // refresh={()=>economicImpactStore.getEconomicImpactByTrustId(trustStore.selectedTrustId)}
                         />
                     ) : (
                         <EmptyTable
