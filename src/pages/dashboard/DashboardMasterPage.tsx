@@ -27,6 +27,7 @@ const DashboardMasterPage = observer(() => {
     const projectStore = useContext(projectStoreCTX)
     useEffect(() => {
         async function getInfo() {
+            // dashboardStore.isLoading = true;
             dashboardStore.selectedTrust = "ALL";
             dashboardStore.selectedSettlor = "ALL";
             dashboardStore.selectedState = "ALL";
@@ -48,6 +49,7 @@ const DashboardMasterPage = observer(() => {
             await projectStore.getProjectDashboardByTrustId("ALL", 0, "ALL", "ALL");
             await settingStore.getAllSettlor();
             await trustStore.getAllTrust();
+            // dashboardStore.isLoading = false;
         }
         getInfo();
         return () => { };

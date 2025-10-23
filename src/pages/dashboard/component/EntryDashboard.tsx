@@ -48,6 +48,7 @@ const EntryDashboard: React.FC<LayoutProps> = observer(({ children }) => {
 
   useEffect(() => {
     async function getInfo() {
+      dashboardStore.isLoading = true;
       dashboardStore.selectedTrust = "ALL";
       dashboardStore.selectedSettlor = "ALL";
       dashboardStore.selectedState = "ALL";
@@ -70,6 +71,7 @@ const EntryDashboard: React.FC<LayoutProps> = observer(({ children }) => {
       await projectStore.getProjectsForGeneralProject();
       await settingStore.getAllSettlor();
       await trustStore.getAllTrust();
+      dashboardStore.isLoading = false;
     }
     getInfo();
     return () => { };

@@ -74,13 +74,13 @@ class DashboardStore implements IDashboardStore {
 
     async getDashboard(trustId: string, year: number, state: string, settlor: string): Promise<void> {
         try {
-            if (this.isLoading || this.dashboardData) return; // Prevent duplicate calls
+            // if (this.isLoading || this.dashboardData) return; // Prevent duplicate calls
             this.isLoading = true;
             let data = await dashboardService.generalDashboard(trustId, year, state, settlor);
             if (data.success) {
                 const processedData = this.transformDashboard(data.data);
                 this.dashboardData = processedData;
-                toJS(console.log(processedData.FUNDS_DISTRIBUTION_PERCENTAGE));
+                toJS(console.log("data333",processedData));
             }
         } catch (error) {
             throw error;

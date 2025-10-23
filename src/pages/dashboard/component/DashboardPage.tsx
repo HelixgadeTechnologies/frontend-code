@@ -55,11 +55,11 @@ const DashboardPage: React.FC = observer(() => {
   // Bar chart data
   const barData = {
     // labels: ["Rivers", "Edo", "Cross Rivers", "Delta", "Bayelsa", "Akwa Ibom"],
-    labels: dashboardStore.dashboardData?.COMMUNITY_BENEFIT.state,
+    labels: dashboardStore.dashboardData?.COMMUNITY_BENEFIT?.state ?? [],
     datasets: [
       {
         label: "Communities",
-        data: dashboardStore.dashboardData?.COMMUNITY_BENEFIT.numberOfTrustCommunities,
+        data: dashboardStore.dashboardData?.COMMUNITY_BENEFIT?.numberOfTrustCommunities ?? [],
         backgroundColor: "#3366CC",
         borderRadius: 6,
         barThickness: 24,
@@ -88,7 +88,11 @@ const DashboardPage: React.FC = observer(() => {
     labels: ["Completed", "Not Completed"],
     datasets: [
       {
-        data: [dashboardStore.dashboardData?.COMPLETION_STATUS.percentFullyEstablished, 100 - dashboardStore.dashboardData?.COMPLETION_STATUS.percentFullyEstablished!],
+        // ensure we send numeric values (default to 0)
+        data: (() => {
+          const v = dashboardStore.dashboardData?.COMPLETION_STATUS?.percentFullyEstablished ?? 0;
+          return [v, 100 - v];
+        })(),
         backgroundColor: ["#3366CC", "#F3F5F7"],
         borderWidth: 0,
       },
@@ -109,25 +113,25 @@ const DashboardPage: React.FC = observer(() => {
 
   // Add this before your return statement
   const localEmploymentBarData = {
-    labels: dashboardStore.dashboardData?.EMPLOYEE_PER_PROJECT.map(e => e.projectTitle),
+    labels: dashboardStore.dashboardData?.EMPLOYEE_PER_PROJECT?.map(e => e.projectTitle) ?? [],
     datasets: [
       {
         label: "Male",
-        data: dashboardStore.dashboardData?.EMPLOYEE_PER_PROJECT.map(e => e.numberOfMaleEmployedByContractor),
+        data: dashboardStore.dashboardData?.EMPLOYEE_PER_PROJECT?.map(e => e.numberOfMaleEmployedByContractor) ?? [],
         backgroundColor: "#22C55E",
         borderRadius: 4,
         stack: "Stack 0",
       },
       {
         label: "Female",
-        data: dashboardStore.dashboardData?.EMPLOYEE_PER_PROJECT.map(e => e.numberOfFemaleEmployedByContractor),
+        data: dashboardStore.dashboardData?.EMPLOYEE_PER_PROJECT?.map(e => e.numberOfFemaleEmployedByContractor) ?? [],
         backgroundColor: "#EF4444",
         borderRadius: 4,
         stack: "Stack 0",
       },
       {
         label: "Pwds",
-        data: dashboardStore.dashboardData?.EMPLOYEE_PER_PROJECT.map(e => e.numberOfPwDsEmployedByContractor),
+        data: dashboardStore.dashboardData?.EMPLOYEE_PER_PROJECT?.map(e => e.numberOfPwDsEmployedByContractor) ?? [],
         backgroundColor: "#EF8",
         borderRadius: 4,
         stack: "Stack 0",
@@ -139,21 +143,21 @@ const DashboardPage: React.FC = observer(() => {
     datasets: [
       {
         label: "Male",
-        data: dashboardStore.dashboardData?.BOT_DISPLAY.male,
+        data: dashboardStore.dashboardData?.BOT_DISPLAY?.male ?? [],
         backgroundColor: "#22C55E",
         borderRadius: 4,
         stack: "Stack 0",
       },
       {
         label: "Female",
-        data: dashboardStore.dashboardData?.BOT_DISPLAY.female,
+        data: dashboardStore.dashboardData?.BOT_DISPLAY?.female ?? [],
         backgroundColor: "#EF4444",
         borderRadius: 4,
         stack: "Stack 0",
       },
       {
         label: "Pwds",
-        data: dashboardStore.dashboardData?.BOT_DISPLAY.pwd,
+        data: dashboardStore.dashboardData?.BOT_DISPLAY?.pwd ?? [],
         backgroundColor: "#EF8",
         borderRadius: 4,
         stack: "Stack 0",
@@ -161,25 +165,25 @@ const DashboardPage: React.FC = observer(() => {
     ],
   };
   const FundsData = {
-    labels: dashboardStore.dashboardData?.FUNDS_DISTRIBUTION_PERCENTAGE.yearReceived,
+    labels: dashboardStore.dashboardData?.FUNDS_DISTRIBUTION_PERCENTAGE?.yearReceived ?? [],
     datasets: [
       {
         label: "Fully Received",
-        data: dashboardStore.dashboardData?.FUNDS_DISTRIBUTION_PERCENTAGE.pct_paymentCheck_1,
+        data: dashboardStore.dashboardData?.FUNDS_DISTRIBUTION_PERCENTAGE?.pct_paymentCheck_1 ?? [],
         backgroundColor: "#22C55E",
         borderRadius: 4,
         stack: "Stack 0",
       },
       {
         label: "Partly Received",
-        data: dashboardStore.dashboardData?.FUNDS_DISTRIBUTION_PERCENTAGE.pct_paymentCheck_2,
+        data: dashboardStore.dashboardData?.FUNDS_DISTRIBUTION_PERCENTAGE?.pct_paymentCheck_2 ?? [],
         backgroundColor: "#EF8",
         borderRadius: 4,
         stack: "Stack 0",
       },
       {
         label: "Not Received",
-        data: dashboardStore.dashboardData?.FUNDS_DISTRIBUTION_PERCENTAGE.pct_paymentCheck_3,
+        data: dashboardStore.dashboardData?.FUNDS_DISTRIBUTION_PERCENTAGE?.pct_paymentCheck_3 ?? [],
         backgroundColor: "#EF4444",
         borderRadius: 4,
         stack: "Stack 0",
@@ -234,7 +238,10 @@ const DashboardPage: React.FC = observer(() => {
     labels: ["Resolved", "Unresolved"],
     datasets: [
       {
-        data: [dashboardStore.dashboardData?.CONFLICT_RESOLUTION_PERCENTAGE.resolvedPercentage, dashboardStore.dashboardData?.CONFLICT_RESOLUTION_PERCENTAGE.unresolvedPercentage],
+        data: [
+          dashboardStore.dashboardData?.CONFLICT_RESOLUTION_PERCENTAGE?.resolvedPercentage ?? 0,
+          dashboardStore.dashboardData?.CONFLICT_RESOLUTION_PERCENTAGE?.unresolvedPercentage ?? 0,
+        ],
         backgroundColor: ["#22C55E", "#EA580C"],
         borderWidth: 0,
         cutout: "75%",
@@ -347,7 +354,7 @@ const DashboardPage: React.FC = observer(() => {
     labels: ["Very True", "Slightly", "Not True"],
     datasets: [
       {
-        data: economicImpactStore?.dashboardData?.incomeIncrease.length! > 0 ? [...economicImpactStore?.dashboardData?.businessGrowth as Array<number>] : [0, 0, 0],
+        data: (economicImpactStore?.dashboardData?.businessGrowth ?? [0, 0, 0]).map((v: any) => Number(v) || 0),
         backgroundColor: ["#22C55E", "#FACC15", "#EF4444"],
         hoverBackgroundColor: ["#16A34A", "#EAB308", "#DC2626"],
       },
@@ -358,7 +365,7 @@ const DashboardPage: React.FC = observer(() => {
     labels: ["Very True", "Slightly", "Not True"],
     datasets: [
       {
-        data: economicImpactStore?.dashboardData?.incomeIncrease.length! > 0 ? [...economicImpactStore?.dashboardData?.incomeIncrease as Array<number>] : [0, 0, 0],
+        data: (economicImpactStore?.dashboardData?.incomeIncrease ?? [0, 0, 0]).map((v: any) => Number(v) || 0),
         backgroundColor: ["#22C55E", "#FACC15", "#EF4444"],
         hoverBackgroundColor: ["#16A34A", "#EAB308", "#DC2626"],
       },
@@ -369,7 +376,7 @@ const DashboardPage: React.FC = observer(() => {
     labels: ["Very True", "Slightly", "Not True"],
     datasets: [
       {
-        data: economicImpactStore?.dashboardData?.livelihoodImprove.length! > 0 ? [...economicImpactStore?.dashboardData?.livelihoodImprove as Array<number>] : [0, 0, 0],
+        data: (economicImpactStore?.dashboardData?.livelihoodImprove ?? [0, 0, 0]).map((v: any) => Number(v) || 0),
         backgroundColor: ["#22C55E", "#FACC15", "#EF4444"],
         hoverBackgroundColor: ["#16A34A", "#EAB308", "#DC2626"],
       },
@@ -390,7 +397,7 @@ const DashboardPage: React.FC = observer(() => {
     datasets: [
       {
         label: "Access to Basic Amenities",
-        data: economicImpactStore?.dashboardData?.accessAmenities.length! > 0 ? [...economicImpactStore?.dashboardData?.accessAmenities as Array<number>] : [0, 0, 0, 0, 0, 0, 0],
+        data: (economicImpactStore?.dashboardData?.accessAmenities ?? [0, 0, 0, 0, 0, 0, 0]).map((v: any) => Number(v) || 0),
         borderColor: "#3B82F6",
         backgroundColor: "rgba(59, 130, 246, 0.2)",
         tension: 0.4,
@@ -534,7 +541,7 @@ const DashboardPage: React.FC = observer(() => {
     labels: ["Effectively Resolved", "Not Effectively Resolved", "Requested", "Yet To Be Addressed"],
     datasets: [
       {
-        data: conflictStore.dashboardData?.STATUS_OF_CONFLICT! || [0, 0, 0, 0],
+        data: (conflictStore.dashboardData?.STATUS_OF_CONFLICT ?? [0, 0, 0, 0]).map((v: any) => Number(v) || 0),
         backgroundColor: ["#22C55E", "#FACC15", "#3B82F6", "#EF4444"],
         hoverBackgroundColor: ["#16A34A", "#EAB308", "#2563EB", "#DC2626"],
       },
@@ -546,7 +553,7 @@ const DashboardPage: React.FC = observer(() => {
     labels: ["Strongly Disagree", "Disagree", "Slightly Agree", "Agree", "Strongly Agree"],
     datasets: [
       {
-        data: satisfactionStore.dashboardData?.settlorAction || [0, 0, 0, 0, 0],
+        data: (satisfactionStore.dashboardData?.settlorAction ?? [0, 0, 0, 0, 0]).map((v: any) => Number(v) || 0),
         backgroundColor: ["#EF4444", "#de9292", "#FACC15", "#3B82F6", "#22C55E"],
         hoverBackgroundColor: ["#EF4444", "#de9292", "#FACC15", "#3B82F6", "#22C55E"],
       },
@@ -556,7 +563,7 @@ const DashboardPage: React.FC = observer(() => {
     labels: ["Strongly Disagree", "Disagree", "Slightly Agree", "Agree", "Strongly Agree"],
     datasets: [
       {
-        data: satisfactionStore.dashboardData?.nuprcAction || [0, 0, 0, 0, 0],
+        data: (satisfactionStore.dashboardData?.nuprcAction ?? [0, 0, 0, 0, 0]).map((v: any) => Number(v) || 0),
         backgroundColor: ["#EF4444", "#de9292", "#FACC15", "#3B82F6", "#22C55E"],
         hoverBackgroundColor: ["#EF4444", "#de9292", "#FACC15", "#3B82F6", "#22C55E"],
       },
@@ -567,7 +574,7 @@ const DashboardPage: React.FC = observer(() => {
     labels: ["Ongoing", "Standing Trial", "Judgment", "Withdrawn"],
     datasets: [
       {
-        data: conflictStore.dashboardData?.CONFLICT_OF_COURT_LITIGATION! || [0, 0, 0, 0],
+        data: (conflictStore.dashboardData?.CONFLICT_OF_COURT_LITIGATION ?? [0, 0, 0, 0]).map((v: any) => Number(v) || 0),
         backgroundColor: ["#3B82F6", "#FACC15", "#22C55E", "#EF4444"],
         hoverBackgroundColor: ["#2563EB", "#EAB308", "#16A34A", "#DC2626"],
       },
@@ -1288,9 +1295,9 @@ const DashboardPage: React.FC = observer(() => {
                       color: "#222",
                       font: { weight: "bold" },
                       formatter: (value: number, context: any) => {
-                        const dataArr = context.chart.data.datasets[0].data;
-                        const total = dataArr.reduce((a: number, b: number) => a + b, 0);
-                        const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                        const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
+                        const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
+                        const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
                         return `${percent}%`;
                       },
                     },
@@ -1322,9 +1329,9 @@ const DashboardPage: React.FC = observer(() => {
                       color: "#222",
                       font: { weight: "bold" },
                       formatter: (value: number, context: any) => {
-                        const dataArr = context.chart.data.datasets[0].data;
-                        const total = dataArr.reduce((a: number, b: number) => a + b, 0);
-                        const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                        const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
+                        const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
+                        const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
                         return `${percent}%`;
                       },
                     },
@@ -1456,9 +1463,9 @@ const DashboardPage: React.FC = observer(() => {
                       color: "#222",
                       font: { weight: "bold" },
                       formatter: (value: number, context: any) => {
-                        const dataArr = context.chart.data.datasets[0].data;
-                        const total = dataArr.reduce((a: number, b: number) => a + b, 0);
-                        const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                        const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
+                        const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
+                        const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
                         return `${percent}%`;
                       },
                     },
@@ -1480,9 +1487,9 @@ const DashboardPage: React.FC = observer(() => {
                       color: "#222",
                       font: { weight: "bold" },
                       formatter: (value: number, context: any) => {
-                        const dataArr = context.chart.data.datasets[0].data;
-                        const total = dataArr.reduce((a: number, b: number) => a + b, 0);
-                        const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                        const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
+                        const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
+                        const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
                         return `${percent}%`;
                       },
                     },
@@ -1503,7 +1510,7 @@ const DashboardPage: React.FC = observer(() => {
           </div>
           <div className="bg-white p-9 rounded-lg shadow-md">
             <h3 className="text-sm font-medium text-gray-600 mb-4">Major causes of conflict</h3>
-            {conflictStore.dashboardData?.CAUSE_OF_CONFLICT.length! > 0 ? (
+            {(conflictStore.dashboardData?.CAUSE_OF_CONFLICT ?? []).length > 0 ? (
               <ul className="space-y-2">
                 {conflictStore.dashboardData?.CAUSE_OF_CONFLICT.map((cause, index) => (
                   <li key={index} className="flex justify-between text-sm text-gray-600">
@@ -1606,9 +1613,9 @@ const DashboardPage: React.FC = observer(() => {
                       color: "#222",
                       font: { weight: "bold" },
                       formatter: (value: number, context: any) => {
-                        const dataArr = context.chart.data.datasets[0].data;
-                        const total = dataArr.reduce((a: number, b: number) => a + b, 0);
-                        const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                        const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
+                        const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
+                        const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
                         return `${percent}%`;
                       },
                     },
@@ -1634,9 +1641,9 @@ const DashboardPage: React.FC = observer(() => {
                       color: "#222",
                       font: { weight: "bold" },
                       formatter: (value: number, context: any) => {
-                        const dataArr = context.chart.data.datasets[0].data;
-                        const total = dataArr.reduce((a: number, b: number) => a + b, 0);
-                        const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                        const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
+                        const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
+                        const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
                         return `${percent}%`;
                       },
                     },
@@ -1672,12 +1679,12 @@ const DashboardPage: React.FC = observer(() => {
                       datalabels: {
                         color: "#222",
                         font: { weight: "bold" },
-                        formatter: (value: number, context: any) => {
-                          const dataArr = context.chart.data.datasets[0].data;
-                          const total = dataArr.reduce((a: number, b: number) => a + b, 0);
-                          const percent = total ? ((value / total) * 100).toFixed(0) : 0;
-                          return `${percent}%`;
-                        },
+                            formatter: (value: number, context: any) => {
+                            const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
+                            const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
+                            const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
+                            return `${percent}%`;
+                          },
                       },
                       legend: {
                         position: "bottom" as const,
@@ -1705,9 +1712,9 @@ const DashboardPage: React.FC = observer(() => {
                           color: "#222",
                           font: { weight: "bold", size: 16 },
                           formatter: (value: number, context: any) => {
-                            const dataArr = context.chart.data.datasets[0].data;
-                            const total = dataArr.reduce((a: number, b: number) => a + b, 0);
-                            const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                            const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
+                            const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
+                            const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
                             return `${percent}%`;
                           },
                         },
@@ -1747,9 +1754,9 @@ const DashboardPage: React.FC = observer(() => {
                           color: "#222",
                           font: { weight: "bold", size: 16 },
                           formatter: (value: number, context: any) => {
-                            const dataArr = context.chart.data.datasets[0].data;
-                            const total = dataArr.reduce((a: number, b: number) => a + b, 0);
-                            const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                            const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
+                            const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
+                            const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
                             return `${percent}%`;
                           },
                         },
@@ -1790,9 +1797,9 @@ const DashboardPage: React.FC = observer(() => {
                           color: "#222",
                           font: { weight: "bold", size: 16 },
                           formatter: (value: number, context: any) => {
-                            const dataArr = context.chart.data.datasets[0].data;
-                            const total = dataArr.reduce((a: number, b: number) => a + b, 0);
-                            const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                            const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
+                            const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
+                            const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
                             return `${percent}%`;
                           },
                         },
@@ -1846,9 +1853,9 @@ const DashboardPage: React.FC = observer(() => {
                             color: "#222",
                             font: { weight: "bold" },
                             formatter: (value: number, context: any) => {
-                              const dataArr = context.chart.data.datasets[0].data;
-                              const total = dataArr.reduce((a: number, b: number) => a + b, 0);
-                              const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                              const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
+                              const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
+                              const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
                               return `${percent}%`;
                             },
                           },
@@ -1883,9 +1890,9 @@ const DashboardPage: React.FC = observer(() => {
                             color: "#222",
                             font: { weight: "bold" },
                             formatter: (value: number, context: any) => {
-                              const dataArr = context.chart.data.datasets[0].data;
-                              const total = dataArr.reduce((a: number, b: number) => a + b, 0);
-                              const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                              const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
+                              const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
+                              const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
                               return `${percent}%`;
                             },
                           },
@@ -1920,9 +1927,9 @@ const DashboardPage: React.FC = observer(() => {
                             color: "#222",
                             font: { weight: "bold" },
                             formatter: (value: number, context: any) => {
-                              const dataArr = context.chart.data.datasets[0].data;
-                              const total = dataArr.reduce((a: number, b: number) => a + b, 0);
-                              const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                              const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
+                              const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
+                              const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
                               return `${percent}%`;
                             },
                           },

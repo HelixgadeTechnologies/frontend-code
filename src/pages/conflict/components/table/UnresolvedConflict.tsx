@@ -104,14 +104,14 @@ export const UnresolvedConflict = observer(({ conflictStore }: { conflictStore: 
             <>
                 {conflictStore.dashboardData == null ? (
                     <LoadingTable headArr={tableHead} />
-                ) : conflictStore.dashboardData?.UNRESOLVED_CONFLICTS?.length! > 0 ? (
+                ) : (conflictStore.dashboardData?.UNRESOLVED_CONFLICTS ?? []).length > 0 ? (
                     <Table
                         columns={columns}
                         data={conflictStore?.dashboardData?.UNRESOLVED_CONFLICTS?.map((conflict: IConflictView, i: number) => ({
                             ...conflict, id: i.toString()
                         } as IConflictView))!
                         }
-                        count={conflictStore.dashboardData?.UNRESOLVED_CONFLICTS?.length!}
+                        count={(conflictStore.dashboardData?.UNRESOLVED_CONFLICTS ?? []).length}
                         rowSelection={rowSelection}
                         setRowSelection={setRowSelection}
                     />

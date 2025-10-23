@@ -47,7 +47,7 @@ const EconomicImpactDashboard = observer(({ economicImpactStore }: { economicImp
         labels: ["Very True", "Slightly", "Not True"],
         datasets: [
             {
-                data: economicImpactStore?.dashboardData?.incomeIncrease.length! > 0 ? [...economicImpactStore?.dashboardData?.businessGrowth as Array<number>] : [0, 0, 0],
+                data: (economicImpactStore?.dashboardData?.businessGrowth ?? [0, 0, 0]).map((v: any) => Number(v) || 0),
                 backgroundColor: ["#22C55E", "#FACC15", "#EF4444"],
                 hoverBackgroundColor: ["#16A34A", "#EAB308", "#DC2626"],
             },
@@ -58,7 +58,7 @@ const EconomicImpactDashboard = observer(({ economicImpactStore }: { economicImp
         labels: ["Very True", "Slightly", "Not True"],
         datasets: [
             {
-                data: economicImpactStore?.dashboardData?.incomeIncrease.length! > 0 ? [...economicImpactStore?.dashboardData?.incomeIncrease as Array<number>] : [0, 0, 0],
+                data: (economicImpactStore?.dashboardData?.incomeIncrease ?? [0, 0, 0]).map((v: any) => Number(v) || 0),
                 backgroundColor: ["#22C55E", "#FACC15", "#EF4444"],
                 hoverBackgroundColor: ["#16A34A", "#EAB308", "#DC2626"],
             },
@@ -69,7 +69,7 @@ const EconomicImpactDashboard = observer(({ economicImpactStore }: { economicImp
         labels: ["Very True", "Slightly", "Not True"],
         datasets: [
             {
-                data: economicImpactStore?.dashboardData?.livelihoodImprove.length! > 0 ? [...economicImpactStore?.dashboardData?.livelihoodImprove as Array<number>] : [0, 0, 0],
+                data: (economicImpactStore?.dashboardData?.livelihoodImprove ?? [0, 0, 0]).map((v: any) => Number(v) || 0),
                 backgroundColor: ["#22C55E", "#FACC15", "#EF4444"],
                 hoverBackgroundColor: ["#16A34A", "#EAB308", "#DC2626"],
             },
@@ -90,7 +90,7 @@ const EconomicImpactDashboard = observer(({ economicImpactStore }: { economicImp
         datasets: [
             {
                 label: "Access to Basic Amenities",
-                data: economicImpactStore?.dashboardData?.accessAmenities.length! > 0 ? [...economicImpactStore?.dashboardData?.accessAmenities as Array<number>] : [0, 0, 0, 0, 0, 0, 0],
+                data: (economicImpactStore?.dashboardData?.accessAmenities ?? [0, 0, 0, 0, 0, 0, 0]).map((v: any) => Number(v) || 0),
                 borderColor: "#3B82F6",
                 backgroundColor: "rgba(59, 130, 246, 0.2)",
                 tension: 0.4,
@@ -119,9 +119,9 @@ const EconomicImpactDashboard = observer(({ economicImpactStore }: { economicImp
                                                     color: "#222",
                                                     font: { weight: "bold" },
                                                     formatter: (value: number, context: any) => {
-                                                        const dataArr = context.chart.data.datasets[0].data;
-                                                        const total = dataArr.reduce((a: number, b: number) => a + b, 0);
-                                                        const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                                                        const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
+                                                        const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
+                                                        const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
                                                         return `${percent}%`;
                                                     },
                                                 },
@@ -156,9 +156,9 @@ const EconomicImpactDashboard = observer(({ economicImpactStore }: { economicImp
                                                     color: "#222",
                                                     font: { weight: "bold" },
                                                     formatter: (value: number, context: any) => {
-                                                        const dataArr = context.chart.data.datasets[0].data;
-                                                        const total = dataArr.reduce((a: number, b: number) => a + b, 0);
-                                                        const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                                                        const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
+                                                        const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
+                                                        const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
                                                         return `${percent}%`;
                                                     },
                                                 },
@@ -194,9 +194,9 @@ const EconomicImpactDashboard = observer(({ economicImpactStore }: { economicImp
                                                     color: "#222",
                                                     font: { weight: "bold" },
                                                     formatter: (value: number, context: any) => {
-                                                        const dataArr = context.chart.data.datasets[0].data;
-                                                        const total = dataArr.reduce((a: number, b: number) => a + b, 0);
-                                                        const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                                                        const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
+                                                        const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
+                                                        const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
                                                         return `${percent}%`;
                                                     },
                                                 },

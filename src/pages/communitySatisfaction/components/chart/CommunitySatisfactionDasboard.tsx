@@ -239,9 +239,9 @@ const CommunitySatisfactionDashboard = observer(
                                             color: "#222",
                                             font: { weight: "bold" },
                                             formatter: (value: number, context: any) => {
-                                                const dataArr = context.chart.data.datasets[0].data;
-                                                const total = dataArr.reduce((a: number, b: number) => a + b, 0);
-                                                const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                                                const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
+                                                const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
+                                                const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
                                                 return `${percent}%`;
                                             },
                                         },
@@ -266,9 +266,9 @@ const CommunitySatisfactionDashboard = observer(
                                             color: "#222",
                                             font: { weight: "bold" },
                                             formatter: (value: number, context: any) => {
-                                                const dataArr = context.chart.data.datasets[0].data;
-                                                const total = dataArr.reduce((a: number, b: number) => a + b, 0);
-                                                const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                                                const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
+                                                const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
+                                                const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
                                                 return `${percent}%`;
                                             },
                                         },
@@ -312,9 +312,9 @@ const CommunitySatisfactionDashboard = observer(
                                                 color: "#222",
                                                 font: { weight: "bold", size: 16 },
                                                 formatter: (value: number, context: any) => {
-                                                    const dataArr = context.chart.data.datasets[0].data;
-                                                    const total = dataArr.reduce((a: number, b: number) => a + b, 0);
-                                                    const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                                                    const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
+                                                    const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
+                                                    const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
                                                     return `${percent}%`;
                                                 },
                                             },
@@ -353,9 +353,9 @@ const CommunitySatisfactionDashboard = observer(
                                                 color: "#222",
                                                 font: { weight: "bold", size: 16 },
                                                 formatter: (value: number, context: any) => {
-                                                    const dataArr = context.chart.data.datasets[0].data;
-                                                    const total = dataArr.reduce((a: number, b: number) => a + b, 0);
-                                                    const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                                                    const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
+                                                    const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
+                                                    const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
                                                     return `${percent}%`;
                                                 },
                                             },
@@ -396,9 +396,9 @@ const CommunitySatisfactionDashboard = observer(
                                                 color: "#222",
                                                 font: { weight: "bold", size: 16 },
                                                 formatter: (value: number, context: any) => {
-                                                    const dataArr = context.chart.data.datasets[0].data;
-                                                    const total = dataArr.reduce((a: number, b: number) => a + b, 0);
-                                                    const percent = total ? ((value / total) * 100).toFixed(0) : 0;
+                                                    const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
+                                                    const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
+                                                    const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
                                                     return `${percent}%`;
                                                 },
                                             },
