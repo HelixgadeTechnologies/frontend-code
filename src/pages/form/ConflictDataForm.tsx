@@ -1,7 +1,8 @@
 import { observer } from "mobx-react-lite";
 import { createContext, useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
+import MultiSelect from "../../components/elements/MultiSelect";
 import { ICauseOfConflict, IConflictPayload, IConflictPayloadData, IConflictStatus, ICourtLitigationStatus, IIssuesAddressBy, IPartiesInvolve } from "../conflict/types/interface";
 import { useParams } from "react-router-dom";
 import { conflictStore as ConflictStore } from "../conflict/store/conflictStore";
@@ -15,7 +16,8 @@ const conflictStoreCTX = createContext(ConflictStore);
 const ConflictDataForm = observer(() => {
   const trustStore = useContext(trustStoreCTX);
   const conflictStore = useContext(conflictStoreCTX);
-  const { register, handleSubmit, reset } = useForm();
+  const { register, handleSubmit, reset, watch, setValue, control } = useForm();
+  const watchedIssueAddressBy = watch("issueAddressedBy");
   const { trustId } = useParams(); // if your route is /page/:id
   const [submitted, setSubmitted] = useState(false);
   useEffect(() => {
@@ -37,15 +39,32 @@ const ConflictDataForm = observer(() => {
     try {
       // console.log("Form Data:", data);
 
+      // normalize partiesInvolved: Controller MultiSelect returns array of {label, value}
+      let partiesInvolveStr = "";
+      const partiesSelected = data.partiesInvolved;
+      if (Array.isArray(partiesSelected)) {
+        const labels = partiesSelected.map((opt: any) => opt?.label).filter(Boolean) as string[];
+        partiesInvolveStr = labels.join(",");
+      } else if (partiesSelected && partiesSelected.label) {
+        // single selected object
+        partiesInvolveStr = partiesSelected.label;
+      } else {
+        // fallback: maybe an id or empty
+        const found = [...conflictStore.partiesInvolve.values()].find((p: IPartiesInvolve) => String(p.partiesInvolveId) === String(partiesSelected));
+        partiesInvolveStr = found?.partiesInvolve ?? String(partiesSelected ?? "");
+      }
+
       const conflictPayloadData: IConflictPayloadData = {
         causeOfConflictId: Number(data.causeOfConflict),
         conflictStatusId: Number(data.statusOfConflict),
         narrateIssues: data.narrateIssues,
         issuesAddressById: Number(data.issueAddressedBy),
-        partiesInvolveId: Number(data.partiesInvolved),
-        courtLitigationStatusId: Number(data.statusOfCourtLitigation),
+        partiesInvolve: partiesInvolveStr,
+        courtLitigationStatusId: Number(data.issueAddressedBy) === 5 ? Number(data.statusOfCourtLitigation) : null,
         trustId: trustId as string,
       };
+
+      // console.log("Conflict Payload Data:", conflictPayloadData);
 
       const payload: IConflictPayload = {
         isCreate: true,
@@ -101,17 +120,29 @@ const ConflictDataForm = observer(() => {
                     </div>
 
                     <div>
-                      <label className="block mb-1 text-base font-medium text-gray-700">Parties Involved</label>
-                      <select
-                        {...register("partiesInvolved")}
-                        className="w-full border border-gray-300 rounded-lg p-4 text-base focus:ring-blue-500 focus:border-blue-500">
-                        <option value={""}>Select select parties involved</option>
-                        {[...conflictStore.partiesInvolve.values()].map((v: IPartiesInvolve) => (
-                          <option key={v.partiesInvolveId} value={v.partiesInvolveId}>
-                            {v.partiesInvolve}
-                          </option>
-                        ))}
-                      </select>
+                      <Controller
+                        control={control}
+                        name="partiesInvolved"
+                        render={({ field }) => {
+                          const options = [...conflictStore.partiesInvolve.values()].map((v: IPartiesInvolve) => ({ label: v.partiesInvolve as string, value: v.partiesInvolve as string }));
+                          return (
+                            <div>
+                              <label className="block mb-1 text-base font-medium text-gray-700">Parties Involved</label>
+                              {/* MultiSelect is a wrapper around react-select and expects option shape {label, value} */}
+                              <MultiSelect
+                                id="parties-involved-select"
+                                options={options}
+                                placeholder="Select parties involved"
+                                value={field.value}
+                                onChange={(val: any) => field.onChange(val)}
+                                isLoading={conflictStore.isLoading}
+                                label=""
+                              />
+                              <p className="mt-1 text-xs text-gray-500">Tap items to select (mobile friendly)</p>
+                            </div>
+                          );
+                        }}
+                      />
                     </div>
 
                     <div>
@@ -131,7 +162,15 @@ const ConflictDataForm = observer(() => {
                     <div>
                       <label className="block mb-1 text-base font-medium text-gray-700">Issue Addressed By</label>
                       <select
-                        {...register("issueAddressedBy")}
+                        {...register("issueAddressedBy", {
+                          onChange: (e) => {
+                            const val = e.target.value;
+                            // if selected value is not 5, clear the court litigation status as it's not applicable
+                            if (Number(val) !== 5) {
+                              setValue('statusOfCourtLitigation', '');
+                            }
+                          }
+                        })}
                         className="w-full border border-gray-300 rounded-lg p-4 text-base focus:ring-blue-500 focus:border-blue-500">
                         <option value={""}>Select issue addressed by</option>
                         {[...conflictStore.issuesAddressBy.values()].map((v: IIssuesAddressBy) => (
@@ -142,20 +181,22 @@ const ConflictDataForm = observer(() => {
                       </select>
                     </div>
                   </div>
-                  {/* Full-width: Status of Court Litigation */}
-                  <div className="md:col-span-2">
-                    <label className="block mb-1 text-base font-medium text-gray-700">Status of Court Litigation</label>
-                    <select
-                      {...register("statusOfCourtLitigation")}
-                      className="w-full border border-gray-300 rounded-lg p-4 text-base focus:ring-blue-500 focus:border-blue-500">
-                      <option value={""}> Select status of the court litigation</option>
-                      {[...conflictStore.courtLitigationStatus.values()].map((v: ICourtLitigationStatus) => (
-                        <option key={v.courtLitigationStatusId} value={v.courtLitigationStatusId}>
-                          {v.courtLitigationStatus}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+                  {/* Full-width: Status of Court Litigation (only shown when issueAddressedBy === 5) */}
+                  {Number(watchedIssueAddressBy) === 5 && (
+                    <div className="md:col-span-2">
+                      <label className="block mb-1 text-base font-medium text-gray-700">Status of Court Litigation</label>
+                      <select
+                        {...register("statusOfCourtLitigation")}
+                        className="w-full border border-gray-300 rounded-lg p-4 text-base focus:ring-blue-500 focus:border-blue-500">
+                        <option value={""}> Select status of the court litigation</option>
+                        {[...conflictStore.courtLitigationStatus.values()].map((v: ICourtLitigationStatus) => (
+                          <option key={v.courtLitigationStatusId} value={v.courtLitigationStatusId}>
+                            {v.courtLitigationStatus}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
                   {/* Full-width: Narrate Issues */}
                   <div className="md:col-span-2">
                     <label className="block mb-1 text-base font-medium text-gray-700">Narrate Issues</label>

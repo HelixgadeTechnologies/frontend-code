@@ -65,7 +65,7 @@ const GeneralConflictView = observer(() => {
                             <strong>Cause of conflict:</strong> {conflictData?.causeOfConflictName}
                         </p>
                         <p className="text-sm text-gray-600">
-                            <strong>Parties Involved:</strong> {conflictData?.partiesInvolveName}
+                            <strong>Parties Involved:</strong> {conflictData?.partiesInvolve}
                         </p>
                         <p className="text-sm text-gray-600">
                             <strong>Issues Addressed by:</strong> {conflictData?.issuesAddressByName}
