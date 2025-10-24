@@ -31,7 +31,36 @@ const EditTrustEstablishmentForm = observer(() => {
   const { name } = useParams();
   // const navigate = useNavigate();
 
-  const { control, handleSubmit, reset, register, formState: { errors }, } = useForm();
+  const { control, handleSubmit, reset, watch, register, setValue, formState: { errors }, } = useForm();
+  const watchedTrustRegisteredWithCAC = watch("trustRegisteredWithCAC");
+  const watchedIsTrustDevelopmentPlanReadilyAvailable = watch("isTrustDevelopmentPlanReadilyAvailable");
+  const watchedStatusOfNeedsAssessment = watch("statusOfNeedsAssessment");
+
+  // clear dependent year fields when parent is not 'Yes' (value '1')
+  useEffect(() => {
+    if (Number(watchedStatusOfNeedsAssessment) !== 1) {
+      try {
+        setValue('yearOfNeedsAssessment', { label: '', value: '' });
+      } catch (e) { }
+    }
+  }, [watchedStatusOfNeedsAssessment, setValue]);
+
+  useEffect(() => {
+    if (Number(watchedTrustRegisteredWithCAC) !== 1) {
+      try {
+        setValue('yearIncorporated', { label: '', value: '' });
+      } catch (e) { }
+    }
+  }, [watchedTrustRegisteredWithCAC, setValue]);
+
+  useEffect(() => {
+    if (Number(watchedIsTrustDevelopmentPlanReadilyAvailable) !== 1) {
+      try {
+        setValue('yearDeveloped', '');
+        setValue('yearExpired', '');
+      } catch (e) { }
+    }
+  }, [watchedIsTrustDevelopmentPlanReadilyAvailable, setValue]);
   // Populate form on mount for edit
   useEffect(() => {
     // Fetch or use already loaded data from store
@@ -144,10 +173,10 @@ const EditTrustEstablishmentForm = observer(() => {
 
         statusOfNeedAssessment: Number(data.statusOfNeedsAssessment),
         trustRegisteredWithCAC: Number(data.trustRegisteredWithCAC),
-        yearDeveloped: Number(data.yearDeveloped),
-        yearExpired: Number(data.yearExpired),
-        yearIncorporated: Number(data.yearIncorporated.value),
-        yearOfNeedsAssessment: Number(data.yearOfNeedsAssessment.value),
+        yearDeveloped: Number(data.isTrustDevelopmentPlanReadilyAvailable) === 1 ? Number(data.yearDeveloped) : null,
+        yearExpired: Number(data.isTrustDevelopmentPlanReadilyAvailable) === 1 ? Number(data.yearExpired) : null,
+        yearIncorporated: Number(data.trustRegisteredWithCAC) === 1 ? Number(data.yearIncorporated.value) : null,
+        yearOfNeedsAssessment: Number(data.statusOfNeedsAssessment) === 1 ? Number(data.yearOfNeedsAssessment.value) : null,
         settlorOperationalExpenditures: opex,
         cscDocument: uploadResCscDocument.success ? uploadResCscDocument.data : trustEstablishmentStore.trustEstablishmentStatus?.cscDocument,
         cscDocumentMimeType: cscDocument == undefined ? trustEstablishmentStore.trustEstablishmentStatus?.cscDocumentMimeType! : cscDocument.mimeType,
@@ -251,30 +280,35 @@ const EditTrustEstablishmentForm = observer(() => {
           </section>
 
           <section className="my-8">
-            <h2 className="font-semibold text-xl text-black capitalize">
-              Year incorporated
-            </h2>
+            {Number(watchedTrustRegisteredWithCAC) === 1 && (
+              <>
+                <h2 className="font-semibold text-xl text-black capitalize">
+                  Year incorporated
+                </h2>
 
-            <div>
-              <Controller
-                control={control}
-                name="yearIncorporated"
-                rules={{ required: true }}
-                render={({ field }) => (
-                  <CustomSelect
-                    id="year"
-                    {...field}
-                    label=""
-                    options={year}
-                    isMulti={false}
-                    placeholder="Select year"
+                <div>
+                  <Controller
+                    control={control}
+                    name="yearIncorporated"
+                    rules={{ required: Number(watchedTrustRegisteredWithCAC) === 1 ? "Please select year" : false }}
+                    render={({ field }) => (
+                      <CustomSelect
+                        id="year"
+                        {...field}
+                        label=""
+                        options={year}
+                        isMulti={false}
+                        placeholder="Select year"
+                      />
+                    )}
                   />
-                )}
-              />
-              {errors.yearIncorporated && (
-                <p className="text-red-500 text-xs mt-1">Please select year</p>
-              )}
-            </div>
+                  {errors.yearIncorporated && (
+                    <p className="text-red-500 text-xs mt-1">Please select year</p>
+                  )}
+                </div>
+
+              </>
+            )}
 
             <div className="mt-6 space-y-8">
               <CustomRadio
@@ -359,43 +393,45 @@ const EditTrustEstablishmentForm = observer(() => {
               {errors.isTrustDevelopmentPlanBudgetReadilyAvailable && (
                 <p className="text-red-500 text-xs mt-1">{String(errors?.isTrustDevelopmentPlanBudgetReadilyAvailable?.message!)}</p>
               )}
-              <div className="lg:flex gap-x-4 justify-between">
-                <div className="flex-1">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Year Developed
-                  </label>
-                  <FormInput
-                    label=""
-                    name="yearDeveloped"
-                    type="text"
-                    placeholder="2021"
-                    register={register}
-                    registerOptions={{
-                      required: "Field is required",
-                    }}
-                    className="mt-4 w-full border py-3 text-center  border-[#525866] focus:border-primary-100 rounded-md"
-                    error={errors.yearDeveloped}
-                  />
-                </div>
+              {Number(watchedIsTrustDevelopmentPlanReadilyAvailable) === 1 && (
+                <div className="lg:flex gap-x-4 justify-between">
+                  <div className="flex-1">
+                    <label className="block text-sm font-medium text-gray-700">
+                      Year Developed
+                    </label>
+                    <FormInput
+                      label=""
+                      name="yearDeveloped"
+                      type="text"
+                      placeholder="2021"
+                      register={register}
+                      registerOptions={{
+                        required: Number(watchedIsTrustDevelopmentPlanReadilyAvailable) === 1 ? "Field is required" : false,
+                      }}
+                      className="mt-4 w-full border py-3 text-center  border-[#525866] focus:border-primary-100 rounded-md"
+                      error={errors.yearDeveloped}
+                    />
+                  </div>
 
-                <div className="flex-1">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Year Expired
-                  </label>
-                  <FormInput
-                    label=""
-                    name="yearExpired"
-                    type="text"
-                    placeholder="2021"
-                    register={register}
-                    registerOptions={{
-                      required: "Field is required",
-                    }}
-                    className="mt-4 w-full border py-3 text-center  border-[#525866] focus:border-primary-100 rounded-md"
-                    error={errors.yearExpired}
-                  />
+                  <div className="flex-1">
+                    <label className="block text-sm font-medium text-gray-700">
+                      Year Expired
+                    </label>
+                    <FormInput
+                      label=""
+                      name="yearExpired"
+                      type="text"
+                      placeholder="2021"
+                      register={register}
+                      registerOptions={{
+                        required: Number(watchedIsTrustDevelopmentPlanReadilyAvailable) === 1 ? "Field is required" : false,
+                      }}
+                      className="mt-4 w-full border py-3 text-center  border-[#525866] focus:border-primary-100 rounded-md"
+                      error={errors.yearExpired}
+                    />
+                  </div>
                 </div>
-              </div>
+              )}
 
               <div>
                 <label className="text-[#8C94A6] text-base mb-2 block">
@@ -476,24 +512,7 @@ const EditTrustEstablishmentForm = observer(() => {
                 </p>
               </div>
               <div className="w-40">
-                <Controller
-                  control={control}
-                  name="yearOfNeedsAssessment"
-                  rules={{ required: true }}
-                  render={({ field }) => (
-                    <CustomSelect
-                      label=""
-                      id="needs-assessment-year"
-                      {...field}
-                      options={year}
-                      isMulti={false}
-                      placeholder="Select Year"
-                    />
-                  )}
-                />
-                {errors.yearOfNeedsAssessment && (
-                  <p className="text-red-500 text-xs mt-1">Pleas select year</p>
-                )}
+
               </div>
             </div>
 
@@ -512,6 +531,32 @@ const EditTrustEstablishmentForm = observer(() => {
               />
               {errors.statusOfNeedsAssessment && (
                 <p className="text-red-500 text-xs mt-1">{String(errors?.statusOfNeedsAssessment?.message!)}</p>
+              )}
+              {Number(watchedStatusOfNeedsAssessment) === 1 && (
+                <>
+                  <h3 className="font-semibold text-xl text-black capitalize">
+                    Year Of Needs Assessment
+                  </h3>
+                  <Controller
+                    control={control}
+                    name="yearOfNeedsAssessment"
+                    rules={{ required: true }}
+                    render={({ field }) => (
+                      <CustomSelect
+                        label=""
+                        id="needs-assessment-year"
+                        {...field}
+                        options={year}
+                        isMulti={false}
+                        placeholder="Select Year"
+                      />
+                    )}
+                  />
+                  {errors.yearOfNeedsAssessment && (
+                    <p className="text-red-500 text-xs mt-1">Pleas select year</p>
+                  )}
+
+                </>
               )}
 
               {/* Were the community women consulted? */}
@@ -715,9 +760,9 @@ const EditTrustEstablishmentForm = observer(() => {
                 width="w-fit"
               />
               <Button padding="py-3" buttonText={trustEstablishmentStore.isSubmitting ? "Submitting..." : "Save Changes"} />
-            <button className="px-3 py-2 rounded-md border border-black text-black font-medium text-sm" onClick={setSwitch}>
-              Back to Dashboard
-            </button>
+              <button className="px-3 py-2 rounded-md border border-black text-black font-medium text-sm" onClick={setSwitch}>
+                Back to Dashboard
+              </button>
             </div>
           </div>
 
