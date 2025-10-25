@@ -40,7 +40,13 @@ const EditTrustEstablishmentForm = observer(() => {
   useEffect(() => {
     if (Number(watchedStatusOfNeedsAssessment) !== 1) {
       try {
+        // clear selected year when needs assessment isn't completed
         setValue('yearOfNeedsAssessment', { label: '', value: '' });
+        // set sensible defaults for hidden consultation radios so they don't block submit
+        setValue('communityWomenConsulted', { label: '', value: '' });
+        setValue('pwDsConsulted', { label: '', value: '' });
+        setValue('communityYouthsConsulted', { label: '', value: '' });
+        setValue('communityLeadershipConsulted', { label: '', value: '' });
       } catch (e) { }
     }
   }, [watchedStatusOfNeedsAssessment, setValue]);
@@ -94,7 +100,7 @@ const EditTrustEstablishmentForm = observer(() => {
         pwDsConsulted: String(data.pwDsConsulted),
         communityYouthsConsulted: String(data.communityYouthsConsulted),
         communityLeadershipConsulted: String(data.communityLeadershipConsulted),
-        attendanceSheet: String(data.attendanceSheet),
+        // attendanceSheet: String(data.attendanceSheet),
         distributionMatrixDevelopedBySettlor: data.distributionMatrixDevelopedBySettlor ? "1" : "0",
         trustDistributionMatrixDocument: undefined,
         opex: Array.isArray(data.settlorOperationalExpenditures)
@@ -159,17 +165,17 @@ const EditTrustEstablishmentForm = observer(() => {
         trustId: trustStore.selectedTrustId as string,
         admin: data.admin.value as string,
         advisoryCommitteeConstitutedAndInaugurated: Number(data.advisoryCommitteeConstitutedAndInaugurated),
-        attendanceSheet: Number(data.attendanceSheet),
+        // attendanceSheet: Number(data.attendanceSheet),
         botConstitutedAndInaugurated: Number(data.botConstitutedAndInaugurated),
         fundsReceive: totalFunds,
-        communityLeadershipConsulted: Number(data.communityLeadershipConsulted),
-        communityWomenConsulted: Number(data.communityWomenConsulted),
-        communityYouthsConsulted: Number(data.communityYouthsConsulted),
+        communityLeadershipConsulted:  Number(data.statusOfNeedsAssessment) === 1 ? Number(data.communityLeadershipConsulted):null,
+        communityWomenConsulted: Number(data.statusOfNeedsAssessment) === 1 ? Number(data.communityWomenConsulted) : null,
+        communityYouthsConsulted: Number(data.statusOfNeedsAssessment) === 1 ? Number(data.communityYouthsConsulted) : null,
         distributionMatrixDevelopedBySettlor: data.distributionMatrixDevelopedBySettlor == "0" ? false : true,
         isTrustDevelopmentPlanBudgetReadilyAvailable: Number(data.isTrustDevelopmentPlanBudgetReadilyAvailable),
         isTrustDevelopmentPlanReadilyAvailable: Number(data.isTrustDevelopmentPlanReadilyAvailable),
         managementCommitteeConstitutedAndInaugurated: Number(data.managementCommitteeConstitutedAndInaugurated),
-        pwDsConsulted: Number(data.pwDsConsulted),
+        pwDsConsulted: Number(data.statusOfNeedsAssessment) === 1 ? Number(data.pwDsConsulted) : null,
 
         statusOfNeedAssessment: Number(data.statusOfNeedsAssessment),
         trustRegisteredWithCAC: Number(data.trustRegisteredWithCAC),
@@ -534,16 +540,16 @@ const EditTrustEstablishmentForm = observer(() => {
               )}
               {Number(watchedStatusOfNeedsAssessment) === 1 && (
                 <>
-                  <h3 className="font-semibold text-xl text-black capitalize">
+                  {/* <h3 className="font-semibold text-xl text-black capitalize">
                     Year Of Needs Assessment
-                  </h3>
+                  </h3> */}
                   <Controller
                     control={control}
                     name="yearOfNeedsAssessment"
                     rules={{ required: true }}
                     render={({ field }) => (
                       <CustomSelect
-                        label=""
+                        label="Year Conducted"
                         id="needs-assessment-year"
                         {...field}
                         options={year}
@@ -556,75 +562,76 @@ const EditTrustEstablishmentForm = observer(() => {
                     <p className="text-red-500 text-xs mt-1">Pleas select year</p>
                   )}
 
+                  {/* Were the community women consulted? */}
+                  <CustomRadio
+                    name="communityWomenConsulted"
+                    control={control}
+                    rules={{ required: "Please select a status" }}
+                    label="Were the community women consulted?"
+                    options={[
+                      { value: "1", label: "Yes, jointly consulted" },
+                      { value: "2", label: "yes, separately consulted" },
+                      { value: "3", label: "No" },
+                      { value: "4", label: "Not in all communities" },
+                    ]}
+                  />
+                  {errors.communityWomenConsulted && (
+                    <p className="text-red-500 text-xs mt-1">{String(errors?.communityWomenConsulted?.message!)}</p>
+                  )}
+                  {/* Were the PwDs consulted? */}
+                  <CustomRadio
+                    name="pwDsConsulted"
+                    control={control}
+                    rules={{ required: "Please select a status" }}
+                    label="Were the PwDs consulted?"
+                    options={[
+                      { value: "1", label: "Yes, jointly consulted" },
+                      { value: "2", label: "yes, separately consulted" },
+                      { value: "3", label: "No" },
+                      { value: "4", label: "Not in all communities" },
+                    ]}
+                  />
+                  {errors.pwDsConsulted && (
+                    <p className="text-red-500 text-xs mt-1">{String(errors?.pwDsConsulted?.message!)}</p>
+                  )}
+                  {/* Were community Youths consulted? */}
+                  <CustomRadio
+                    name="communityYouthsConsulted"
+                    control={control}
+                    rules={{ required: "Please select a status" }}
+                    label="Were community Youths consulted?"
+                    options={[
+                      { value: "1", label: "Yes, jointly consulted" },
+                      { value: "2", label: "yes, separately consulted" },
+                      { value: "3", label: "No" },
+                      { value: "4", label: "Not in all communities" },
+                    ]}
+                  />
+                  {errors.communityYouthsConsulted && (
+                    <p className="text-red-500 text-xs mt-1">{String(errors?.communityYouthsConsulted?.message!)}</p>
+                  )}
+                  {/* Were community leadership consulted? */}
+                  <CustomRadio
+                    name="communityLeadershipConsulted"
+                    control={control}
+                    rules={{ required: "Please select a status" }}
+                    label="Were community leadership consulted?"
+                    options={[
+                      { value: "1", label: "Yes, jointly consulted" },
+                      { value: "2", label: "yes, separately consulted" },
+                      { value: "3", label: "No" },
+                      { value: "4", label: "Not in all communities" },
+                    ]}
+                  />
+                  {errors.communityLeadershipConsulted && (
+                    <p className="text-red-500 text-xs mt-1">{String(errors?.communityLeadershipConsulted?.message!)}</p>
+                  )}
+
                 </>
               )}
 
-              {/* Were the community women consulted? */}
-              <CustomRadio
-                name="communityWomenConsulted"
-                control={control}
-                rules={{ required: "Please select a status" }}
-                label="Were the community women consulted?"
-                options={[
-                  { value: "1", label: "Yes" },
-                  { value: "2", label: "In progress" },
-                  { value: "3", label: "No" },
-                  { value: "4", label: "Not in all communities" },
-                ]}
-              />
-              {errors.communityWomenConsulted && (
-                <p className="text-red-500 text-xs mt-1">{String(errors?.communityWomenConsulted?.message!)}</p>
-              )}
-              {/* Were the PwDs consulted? */}
-              <CustomRadio
-                name="pwDsConsulted"
-                control={control}
-                rules={{ required: "Please select a status" }}
-                label="Were the PwDs consulted?"
-                options={[
-                  { value: "1", label: "Yes" },
-                  { value: "2", label: "In progress" },
-                  { value: "3", label: "No" },
-                  { value: "4", label: "Not in all communities" },
-                ]}
-              />
-              {errors.pwDsConsulted && (
-                <p className="text-red-500 text-xs mt-1">{String(errors?.pwDsConsulted?.message!)}</p>
-              )}
-              {/* Were community Youths consulted? */}
-              <CustomRadio
-                name="communityYouthsConsulted"
-                control={control}
-                rules={{ required: "Please select a status" }}
-                label="Were community Youths consulted?"
-                options={[
-                  { value: "1", label: "Yes" },
-                  { value: "2", label: "In progress" },
-                  { value: "3", label: "No" },
-                  { value: "4", label: "Not in all communities" },
-                ]}
-              />
-              {errors.communityYouthsConsulted && (
-                <p className="text-red-500 text-xs mt-1">{String(errors?.communityYouthsConsulted?.message!)}</p>
-              )}
-              {/* Were community leadership consulted? */}
-              <CustomRadio
-                name="communityLeadershipConsulted"
-                control={control}
-                rules={{ required: "Please select a status" }}
-                label="Were community leadership consulted?"
-                options={[
-                  { value: "1", label: "Yes" },
-                  { value: "2", label: "In progress" },
-                  { value: "3", label: "No" },
-                  { value: "4", label: "Not in all communities" },
-                ]}
-              />
-              {errors.communityLeadershipConsulted && (
-                <p className="text-red-500 text-xs mt-1">{String(errors?.communityLeadershipConsulted?.message!)}</p>
-              )}
               {/* Attach attendance sheet (optional) */}
-              <CustomRadio
+              {/* <CustomRadio
                 name="attendanceSheet"
                 control={control}
                 rules={{ required: "Please select a status" }}
@@ -638,7 +645,7 @@ const EditTrustEstablishmentForm = observer(() => {
               />
               {errors.attendanceSheet && (
                 <p className="text-red-500 text-xs mt-1">{String(errors?.attendanceSheet?.message!)}</p>
-              )}
+              )} */}
             </div>
           </div>
           {/* NEXT */}

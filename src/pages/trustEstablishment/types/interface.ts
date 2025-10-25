@@ -51,11 +51,11 @@ export interface ITrustEstablishmentPayload extends BaseCompletionItem {
     admin: string,
     yearOfNeedsAssessment: number | null,
     statusOfNeedAssessment: number,
-    communityWomenConsulted: number,
-    pwDsConsulted: number,
-    communityYouthsConsulted: number,
-    communityLeadershipConsulted: number,
-    attendanceSheet: number,
+    communityWomenConsulted: number | null,
+    pwDsConsulted: number | null,
+    communityYouthsConsulted: number | null,
+    communityLeadershipConsulted: number | null,
+    // attendanceSheet: number,
     distributionMatrixDevelopedBySettlor: boolean,
     trustDistributionMatrixDocument: string,
     trustDistributionMatrixDocumentMimeType: string,
@@ -120,7 +120,7 @@ export interface ITrustEstablishmentStatus {
     pwDsConsulted?: number | null;
     communityYouthsConsulted?: number | null;
     communityLeadershipConsulted?: number | null;
-    attendanceSheet?: number | null;
+    // attendanceSheet?: number | null;
     distributionMatrixDevelopedBySettlor?: boolean | null;
     trustDistributionMatrixDocument?: string | null;
     trustDistributionMatrixDocumentMimeType?: string | null;
@@ -139,7 +139,7 @@ export interface ISubFields {
     yearIncorporated: number,
     yearDeveloped: number,
     yearExpired: number,
-    communityLeadershipConsulted: number,
+    communityLeadershipConsulted: number | null,
     communityYouthsConsulted: number,
     communityWomenConsulted: number,
     pwDsConsulted: number,
