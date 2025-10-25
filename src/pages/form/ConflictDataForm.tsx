@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { useForm, Controller } from "react-hook-form";
 import MultiSelect from "../../components/elements/MultiSelect";
 import { ICauseOfConflict, IConflictPayload, IConflictPayloadData, IConflictStatus, ICourtLitigationStatus, IIssuesAddressBy, IPartiesInvolve } from "../conflict/types/interface";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { conflictStore as ConflictStore } from "../conflict/store/conflictStore";
 import { trustStore as TrustStore } from "../trust/store/trustStore";
 import IMG from "../../assets/icons/access2.svg"
@@ -20,8 +20,13 @@ const ConflictDataForm = observer(() => {
   const watchedIssueAddressBy = watch("issueAddressedBy");
   const { trustId } = useParams(); // if your route is /page/:id
   const [submitted, setSubmitted] = useState(false);
+  const [trustName, setTrustName] = useState("");
+  const location = useLocation();
   useEffect(() => {
     async function fetchData() {
+      const queryParams = new URLSearchParams(location.search);
+      const trustName = queryParams.get("trust_name");
+      setTrustName(trustName || "");
       // console.log("Fetching data for trustId:", trustId);
       if (trustId) {
         await trustStore.getATrust(trustId as string);
@@ -96,7 +101,7 @@ const ConflictDataForm = observer(() => {
             <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
               <div >
                 <h2 className="text-3xl font-bold text-center text-blue-800 mb-2">
-                  Conflict Data Reporting
+                  {trustName} Conflict Data Reporting
                 </h2>
                 <p className="text-center text-gray-600 mb-10 text-lg">
                   Help us understand and resolve issues better. Please fill out the details below.

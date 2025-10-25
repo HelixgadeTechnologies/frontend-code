@@ -2,7 +2,7 @@ import { observer } from "mobx-react-lite";
 import { createContext, useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { trustStore as TrustStore } from "../trust/store/trustStore";
 import IMG from "../../assets/icons/access2.svg"
 import IMG2 from "../../assets/icons/notfound.svg"
@@ -19,9 +19,14 @@ const SatisfactionDataForm = observer(() => {
     const { control, handleSubmit, reset } = useForm();
     const { trustId } = useParams(); // if your route is /page/:id
     const [submitted, setSubmitted] = useState(false);
+    const [trustName, setTrustName] = useState("");
+    const location = useLocation();
 
     useEffect(() => {
         async function fetchData() {
+            const queryParams = new URLSearchParams(location.search);
+            const trustName = queryParams.get("trust_name");
+            setTrustName(trustName || "");
             // console.log("Fetching data for trustId:", trustId);
             if (trustId) {
                 await trustStore.getATrust(trustId as string);
@@ -80,8 +85,9 @@ const SatisfactionDataForm = observer(() => {
                     {trustStore.trust?.disableSatisfactionSurvey == 1 && (
                         <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
                             <div >
+                               
                                 <h2 className="text-3xl font-bold text-center text-blue-800 mb-2">
-                                    Average Community Satisfaction Data Reporting
+                                   {trustName} Average Community Satisfaction Data Reporting
                                 </h2>
                                 <p className="text-center text-gray-600 mb-10 text-lg">
                                     Help us understand better. Please fill out the details below.

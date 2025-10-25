@@ -57,12 +57,12 @@ const TrustSettingsPage = observer(() => {
       label: "Conflict Survey Form",
       description: "Enable or disable the conflict survey form for this trust.",
       value: trustStore.setConflictForm,
-      url: `${window.location.protocol}//${window.location.host}/conflict/${trustStore.selectedTrustId}`,
+      url: `${window.location.protocol}//${window.location.host}/conflict/${trustStore.selectedTrustId}?trust_name=${trustStore.trust.trustName}`,
       onChange: (value: boolean) => {
 
         trustStore.setConflictForm = value;
         const payloadType: ISurveyType = { type: "CONFLICT" };
-        const hostUrl = `${window.location.protocol}//${window.location.host}/conflict/${trustStore.selectedTrustId}`;
+        const hostUrl = `${window.location.protocol}//${window.location.host}/conflict/${trustStore.selectedTrustId}?trust_name=${trustStore.trust.trustName}`;
         onSubmit(payloadType, hostUrl);
 
       }
@@ -72,12 +72,12 @@ const TrustSettingsPage = observer(() => {
       label: "Community Satisfaction Survey Form",
       description: "Enable or disable the community satisfaction survey form for this trust.",
       value: trustStore.setSatisfactionForm,
-      url: `${window.location.protocol}//${window.location.host}/satisfaction/${trustStore.selectedTrustId}`,
+      url: `${window.location.protocol}//${window.location.host}/satisfaction/${trustStore.selectedTrustId}?trust_name=${trustStore.trust.trustName}`,
       onChange: (value: boolean) => {
 
         trustStore.setSatisfactionForm = value;
         const payloadType: ISurveyType = { type: "SATISFACTION" };
-        const hostUrl = `${window.location.protocol}//${window.location.host}/satisfaction/${trustStore.selectedTrustId}`;
+        const hostUrl = `${window.location.protocol}//${window.location.host}/satisfaction/${trustStore.selectedTrustId}?trust_name=${trustStore.trust.trustName}`;
         onSubmit(payloadType, hostUrl);
 
       }
@@ -87,12 +87,12 @@ const TrustSettingsPage = observer(() => {
       label: "Economic Impact Survey Form",
       description: "Enable or disable the economic impact survey form for this trust.",
       value: trustStore.setEconomicImpactForm,
-      url: `${window.location.protocol}//${window.location.host}/economic-impact/${trustStore.selectedTrustId}`,
+      url: `${window.location.protocol}//${window.location.host}/economic-impact/${trustStore.selectedTrustId}?trust_name=${trustStore.trust.trustName}`,
       onChange: (value: boolean) => {
 
         trustStore.setEconomicImpactForm = value;
         const payloadType: ISurveyType = { type: "ECONOMIC" };
-        const hostUrl = `${window.location.protocol}//${window.location.host}/economic-impact/${trustStore.selectedTrustId}`;
+        const hostUrl = `${window.location.protocol}//${window.location.host}/economic-impact/${trustStore.selectedTrustId}?trust_name=${trustStore.trust.trustName}`;
         onSubmit(payloadType, hostUrl);
 
       }
