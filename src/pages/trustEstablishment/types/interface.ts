@@ -176,7 +176,7 @@ export interface IFinishedDashboard {
     YEAR_EXPIRED: number,
     YEAR_NEEDS: number,
     STATUS_OF_NEED_ASSESSMENT: number,
-    LEADER_CONSULTED: number,
+    LEADER_CONSULTED: number | null,
     YOUTH_CONSULTED: number,
     WOMEN_CONSULTED: number,
     PWD_CONSULTED: number,
