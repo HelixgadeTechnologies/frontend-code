@@ -50,6 +50,7 @@ class TrustStore implements ITrustStore {
             "totalMaleManagementCommitteeMembers",
             "totalFemaleManagementCommitteeMembers",
             "totalPwdManagementCommitteeMembers",
+            "trustCommunities"
         ];
 
         // Filter out excluded fields

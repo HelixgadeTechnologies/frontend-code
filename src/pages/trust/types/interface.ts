@@ -80,6 +80,7 @@ export interface ITrust extends BaseItem {
     disableConflictSurvey: number;
     disableSatisfactionSurvey: number;
     disableEconomicImpactSurvey: number;
+    completionStatus?:number
 }
 interface BaseItem {
     id: string;
@@ -119,6 +120,7 @@ export interface ITrustList extends BaseItem {
     disableConflictSurvey: number;
     disableSatisfactionSurvey: number;
     disableEconomicImpactSurvey: number;
+    completionStatus?: number;
 }
 
 export interface ITrustPayloadData {

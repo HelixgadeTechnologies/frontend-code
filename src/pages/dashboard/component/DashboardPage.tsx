@@ -212,7 +212,7 @@ const DashboardPage: React.FC = observer(() => {
         color: '#222',
         font: { weight: 'bold' },
         formatter: function (value: number) {
-          return `${value}`;
+          return `${value}%`;
         },
       },
     },

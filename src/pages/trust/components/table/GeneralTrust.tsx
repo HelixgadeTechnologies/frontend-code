@@ -96,6 +96,19 @@ const GeneralTrust = observer(() => {
         //   );
         // },
       },
+        {
+        id: "completionStatus",
+        header: "Status",
+        accessorKey: "completionStatus",
+        cell: ({ row }: { row: { original: ITrustList } }) => {
+          const completionStatus = row.original.completionStatus;
+          return (
+            <span>
+              {`${completionStatus}%`}
+            </span>
+          );
+        },
+      },
     ],
     [],
   );
