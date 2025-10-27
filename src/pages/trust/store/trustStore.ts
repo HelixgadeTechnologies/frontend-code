@@ -1,5 +1,5 @@
 import { makeAutoObservable, ObservableMap, toJS } from "mobx"
-import { IStateAndLGA, ISurveyTypePayload, ITrust, ITrustList, ITrustPayload, ITrustPayloadData, ITrustStore, IUploadResponse, IUploadValidationResponse} from "../types/interface";
+import { IStateAndLGA, ISurveyTypePayload, ITrust, ITrustList, ITrustPayload, ITrustPayloadData, ITrustStore, IUploadResponse, IUploadValidationResponse } from "../types/interface";
 import { trustService } from "../service/trustService";
 import { TabType } from "../../project/types/interface";
 import data from "../../../utils/stateAndLg.json"
@@ -30,15 +30,30 @@ class TrustStore implements ITrustStore {
     uploadResponse: IUploadResponse = {} as IUploadResponse;
     activeUploadTab: number = 0;
     uploadErrorCount: number = 0;
-    isValidate:boolean = true
+    isValidate: boolean = true
     constructor() {
         makeAutoObservable(this);
     }
     calculateTrustCompletion(data: ITrustPayloadData): number {
         const keys = Object.keys(data) as (keyof ITrustPayloadData)[];
 
-        // Filter out keys you want to skip
-        const relevantKeys = keys.filter(key => key !== 'completionStatus');
+        // 🧩 List of fields to exclude from the completion calculation
+        const excludeFields: (keyof ITrustPayloadData)[] = [
+            'completionStatus',
+            'trustId',
+            "totalMaleBotMembers",
+            "totalFemaleBotMembers",
+            "totalPwdBotMembers",
+            "totalMaleAdvisoryCommitteeMembers",
+            "totalFemaleAdvisoryCommitteeMembers",
+            "totalPwdAdvisoryCommitteeMembers",
+            "totalMaleManagementCommitteeMembers",
+            "totalFemaleManagementCommitteeMembers",
+            "totalPwdManagementCommitteeMembers",
+        ];
+
+        // Filter out excluded fields
+        const relevantKeys = keys.filter(key => !excludeFields.includes(key));
 
         const totalFields = relevantKeys.length;
 
@@ -61,6 +76,7 @@ class TrustStore implements ITrustStore {
         const percentage = (filledFields / totalFields) * 100;
         return Math.round(percentage);
     }
+
     getFormSteps(): void {
         const tabs: TabType[] = [
             {
@@ -307,7 +323,7 @@ class TrustStore implements ITrustStore {
         try {
             this.isSaving = true;
             const res = await trustService.saveValidData(this.uploadValidationResult.allTrustData);
-            const data:IUploadResponse= res.data
+            const data: IUploadResponse = res.data
             this.uploadResponse = data;
             this.uploadErrorCount = data.totalFailed
             return true

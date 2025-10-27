@@ -44,6 +44,20 @@ class TrustEstablishmentStore implements ITrustEstablishmentStore {
             'completionStatus',
             'cscDocument',
             'cscDocumentMimeType',
+            'developmentPlanBudgetDocument',
+            'developmentPlanBudgetDocumentMimeType',
+            'developmentPlanDocument',
+            'developmentPlanDocumentMimeType',
+            'trustDistributionMatrixDocument',
+            'trustDistributionMatrixDocumentMimeType',
+            'communityLeadershipConsulted',
+            'communityWomenConsulted',
+            'communityYouthsConsulted',
+            'pwDsConsulted',
+            'yearDeveloped',
+            'yearExpired',
+            'yearIncorporated',
+            'yearOfNeedsAssessment'
         ];
 
         const relevantKeys = keys.filter(key => !excludedKeys.includes(key));
