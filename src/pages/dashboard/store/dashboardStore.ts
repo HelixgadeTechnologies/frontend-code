@@ -61,7 +61,34 @@ class DashboardStore implements IDashboardStore {
             },
             // CONFLICT_RESOLUTION_OVER: data.CONFLICT_RESOLUTION_OVER,
             BOT_INAUGURATION_CHECK: data.BOT_INAUGURATION_CHECK[0],
-            COMMUNITY_LEADERSHIP_PERCENTAGE: data.COMMUNITY_LEADERSHIP_PERCENTAGE[0],
+
+            
+            COMMUNITY_LEADERSHIP_PERCENTAGE:{
+                COMMUNITY_LEADERSHIP_PERCENTAGE:[
+                    data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].communityLeadership_opt1_pct,
+                    data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].communityLeadership_opt2_pct,
+                    data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].communityLeadership_opt3_pct,
+                    data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].communityLeadership_opt4_pct,
+                ],
+                COMMUNITY_YOUTHS_PERCENTAGE:[
+                    data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].communityYouths_opt1_pct,
+                    data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].communityYouths_opt2_pct,
+                    data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].communityYouths_opt3_pct,
+                    data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].communityYouths_opt4_pct,
+                ],
+                COMMUNITY_WOMEN_PERCENTAGE:[
+                    data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].communityWomen_opt1_pct,
+                    data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].communityWomen_opt2_pct,
+                    data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].communityWomen_opt3_pct,
+                    data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].communityWomen_opt4_pct,
+                ],
+                PWDS_PERCENTAGE:[   
+                    data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].pwDs_opt1_pct,
+                    data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].pwDs_opt2_pct,
+                    data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].pwDs_opt3_pct,
+                    data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].pwDs_opt4_pct,
+                ]
+            },
             NEEDS_ASSESSMENT_PERCENTAGE: data.NEEDS_ASSESSMENT_PERCENTAGE[0],
             FUNDS_DISTRIBUTION_PERCENTAGE: {
                 yearReceived: data.FUNDS_DISTRIBUTION_PERCENTAGE.map(item => item.yearReceived),

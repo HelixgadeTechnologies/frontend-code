@@ -102,8 +102,8 @@ const EstablishmentDashboard = observer(() => {
     return "bg-yellow-100 text-yellow-700 px-3 py-1 rounded text-xs font-medium";
   }
   const translator = (data: number): string => {
-    if (data == 1) return "YES";
-    if (data == 2) return "IN PROGRESS";
+    if (data == 1) return "YES, JOINTLY CONDUCTED";
+    if (data == 2) return "YES, SEPARATELY CONDUCTED";
     if (data == 3) return "NO";
     return "NOT IN ALL COMMUNITIES";
   }

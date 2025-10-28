@@ -15,7 +15,7 @@ import { observer } from "mobx-react-lite";
 import { toast } from "react-toastify";
 import { settingStore as SettingStore } from "../../../Settings/store/settingStore"
 import { IAdmin } from "../../../Settings/types/interface";
-import { OpexFieldsArray } from "./OpexFieldsArray";
+// import { OpexFieldsArray } from "./OpexFieldsArray";
 import { IFundsReceived, IOperationalExpenditure, ITrustEstablishmentPayload } from "../../types/interface";
 import { trustStore as TrustStore } from "../../../trust/store/trustStore"
 import { convertFileToBase64 } from "../../../../utils/helpers";
@@ -35,6 +35,7 @@ const TrustEstablishmentForm = observer(() => {
   const watchedTrustRegisteredWithCAC = watch("trustRegisteredWithCAC");
   const watchedIsTrustDevelopmentPlanReadilyAvailable = watch("isTrustDevelopmentPlanReadilyAvailable");
   const watchedStatusOfNeedsAssessment = watch("statusOfNeedsAssessment");
+  const watchedIsTrustDevelopmentPlanBudgetReadilyAvailable = watch("isTrustDevelopmentPlanBudgetReadilyAvailable");
 
   // clear dependent year fields when parent is not 'Yes' (value '1')
   useEffect(() => {
@@ -121,14 +122,14 @@ const TrustEstablishmentForm = observer(() => {
         advisoryCommitteeConstitutedAndInaugurated: Number(data.advisoryCommitteeConstitutedAndInaugurated),
         // attendanceSheet: Number(data.attendanceSheet),
         botConstitutedAndInaugurated: Number(data.botConstitutedAndInaugurated),
-        communityLeadershipConsulted: Number(data.statusOfNeedsAssessment) === 1 ?  Number(data.communityLeadershipConsulted) : null,
-        communityWomenConsulted:  Number(data.statusOfNeedsAssessment) === 1 ? Number(data.communityWomenConsulted): null,
-        communityYouthsConsulted:  Number(data.statusOfNeedsAssessment) === 1 ? Number(data.communityYouthsConsulted): null,
+        communityLeadershipConsulted: Number(data.statusOfNeedsAssessment) === 1 ? Number(data.communityLeadershipConsulted) : null,
+        communityWomenConsulted: Number(data.statusOfNeedsAssessment) === 1 ? Number(data.communityWomenConsulted) : null,
+        communityYouthsConsulted: Number(data.statusOfNeedsAssessment) === 1 ? Number(data.communityYouthsConsulted) : null,
         distributionMatrixDevelopedBySettlor: data.distributionMatrixDevelopedBySettlor == "0" ? false : true,
         isTrustDevelopmentPlanBudgetReadilyAvailable: Number(data.isTrustDevelopmentPlanBudgetReadilyAvailable),
         isTrustDevelopmentPlanReadilyAvailable: Number(data.isTrustDevelopmentPlanReadilyAvailable),
         managementCommitteeConstitutedAndInaugurated: Number(data.managementCommitteeConstitutedAndInaugurated),
-        pwDsConsulted:  Number(data.statusOfNeedsAssessment) === 1 ? Number(data.pwDsConsulted):null,
+        pwDsConsulted: Number(data.statusOfNeedsAssessment) === 1 ? Number(data.pwDsConsulted) : null,
         statusOfNeedAssessment: Number(data.statusOfNeedsAssessment),
         fundsReceive: totalFunds,
         trustRegisteredWithCAC: Number(data.trustRegisteredWithCAC),
@@ -328,6 +329,69 @@ const TrustEstablishmentForm = observer(() => {
               {errors.isTrustDevelopmentPlanReadilyAvailable && (
                 <p className="text-red-500 text-xs mt-1">{String(errors?.isTrustDevelopmentPlanReadilyAvailable?.message!)}</p>
               )}
+
+
+              {Number(watchedIsTrustDevelopmentPlanReadilyAvailable) === 1 && (
+                <>
+                  <div className="lg:flex gap-x-4 justify-between">
+                    <div className="flex-1">
+                      <label className="block text-sm font-medium text-gray-700">
+                        Year Developed
+                      </label>
+                      <FormInput
+                        label=""
+                        name="yearDeveloped"
+                        type="text"
+                        placeholder="2021"
+                        register={register}
+                        // registerOptions={{
+                        //   required: "Field is required",
+                        // }}
+                        className="mt-4 w-full border py-3 text-center  border-[#525866] focus:border-primary-100 rounded-md"
+                      // error={errors.yearDeveloped}
+                      />
+                    </div>
+
+                    <div className="flex-1">
+                      <label className="block text-sm font-medium text-gray-700">
+                        Year Expired
+                      </label>
+                      <FormInput
+                        label=""
+                        name="yearExpired"
+                        type="text"
+                        placeholder="2021"
+                        register={register}
+                        // registerOptions={{
+                        //   required: "Field is required",
+                        // }}
+                        className="mt-4 w-full border py-3 text-center  border-[#525866] focus:border-primary-100 rounded-md"
+                      // error={errors.yearExpired}
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-[#8C94A6] text-base mb-2 block">
+                      If yes? Attach
+                    </label>
+                    <FileUpload
+                      name="developmentPlanDocument"
+                      control={control}
+                      label="Upload your document"
+                      helperText="PDF format • Max. 5MB"
+                      accept="application/pdf"
+                      maxSize={5 * 1024 * 1024} // 5MB
+                      buttonText="Upload"
+
+                    />
+                    {errors.developmentPlanDocument && (
+                      <p className="text-red-500 text-xs mt-1">select a file</p>
+                    )}
+                  </div>
+                </>
+              )}
+
+
               <CustomRadio
                 name="isTrustDevelopmentPlanBudgetReadilyAvailable"
                 control={control}
@@ -342,65 +406,24 @@ const TrustEstablishmentForm = observer(() => {
               {errors.isTrustDevelopmentPlanBudgetReadilyAvailable && (
                 <p className="text-red-500 text-xs mt-1">{String(errors?.isTrustDevelopmentPlanBudgetReadilyAvailable?.message!)}</p>
               )}
-
-              {Number(watchedIsTrustDevelopmentPlanReadilyAvailable) === 1 && (
-                <div className="lg:flex gap-x-4 justify-between">
-                  <div className="flex-1">
-                    <label className="block text-sm font-medium text-gray-700">
-                      Year Developed
-                    </label>
-                    <FormInput
-                      label=""
-                      name="yearDeveloped"
-                      type="text"
-                      placeholder="2021"
-                      register={register}
-                      // registerOptions={{
-                      //   required: "Field is required",
-                      // }}
-                      className="mt-4 w-full border py-3 text-center  border-[#525866] focus:border-primary-100 rounded-md"
-                    // error={errors.yearDeveloped}
-                    />
-                  </div>
-
-                  <div className="flex-1">
-                    <label className="block text-sm font-medium text-gray-700">
-                      Year Expired
-                    </label>
-                    <FormInput
-                      label=""
-                      name="yearExpired"
-                      type="text"
-                      placeholder="2021"
-                      register={register}
-                      // registerOptions={{
-                      //   required: "Field is required",
-                      // }}
-                      className="mt-4 w-full border py-3 text-center  border-[#525866] focus:border-primary-100 rounded-md"
-                    // error={errors.yearExpired}
-                    />
-                  </div>
+              {watchedIsTrustDevelopmentPlanBudgetReadilyAvailable === "1" && (
+                <div>
+                  <FileUpload
+                    name="developmentPlanBudgetDocument"
+                    control={control}
+                    label="Upload your document"
+                    helperText="PDF format • Max. 5MB"
+                    accept="application/pdf"
+                    maxSize={5 * 1024 * 1024} // 5MB
+                    buttonText="Upload"
+                  />
+                  {errors.developmentPlanBudgetDocument && (
+                    <p className="text-red-500 text-xs mt-1">{String(errors?.developmentPlanBudgetDocument?.message!)}</p>
+                  )}
                 </div>
+
               )}
 
-              <div>
-                <label className="text-[#8C94A6] text-base mb-2 block">
-                  If yes? Attach
-                </label>
-                <FileUpload
-                  name="developmentPlanDocument"
-                  control={control}
-                  label="Upload your document"
-                  helperText="PDF format • Max. 5MB"
-                  accept="application/pdf"
-                  maxSize={5 * 1024 * 1024} // 5MB
-                  buttonText="Upload"
-
-                />
-                {errors.developmentPlanDocument && (
-                  <p className="text-red-500 text-xs mt-1">select a file</p>
-                )}
-              </div>
             </div>
           </section>
 
@@ -624,15 +647,15 @@ const TrustEstablishmentForm = observer(() => {
             </div>
 
             {/* Settlor Operational Expenditure (OPEX) */}
-            <h2 className="font-semibold text-xl text-black mb-1 mt-8">
+            {/* <h2 className="font-semibold text-xl text-black mb-1 mt-8">
               Settlor Operational Expenditure (OPEX)
             </h2>
             <p className="text-sm text-gray-500 mb-4">
               This will be annually starting from 2021
             </p>
-            <OpexFieldsArray control={control} register={register} />
+            <OpexFieldsArray control={control} register={register} /> */}
             {/* Is the trust development plan budget readily available? */}
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Is the trust development plan budget readily available?
               </label>
@@ -650,21 +673,8 @@ const TrustEstablishmentForm = observer(() => {
                   <p className="text-red-500 text-xs mt-1">{String(errors?.isTrustDevPlanBudgetAvailable?.message!)}</p>
                 )}
               </div>
-              <div>
-                <FileUpload
-                  name="developmentPlanBudgetDocument"
-                  control={control}
-                  label="Upload your document"
-                  helperText="PDF format • Max. 5MB"
-                  accept="application/pdf"
-                  maxSize={5 * 1024 * 1024} // 5MB
-                  buttonText="Upload"
-                />
-                {errors.developmentPlanBudgetDocument && (
-                  <p className="text-red-500 text-xs mt-1">{String(errors?.developmentPlanBudgetDocument?.message!)}</p>
-                )}
-              </div>
-            </div>
+
+            </div> */}
 
             {/* Action Buttons */}
             <div className="mt-8 flex flex-col lg:flex-row items-center gap-8 justify-between">

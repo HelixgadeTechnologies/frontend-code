@@ -1,12 +1,13 @@
 import { Controller, useFieldArray } from "react-hook-form";
 
 import { year, currencyOptions } from "../../../../utils/data";
-import { Button, CustomSelect, FormInput } from "../../../../components/elements";
+import { CustomSelect, FormInput } from "../../../../components/elements";
 import { observer } from "mobx-react-lite";
 
 export const OpexFieldsArray = observer(({ control, register }: { control: any, register: any }) => {
 
-    const { fields, append, remove } = useFieldArray({
+    const { fields, remove } = useFieldArray({
+        // const { fields, append, remove } = useFieldArray({
         control,
         name: "opex", // This will be an array in your form data
     });
@@ -89,7 +90,7 @@ export const OpexFieldsArray = observer(({ control, register }: { control: any, 
                     </div>
                 </div>
             ))}
-            <div className="flex justify-center my-6">
+            {/* <div className="flex justify-center my-6">
                 <Button
                     type="button"
                     className="border text-black bg-white border-blue-800 rounded-lg py-2 px-4 lg:px-10"
@@ -97,7 +98,7 @@ export const OpexFieldsArray = observer(({ control, register }: { control: any, 
                     width="w-fit"
                     onClick={() => append({ year: "", currency: "", amount: "" })}
                 />
-            </div>
+            </div> */}
         </div>
     );
 })

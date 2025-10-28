@@ -39,7 +39,7 @@ export interface ITrustEstablishmentPayload extends BaseCompletionItem {
     botConstitutedAndInaugurated: number,
     managementCommitteeConstitutedAndInaugurated: number,
     advisoryCommitteeConstitutedAndInaugurated: number,
-    isTrustDevelopmentPlanReadilyAvailable: number,
+    isTrustDevelopmentPlanReadilyAvailable: number | null,
     isTrustDevelopmentPlanBudgetReadilyAvailable: number,
     yearDeveloped: number | null,
     yearExpired: number | null,

@@ -39,6 +39,17 @@ const GeneralDashboard: React.FC = observer(() => {
     const conflictStore = useContext(conflictStoreCTX);
     const projectStore = useContext(projectStoreCTX);
 
+        const doughnutColors = [
+        "#FF6384", // pink/red
+        "#36A2EB", // blue
+        "#FFCE56", // yellow
+        "#4BC0C0", // teal
+        "#9966FF", // purple
+        "#FF9F40", // orange
+        "#00C49A", // green
+        "#C0C0C0"  // gray
+    ];
+
     const renderStars = (rating: number, max = 5) => {
         return (
             <span className="flex items-center gap-1">
@@ -132,6 +143,39 @@ const GeneralDashboard: React.FC = observer(() => {
                 label: "Pwds",
                 data: (dashboardStore.dashboardData?.EMPLOYEE_PER_PROJECT ?? []).map(e => Number(e?.numberOfPwDsEmployedByContractor) || 0),
                 backgroundColor: "#EF8",
+                borderRadius: 4,
+                stack: "Stack 0",
+            },
+        ],
+    };
+    const BoTData2 = {
+        labels: ["Leadership consulted", "Women Consulted", "Youths Consulted", "PwDs Consulted",],
+        datasets: [
+            {
+                label: "Yes, jointly consulted",
+                data: dashboardStore.dashboardData?.COMMUNITY_LEADERSHIP_PERCENTAGE?.COMMUNITY_LEADERSHIP_PERCENTAGE ?? [],
+                backgroundColor: doughnutColors[0],
+                borderRadius: 4,
+                stack: "Stack 0",
+            },
+            {
+                label: "yes, separately consulted",
+                data: dashboardStore.dashboardData?.COMMUNITY_LEADERSHIP_PERCENTAGE?.COMMUNITY_WOMEN_PERCENTAGE ?? [],
+                backgroundColor: doughnutColors[1],
+                borderRadius: 4,
+                stack: "Stack 0",
+            },
+            {
+                label: "No",
+                data: dashboardStore.dashboardData?.COMMUNITY_LEADERSHIP_PERCENTAGE?.COMMUNITY_YOUTHS_PERCENTAGE ?? [],
+                backgroundColor: doughnutColors[2],
+                borderRadius: 4,
+                stack: "Stack 0",
+            },
+            {
+                label: "Not in all communities",
+                data: dashboardStore.dashboardData?.COMMUNITY_LEADERSHIP_PERCENTAGE?.PWDS_PERCENTAGE ?? [],
+                backgroundColor: doughnutColors[3],
                 borderRadius: 4,
                 stack: "Stack 0",
             },
@@ -658,16 +702,7 @@ const GeneralDashboard: React.FC = observer(() => {
             },
         ],
     };
-    const doughnutColors = [
-        "#FF6384", // pink/red
-        "#36A2EB", // blue
-        "#FFCE56", // yellow
-        "#4BC0C0", // teal
-        "#9966FF", // purple
-        "#FF9F40", // orange
-        "#00C49A", // green
-        "#C0C0C0"  // gray
-    ];
+
     const setSelectedYear = useCallback((v: string) => {
         async function getInfo() {
             dashboardStore.selectedYear = Number(v)
@@ -1021,7 +1056,10 @@ const GeneralDashboard: React.FC = observer(() => {
                     <span className="font-semibold text-base text-gray-900 mb-4 self-start">
                         Percentage of Trusts where host community leaders, women, youths, and PwDs were consulted during needs assessment.
                     </span>
-                    <Bar
+                    <div className="w-full max-w-4xl mx-auto" style={{ minHeight: "220px" }}>
+                        <Bar data={BoTData2} options={conflictBarOptions} />
+                    </div>
+                    {/* <Bar
                         data={{
                             labels: [
                                 "Leadership consulted",
@@ -1087,7 +1125,7 @@ const GeneralDashboard: React.FC = observer(() => {
                                 }
                             }
                         }}
-                    />
+                    /> */}
                 </div>
                 <div className="bg-white rounded-xl p-8 shadow flex flex-col md:flex-row items-center min-h-[320px]">
                     <div className="flex flex-col items-center ">
