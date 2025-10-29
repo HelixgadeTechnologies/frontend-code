@@ -56,7 +56,7 @@ export interface ITrustEstablishmentPayload extends BaseCompletionItem {
     communityYouthsConsulted: number | null,
     communityLeadershipConsulted: number | null,
     // attendanceSheet: number,
-    distributionMatrixDevelopedBySettlor: boolean,
+    distributionMatrixDevelopedBySettlor: number | null,
     trustDistributionMatrixDocument: string,
     trustDistributionMatrixDocumentMimeType: string,
     settlorOperationalExpenditures: Array<IOperationalExpenditure>
@@ -77,7 +77,7 @@ export interface IFundsDashboardData {
     capitalPercentage: number,
     reservePercentage: number
 }
-export interface IFundsStatusDashboardData{
+export interface IFundsStatusDashboardData {
     yearReceived: number,
     paymentCheck: number
 
@@ -121,7 +121,7 @@ export interface ITrustEstablishmentStatus {
     communityYouthsConsulted?: number | null;
     communityLeadershipConsulted?: number | null;
     // attendanceSheet?: number | null;
-    distributionMatrixDevelopedBySettlor?: boolean | null;
+    distributionMatrixDevelopedBySettlor?: number | null;
     trustDistributionMatrixDocument?: string | null;
     trustDistributionMatrixDocumentMimeType?: string | null;
     settlorOperationalExpenditures?: Array<IOperationalExpenditure>;

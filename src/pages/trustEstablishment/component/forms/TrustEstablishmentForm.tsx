@@ -125,7 +125,7 @@ const TrustEstablishmentForm = observer(() => {
         communityLeadershipConsulted: Number(data.statusOfNeedsAssessment) === 1 ? Number(data.communityLeadershipConsulted) : null,
         communityWomenConsulted: Number(data.statusOfNeedsAssessment) === 1 ? Number(data.communityWomenConsulted) : null,
         communityYouthsConsulted: Number(data.statusOfNeedsAssessment) === 1 ? Number(data.communityYouthsConsulted) : null,
-        distributionMatrixDevelopedBySettlor: data.distributionMatrixDevelopedBySettlor == "0" ? false : true,
+        distributionMatrixDevelopedBySettlor: Number(data.distributionMatrixDevelopedBySettlor),
         isTrustDevelopmentPlanBudgetReadilyAvailable: Number(data.isTrustDevelopmentPlanBudgetReadilyAvailable),
         isTrustDevelopmentPlanReadilyAvailable: Number(data.isTrustDevelopmentPlanReadilyAvailable),
         managementCommitteeConstitutedAndInaugurated: Number(data.managementCommitteeConstitutedAndInaugurated),
@@ -620,7 +620,8 @@ const TrustEstablishmentForm = observer(() => {
                 rules={{ required: "Please select a status" }}
                 options={[
                   { value: "1", label: "Yes" },
-                  { value: "0", label: "No" },
+                  { value: "2", label: "In progress" },
+                  { value: "3", label: "No" },
                 ]}
               />
               {errors.distributionMatrixDevelopedBySettlor && (
