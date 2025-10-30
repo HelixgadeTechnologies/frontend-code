@@ -11,7 +11,7 @@ import {
   ChartOptions,
   ArcElement,
 } from "chart.js";
-import { Doughnut, Line, Pie } from "react-chartjs-2";
+import { Doughnut, Pie } from "react-chartjs-2";
 import { trustEstablishmentStore as TrustEstablishmentStore } from "../../store/trustEstablishmentStore"
 import { observer } from "mobx-react-lite";
 import FileCard from "./FileCard";
@@ -39,44 +39,44 @@ const EstablishmentDashboard = observer(() => {
 
   const [type, setType] = useState<string | null>(null);
   const [url, setUrl] = useState<string | null>(null);
-  const chartOptions: ChartOptions<"line"> = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: "top" as const,
-        align: "end" as const, // Align legend to the end
-      },
-      title: {
-        display: false,
-        text: "Chart.js Line Chart",
-      },
-    },
-    scales: {
-      x: {
-        grid: {
-          display: false,
-        },
-      },
-      y: {
-        grid: {
-          tickBorderDash: [3, 3],
-        },
-      },
-    },
-  };
+  // const chartOptions: ChartOptions<"line"> = {
+  //   responsive: true,
+  //   maintainAspectRatio: false,
+  //   plugins: {
+  //     legend: {
+  //       position: "top" as const,
+  //       align: "end" as const, // Align legend to the end
+  //     },
+  //     title: {
+  //       display: false,
+  //       text: "Chart.js Line Chart",
+  //     },
+  //   },
+  //   scales: {
+  //     x: {
+  //       grid: {
+  //         display: false,
+  //       },
+  //     },
+  //     y: {
+  //       grid: {
+  //         tickBorderDash: [3, 3],
+  //       },
+  //     },
+  //   },
+  // };
 
-  const data1 = {
-    labels: trustEstablishmentStore.dashboardData?.TRENDS_YEAR,
-    datasets: [
-      {
-        label: "OPEX Trends",
-        data: trustEstablishmentStore.dashboardData?.TRENDS_AMOUNT || [0, 0, 0],
-        borderColor: "rgb(54, 162, 235)",
-        backgroundColor: "rgba(54, 162, 235, 0.5)",
-      },
-    ],
-  };
+  // const data1 = {
+  //   labels: trustEstablishmentStore.dashboardData?.TRENDS_YEAR,
+  //   datasets: [
+  //     {
+  //       label: "OPEX Trends",
+  //       data: trustEstablishmentStore.dashboardData?.TRENDS_AMOUNT || [0, 0, 0],
+  //       borderColor: "rgb(54, 162, 235)",
+  //       backgroundColor: "rgba(54, 162, 235, 0.5)",
+  //     },
+  //   ],
+  // };
   const data = {
     datasets: [
       {
@@ -352,34 +352,13 @@ const EstablishmentDashboard = observer(() => {
         </div>
 
         {/* OPEX Trends */}
-        <div className="bg-white rounded-lg p-5 shadow col-span-2 mt-6">
+        {/* <div className="bg-white rounded-lg p-5 shadow col-span-2 mt-6">
           <h3 className="font-semibold text-lg mb-2">OPEX Trends</h3>
           <div className="h-[320px] flex items-center justify-center text-gray-400">
             <Line options={chartOptions} data={data1} />
           </div>
-        </div>
-
-        {/* Trust Development Plan & Budget */}
-        <div className="bg-white rounded-lg p-5 shadow mt-6 flex flex-col items-center justify-center">
-          <h3 className="font-semibold text-lg mb-2">Trust Development Plan & Budget</h3>
-          {/* Replace this with your actual progress component */}
-          <div className="relative flex items-center justify-center w-44 h-44 my-4">
-            <Doughnut data={data} options={options} />
-            <span className="absolute text-3xl font-bold text-gray-900">{trustEstablishmentStore.dashboardData?.DEVELOP_PLAN_AND_BUDGET_PERCENTAGE!}%</span>
-          </div>
-          {/* <div className="relative flex items-center justify-center my-4">
-          <div className="w-40 h-40 ">
-            <Doughnut data={data} options={options} />
-          </div>
         </div> */}
-          <div className="flex justify-between w-full px-4 text-gray-500 text-sm">
-            <span>{trustEstablishmentStore.dashboardData?.YEAR_START}<br /><span className="text-xs">Year Started</span></span>
-            <span>{trustEstablishmentStore.dashboardData?.YEAR_EXPIRED}<br /><span className="text-xs">End Year</span></span>
-          </div>
-        </div>
-
-
-        <div className="rounded-xl mt-6 col-span-2 overflow-hidden">
+         <div className="rounded-xl mt-6 col-span-2 overflow-hidden">
 
           <div className="bg-[#F3F5F7] flex items-center justify-between px-6 py-4">
             <div>
@@ -423,6 +402,28 @@ const EstablishmentDashboard = observer(() => {
             </div>
           </div>
         </div>
+
+        {/* Trust Development Plan & Budget */}
+        <div className="bg-white rounded-lg p-5 shadow mt-6 flex flex-col items-center justify-center">
+          <h3 className="font-semibold text-lg mb-2">Trust Development Plan & Budget</h3>
+          {/* Replace this with your actual progress component */}
+          <div className="relative flex items-center justify-center w-44 h-44 my-4">
+            <Doughnut data={data} options={options} />
+            <span className="absolute text-3xl font-bold text-gray-900">{trustEstablishmentStore.dashboardData?.DEVELOP_PLAN_AND_BUDGET_PERCENTAGE!}%</span>
+          </div>
+          {/* <div className="relative flex items-center justify-center my-4">
+          <div className="w-40 h-40 ">
+            <Doughnut data={data} options={options} />
+          </div>
+        </div> */}
+          <div className="flex justify-between w-full px-4 text-gray-500 text-sm">
+            <span>{trustEstablishmentStore.dashboardData?.YEAR_START}<br /><span className="text-xs">Year Started</span></span>
+            <span>{trustEstablishmentStore.dashboardData?.YEAR_EXPIRED}<br /><span className="text-xs">End Year</span></span>
+          </div>
+        </div>
+
+
+       
 
         {/* Trust Compliance & Distribution Matrix */}
         {/* <div className="bg-white rounded-lg p-5 shadow mt-6 flex-1">
