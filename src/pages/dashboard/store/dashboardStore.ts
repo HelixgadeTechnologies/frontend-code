@@ -62,30 +62,30 @@ class DashboardStore implements IDashboardStore {
             // CONFLICT_RESOLUTION_OVER: data.CONFLICT_RESOLUTION_OVER,
             BOT_INAUGURATION_CHECK: data.BOT_INAUGURATION_CHECK[0],
 
-            
-            COMMUNITY_LEADERSHIP_PERCENTAGE:{
-                COMMUNITY_LEADERSHIP_PERCENTAGE:[
+
+            COMMUNITY_LEADERSHIP_PERCENTAGE: {
+                COMMUNITY_LEADERSHIP_PERCENTAGE: [
                     data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].communityLeadership_opt1_pct,
-                    data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].communityLeadership_opt2_pct,
-                    data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].communityLeadership_opt3_pct,
-                    data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].communityLeadership_opt4_pct,
-                ],
-                COMMUNITY_YOUTHS_PERCENTAGE:[
-                    data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].communityYouths_opt1_pct,
-                    data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].communityYouths_opt2_pct,
-                    data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].communityYouths_opt3_pct,
-                    data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].communityYouths_opt4_pct,
-                ],
-                COMMUNITY_WOMEN_PERCENTAGE:[
                     data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].communityWomen_opt1_pct,
-                    data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].communityWomen_opt2_pct,
-                    data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].communityWomen_opt3_pct,
-                    data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].communityWomen_opt4_pct,
-                ],
-                PWDS_PERCENTAGE:[   
+                    data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].communityYouths_opt1_pct,
                     data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].pwDs_opt1_pct,
+                ],
+                COMMUNITY_WOMEN_PERCENTAGE: [
+                    data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].communityLeadership_opt2_pct,
+                    data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].communityWomen_opt2_pct,
+                    data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].communityYouths_opt2_pct,
                     data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].pwDs_opt2_pct,
+                ],
+                COMMUNITY_YOUTHS_PERCENTAGE: [
+                    data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].communityLeadership_opt3_pct,
+                    data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].communityWomen_opt3_pct,
+                    data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].communityYouths_opt3_pct,
                     data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].pwDs_opt3_pct,
+                ],
+                PWDS_PERCENTAGE: [
+                    data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].communityLeadership_opt4_pct,
+                    data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].communityWomen_opt4_pct,
+                    data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].communityYouths_opt4_pct,
                     data.COMMUNITY_LEADERSHIP_PERCENTAGE[0].pwDs_opt4_pct,
                 ]
             },
@@ -105,9 +105,10 @@ class DashboardStore implements IDashboardStore {
             this.isLoading = true;
             let data = await dashboardService.generalDashboard(trustId, year, state, settlor);
             if (data.success) {
+                // toJS(console.log("data444", data.data));
                 const processedData = this.transformDashboard(data.data);
                 this.dashboardData = processedData;
-                toJS(console.log("data333",processedData));
+                // toJS(console.log("data333", processedData.COMMUNITY_LEADERSHIP_PERCENTAGE));
             }
         } catch (error) {
             throw error;
