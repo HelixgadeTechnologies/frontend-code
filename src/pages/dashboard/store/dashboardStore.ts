@@ -1,4 +1,4 @@
-import { makeAutoObservable, toJS } from "mobx"
+import { makeAutoObservable } from "mobx"
 import { dashboardService } from "../service/dashboardService";
 import { IDashboardStore, IFinishedDashboard, IGeneralDashboard } from "../types/interface";
 
