@@ -9,9 +9,12 @@ import { useCallback } from "react";
 const ConflictForm = observer(({ close, conflictStore, selectedTrust }: { close: () => void, conflictStore: IConflictStore, selectedTrust: string }) => {
   const { control, reset, register, handleSubmit, watch, setValue, formState: { errors } } = useForm();
   const watchedIssuesAddressBy = watch('issuesAddressBy');
+  const watchedConflictStatus = watch('conflictStatus');
+
 
 
   const onSubmit = async (data: any) => {
+    console.log("Form Data:", data);
     try {
       // console.log("Form Data:", partiesInvolved.map(e=>e.label).join(","));
       const causeOfConflict = data.causeOfConflict as IDropdownProp
@@ -170,6 +173,16 @@ const ConflictForm = observer(({ close, conflictStore, selectedTrust }: { close:
                     isLoading={conflictStore.isLoading}
                     label="Status of conflict"
                     placeholder="Status of conflict"
+                    onChange={(val: any) => {
+                      // propagate change to RHF
+                      field.onChange(val);
+                      // if selected value is 5, set an initial courtLitigationStatus
+                      if (Number(val?.value) === 4) {
+                        console.log("Clearing issuesAddressBy as it's not applicable");
+                        setValue('issuesAddressBy', { label: '', value: '' }, { shouldValidate: false, shouldDirty: true });
+                        setValue('courtLitigationStatus', { label: '', value: '' }, { shouldValidate: false, shouldDirty: true });
+                      }
+                    }}
                   />
                 )}
               />
@@ -179,38 +192,40 @@ const ConflictForm = observer(({ close, conflictStore, selectedTrust }: { close:
             </div>
 
             {/* Issue Addressed By */}
-            <div>
-              <Controller
-                control={control}
-                name="issuesAddressBy"
-                rules={{ required: true }}
-                render={({ field }) => (
-                  <CustomSelect
-                    id="issue-addressed-by-select"
-                    {...field}
-                    options={[...conflictStore.issuesAddressBy.values()].map((v: IIssuesAddressBy) => ({
-                      label: v?.issuesAddressBy as string,
-                      value: v?.issuesAddressById,
-                    }))}
-                    isLoading={conflictStore.isLoading}
-                    label="Issue addressed by"
-                    placeholder="Issue addressed by"
-                    onChange={(val: any) => {
-                      // propagate change to RHF
-                      field.onChange(val);
-                      // if selected value is 5, set an initial courtLitigationStatus
-                      if (Number(val?.value) !== 5) {
-                        console.log("Clearing courtLitigationStatus as it's not applicable");
-                        setValue('courtLitigationStatus', { label: '', value: '' }, { shouldValidate: false, shouldDirty: true });
-                      }
-                    }}
-                  />
+            {Number(watchedConflictStatus?.value) !== 4 && (
+              <div>
+                <Controller
+                  control={control}
+                  name="issuesAddressBy"
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <CustomSelect
+                      id="issue-addressed-by-select"
+                      {...field}
+                      options={[...conflictStore.issuesAddressBy.values()].map((v: IIssuesAddressBy) => ({
+                        label: v?.issuesAddressBy as string,
+                        value: v?.issuesAddressById,
+                      }))}
+                      isLoading={conflictStore.isLoading}
+                      label="Issue addressed by"
+                      placeholder="Issue addressed by"
+                      onChange={(val: any) => {
+                        // propagate change to RHF
+                        field.onChange(val);
+                        // if selected value is 5, set an initial courtLitigationStatus
+                        if (Number(val?.value) !== 5) {
+                          console.log("Clearing courtLitigationStatus as it's not applicable");
+                          setValue('courtLitigationStatus', { label: '', value: '' }, { shouldValidate: false, shouldDirty: true });
+                        }
+                      }}
+                    />
+                  )}
+                />
+                {errors.issuesAddressBy && (
+                  <p className="mt-2 text-xs text-red-400">Select who addressed the issue</p>
                 )}
-              />
-              {errors.issuesAddressBy && (
-                <p className="mt-2 text-xs text-red-400">Select who addressed the issue</p>
-              )}
-            </div>
+              </div>
+            )}
           </div>
           {/* Status of Court Litigation (shown only when issuesAddressBy.value === 5) */}
           {Number(watchedIssuesAddressBy?.value) === 5 && (
