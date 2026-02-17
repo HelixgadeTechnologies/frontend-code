@@ -1,7 +1,5 @@
 import { FaStar, FaRegStar } from "react-icons/fa";
-import {
-  ChartOptions,
-} from "chart.js";
+import { ChartOptions } from "chart.js";
 import { Doughnut, Bar, Line, Pie } from "react-chartjs-2";
 import DashboardTable, { DashboardTableColumn } from "../table/DashboardTable";
 import { Observer, observer } from "mobx-react-lite";
@@ -9,7 +7,7 @@ import { dashboardStore as DashboardStore } from "../store/dashboardStore";
 import { useContext, createContext, useCallback } from "react";
 import dayjs from "dayjs";
 import { IConflictView } from "../../conflict/types/interface";
-import IMG from "../../../assets/svgs/dashboardConflictNotFound.svg"
+import IMG from "../../../assets/svgs/dashboardConflictNotFound.svg";
 import { economicImpactStore as EconomicImpactStore } from "../../EconomicImpact/store/economicImpactStore";
 import { satisfactionStore as SatisfactionStore } from "../../communitySatisfaction/store/satisfactionStore";
 import { conflictStore as ConflictStore } from "../../conflict/store/conflictStore";
@@ -39,7 +37,7 @@ const DashboardPage: React.FC = observer(() => {
   const conflictStore = useContext(conflictStoreCTX);
   const projectStore = useContext(projectStoreCTX);
 
-    const doughnutColors = [
+  const doughnutColors = [
     "#FF6384", // pink/red
     "#36A2EB", // blue
     "#FFCE56", // yellow
@@ -47,7 +45,7 @@ const DashboardPage: React.FC = observer(() => {
     "#9966FF", // purple
     "#FF9F40", // orange
     "#00C49A", // green
-    "#C0C0C0"  // gray
+    "#C0C0C0", // gray
   ];
 
   const renderStars = (rating: number, max = 5) => {
@@ -70,7 +68,9 @@ const DashboardPage: React.FC = observer(() => {
     datasets: [
       {
         label: "Communities",
-        data: dashboardStore.dashboardData?.COMMUNITY_BENEFIT?.numberOfTrustCommunities ?? [],
+        data:
+          dashboardStore.dashboardData?.COMMUNITY_BENEFIT
+            ?.numberOfTrustCommunities ?? [],
         backgroundColor: "#3366CC",
         borderRadius: 6,
         barThickness: 24,
@@ -88,10 +88,12 @@ const DashboardPage: React.FC = observer(() => {
     },
     scales: {
       x: { grid: { display: false }, ticks: { color: "#8C4A6" } },
-      y: { grid: { color: "#F3F5F7" }, ticks: { color: "#8C94A6", stepSize: 20 } },
+      y: {
+        grid: { color: "#F3F5F7" },
+        ticks: { color: "#8C94A6", stepSize: 20 },
+      },
     },
     layout: { padding: 20 },
-
   };
 
   // Doughnut chart data
@@ -101,7 +103,9 @@ const DashboardPage: React.FC = observer(() => {
       {
         // ensure we send numeric values (default to 0)
         data: (() => {
-          const v = dashboardStore.dashboardData?.COMPLETION_STATUS?.percentFullyEstablished ?? 0;
+          const v =
+            dashboardStore.dashboardData?.COMPLETION_STATUS
+              ?.percentFullyEstablished ?? 0;
           return [v, 100 - v];
         })(),
         backgroundColor: ["#3366CC", "#F3F5F7"],
@@ -118,31 +122,39 @@ const DashboardPage: React.FC = observer(() => {
     },
   };
 
-
-
-
-
   // Add this before your return statement
   const localEmploymentBarData = {
-    labels: dashboardStore.dashboardData?.EMPLOYEE_PER_PROJECT?.map(e => e.projectTitle) ?? [],
+    labels:
+      dashboardStore.dashboardData?.EMPLOYEE_PER_PROJECT?.map(
+        (e) => e.projectTitle
+      ) ?? [],
     datasets: [
       {
         label: "Male",
-        data: dashboardStore.dashboardData?.EMPLOYEE_PER_PROJECT?.map(e => e.numberOfMaleEmployedByContractor) ?? [],
+        data:
+          dashboardStore.dashboardData?.EMPLOYEE_PER_PROJECT?.map(
+            (e) => e.numberOfMaleEmployedByContractor
+          ) ?? [],
         backgroundColor: "#22C55E",
         borderRadius: 4,
         stack: "Stack 0",
       },
       {
         label: "Female",
-        data: dashboardStore.dashboardData?.EMPLOYEE_PER_PROJECT?.map(e => e.numberOfFemaleEmployedByContractor) ?? [],
+        data:
+          dashboardStore.dashboardData?.EMPLOYEE_PER_PROJECT?.map(
+            (e) => e.numberOfFemaleEmployedByContractor
+          ) ?? [],
         backgroundColor: "#EF4444",
         borderRadius: 4,
         stack: "Stack 0",
       },
       {
         label: "Pwds",
-        data: dashboardStore.dashboardData?.EMPLOYEE_PER_PROJECT?.map(e => e.numberOfPwDsEmployedByContractor) ?? [],
+        data:
+          dashboardStore.dashboardData?.EMPLOYEE_PER_PROJECT?.map(
+            (e) => e.numberOfPwDsEmployedByContractor
+          ) ?? [],
         backgroundColor: "#EF8",
         borderRadius: 4,
         stack: "Stack 0",
@@ -176,65 +188,85 @@ const DashboardPage: React.FC = observer(() => {
     ],
   };
   const BoTData2 = {
-    labels: ["Leadership consulted","Women Consulted","Youths Consulted","PwDs Consulted",],
+    labels: [
+      "Leadership consulted",
+      "Women Consulted",
+      "Youths Consulted",
+      "PwDs Consulted",
+    ],
     datasets: [
       {
         label: "Yes, jointly consulted",
-        data: dashboardStore.dashboardData?.COMMUNITY_LEADERSHIP_PERCENTAGE?.COMMUNITY_LEADERSHIP_PERCENTAGE ?? [],
+        data:
+          dashboardStore.dashboardData?.COMMUNITY_LEADERSHIP_PERCENTAGE
+            ?.COMMUNITY_LEADERSHIP_PERCENTAGE ?? [],
         backgroundColor: doughnutColors[0],
         borderRadius: 4,
         stack: "Stack 0",
       },
       {
         label: "yes, separately consulted",
-        data: dashboardStore.dashboardData?.COMMUNITY_LEADERSHIP_PERCENTAGE?.COMMUNITY_WOMEN_PERCENTAGE ?? [],
-        backgroundColor:  doughnutColors[1],
+        data:
+          dashboardStore.dashboardData?.COMMUNITY_LEADERSHIP_PERCENTAGE
+            ?.COMMUNITY_WOMEN_PERCENTAGE ?? [],
+        backgroundColor: doughnutColors[1],
         borderRadius: 4,
         stack: "Stack 0",
       },
       {
         label: "No",
-        data: dashboardStore.dashboardData?.COMMUNITY_LEADERSHIP_PERCENTAGE?.COMMUNITY_YOUTHS_PERCENTAGE ?? [],
-        backgroundColor:  doughnutColors[2],
+        data:
+          dashboardStore.dashboardData?.COMMUNITY_LEADERSHIP_PERCENTAGE
+            ?.COMMUNITY_YOUTHS_PERCENTAGE ?? [],
+        backgroundColor: doughnutColors[2],
         borderRadius: 4,
         stack: "Stack 0",
       },
       {
         label: "Not in all communities",
-        data: dashboardStore.dashboardData?.COMMUNITY_LEADERSHIP_PERCENTAGE?.PWDS_PERCENTAGE ?? [],
-        backgroundColor:  doughnutColors[3],
+        data:
+          dashboardStore.dashboardData?.COMMUNITY_LEADERSHIP_PERCENTAGE
+            ?.PWDS_PERCENTAGE ?? [],
+        backgroundColor: doughnutColors[3],
         borderRadius: 4,
         stack: "Stack 0",
       },
     ],
   };
   const FundsData = {
-    labels: dashboardStore.dashboardData?.FUNDS_DISTRIBUTION_PERCENTAGE?.yearReceived ?? [],
+    labels:
+      dashboardStore.dashboardData?.FUNDS_DISTRIBUTION_PERCENTAGE
+        ?.yearReceived ?? [],
     datasets: [
       {
         label: "Fully Received",
-        data: dashboardStore.dashboardData?.FUNDS_DISTRIBUTION_PERCENTAGE?.pct_paymentCheck_1 ?? [],
+        data:
+          dashboardStore.dashboardData?.FUNDS_DISTRIBUTION_PERCENTAGE
+            ?.pct_paymentCheck_1 ?? [],
         backgroundColor: "#22C55E",
         borderRadius: 4,
         stack: "Stack 0",
       },
       {
         label: "Partly Received",
-        data: dashboardStore.dashboardData?.FUNDS_DISTRIBUTION_PERCENTAGE?.pct_paymentCheck_2 ?? [],
+        data:
+          dashboardStore.dashboardData?.FUNDS_DISTRIBUTION_PERCENTAGE
+            ?.pct_paymentCheck_2 ?? [],
         backgroundColor: "#EF8",
         borderRadius: 4,
         stack: "Stack 0",
       },
       {
         label: "Not Received",
-        data: dashboardStore.dashboardData?.FUNDS_DISTRIBUTION_PERCENTAGE?.pct_paymentCheck_3 ?? [],
+        data:
+          dashboardStore.dashboardData?.FUNDS_DISTRIBUTION_PERCENTAGE
+            ?.pct_paymentCheck_3 ?? [],
         backgroundColor: "#EF4444",
         borderRadius: 4,
         stack: "Stack 0",
       },
     ],
   };
-
 
   const conflictBarOptions = {
     plugins: {
@@ -251,10 +283,10 @@ const DashboardPage: React.FC = observer(() => {
       },
       tooltip: { enabled: true },
       datalabels: {
-        anchor: 'center' as const,
-        align: 'center' as const,
-        color: '#222',
-        font: { weight: 'bold' },
+        anchor: "center" as const,
+        align: "center" as const,
+        color: "#222",
+        font: { weight: "bold" },
         formatter: function (value: number) {
           return `${value}%`;
         },
@@ -276,15 +308,16 @@ const DashboardPage: React.FC = observer(() => {
     },
   } as const; // <== This helps in some cases too
 
-
   // Chart data and options
   const conflictStatusData = {
     labels: ["Resolved", "Unresolved"],
     datasets: [
       {
         data: [
-          dashboardStore.dashboardData?.CONFLICT_RESOLUTION_PERCENTAGE?.resolvedPercentage ?? 0,
-          dashboardStore.dashboardData?.CONFLICT_RESOLUTION_PERCENTAGE?.unresolvedPercentage ?? 0,
+          dashboardStore.dashboardData?.CONFLICT_RESOLUTION_PERCENTAGE
+            ?.resolvedPercentage ?? 0,
+          dashboardStore.dashboardData?.CONFLICT_RESOLUTION_PERCENTAGE
+            ?.unresolvedPercentage ?? 0,
         ],
         backgroundColor: ["#22C55E", "#EA580C"],
         borderWidth: 0,
@@ -301,7 +334,6 @@ const DashboardPage: React.FC = observer(() => {
     },
   };
 
-
   // community table data
 
   const communityColumns: DashboardTableColumn[] = [
@@ -316,18 +348,15 @@ const DashboardPage: React.FC = observer(() => {
             row.totalEmployed > 40
               ? "bg-[#E6F7F0] text-[#3BB77E] rounded px-2 py-1 text-xs font-medium"
               : "bg-[#FFF3ED] text-[#FF9C66] rounded px-2 py-1 text-xs font-medium"
-          }
-        >
+          }>
           {row.totalEmployed}
         </span>
       ),
     },
   ];
 
-
-  // Conflict table Data 
+  // Conflict table Data
   // Example data and columns for the "Conflict Details" table
-
 
   const conflictDetailsColumns: DashboardTableColumn[] = [
     { key: "causeOfConflictName", label: "Cause" },
@@ -352,7 +381,6 @@ const DashboardPage: React.FC = observer(() => {
   // Usage example in your component:
   // Project Details Table Data
 
-
   // Project Details Table Columns
 
   const projectDetailsColumns = [
@@ -371,9 +399,7 @@ const DashboardPage: React.FC = observer(() => {
     {
       key: "rating",
       label: "Rating",
-      render: (row: any) => (
-        renderStars(row.rating)
-      ),
+      render: (row: any) => renderStars(row.rating),
     },
   ];
   const conflictDetailsColumnsR = [
@@ -390,15 +416,15 @@ const DashboardPage: React.FC = observer(() => {
     },
   ];
 
-
-
   // Economic Impact
   // Data for the pie charts
   const pieData1 = {
     labels: ["Very True", "Slightly", "Not True"],
     datasets: [
       {
-        data: (economicImpactStore?.dashboardData?.businessGrowth ?? [0, 0, 0]).map((v: any) => Number(v) || 0),
+        data: (
+          economicImpactStore?.dashboardData?.businessGrowth ?? [0, 0, 0]
+        ).map((v: any) => Number(v) || 0),
         backgroundColor: ["#22C55E", "#FACC15", "#EF4444"],
         hoverBackgroundColor: ["#16A34A", "#EAB308", "#DC2626"],
       },
@@ -409,7 +435,9 @@ const DashboardPage: React.FC = observer(() => {
     labels: ["Very True", "Slightly", "Not True"],
     datasets: [
       {
-        data: (economicImpactStore?.dashboardData?.incomeIncrease ?? [0, 0, 0]).map((v: any) => Number(v) || 0),
+        data: (
+          economicImpactStore?.dashboardData?.incomeIncrease ?? [0, 0, 0]
+        ).map((v: any) => Number(v) || 0),
         backgroundColor: ["#22C55E", "#FACC15", "#EF4444"],
         hoverBackgroundColor: ["#16A34A", "#EAB308", "#DC2626"],
       },
@@ -420,7 +448,9 @@ const DashboardPage: React.FC = observer(() => {
     labels: ["Very True", "Slightly", "Not True"],
     datasets: [
       {
-        data: (economicImpactStore?.dashboardData?.livelihoodImprove ?? [0, 0, 0]).map((v: any) => Number(v) || 0),
+        data: (
+          economicImpactStore?.dashboardData?.livelihoodImprove ?? [0, 0, 0]
+        ).map((v: any) => Number(v) || 0),
         backgroundColor: ["#22C55E", "#FACC15", "#EF4444"],
         hoverBackgroundColor: ["#16A34A", "#EAB308", "#DC2626"],
       },
@@ -441,7 +471,11 @@ const DashboardPage: React.FC = observer(() => {
     datasets: [
       {
         label: "Access to Basic Amenities",
-        data: (economicImpactStore?.dashboardData?.accessAmenities ?? [0, 0, 0, 0, 0, 0, 0]).map((v: any) => Number(v) || 0),
+        data: (
+          economicImpactStore?.dashboardData?.accessAmenities ?? [
+            0, 0, 0, 0, 0, 0, 0,
+          ]
+        ).map((v: any) => Number(v) || 0),
         borderColor: "#3B82F6",
         backgroundColor: "rgba(59, 130, 246, 0.2)",
         tension: 0.4,
@@ -451,19 +485,19 @@ const DashboardPage: React.FC = observer(() => {
 
   // community satisfaction
   const groupedBarOptions = {
-    indexAxis: 'y' as const,
+    indexAxis: "y" as const,
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: 'bottom' as const,
+        position: "bottom" as const,
       },
       datalabels: {
-        anchor: 'center' as const,
-        align: 'center' as const,
-        color: '#222',
+        anchor: "center" as const,
+        align: "center" as const,
+        color: "#222",
         font: {
-          weight: 'bold' as 'bold',
+          weight: "bold" as "bold",
           size: 12,
         },
         formatter: function (value: number) {
@@ -474,12 +508,12 @@ const DashboardPage: React.FC = observer(() => {
     scales: {
       x: {
         stacked: true,
-        type: 'linear' as const,
+        type: "linear" as const,
         min: 0,
         max: 100,
         title: {
           display: true,
-          text: 'Percentage of Respondents',
+          text: "Percentage of Respondents",
         },
         ticks: {
           stepSize: 20,
@@ -490,15 +524,13 @@ const DashboardPage: React.FC = observer(() => {
       },
       y: {
         stacked: true,
-        type: 'category' as const,
+        type: "category" as const,
         title: {
           display: false,
         },
       },
     },
   };
-
-
 
   const generateGroupedBarData = (data: number[][]) => ({
     labels: [
@@ -514,36 +546,40 @@ const DashboardPage: React.FC = observer(() => {
     datasets: [
       {
         label: "Strongly Disagree",
-        data: data.map(d => d[0]),
+        data: data.map((d) => d[0]),
         backgroundColor: "#EF4444",
       },
       {
         label: "Disagree",
-        data: data.map(d => d[1]),
+        data: data.map((d) => d[1]),
         backgroundColor: "#de9292",
       },
       {
         label: "Slightly Agree",
-        data: data.map(d => d[2]),
+        data: data.map((d) => d[2]),
         backgroundColor: "#FACC15",
       },
       {
         label: "Agree",
-        data: data.map(d => d[3]),
+        data: data.map((d) => d[3]),
         backgroundColor: "#3B82F6",
       },
       {
         label: "Strongly Agree",
-        data: data.map(d => d[4]),
+        data: data.map((d) => d[4]),
         backgroundColor: "#22C55E",
       },
     ],
   });
 
-
   // Generate pie chart data dynamically
   const generatePieData = (data: number[]) => ({
-    labels: ["In Progress", "True", "Project yet to be implemented in my community", "Not True"],
+    labels: [
+      "In Progress",
+      "True",
+      "Project yet to be implemented in my community",
+      "Not True",
+    ],
     datasets: [
       {
         data: data,
@@ -552,8 +588,6 @@ const DashboardPage: React.FC = observer(() => {
       },
     ],
   });
-
-
 
   // const pieOptions = {
   //   // plugins: {
@@ -583,34 +617,80 @@ const DashboardPage: React.FC = observer(() => {
 
   // Conflict
   const pieDataStatusOfConflict = {
-    labels: ["Effectively Resolved", "Not Effectively Resolved", "Requested", "Yet To Be Addressed"],
+    labels: [
+      "Effectively Resolved",
+      "Not Effectively Resolved",
+      "Requested",
+      "Yet To Be Addressed",
+    ],
     datasets: [
       {
-        data: (conflictStore.dashboardData?.STATUS_OF_CONFLICT ?? [0, 0, 0, 0]).map((v: any) => Number(v) || 0),
+        data: (
+          conflictStore.dashboardData?.STATUS_OF_CONFLICT ?? [0, 0, 0, 0]
+        ).map((v: any) => Number(v) || 0),
         backgroundColor: ["#22C55E", "#FACC15", "#3B82F6", "#EF4444"],
         hoverBackgroundColor: ["#16A34A", "#EAB308", "#2563EB", "#DC2626"],
       },
     ],
   };
 
-
   const pieDataForSettlorSatisfaction = {
-    labels: ["Strongly Disagree", "Disagree", "Slightly Agree", "Agree", "Strongly Agree"],
+    labels: [
+      "Strongly Disagree",
+      "Disagree",
+      "Slightly Agree",
+      "Agree",
+      "Strongly Agree",
+    ],
     datasets: [
       {
-        data: (satisfactionStore.dashboardData?.settlorAction ?? [0, 0, 0, 0, 0]).map((v: any) => Number(v) || 0),
-        backgroundColor: ["#EF4444", "#de9292", "#FACC15", "#3B82F6", "#22C55E"],
-        hoverBackgroundColor: ["#EF4444", "#de9292", "#FACC15", "#3B82F6", "#22C55E"],
+        data: (
+          satisfactionStore.dashboardData?.settlorAction ?? [0, 0, 0, 0, 0]
+        ).map((v: any) => Number(v) || 0),
+        backgroundColor: [
+          "#EF4444",
+          "#de9292",
+          "#FACC15",
+          "#3B82F6",
+          "#22C55E",
+        ],
+        hoverBackgroundColor: [
+          "#EF4444",
+          "#de9292",
+          "#FACC15",
+          "#3B82F6",
+          "#22C55E",
+        ],
       },
     ],
   };
   const pieDataForNUPRCSatisfaction = {
-    labels: ["Strongly Disagree", "Disagree", "Slightly Agree", "Agree", "Strongly Agree"],
+    labels: [
+      "Strongly Disagree",
+      "Disagree",
+      "Slightly Agree",
+      "Agree",
+      "Strongly Agree",
+    ],
     datasets: [
       {
-        data: (satisfactionStore.dashboardData?.nuprcAction ?? [0, 0, 0, 0, 0]).map((v: any) => Number(v) || 0),
-        backgroundColor: ["#EF4444", "#de9292", "#FACC15", "#3B82F6", "#22C55E"],
-        hoverBackgroundColor: ["#EF4444", "#de9292", "#FACC15", "#3B82F6", "#22C55E"],
+        data: (
+          satisfactionStore.dashboardData?.nuprcAction ?? [0, 0, 0, 0, 0]
+        ).map((v: any) => Number(v) || 0),
+        backgroundColor: [
+          "#EF4444",
+          "#de9292",
+          "#FACC15",
+          "#3B82F6",
+          "#22C55E",
+        ],
+        hoverBackgroundColor: [
+          "#EF4444",
+          "#de9292",
+          "#FACC15",
+          "#3B82F6",
+          "#22C55E",
+        ],
       },
     ],
   };
@@ -619,7 +699,11 @@ const DashboardPage: React.FC = observer(() => {
     labels: ["Ongoing", "Standing Trial", "Judgment", "Withdrawn"],
     datasets: [
       {
-        data: (conflictStore.dashboardData?.CONFLICT_OF_COURT_LITIGATION ?? [0, 0, 0, 0]).map((v: any) => Number(v) || 0),
+        data: (
+          conflictStore.dashboardData?.CONFLICT_OF_COURT_LITIGATION ?? [
+            0, 0, 0, 0,
+          ]
+        ).map((v: any) => Number(v) || 0),
         backgroundColor: ["#3B82F6", "#FACC15", "#22C55E", "#EF4444"],
         hoverBackgroundColor: ["#2563EB", "#EAB308", "#16A34A", "#DC2626"],
       },
@@ -627,11 +711,26 @@ const DashboardPage: React.FC = observer(() => {
   };
 
   const lineDataReportFrequency = {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    labels: [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ],
     datasets: [
       {
         label: "Report Frequency",
-        data: conflictStore.dashboardData?.REPORT_FREQUENCY! || [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        data: conflictStore.dashboardData?.REPORT_FREQUENCY! || [
+          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        ],
         borderColor: "#3B82F6",
         backgroundColor: "rgba(59, 130, 246, 0.2)",
         fill: true,
@@ -640,7 +739,7 @@ const DashboardPage: React.FC = observer(() => {
   };
 
   function removeUnderscores(input: string): string {
-    return input.replace(/_/g, ' ');
+    return input.replace(/_/g, " ");
   }
 
   // Project
@@ -671,7 +770,6 @@ const DashboardPage: React.FC = observer(() => {
     },
   };
 
-
   const labels = ["Males", "Females", "PwDs"];
 
   const data1 = {
@@ -699,7 +797,15 @@ const DashboardPage: React.FC = observer(() => {
   };
 
   const pieChartData1 = {
-    labels: ["EDUCATION", "ELECTRIFICATION", "AGRICULTURE", "HEALTH", "INFORMATION TECHNOLOGY", "ROAD", "WATER"],
+    labels: [
+      "EDUCATION",
+      "ELECTRIFICATION",
+      "AGRICULTURE",
+      "HEALTH",
+      "INFORMATION TECHNOLOGY",
+      "ROAD",
+      "WATER",
+    ],
     datasets: [
       {
         label: "Number of Trust Project by Category",
@@ -734,118 +840,332 @@ const DashboardPage: React.FC = observer(() => {
     ],
   };
 
-  const setSelectedYear = useCallback((v: string) => {
-    async function getInfo() {
-      dashboardStore.selectedYear = Number(v)
-      dashboardStore.dashboardData = null
-      await dashboardStore.getDashboard(dashboardStore.selectedTrust == "ALL" ? "ALL" : dashboardStore.selectedTrust, Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor)
-      economicImpactStore.isDashboardLoading = false;
-      economicImpactStore.dashboardData = null;
-      await economicImpactStore.getEconomicImpactDashboardByTrustId(dashboardStore.selectedTrust == "ALL" ? "ALL" : dashboardStore.selectedTrust, Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
-      satisfactionStore.isDashboardLoading = false;
-      satisfactionStore.dashboardData = null;
-      await satisfactionStore.getSatisfactionDashboardByTrustId(dashboardStore.selectedTrust == "ALL" ? "ALL" : dashboardStore.selectedTrust, Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
-      conflictStore.isDashboardLoading = false;
-      conflictStore.dashboardData = null;
-      await conflictStore.getConflictDashboardByTrustId(dashboardStore.selectedTrust == "ALL" ? "ALL" : dashboardStore.selectedTrust, Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
-      projectStore.isDashboardLoading = false;
-      projectStore.dashboardData = null;
-      await projectStore.getProjectDashboardByTrustId(dashboardStore.selectedTrust == "ALL" ? "ALL" : dashboardStore.selectedTrust, Number(v), dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
-    }
-    getInfo()
-  }, [dashboardStore]);
+  const setSelectedYear = useCallback(
+    (v: string) => {
+      async function getInfo() {
+        dashboardStore.selectedYear = Number(v);
+        dashboardStore.dashboardData = null;
+        await dashboardStore.getDashboard(
+          dashboardStore.selectedTrust == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedTrust,
+          Number(v),
+          dashboardStore.selectedState == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedState,
+          dashboardStore.selectedSettlor == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedSettlor
+        );
+        economicImpactStore.isDashboardLoading = false;
+        economicImpactStore.dashboardData = null;
+        await economicImpactStore.getEconomicImpactDashboardByTrustId(
+          dashboardStore.selectedTrust == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedTrust,
+          Number(v),
+          dashboardStore.selectedState == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedState,
+          dashboardStore.selectedSettlor == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedSettlor
+        );
+        satisfactionStore.isDashboardLoading = false;
+        satisfactionStore.dashboardData = null;
+        await satisfactionStore.getSatisfactionDashboardByTrustId(
+          dashboardStore.selectedTrust == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedTrust,
+          Number(v),
+          dashboardStore.selectedState == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedState,
+          dashboardStore.selectedSettlor == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedSettlor
+        );
+        conflictStore.isDashboardLoading = false;
+        conflictStore.dashboardData = null;
+        await conflictStore.getConflictDashboardByTrustId(
+          dashboardStore.selectedTrust == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedTrust,
+          Number(v),
+          dashboardStore.selectedState == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedState,
+          dashboardStore.selectedSettlor == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedSettlor
+        );
+        projectStore.isDashboardLoading = false;
+        projectStore.dashboardData = null;
+        await projectStore.getProjectDashboardByTrustId(
+          dashboardStore.selectedTrust == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedTrust,
+          Number(v),
+          dashboardStore.selectedState == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedState,
+          dashboardStore.selectedSettlor == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedSettlor
+        );
+      }
+      getInfo();
+    },
+    [dashboardStore]
+  );
 
-  const selectState = useCallback((v: string) => {
-    async function getInfo() {
-      dashboardStore.selectedState = v
-      dashboardStore.dashboardData = null
-      await dashboardStore.getDashboard(dashboardStore.selectedTrust == "ALL" ? "ALL" : dashboardStore.selectedTrust, dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, v, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor)
-      economicImpactStore.isDashboardLoading = false;
-      economicImpactStore.dashboardData = null;
-      await economicImpactStore.getEconomicImpactDashboardByTrustId(dashboardStore.selectedTrust == "ALL" ? "ALL" : dashboardStore.selectedTrust, dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, v, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
-      satisfactionStore.isDashboardLoading = false;
-      satisfactionStore.dashboardData = null;
-      await satisfactionStore.getSatisfactionDashboardByTrustId(dashboardStore.selectedTrust == "ALL" ? "ALL" : dashboardStore.selectedTrust, dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, v, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
-      conflictStore.isDashboardLoading = false;
-      conflictStore.dashboardData = null;
-      await conflictStore.getConflictDashboardByTrustId(dashboardStore.selectedTrust == "ALL" ? "ALL" : dashboardStore.selectedTrust, dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, v, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
-      projectStore.isDashboardLoading = false;
-      projectStore.dashboardData = null;
-      await projectStore.getProjectDashboardByTrustId(dashboardStore.selectedTrust == "ALL" ? "ALL" : dashboardStore.selectedTrust, dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, v, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
-    }
-    getInfo()
-  }, [dashboardStore]);
+  const selectState = useCallback(
+    (v: string) => {
+      async function getInfo() {
+        dashboardStore.selectedState = v;
+        dashboardStore.dashboardData = null;
+        await dashboardStore.getDashboard(
+          dashboardStore.selectedTrust == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedTrust,
+          dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear,
+          v,
+          dashboardStore.selectedSettlor == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedSettlor
+        );
+        economicImpactStore.isDashboardLoading = false;
+        economicImpactStore.dashboardData = null;
+        await economicImpactStore.getEconomicImpactDashboardByTrustId(
+          dashboardStore.selectedTrust == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedTrust,
+          dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear,
+          v,
+          dashboardStore.selectedSettlor == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedSettlor
+        );
+        satisfactionStore.isDashboardLoading = false;
+        satisfactionStore.dashboardData = null;
+        await satisfactionStore.getSatisfactionDashboardByTrustId(
+          dashboardStore.selectedTrust == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedTrust,
+          dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear,
+          v,
+          dashboardStore.selectedSettlor == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedSettlor
+        );
+        conflictStore.isDashboardLoading = false;
+        conflictStore.dashboardData = null;
+        await conflictStore.getConflictDashboardByTrustId(
+          dashboardStore.selectedTrust == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedTrust,
+          dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear,
+          v,
+          dashboardStore.selectedSettlor == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedSettlor
+        );
+        projectStore.isDashboardLoading = false;
+        projectStore.dashboardData = null;
+        await projectStore.getProjectDashboardByTrustId(
+          dashboardStore.selectedTrust == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedTrust,
+          dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear,
+          v,
+          dashboardStore.selectedSettlor == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedSettlor
+        );
+      }
+      getInfo();
+    },
+    [dashboardStore]
+  );
 
-  const selectSettlor = useCallback((v: string) => {
-    async function getInfo() {
-      dashboardStore.selectedSettlor = v
-      dashboardStore.dashboardData = null
-      await dashboardStore.getDashboard(dashboardStore.selectedTrust == "ALL" ? "ALL" : dashboardStore.selectedTrust, dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, v)
-      economicImpactStore.isDashboardLoading = false;
-      economicImpactStore.dashboardData = null;
-      await economicImpactStore.getEconomicImpactDashboardByTrustId(dashboardStore.selectedTrust == "ALL" ? "ALL" : dashboardStore.selectedTrust, dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, v);
-      satisfactionStore.isDashboardLoading = false;
-      satisfactionStore.dashboardData = null;
-      await satisfactionStore.getSatisfactionDashboardByTrustId(dashboardStore.selectedTrust == "ALL" ? "ALL" : dashboardStore.selectedTrust, dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, v);
-      conflictStore.isDashboardLoading = false;
-      conflictStore.dashboardData = null;
-      await conflictStore.getConflictDashboardByTrustId(dashboardStore.selectedTrust == "ALL" ? "ALL" : dashboardStore.selectedTrust, dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, v);
-      projectStore.isDashboardLoading = false;
-      projectStore.dashboardData = null;
-      await projectStore.getProjectDashboardByTrustId(dashboardStore.selectedTrust == "ALL" ? "ALL" : dashboardStore.selectedTrust, dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, v);
-    }
-    getInfo()
-  }, [dashboardStore]);
-  const selectTrust = useCallback((v: string) => {
-    async function getInfo() {
-      dashboardStore.selectedTrust = v
-      dashboardStore.dashboardData = null
-      await dashboardStore.getDashboard(v, dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor)
-      economicImpactStore.isDashboardLoading = false;
-      economicImpactStore.dashboardData = null;
-      await economicImpactStore.getEconomicImpactDashboardByTrustId(v, dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
-      satisfactionStore.isDashboardLoading = false;
-      satisfactionStore.dashboardData = null;
-      await satisfactionStore.getSatisfactionDashboardByTrustId(v, dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
-      conflictStore.isDashboardLoading = false;
-      conflictStore.dashboardData = null;
-      await conflictStore.getConflictDashboardByTrustId(v, dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
-      projectStore.isDashboardLoading = false;
-      projectStore.dashboardData = null;
-      await projectStore.getProjectDashboardByTrustId(v, dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear, dashboardStore.selectedState == "ALL" ? "ALL" : dashboardStore.selectedState, dashboardStore.selectedSettlor == "ALL" ? "ALL" : dashboardStore.selectedSettlor);
-    }
-    getInfo()
-  }, [dashboardStore]);
+  const selectSettlor = useCallback(
+    (v: string) => {
+      async function getInfo() {
+        dashboardStore.selectedSettlor = v;
+        dashboardStore.dashboardData = null;
+        await dashboardStore.getDashboard(
+          dashboardStore.selectedTrust == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedTrust,
+          dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear,
+          dashboardStore.selectedState == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedState,
+          v
+        );
+        economicImpactStore.isDashboardLoading = false;
+        economicImpactStore.dashboardData = null;
+        await economicImpactStore.getEconomicImpactDashboardByTrustId(
+          dashboardStore.selectedTrust == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedTrust,
+          dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear,
+          dashboardStore.selectedState == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedState,
+          v
+        );
+        satisfactionStore.isDashboardLoading = false;
+        satisfactionStore.dashboardData = null;
+        await satisfactionStore.getSatisfactionDashboardByTrustId(
+          dashboardStore.selectedTrust == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedTrust,
+          dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear,
+          dashboardStore.selectedState == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedState,
+          v
+        );
+        conflictStore.isDashboardLoading = false;
+        conflictStore.dashboardData = null;
+        await conflictStore.getConflictDashboardByTrustId(
+          dashboardStore.selectedTrust == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedTrust,
+          dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear,
+          dashboardStore.selectedState == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedState,
+          v
+        );
+        projectStore.isDashboardLoading = false;
+        projectStore.dashboardData = null;
+        await projectStore.getProjectDashboardByTrustId(
+          dashboardStore.selectedTrust == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedTrust,
+          dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear,
+          dashboardStore.selectedState == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedState,
+          v
+        );
+      }
+      getInfo();
+    },
+    [dashboardStore]
+  );
+  const selectTrust = useCallback(
+    (v: string) => {
+      async function getInfo() {
+        dashboardStore.selectedTrust = v;
+        dashboardStore.dashboardData = null;
+        await dashboardStore.getDashboard(
+          v,
+          dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear,
+          dashboardStore.selectedState == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedState,
+          dashboardStore.selectedSettlor == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedSettlor
+        );
+        economicImpactStore.isDashboardLoading = false;
+        economicImpactStore.dashboardData = null;
+        await economicImpactStore.getEconomicImpactDashboardByTrustId(
+          v,
+          dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear,
+          dashboardStore.selectedState == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedState,
+          dashboardStore.selectedSettlor == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedSettlor
+        );
+        satisfactionStore.isDashboardLoading = false;
+        satisfactionStore.dashboardData = null;
+        await satisfactionStore.getSatisfactionDashboardByTrustId(
+          v,
+          dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear,
+          dashboardStore.selectedState == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedState,
+          dashboardStore.selectedSettlor == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedSettlor
+        );
+        conflictStore.isDashboardLoading = false;
+        conflictStore.dashboardData = null;
+        await conflictStore.getConflictDashboardByTrustId(
+          v,
+          dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear,
+          dashboardStore.selectedState == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedState,
+          dashboardStore.selectedSettlor == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedSettlor
+        );
+        projectStore.isDashboardLoading = false;
+        projectStore.dashboardData = null;
+        await projectStore.getProjectDashboardByTrustId(
+          v,
+          dashboardStore.selectedYear == 0 ? 0 : dashboardStore.selectedYear,
+          dashboardStore.selectedState == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedState,
+          dashboardStore.selectedSettlor == "ALL"
+            ? "ALL"
+            : dashboardStore.selectedSettlor
+        );
+      }
+      getInfo();
+    },
+    [dashboardStore]
+  );
 
   const dataM = [
     {
       name: "Completed",
-      percentage: dashboardStore.dashboardData?.NEEDS_ASSESSMENT_PERCENTAGE?.percentage_status_1,
+      percentage:
+        dashboardStore.dashboardData?.NEEDS_ASSESSMENT_PERCENTAGE
+          ?.percentage_status_1,
       color: doughnutColors[0],
     },
     {
       name: "In progress",
-      percentage: dashboardStore.dashboardData?.NEEDS_ASSESSMENT_PERCENTAGE?.percentage_status_2,
+      percentage:
+        dashboardStore.dashboardData?.NEEDS_ASSESSMENT_PERCENTAGE
+          ?.percentage_status_2,
       color: doughnutColors[1],
     },
     {
       name: "Yet to be conducted",
-      percentage: dashboardStore.dashboardData?.NEEDS_ASSESSMENT_PERCENTAGE?.percentage_status_3,
+      percentage:
+        dashboardStore.dashboardData?.NEEDS_ASSESSMENT_PERCENTAGE
+          ?.percentage_status_3,
       color: doughnutColors[2],
     },
-  ]
+  ];
 
-  const calculateEstablishedTrusts = (percentage: number, totalTrusts: number) => {
+  const calculateEstablishedTrusts = (
+    percentage: number,
+    totalTrusts: number
+  ) => {
     const establishedTrusts = Math.round((percentage / 100) * totalTrusts);
     return establishedTrusts;
-  }
+  };
 
   return (
     <div className="bg-[#F3F5F7] min-h-screen p-6">
-      <div id="trust-establishment" className="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-4">
-
+      <div
+        id="trust-establishment"
+        className="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-4">
         <div>
-          <h2 className="font-semibold text-xl text-gray-900">Aggregated Dashboard</h2>
+          <h2 className="font-semibold text-xl text-gray-900">
+            Aggregated Dashboard
+          </h2>
           {/* <p className="text-gray-500 text-sm">Control your profile setup and integrations</p> */}
         </div>
         <div>
@@ -854,20 +1174,25 @@ const DashboardPage: React.FC = observer(() => {
               <Observer>
                 {() => (
                   <>
-                    <label className="text-sm font-medium text-gray-700 mb-1">Select Trust</label>
+                    <label className="text-sm font-medium text-gray-700 mb-1">
+                      Select Trust
+                    </label>
                     <select
-                      style={{ width: '160px' }}
+                      style={{ width: "160px" }}
                       className="border border-gray-300 rounded px-4 py-2 min-w-[160px] focus:outline-none focus:ring-2 focus:ring-primary-200 bg-white text-gray-700"
                       value={dashboardStore.selectedTrust}
-                      onChange={e => selectTrust(e.target.value)}
-
-                    >
-                      <option key="ALL" value="ALL">ALL</option>
-                      {[...trustStore.allTrustList.values()].map((v: ITrustList) => (
-                        <option key={v.trustName} value={v.trustId}>{v.trustName}</option>
-                      ))}
+                      onChange={(e) => selectTrust(e.target.value)}>
+                      <option key="ALL" value="ALL">
+                        ALL
+                      </option>
+                      {[...trustStore.allTrustList.values()].map(
+                        (v: ITrustList) => (
+                          <option key={v.trustName} value={v.trustId}>
+                            {v.trustName}
+                          </option>
+                        )
+                      )}
                     </select>
-
                   </>
                 )}
               </Observer>
@@ -876,20 +1201,25 @@ const DashboardPage: React.FC = observer(() => {
               <Observer>
                 {() => (
                   <>
-                    <label className="text-sm font-medium text-gray-700 mb-1">Select Settlor</label>
+                    <label className="text-sm font-medium text-gray-700 mb-1">
+                      Select Settlor
+                    </label>
                     <select
-                      style={{ width: '160px' }}
+                      style={{ width: "160px" }}
                       className="border border-gray-300 rounded px-4 py-2 min-w-[160px] focus:outline-none focus:ring-2 focus:ring-primary-200 bg-white text-gray-700"
                       value={dashboardStore.selectedSettlor}
-                      onChange={e => selectSettlor(e.target.value)}
-
-                    >
-                      <option key="ALL" value="ALL">ALL</option>
-                      {[...settingStore.allSettlor.values()].map((v: ISettlor) => (
-                        <option key={v.settlorName} value={v.settlorName}>{v.settlorName}</option>
-                      ))}
+                      onChange={(e) => selectSettlor(e.target.value)}>
+                      <option key="ALL" value="ALL">
+                        ALL
+                      </option>
+                      {[...settingStore.allSettlor.values()].map(
+                        (v: ISettlor) => (
+                          <option key={v.settlorName} value={v.settlorName}>
+                            {v.settlorName}
+                          </option>
+                        )
+                      )}
                     </select>
-
                   </>
                 )}
               </Observer>
@@ -898,63 +1228,99 @@ const DashboardPage: React.FC = observer(() => {
               <Observer>
                 {() => (
                   <>
-                    <label className="text-sm font-medium text-gray-700 mb-1">Select State</label>
+                    <label className="text-sm font-medium text-gray-700 mb-1">
+                      Select State
+                    </label>
                     <select
                       className="border border-gray-300 rounded px-4 py-2 min-w-[160px] focus:outline-none focus:ring-2 focus:ring-primary-200 bg-white text-gray-700"
                       value={dashboardStore.selectedState}
-                      onChange={e => selectState(e.target.value)}
-
-                    >
+                      onChange={(e) => selectState(e.target.value)}>
                       {[...trustStore.allStates.values()].map((s: string) => (
-                        <option key={s} value={s}>{s}</option>
+                        <option key={s} value={s}>
+                          {s}
+                        </option>
                       ))}
                     </select>
-
                   </>
                 )}
               </Observer>
             </div>
             <div className="flex flex-col">
-              <label className="text-sm font-medium text-gray-700 mb-1">Select Year</label>
+              <label className="text-sm font-medium text-gray-700 mb-1">
+                Select Year
+              </label>
               <select
                 className="border border-gray-300 rounded px-4 py-2 min-w-[120px] focus:outline-none focus:ring-2 focus:ring-primary-200 bg-white text-gray-700"
                 value={dashboardStore.selectedYear}
-                onChange={e => setSelectedYear(e.target.value)}
-              >
-                {year.map(year => (
-                  <option key={year.value} value={year.value}>{year.label}</option>
+                onChange={(e) => setSelectedYear(e.target.value)}>
+                {year.map((year) => (
+                  <option key={year.value} value={year.value}>
+                    {year.label}
+                  </option>
                 ))}
               </select>
             </div>
           </div>
-
         </div>
       </div>
 
       {/* Main Grid */}
-      <h2 className="font-semibold text-xl text-gray-900 mb-4">Trust Establishment and Governance</h2>
+      <h2 className="font-semibold text-xl text-gray-900 mb-4">
+        Trust Establishment and Governance
+      </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-stretch">
         {/* Left Column */}
         <div className="flex flex-col gap-5 h-full">
           {/* HCDT Establishment and Governance */}
           <div className="bg-white rounded-xl p-4 shadow flex flex-col gap-2">
-            <div className="text-xs text-gray-700 mb-1">Number/Percent of HCDT established by NUPRC</div>
+            <div className="text-xs text-gray-700 mb-1">
+              Number of HCDTs established by the Nigerian Upstream Petroleum
+              Regulatory Commission (NUPRC)
+            </div>
             <div className="flex items-center gap-2">
               <div className="flex-1 h-2 bg-[#E5E7EB] rounded-full overflow-hidden">
-                <div className="h-full bg-[#22C55E]" style={{ width: `${dashboardStore.dashboardData?.FIELDS_COMPLETION}%` }}></div>
+                <div
+                  className="h-full bg-[#22C55E]"
+                  style={{
+                    width: `${dashboardStore.dashboardData?.FIELDS_COMPLETION}%`,
+                  }}></div>
               </div>
-              <span className="text-xs text-gray-700 font-semibold">{dashboardStore.dashboardData?.FIELDS_COMPLETION}%</span>
+              <span className="text-xs text-gray-700 font-semibold">
+                {dashboardStore.dashboardData?.FIELDS_COMPLETION}%
+              </span>
             </div>
-            <div className="text-xs text-gray-500 mt-1">{calculateEstablishedTrusts(dashboardStore.dashboardData?.FIELDS_COMPLETION as number, dashboardStore.dashboardData?.COMPLETION_STATUS.totalTrust as number)} out of {dashboardStore.dashboardData?.COMPLETION_STATUS.totalTrust} Trusts is fully Established</div>
+            <div className="text-xs text-gray-500 mt-1">
+              {calculateEstablishedTrusts(
+                dashboardStore.dashboardData?.FIELDS_COMPLETION as number,
+                dashboardStore.dashboardData?.COMPLETION_STATUS
+                  .totalTrust as number
+              )}{" "}
+              out of{" "}
+              {dashboardStore.dashboardData?.COMPLETION_STATUS.totalTrust}{" "}
+              Trusts is fully Established
+            </div>
           </div>
           {/* Communities benefiting by state */}
           <div className="bg-white rounded-xl p-6 shadow flex flex-col gap-4 flex-1 justify-between">
             <div className="flex items-center justify-between mb-4">
-              <span className="text-sm text-gray-700 font-medium">Total number of host communities involved with the HCDTs</span>
-              <span className="text-xs text-gray-500 font-medium">Total Number of all Benefiting Communities | {dashboardStore.dashboardData?.COMMUNITY_BENEFIT.numberOfTrustCommunities.reduce((sum: any, num: any) => sum + num, 0)}</span>
+              <span className="text-sm text-gray-700 font-medium">
+                Total number of host communities delineated to benefit from the
+                Host Community Development Trust Fund
+              </span>
+              <span className="text-xs text-gray-500 font-medium">
+                Total Number of all Benefiting Communities |{" "}
+                {dashboardStore.dashboardData?.COMMUNITY_BENEFIT.numberOfTrustCommunities.reduce(
+                  (sum: any, num: any) => sum + num,
+                  0
+                )}
+              </span>
             </div>
             <div className="w-full h-56 flex items-end">
-              <Bar data={barData} options={barOptions} plugins={[ChartDataLabels]} />
+              <Bar
+                data={barData}
+                options={barOptions}
+                plugins={[ChartDataLabels]}
+              />
             </div>
           </div>
         </div>
@@ -962,19 +1328,34 @@ const DashboardPage: React.FC = observer(() => {
         <div className="flex flex-col h-full">
           {/* Number of Trust with Compliance */}
           <div className="bg-white rounded-xl p-4 shadow flex flex-col items-center gap-2 relative h-full justify-center">
-            <div className="font-semibold text-base text-gray-900 mb-2">Number of HCDTs with development plan fully completed by Settlor and readily available</div>
+            <div className="font-semibold text-base text-gray-900 mb-2">
+              Number of HCDTs with approved Community Development Plans
+            </div>
             <div className="relative flex items-center justify-center w-44 h-44 my-4">
               <Doughnut data={doughnutData} options={doughnutOptions} />
-              <span className="absolute text-3xl font-bold text-gray-900">{dashboardStore.dashboardData?.COMPLETION_STATUS.percentFullyEstablished}%</span>
+              <span className="absolute text-3xl font-bold text-gray-900">
+                {
+                  dashboardStore.dashboardData?.COMPLETION_STATUS
+                    .percentFullyEstablished
+                }
+                %
+              </span>
             </div>
             <div className="flex justify-between w-full mt-2 text-xs text-gray-500">
               <div className="flex flex-col items-center flex-1">
-                <span className="font-semibold text-lg text-gray-900">{dashboardStore.dashboardData?.COMPLETION_STATUS.totalCompleteTrust}</span>
+                <span className="font-semibold text-lg text-gray-900">
+                  {
+                    dashboardStore.dashboardData?.COMPLETION_STATUS
+                      .totalCompleteTrust
+                  }
+                </span>
                 <span>Completed Development plan</span>
               </div>
 
               <div className="flex flex-col items-center flex-1">
-                <span className="font-semibold text-lg text-gray-900">{dashboardStore.dashboardData?.COMPLETION_STATUS.totalTrust}</span>
+                <span className="font-semibold text-lg text-gray-900">
+                  {dashboardStore.dashboardData?.COMPLETION_STATUS.totalTrust}
+                </span>
                 <span>Total number of Trust</span>
               </div>
             </div>
@@ -993,56 +1374,73 @@ const DashboardPage: React.FC = observer(() => {
         {/* HCDT Statistics */}
         {/* Settlors Operational Expenditure */}
         <div className="bg-white rounded-xl p-8 shadow flex flex-col justify-center min-h-[220px]">
-          <span className="font-semibold text-base text-gray-900 mb-4">Number of Trust with agreed distribution matrix</span>
+          <span className="font-semibold text-base text-gray-900 mb-4">
+            Number of HCDTs with Settlor-approved distribution matrix
+          </span>
           <div>
-            <span className="font-bold text-3xl text-gray-900 align-middle">{dashboardStore.dashboardData?.DISTRIBUTION_MATRIX.total_complete}</span>
-            <span className="text-base text-gray-700 ml-2 align-middle">Trust with agreed distribution matrix</span>
+            <span className="font-bold text-3xl text-gray-900 align-middle">
+              {dashboardStore.dashboardData?.DISTRIBUTION_MATRIX.total_complete}
+            </span>
+            <span className="text-base text-gray-700 ml-2 align-middle">
+              Trust with agreed distribution matrix
+            </span>
           </div>
         </div>
         <div className="bg-white rounded-xl p-8 shadow">
-          <div className="font-semibold text-base text-gray-900 mb-4">Status of HCDT Funding by the Settlor: Percent of Trust that have received their annual OPEX funding from the Settlors</div>
-          <div className="w-full max-w-4xl mx-auto" style={{ minHeight: "220px" }}>
+          <div className="font-semibold text-base text-gray-900 mb-4">
+            Percentage of HCDTs that have received their annual funding (3% OPEX) 
+          </div>
+          <div
+            className="w-full max-w-4xl mx-auto"
+            style={{ minHeight: "220px" }}>
             <Bar data={FundsData} options={conflictBarOptions} />
           </div>
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 min-h-[220px]">
         <div className="bg-white rounded-xl p-8 shadow">
-          <div className="font-semibold text-base text-gray-900 mb-4">Gender composition of HCDT committees</div>
-          <div className="w-full max-w-4xl mx-auto" style={{ minHeight: "220px" }}>
+          <div className="font-semibold text-base text-gray-900 mb-4">
+            Gender composition of HCDT committees
+          </div>
+          <div
+            className="w-full max-w-4xl mx-auto"
+            style={{ minHeight: "220px" }}>
             <Bar data={BoTData} options={conflictBarOptions} />
           </div>
         </div>
 
         <div className="bg-white rounded-xl p-6 shadow flex flex-col items-center ">
           <span className="font-semibold text-base text-gray-900 mb-4 self-start">
-            Percentage of HCDTs with constituted and inaugurated Board of trustee and Management Committee and Advisory Committee
+           Percentage of HCDTs that have established a Board of Trustees, Management Committee, and Advisory Committee.
           </span>
           <Bar
             data={{
               labels: [
                 "BoT Committee",
                 "Management Committee",
-                "Advisory Committee"
+                "Advisory Committee",
               ],
               datasets: [
                 {
                   label: "Percentage",
                   data: [
-                    dashboardStore.dashboardData?.BOT_INAUGURATION_CHECK.botYesPercentage,
-                    dashboardStore.dashboardData?.BOT_INAUGURATION_CHECK.managementYesPercentage,
-                    dashboardStore.dashboardData?.BOT_INAUGURATION_CHECK.advisoryYesPercentage,
+                    dashboardStore.dashboardData?.BOT_INAUGURATION_CHECK
+                      .botYesPercentage,
+                    dashboardStore.dashboardData?.BOT_INAUGURATION_CHECK
+                      .managementYesPercentage,
+                    dashboardStore.dashboardData?.BOT_INAUGURATION_CHECK
+                      .advisoryYesPercentage,
                   ],
                   backgroundColor: [
                     doughnutColors[0],
                     doughnutColors[1],
-                    doughnutColors[2]
+                    doughnutColors[2],
                   ],
                   borderRadius: 8,
                   barPercentage: 0.5,
                   categoryPercentage: 0.5,
-                }
-              ]
+                },
+              ],
             }}
             options={{
               indexAxis: "y",
@@ -1050,16 +1448,16 @@ const DashboardPage: React.FC = observer(() => {
                 legend: { display: false },
                 tooltip: { enabled: true },
                 datalabels: {
-                  anchor: 'center' as const,
-                  align: 'center' as const,
+                  anchor: "center" as const,
+                  align: "center" as const,
                   formatter: function (value) {
                     return `${value}%`;
                   },
-                  color: '#222',
+                  color: "#222",
                   font: {
-                    weight: 'bold'
-                  }
-                }
+                    weight: "bold",
+                  },
+                },
               },
               scales: {
                 x: {
@@ -1068,18 +1466,18 @@ const DashboardPage: React.FC = observer(() => {
                   ticks: {
                     callback: function (tickValue) {
                       return `${tickValue}%`;
-                    }
+                    },
                   },
                   title: {
-                    display: false
-                  }
+                    display: false,
+                  },
                 },
                 y: {
                   title: {
-                    display: false
-                  }
-                }
-              }
+                    display: false,
+                  },
+                },
+              },
             }}
           />
         </div>
@@ -1087,9 +1485,11 @@ const DashboardPage: React.FC = observer(() => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 min-h-[220px]">
         <div className="bg-white rounded-xl p-6 shadow flex flex-col items-center ">
           <span className="font-semibold text-base text-gray-900 mb-4 self-start">
-            Percentage of Trusts where host community leaders, women, youths, and PwDs were consulted during needs assessment.
+           Percentage of HCDTs that consulted with community leaders, women, youth, and PwDs during the needs assessment – <i>disaggregate by process of consultation</i>
           </span>
-          <div className="w-full max-w-4xl mx-auto" style={{ minHeight: "220px" }}>
+          <div
+            className="w-full max-w-4xl mx-auto"
+            style={{ minHeight: "220px" }}>
             <Bar data={BoTData2} options={conflictBarOptions} />
           </div>
           {/* <Bar
@@ -1162,7 +1562,9 @@ const DashboardPage: React.FC = observer(() => {
         </div>
         <div className="bg-white rounded-xl p-8 shadow flex flex-col md:flex-row items-center min-h-[320px]">
           <div className="flex flex-col items-center ">
-            <span className="font-semibold text-base text-gray-900 mb-4 self-start">Percentage of Trust where needs assessment has been conducted.</span>
+            <span className="font-semibold text-base text-gray-900 mb-4 self-start">
+              Percentage of HCDTs whose needs assessments have been undertaken by the Settlor
+            </span>
             <div className="flex flex-row items-center ">
               <div className="w-40 h-40">
                 <Doughnut
@@ -1172,21 +1574,27 @@ const DashboardPage: React.FC = observer(() => {
                     datasets: [
                       {
                         data: [
-                          dashboardStore.dashboardData?.NEEDS_ASSESSMENT_PERCENTAGE?.percentage_status_1,
-                          dashboardStore.dashboardData?.NEEDS_ASSESSMENT_PERCENTAGE?.percentage_status_2,
-                          dashboardStore.dashboardData?.NEEDS_ASSESSMENT_PERCENTAGE?.percentage_status_3,
+                          dashboardStore.dashboardData
+                            ?.NEEDS_ASSESSMENT_PERCENTAGE?.percentage_status_1,
+                          dashboardStore.dashboardData
+                            ?.NEEDS_ASSESSMENT_PERCENTAGE?.percentage_status_2,
+                          dashboardStore.dashboardData
+                            ?.NEEDS_ASSESSMENT_PERCENTAGE?.percentage_status_3,
                         ],
                         backgroundColor: [
                           doughnutColors[0],
                           doughnutColors[1],
-                          doughnutColors[2]
+                          doughnutColors[2],
                         ],
                         borderWidth: 0,
                       },
                     ],
                   }}
                   options={{
-                    plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                    plugins: {
+                      legend: { display: false },
+                      tooltip: { enabled: false },
+                    },
                     cutout: "60%",
                   }}
                 />
@@ -1195,9 +1603,13 @@ const DashboardPage: React.FC = observer(() => {
                 {dataM.map((e, i) => (
                   <div key={i}>
                     <div className="flex items-center text-sm text-gray-700 gap-2">
-                      <span className="inline-block w-3 h-3 rounded-full" style={{ background: e.color }}></span>
+                      <span
+                        className="inline-block w-3 h-3 rounded-full"
+                        style={{ background: e.color }}></span>
                       {e.name}
-                      <span className="ml-2 text-gray-500">{e.percentage}%</span>
+                      <span className="ml-2 text-gray-500">
+                        {e.percentage}%
+                      </span>
                     </div>
                   </div>
                 ))}
@@ -1208,8 +1620,9 @@ const DashboardPage: React.FC = observer(() => {
       </div>
 
       {/* Project */}
-      <div id="project" className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
-
+      <div
+        id="project"
+        className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
         {/* <div className="p-6 bg-gray-100 min-h-screen"> */}
         <h2 className="font-semibold text-xl text-gray-900 mb-4 mt-10">
           Project implementation and quality assessment
@@ -1237,23 +1650,35 @@ const DashboardPage: React.FC = observer(() => {
           {/* Project Quality Ratings */}
           <div className="bg-white rounded-xl p-8 shadow flex flex-col md:flex-row items-center min-h-[320px]">
             <div className="flex flex-col items-center w-full">
-              <span className="font-semibold text-base text-gray-900 mb-4 self-start">Project quality ratings</span>
+              <span className="font-semibold text-base text-gray-900 mb-4 self-start">
+                Project quality ratings
+              </span>
               <div className="flex flex-row items-center w-full">
                 <div className="w-40 h-40">
                   <Doughnut
                     data={{
                       // labels: ["Worse", "Good", "Fair", "Excellent", "Bad"],
-                      labels: dashboardStore.dashboardData?.QUALITY_RATINGS.map(e => e.qualityRating),
+                      labels: dashboardStore.dashboardData?.QUALITY_RATINGS.map(
+                        (e) => e.qualityRating
+                      ),
                       datasets: [
                         {
-                          data: dashboardStore.dashboardData?.QUALITY_RATINGS.map(e => e.percentage),
-                          backgroundColor: dashboardStore.dashboardData?.QUALITY_RATINGS.map(e => e.color),
+                          data: dashboardStore.dashboardData?.QUALITY_RATINGS.map(
+                            (e) => e.percentage
+                          ),
+                          backgroundColor:
+                            dashboardStore.dashboardData?.QUALITY_RATINGS.map(
+                              (e) => e.color
+                            ),
                           borderWidth: 0,
                         },
                       ],
                     }}
                     options={{
-                      plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                      plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: false },
+                      },
                       cutout: "60%",
                     }}
                   />
@@ -1262,9 +1687,13 @@ const DashboardPage: React.FC = observer(() => {
                   {dashboardStore.dashboardData?.QUALITY_RATINGS.map((e, i) => (
                     <div key={i}>
                       <div className="flex items-center text-sm text-gray-700 gap-2">
-                        <span className="inline-block w-3 h-3 rounded-full" style={{ background: e.color }}></span>
+                        <span
+                          className="inline-block w-3 h-3 rounded-full"
+                          style={{ background: e.color }}></span>
                         {e.qualityRating}
-                        <span className="ml-2 text-gray-500">{e.percentage}%</span>
+                        <span className="ml-2 text-gray-500">
+                          {e.percentage}%
+                        </span>
                       </div>
                     </div>
                   ))}
@@ -1274,15 +1703,20 @@ const DashboardPage: React.FC = observer(() => {
           </div>
           {/* Project Completion over time */}
           <div className="bg-white rounded-xl p-8 shadow flex flex-col min-h-[320px]">
-            <span className="font-semibold text-base text-gray-900 mb-4">Project completion over time</span>
+            <span className="font-semibold text-base text-gray-900 mb-4">
+              Project completion over time
+            </span>
             <div className="w-full h-64">
               <Line
                 data={{
-                  labels: dashboardStore.dashboardData?.COMPLETION_OVER_MONTH.monthName,
+                  labels:
+                    dashboardStore.dashboardData?.COMPLETION_OVER_MONTH
+                      .monthName,
                   datasets: [
                     {
                       label: "Completion",
-                      data: dashboardStore.dashboardData?.COMPLETION_OVER_MONTH.total,
+                      data: dashboardStore.dashboardData?.COMPLETION_OVER_MONTH
+                        .total,
                       borderColor: "#3366CC",
                       backgroundColor: "#3366CC",
                       tension: 0.4,
@@ -1293,7 +1727,10 @@ const DashboardPage: React.FC = observer(() => {
                   ],
                 }}
                 options={{
-                  plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                  plugins: {
+                    legend: { display: false },
+                    tooltip: { enabled: false },
+                  },
                   scales: {
                     x: {
                       grid: { display: false },
@@ -1317,7 +1754,9 @@ const DashboardPage: React.FC = observer(() => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Line Chart 1 */}
           <div className="bg-white p-3 rounded-md shadow-sm">
-            <h3 className="font-semibold text-lg text-gray-600 mb-2">Number of community members benefitting from livelihood/ human capacity development initiatives</h3>
+            <h3 className="font-semibold text-lg text-gray-600 mb-2">
+              Number of host community members benefitting from livelihood/ human capacity development initiatives implemented by HCDTs
+            </h3>
             <div className="h-80 flex items-center justify-center">
               <Line options={chartOptions} data={data1} />
             </div>
@@ -1325,7 +1764,9 @@ const DashboardPage: React.FC = observer(() => {
 
           {/* Pie Chart 1 */}
           <div className="bg-white p-3 rounded-md shadow-sm">
-            <h3 className="font-semibold  text-lg text-gray-600 mb-2">Trust Projects by Category</h3>
+            <h3 className="font-semibold  text-lg text-gray-600 mb-2">
+              Trust Projects by Category
+            </h3>
             <div className="h-80 flex items-center justify-center">
               <Pie
                 options={{
@@ -1334,9 +1775,17 @@ const DashboardPage: React.FC = observer(() => {
                       color: "#222",
                       font: { weight: "bold" },
                       formatter: (value: number, context: any) => {
-                        const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
-                        const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
-                        const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
+                        const dataArr =
+                          context?.chart?.data?.datasets?.[0]?.data ?? [];
+                        const total = Array.isArray(dataArr)
+                          ? dataArr.reduce(
+                              (a: number, b: any) => a + (Number(b) || 0),
+                              0
+                            )
+                          : 0;
+                        const percent = total
+                          ? ((Number(value) / total) * 100).toFixed(0)
+                          : 0;
                         return `${percent}%`;
                       },
                     },
@@ -1344,22 +1793,27 @@ const DashboardPage: React.FC = observer(() => {
                   },
                 }}
                 plugins={[ChartDataLabels]}
-                data={pieChartData1} />
+                data={pieChartData1}
+              />
             </div>
           </div>
 
           {/* Line Chart 2 */}
           <div className="bg-white p-3 rounded-md shadow-sm">
-            <h3 className="font-semibold text-lg text-gray-600 mb-2"> Number of Trust community members who were locally employed by HCDT project contractors</h3>
+            <h3 className="font-semibold text-lg text-gray-600 mb-2">
+              {" "}
+              Number of host community members employed by HCDT project contractors
+            </h3>
             <div className="h-80 flex items-center justify-center">
               <Line options={chartOptions} data={data2} />
             </div>
           </div>
 
-
           {/* Pie Chart 2 */}
           <div className="bg-white p-3 rounded-md shadow-sm">
-            <h3 className="font-semibold text-lg text-gray-600 mb-2">Trust Projects by Status</h3>
+            <h3 className="font-semibold text-lg text-gray-600 mb-2">
+              Trust Projects by Status
+            </h3>
             <div className="h-80 flex items-center justify-center">
               <Pie
                 options={{
@@ -1368,9 +1822,17 @@ const DashboardPage: React.FC = observer(() => {
                       color: "#222",
                       font: { weight: "bold" },
                       formatter: (value: number, context: any) => {
-                        const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
-                        const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
-                        const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
+                        const dataArr =
+                          context?.chart?.data?.datasets?.[0]?.data ?? [];
+                        const total = Array.isArray(dataArr)
+                          ? dataArr.reduce(
+                              (a: number, b: any) => a + (Number(b) || 0),
+                              0
+                            )
+                          : 0;
+                        const percent = total
+                          ? ((Number(value) / total) * 100).toFixed(0)
+                          : 0;
                         return `${percent}%`;
                       },
                     },
@@ -1378,39 +1840,57 @@ const DashboardPage: React.FC = observer(() => {
                   },
                 }}
                 plugins={[ChartDataLabels]}
-                data={pieChartData2} />
+                data={pieChartData2}
+              />
             </div>
           </div>
         </div>
         {/* </div> */}
         <div className="bg-white rounded-xl p-8 shadow mt-10 w-full">
-          <div className="font-semibold text-base text-gray-900 mb-4">Local employment by gender and social inclusion</div>
-          <div className="w-full max-w-4xl mx-auto" style={{ minHeight: "320px" }}>
+          <div className="font-semibold text-base text-gray-900 mb-4">
+            Local employment by gender and social inclusion
+          </div>
+          <div
+            className="w-full max-w-4xl mx-auto"
+            style={{ minHeight: "320px" }}>
             <Bar data={localEmploymentBarData} options={conflictBarOptions} />
           </div>
         </div>
-
       </div>
 
       {/* Conflict Resolution */}
-      <div id="conflict" className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
-
+      <div
+        id="conflict"
+        className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
         <h2 className="font-semibold text-xl text-gray-900 mb-4 mt-10">
           Conflict Resolution
         </h2>
         {/* Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
           {[
-            { title: "All Conflict Reported", count: conflictStore.dashboardData?.ALL_CONFLICT_REPORT },
-            { title: "Conflicts Resolved", count: conflictStore.dashboardData?.RESOLVED_CONFLICT },
-            { title: "Conflicts Pending Resolution", count: conflictStore.dashboardData?.PENDING_CONFLICT },
-            { title: "Conflicts in Court", count: conflictStore.dashboardData?.CONFLICTS_IN_COURT },
+            {
+              title: "All Conflict Reported",
+              count: conflictStore.dashboardData?.ALL_CONFLICT_REPORT,
+            },
+            {
+              title: "Conflicts Resolved",
+              count: conflictStore.dashboardData?.RESOLVED_CONFLICT,
+            },
+            {
+              title: "Conflicts Pending Resolution",
+              count: conflictStore.dashboardData?.PENDING_CONFLICT,
+            },
+            {
+              title: "Conflicts in Court",
+              count: conflictStore.dashboardData?.CONFLICTS_IN_COURT,
+            },
           ].map((item, index) => (
             <div
               key={index}
-              className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center"
-            >
-              <h3 className="text-sm font-medium text-gray-600">{item.title}</h3>
+              className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center">
+              <h3 className="text-sm font-medium text-gray-600">
+                {item.title}
+              </h3>
               <p className="text-2xl font-bold text-gray-800">{item.count}</p>
             </div>
           ))}
@@ -1455,24 +1935,43 @@ const DashboardPage: React.FC = observer(() => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10 pb-6">
           {/* Conflict resolution status chart */}
           <div className="bg-white rounded-xl p-6 shadow flex flex-col items-center  w-full md:max-w-xs">
-            <span className="font-semibold text-base text-gray-900 mb-4">Conflict resolution status</span>
+            <span className="font-semibold text-base text-gray-900 mb-4">
+              Conflict resolution status
+            </span>
             <div className="w-32 h-32 mb-4">
-              <Doughnut data={conflictStatusData} options={conflictStatusOptions} />
+              <Doughnut
+                data={conflictStatusData}
+                options={conflictStatusOptions}
+              />
             </div>
             <div className="flex flex-col gap-2 w-full mt-2">
               <div className="flex items-center justify-between text-sm">
                 <span className="flex items-center">
-                  <span className="inline-block w-3 h-3 rounded-full mr-2" style={{ background: "#22C55E" }}></span>
+                  <span
+                    className="inline-block w-3 h-3 rounded-full mr-2"
+                    style={{ background: "#22C55E" }}></span>
                   Resolved
                 </span>
-                <span className="font-semibold text-gray-900">{dashboardStore.dashboardData?.CONFLICT_RESOLUTION_PERCENTAGE.resolvedPercentage}</span>
+                <span className="font-semibold text-gray-900">
+                  {
+                    dashboardStore.dashboardData?.CONFLICT_RESOLUTION_PERCENTAGE
+                      .resolvedPercentage
+                  }
+                </span>
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="flex items-center">
-                  <span className="inline-block w-3 h-3 rounded-full mr-2" style={{ background: "#EA580C" }}></span>
+                  <span
+                    className="inline-block w-3 h-3 rounded-full mr-2"
+                    style={{ background: "#EA580C" }}></span>
                   Unresolved
                 </span>
-                <span className="font-semibold text-gray-900">{dashboardStore.dashboardData?.CONFLICT_RESOLUTION_PERCENTAGE.unresolvedPercentage}</span>
+                <span className="font-semibold text-gray-900">
+                  {
+                    dashboardStore.dashboardData?.CONFLICT_RESOLUTION_PERCENTAGE
+                      .unresolvedPercentage
+                  }
+                </span>
               </div>
             </div>
           </div>
@@ -1491,10 +1990,11 @@ const DashboardPage: React.FC = observer(() => {
         {/* Charts Section */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mb-4">
           <div className="bg-white p-3 rounded-md shadow-sm">
-            <h3 className="text-xs font-medium text-gray-600 mb-2">Status of conflict</h3>
+            <h3 className="text-xs font-medium text-gray-600 mb-2">
+              Status of conflict
+            </h3>
             <div className="h-80 flex items-center justify-center">
               <Pie
-
                 data={pieDataStatusOfConflict}
                 options={{
                   plugins: {
@@ -1502,9 +2002,17 @@ const DashboardPage: React.FC = observer(() => {
                       color: "#222",
                       font: { weight: "bold" },
                       formatter: (value: number, context: any) => {
-                        const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
-                        const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
-                        const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
+                        const dataArr =
+                          context?.chart?.data?.datasets?.[0]?.data ?? [];
+                        const total = Array.isArray(dataArr)
+                          ? dataArr.reduce(
+                              (a: number, b: any) => a + (Number(b) || 0),
+                              0
+                            )
+                          : 0;
+                        const percent = total
+                          ? ((Number(value) / total) * 100).toFixed(0)
+                          : 0;
                         return `${percent}%`;
                       },
                     },
@@ -1516,7 +2024,9 @@ const DashboardPage: React.FC = observer(() => {
             </div>
           </div>
           <div className="bg-white p-3 rounded-md shadow-sm">
-            <h3 className="text-xs font-medium text-gray-600 mb-2">Status of Court litigation</h3>
+            <h3 className="text-xs font-medium text-gray-600 mb-2">
+              Status of Court litigation
+            </h3>
             <div className="h-80 flex items-center justify-center">
               <Pie
                 data={pieDataCourtLitigation}
@@ -1526,9 +2036,17 @@ const DashboardPage: React.FC = observer(() => {
                       color: "#222",
                       font: { weight: "bold" },
                       formatter: (value: number, context: any) => {
-                        const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
-                        const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
-                        const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
+                        const dataArr =
+                          context?.chart?.data?.datasets?.[0]?.data ?? [];
+                        const total = Array.isArray(dataArr)
+                          ? dataArr.reduce(
+                              (a: number, b: any) => a + (Number(b) || 0),
+                              0
+                            )
+                          : 0;
+                        const percent = total
+                          ? ((Number(value) / total) * 100).toFixed(0)
+                          : 0;
                         return `${percent}%`;
                       },
                     },
@@ -1544,24 +2062,40 @@ const DashboardPage: React.FC = observer(() => {
         {/* Report Frequency and Major Causes */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6 ">
           <div className="bg-white p-4 rounded-lg shadow-md">
-            <h3 className="text-sm font-medium text-gray-600 mb-4">Report frequency</h3>
+            <h3 className="text-sm font-medium text-gray-600 mb-4">
+              Report frequency
+            </h3>
             <Line data={lineDataReportFrequency} />
           </div>
           <div className="bg-white p-9 rounded-lg shadow-md">
-            <h3 className="text-sm font-medium text-gray-600 mb-4">Major causes of conflict</h3>
-            {(conflictStore.dashboardData?.CAUSE_OF_CONFLICT ?? []).length > 0 ? (
+            <h3 className="text-sm font-medium text-gray-600 mb-4">
+              Major causes of conflict
+            </h3>
+            {(conflictStore.dashboardData?.CAUSE_OF_CONFLICT ?? []).length >
+            0 ? (
               <ul className="space-y-2">
-                {conflictStore.dashboardData?.CAUSE_OF_CONFLICT.map((cause, index) => (
-                  <li key={index} className="flex justify-between text-sm text-gray-600">
-                    <span className="font-bold text-lg">{removeUnderscores(cause.label)}</span>
-                    <span className="font-bold text-lg">{cause.value}</span>
-                  </li>
-                ))}
+                {conflictStore.dashboardData?.CAUSE_OF_CONFLICT.map(
+                  (cause, index) => (
+                    <li
+                      key={index}
+                      className="flex justify-between text-sm text-gray-600">
+                      <span className="font-bold text-lg">
+                        {removeUnderscores(cause.label)}
+                      </span>
+                      <span className="font-bold text-lg">{cause.value}</span>
+                    </li>
+                  )
+                )}
               </ul>
             ) : (
               <div className="mt-8 h-[40vh] text-center flex items-center justify-center border border-grey-500 rounded-lg">
                 <div>
-                  <img className="mx-auto" src={IMG} alt="No data available" style={{ width: "200px" }} />
+                  <img
+                    className="mx-auto"
+                    src={IMG}
+                    alt="No data available"
+                    style={{ width: "200px" }}
+                  />
                   <div className="mt-2">
                     <h3 className="text-base lg:text-lg font-semibold text-grey-500">
                       No major cause of conflict
@@ -1578,29 +2112,32 @@ const DashboardPage: React.FC = observer(() => {
           <div className="bg-white p-4 rounded-lg shadow-md">
             <DashboardTable
               header={"Top Resolved Conflict"}
-              data={conflictStore?.dashboardData?.RESOLVED_CONFLICTS.map((conflict: IConflictView) => {
-                return {
-                  trustName: conflict.trustName,
-                  causeOfConflictName: conflict.causeOfConflictName,
-                  createAt: conflict.createAt
+              data={conflictStore?.dashboardData?.RESOLVED_CONFLICTS.map(
+                (conflict: IConflictView) => {
+                  return {
+                    trustName: conflict.trustName,
+                    causeOfConflictName: conflict.causeOfConflictName,
+                    createAt: conflict.createAt,
+                  };
                 }
-              })}
+              )}
               columns={conflictDetailsColumnsR}
               emptyText={"No data available"}
               loading={false}
             />
-
           </div>
           <div className="bg-white p-4 rounded-lg shadow-md">
             <DashboardTable
               header={"Top Unresolved Conflict"}
-              data={conflictStore?.dashboardData?.UNRESOLVED_CONFLICTS.map((conflict: IConflictView) => {
-                return {
-                  trustName: conflict.trustName,
-                  causeOfConflictName: conflict.causeOfConflictName,
-                  createAt: conflict.createAt
+              data={conflictStore?.dashboardData?.UNRESOLVED_CONFLICTS.map(
+                (conflict: IConflictView) => {
+                  return {
+                    trustName: conflict.trustName,
+                    causeOfConflictName: conflict.causeOfConflictName,
+                    createAt: conflict.createAt,
+                  };
                 }
-              })}
+              )}
               columns={conflictDetailsColumnsR}
               emptyText={"No data available"}
               loading={false}
@@ -1609,22 +2146,33 @@ const DashboardPage: React.FC = observer(() => {
         </div>
       </div>
 
-
       {/* Community Satisfaction */}
-      <div id="community-satisfaction" className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
-
+      <div
+        id="community-satisfaction"
+        className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
         <h2 className="font-semibold text-xl text-gray-900 mb-4 mt-10">
-          Average community satisfaction with the process, inclusion, approach and management of the HCDTs by the government structure (BoT, MC & AC)
+          Average community satisfaction with the process, inclusion, approach
+          and management of the HCDTs by the government structure (BoT, MC & AC)
         </h2>
         <div className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
           <div className="h-[400px] sm:h-[500px]">
             <Bar
               data={generateGroupedBarData([
-                satisfactionStore.dashboardData?.infoProjects || [0, 0, 0, 0, 0],
-                satisfactionStore.dashboardData?.communityConsult || [0, 0, 0, 0, 0],
-                satisfactionStore.dashboardData?.localParticipation || [0, 0, 0, 0, 0],
-                satisfactionStore.dashboardData?.reportMechanism || [0, 0, 0, 0, 0],
-                satisfactionStore.dashboardData?.conflictMinimization || [0, 0, 0, 0, 0],
+                satisfactionStore.dashboardData?.infoProjects || [
+                  0, 0, 0, 0, 0,
+                ],
+                satisfactionStore.dashboardData?.communityConsult || [
+                  0, 0, 0, 0, 0,
+                ],
+                satisfactionStore.dashboardData?.localParticipation || [
+                  0, 0, 0, 0, 0,
+                ],
+                satisfactionStore.dashboardData?.reportMechanism || [
+                  0, 0, 0, 0, 0,
+                ],
+                satisfactionStore.dashboardData?.conflictMinimization || [
+                  0, 0, 0, 0, 0,
+                ],
                 // satisfactionStore.dashboardData?.settlorAction || [0, 0, 0, 0, 0],
                 // satisfactionStore.dashboardData?.nuprcAction || [0, 0, 0, 0, 0],
               ])}
@@ -1632,7 +2180,6 @@ const DashboardPage: React.FC = observer(() => {
               plugins={[ChartDataLabels]}
             />
           </div>
-
         </div>
 
         {/* Pie Charts Section */}
@@ -1641,10 +2188,12 @@ const DashboardPage: React.FC = observer(() => {
         <br />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mb-4">
           <div className="bg-white p-3 rounded-md shadow-sm">
-            <h3 className="text-s font-medium text-gray-800 mb-2">The way the Settlor has acted has  minimized conflict and improved their relationship with the host communities.</h3>
+            <h3 className="text-s font-medium text-gray-800 mb-2">
+              The way the Settlor has acted has minimized conflict and improved
+              their relationship with the host communities.
+            </h3>
             <div className="h-80 flex items-center justify-center">
               <Pie
-
                 data={pieDataForSettlorSatisfaction}
                 options={{
                   plugins: {
@@ -1652,9 +2201,17 @@ const DashboardPage: React.FC = observer(() => {
                       color: "#222",
                       font: { weight: "bold" },
                       formatter: (value: number, context: any) => {
-                        const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
-                        const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
-                        const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
+                        const dataArr =
+                          context?.chart?.data?.datasets?.[0]?.data ?? [];
+                        const total = Array.isArray(dataArr)
+                          ? dataArr.reduce(
+                              (a: number, b: any) => a + (Number(b) || 0),
+                              0
+                            )
+                          : 0;
+                        const percent = total
+                          ? ((Number(value) / total) * 100).toFixed(0)
+                          : 0;
                         return `${percent}%`;
                       },
                     },
@@ -1669,10 +2226,14 @@ const DashboardPage: React.FC = observer(() => {
             </div>
           </div>
           <div className="bg-white p-3 rounded-md shadow-sm">
-            <h3 className="text-s font-medium text-gray-800 mb-2">The way NUPRC is regulating and responding is effectively addressing disputes emanating from the implementation of the HCDT, and promoting improved relationships between host communities and Settlor's.</h3>
+            <h3 className="text-s font-medium text-gray-800 mb-2">
+              The way NUPRC is regulating and responding is effectively
+              addressing disputes emanating from the implementation of the HCDT,
+              and promoting improved relationships between host communities and
+              Settlor's.
+            </h3>
             <div className="h-80 flex items-center justify-center">
               <Pie
-
                 data={pieDataForNUPRCSatisfaction}
                 options={{
                   plugins: {
@@ -1680,9 +2241,17 @@ const DashboardPage: React.FC = observer(() => {
                       color: "#222",
                       font: { weight: "bold" },
                       formatter: (value: number, context: any) => {
-                        const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
-                        const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
-                        const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
+                        const dataArr =
+                          context?.chart?.data?.datasets?.[0]?.data ?? [];
+                        const total = Array.isArray(dataArr)
+                          ? dataArr.reduce(
+                              (a: number, b: any) => a + (Number(b) || 0),
+                              0
+                            )
+                          : 0;
+                        const percent = total
+                          ? ((Number(value) / total) * 100).toFixed(0)
+                          : 0;
                         return `${percent}%`;
                       },
                     },
@@ -1700,7 +2269,8 @@ const DashboardPage: React.FC = observer(() => {
         <br />
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4">
-            Existence, and activeness of sustainability management structure/committees established by the Trust
+            Existence, and activeness of sustainability management
+            structure/committees established by the Trust
           </h1>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Question 1 */}
@@ -1737,13 +2307,16 @@ const DashboardPage: React.FC = observer(() => {
             </div> */}
             <div className="bg-white shadow-md rounded-lg p-4 sm:p-6 flex flex-col items-center">
               <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4 text-center">
-                The Trust commissioned and handed over completed projects in our community to the community leadership?
+                The Trust commissioned and handed over completed projects in our
+                community to the community leadership?
               </h3>
               <div className="flex flex-col items-center">
                 <div className="h-52 w-52 mb-4">
                   <Pie
                     data={generatePieData(
-                      satisfactionStore.dashboardData?.projectHandover || [0, 0, 0, 0]
+                      satisfactionStore.dashboardData?.projectHandover || [
+                        0, 0, 0, 0,
+                      ]
                     )}
                     options={{
                       plugins: {
@@ -1751,9 +2324,17 @@ const DashboardPage: React.FC = observer(() => {
                           color: "#222",
                           font: { weight: "bold", size: 16 },
                           formatter: (value: number, context: any) => {
-                            const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
-                            const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
-                            const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
+                            const dataArr =
+                              context?.chart?.data?.datasets?.[0]?.data ?? [];
+                            const total = Array.isArray(dataArr)
+                              ? dataArr.reduce(
+                                  (a: number, b: any) => a + (Number(b) || 0),
+                                  0
+                                )
+                              : 0;
+                            const percent = total
+                              ? ((Number(value) / total) * 100).toFixed(0)
+                              : 0;
                             return `${percent}%`;
                           },
                         },
@@ -1778,14 +2359,17 @@ const DashboardPage: React.FC = observer(() => {
             </div>
             <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
               <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
-                The Trust has consulted our community leadership to discuss or develop maintenance plans for all the completed projects implemented in our community.
+                The Trust has consulted our community leadership to discuss or
+                develop maintenance plans for all the completed projects
+                implemented in our community.
               </h3>
               <div className="flex flex-col items-center">
                 <div className="h-52 w-52 mb-4">
-
                   <Pie
                     data={generatePieData(
-                      satisfactionStore.dashboardData?.maintenanceConsult || [0, 0, 0, 0]
+                      satisfactionStore.dashboardData?.maintenanceConsult || [
+                        0, 0, 0, 0,
+                      ]
                     )}
                     options={{
                       plugins: {
@@ -1793,9 +2377,17 @@ const DashboardPage: React.FC = observer(() => {
                           color: "#222",
                           font: { weight: "bold", size: 16 },
                           formatter: (value: number, context: any) => {
-                            const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
-                            const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
-                            const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
+                            const dataArr =
+                              context?.chart?.data?.datasets?.[0]?.data ?? [];
+                            const total = Array.isArray(dataArr)
+                              ? dataArr.reduce(
+                                  (a: number, b: any) => a + (Number(b) || 0),
+                                  0
+                                )
+                              : 0;
+                            const percent = total
+                              ? ((Number(value) / total) * 100).toFixed(0)
+                              : 0;
                             return `${percent}%`;
                           },
                         },
@@ -1822,13 +2414,16 @@ const DashboardPage: React.FC = observer(() => {
             {/* Question 3 */}
             <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
               <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
-                The Trust implemented or is implementing at least one income-generating project for the host communities.
+                The Trust implemented or is implementing at least one
+                income-generating project for the host communities.
               </h3>
               <div className="flex flex-col items-center">
                 <div className="h-52 w-52 mb-4">
                   <Pie
                     data={generatePieData(
-                      satisfactionStore.dashboardData?.incomeProject || [0, 0, 0, 0]
+                      satisfactionStore.dashboardData?.incomeProject || [
+                        0, 0, 0, 0,
+                      ]
                     )}
                     options={{
                       plugins: {
@@ -1836,9 +2431,17 @@ const DashboardPage: React.FC = observer(() => {
                           color: "#222",
                           font: { weight: "bold", size: 16 },
                           formatter: (value: number, context: any) => {
-                            const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
-                            const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
-                            const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
+                            const dataArr =
+                              context?.chart?.data?.datasets?.[0]?.data ?? [];
+                            const total = Array.isArray(dataArr)
+                              ? dataArr.reduce(
+                                  (a: number, b: any) => a + (Number(b) || 0),
+                                  0
+                                )
+                              : 0;
+                            const percent = total
+                              ? ((Number(value) / total) * 100).toFixed(0)
+                              : 0;
                             return `${percent}%`;
                           },
                         },
@@ -1866,12 +2469,14 @@ const DashboardPage: React.FC = observer(() => {
         </div>
       </div>
 
-
       {/* Economic impact */}
-      <div id="economic-impact" className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
-
+      <div
+        id="economic-impact"
+        className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
         <h2 className="font-semibold text-xl text-gray-900 mb-4 mt-10">
-          Economic impact: Percentage of community members who reported that their income and livelihood have improved as a result of thr implementation of the HCDT project & initiatives
+          Economic impact: Percentage of community members who reported that
+          their income and livelihood have improved as a result of thr
+          implementation of the HCDT project & initiatives
         </h2>
         <div className=" mx-auto space-y-8">
           {/* Pie Charts */}
@@ -1880,8 +2485,8 @@ const DashboardPage: React.FC = observer(() => {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
                   <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
-                    My business is generating more money since they implemented some
-                    of the HCDT projects in my community.
+                    My business is generating more money since they implemented
+                    some of the HCDT projects in my community.
                   </h3>
                   <div className="h-48 sm:h-56">
                     <Pie
@@ -1892,9 +2497,17 @@ const DashboardPage: React.FC = observer(() => {
                             color: "#222",
                             font: { weight: "bold" },
                             formatter: (value: number, context: any) => {
-                              const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
-                              const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
-                              const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
+                              const dataArr =
+                                context?.chart?.data?.datasets?.[0]?.data ?? [];
+                              const total = Array.isArray(dataArr)
+                                ? dataArr.reduce(
+                                    (a: number, b: any) => a + (Number(b) || 0),
+                                    0
+                                  )
+                                : 0;
+                              const percent = total
+                                ? ((Number(value) / total) * 100).toFixed(0)
+                                : 0;
                               return `${percent}%`;
                             },
                           },
@@ -1917,8 +2530,8 @@ const DashboardPage: React.FC = observer(() => {
                 </div>
                 <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
                   <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
-                    My income has increased since the implementation of some of the
-                    HCDT projects in my community.
+                    My income has increased since the implementation of some of
+                    the HCDT projects in my community.
                   </h3>
                   <div className="h-48 sm:h-56">
                     <Pie
@@ -1929,9 +2542,17 @@ const DashboardPage: React.FC = observer(() => {
                             color: "#222",
                             font: { weight: "bold" },
                             formatter: (value: number, context: any) => {
-                              const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
-                              const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
-                              const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
+                              const dataArr =
+                                context?.chart?.data?.datasets?.[0]?.data ?? [];
+                              const total = Array.isArray(dataArr)
+                                ? dataArr.reduce(
+                                    (a: number, b: any) => a + (Number(b) || 0),
+                                    0
+                                  )
+                                : 0;
+                              const percent = total
+                                ? ((Number(value) / total) * 100).toFixed(0)
+                                : 0;
                               return `${percent}%`;
                             },
                           },
@@ -1954,8 +2575,8 @@ const DashboardPage: React.FC = observer(() => {
                 </div>
                 <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
                   <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
-                    The implemented HCDT projects have bettered my livelihood and
-                    quality of lives.
+                    The implemented HCDT projects have bettered my livelihood
+                    and quality of lives.
                   </h3>
                   <div className="h-48 sm:h-56">
                     <Pie
@@ -1966,9 +2587,17 @@ const DashboardPage: React.FC = observer(() => {
                             color: "#222",
                             font: { weight: "bold" },
                             formatter: (value: number, context: any) => {
-                              const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
-                              const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
-                              const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
+                              const dataArr =
+                                context?.chart?.data?.datasets?.[0]?.data ?? [];
+                              const total = Array.isArray(dataArr)
+                                ? dataArr.reduce(
+                                    (a: number, b: any) => a + (Number(b) || 0),
+                                    0
+                                  )
+                                : 0;
+                              const percent = total
+                                ? ((Number(value) / total) * 100).toFixed(0)
+                                : 0;
                               return `${percent}%`;
                             },
                           },
@@ -1999,35 +2628,34 @@ const DashboardPage: React.FC = observer(() => {
             {() => (
               <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
                 <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
-                  As a result of the HCDT projects, my household/I now have access to
-                  these basic amenities than before.
+                  As a result of the HCDT projects, my household/I now have
+                  access to these basic amenities than before.
                 </h3>
                 <div className="h-64 sm:h-80">
                   <Line
-
                     data={lineData}
                     options={{
                       maintainAspectRatio: false,
                       plugins: {
                         datalabels: {
-                          align: 'top',
-                          anchor: 'end',
-                          color: '#222',
-                          font: { weight: 'bold' },
-                          formatter: (value) => `${value}%`
-                        }
+                          align: "top",
+                          anchor: "end",
+                          color: "#222",
+                          font: { weight: "bold" },
+                          formatter: (value) => `${value}%`,
+                        },
                       },
                       scales: {
                         y: {
                           ticks: {
                             callback: function (value) {
                               return `${value}%`;
-                            }
+                            },
                           },
                           min: 0,
                           max: 100,
-                        }
-                      }
+                        },
+                      },
                     }}
                     plugins={[ChartDataLabels]}
                   />
