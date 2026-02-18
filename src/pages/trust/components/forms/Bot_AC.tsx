@@ -57,11 +57,9 @@ const Bot_AC = observer(({ method }: { method: any }) => {
               type="number"
               placeholder="Male"
               register={register}
-              registerOptions={{
-                required: "This field is required.",
-              }}
+              registerOptions={{}}
               errorMessage="This field is required"
-              />
+            />
           </div>
 
           <div>
@@ -72,9 +70,7 @@ const Bot_AC = observer(({ method }: { method: any }) => {
               type="number"
               placeholder="Female"
               register={register}
-              registerOptions={{
-                required: "This field is required.",
-              }}
+              registerOptions={{}}
               errorMessage="This field is required"
             />
           </div>
@@ -87,9 +83,7 @@ const Bot_AC = observer(({ method }: { method: any }) => {
               type="number"
               placeholder="Female"
               register={register}
-              registerOptions={{
-                required: "This field is required.",
-              }}
+              registerOptions={{}}
               errorMessage="This field is required"
             />
           </div>
@@ -110,9 +104,7 @@ const Bot_AC = observer(({ method }: { method: any }) => {
               type="number"
               placeholder="Male"
               register={register}
-              registerOptions={{
-                required: "This field is required.",
-              }}
+              registerOptions={{}}
               errorMessage="This field is required"
             />
           </div>
@@ -125,9 +117,7 @@ const Bot_AC = observer(({ method }: { method: any }) => {
               type="number"
               placeholder="Female"
               register={register}
-              registerOptions={{
-                required: "This field is required.",
-              }}
+              registerOptions={{}}
               errorMessage="This field is required"
             />
           </div>
@@ -140,9 +130,7 @@ const Bot_AC = observer(({ method }: { method: any }) => {
               type="number"
               placeholder="Female"
               register={register}
-              registerOptions={{
-                required: "This field is required.",
-              }}
+              registerOptions={{}}
               errorMessage="This field is required"
             />
           </div>
@@ -163,9 +151,7 @@ const Bot_AC = observer(({ method }: { method: any }) => {
               type="number"
               placeholder="Male"
               register={register}
-              registerOptions={{
-                required: "This field is required.",
-              }}
+              registerOptions={{}}
               errorMessage="This field is required"
             />
           </div>
@@ -178,9 +164,7 @@ const Bot_AC = observer(({ method }: { method: any }) => {
               type="number"
               placeholder="Female"
               register={register}
-              registerOptions={{
-                required: "This field is required.",
-              }}
+              registerOptions={{}}
               errorMessage="This field is required"
             />
           </div>
@@ -193,9 +177,7 @@ const Bot_AC = observer(({ method }: { method: any }) => {
               type="number"
               placeholder="Female"
               register={register}
-              registerOptions={{
-                required: "This field is required.",
-              }}
+              registerOptions={{}}
               errorMessage="This field is required"
             />
           </div>
@@ -204,7 +186,7 @@ const Bot_AC = observer(({ method }: { method: any }) => {
 
       <div className="mt-8 flex flex-col lg:flex-row items-center gap-8 justify-between">
 
-        <Button padding="py-3" buttonText={trustStore.isSaving?"Saving...":"Next"} />
+        <Button padding="py-3" buttonText={trustStore.isSaving ? "Saving..." : "Next"} />
       </div>
     </form>
   );

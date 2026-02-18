@@ -93,7 +93,7 @@ class TrustStore implements ITrustStore {
                 name: "Create Segments",
                 desc: "Get full control over your audience",
                 isCompleted: false,
-                isVisible: false,
+                isVisible: true,
                 isActive: false
             },
             {
@@ -101,7 +101,7 @@ class TrustStore implements ITrustStore {
                 name: "Add BoT,MC and AC",
                 desc: "Optimize your campaign reach with absence",
                 isCompleted: false,
-                isVisible: false,
+                isVisible: true,
                 isActive: false
             },
             {
@@ -109,7 +109,7 @@ class TrustStore implements ITrustStore {
                 name: "Preview Trust",
                 desc: "Setup your customer journey flow",
                 isCompleted: false,
-                isVisible: false,
+                isVisible: true,
                 isActive: false
             },
 

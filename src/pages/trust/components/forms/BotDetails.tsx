@@ -54,9 +54,7 @@ const BotDetails = observer(({ method }: { method: any }) => {
               name={`botDetailsOneFirstName`}
               type="text"
               register={register}
-              registerOptions={{
-                required: "This field is required.",
-              }}
+              registerOptions={{}}
               errorMessage="This field is required"
             />
           </div>
@@ -68,9 +66,7 @@ const BotDetails = observer(({ method }: { method: any }) => {
               name={`botDetailsOneLastName`}
               type="text"
               register={register}
-              registerOptions={{
-                required: "This field is required.",
-              }}
+              registerOptions={{}}
               errorMessage="This field is required"
             />
           </div>
@@ -82,9 +78,7 @@ const BotDetails = observer(({ method }: { method: any }) => {
               name={`botDetailsOneEmail`}
               type="email"
               register={register}
-              registerOptions={{
-                required: "This field is required.",
-              }}
+              registerOptions={{}}
               errorMessage="This field is required"
             />
           </div>
@@ -96,9 +90,7 @@ const BotDetails = observer(({ method }: { method: any }) => {
               name={`botDetailsOnePhoneNumber`}
               type="tel"
               register={register}
-              registerOptions={{
-                required: "This field is required.",
-              }}
+              registerOptions={{}}
               errorMessage="This field is required"
             />
           </div>
@@ -111,9 +103,7 @@ const BotDetails = observer(({ method }: { method: any }) => {
               name={`botDetailsTwoFirstName`}
               type="text"
               register={register}
-              registerOptions={{
-                required: "This field is required.",
-              }}
+              registerOptions={{}}
               errorMessage="This field is required"
             />
           </div>
@@ -125,9 +115,7 @@ const BotDetails = observer(({ method }: { method: any }) => {
               name={`botDetailsTwoLastName`}
               type="text"
               register={register}
-              registerOptions={{
-                required: "This field is required.",
-              }}
+              registerOptions={{}}
               errorMessage="This field is required"
             />
           </div>
@@ -139,9 +127,7 @@ const BotDetails = observer(({ method }: { method: any }) => {
               name={`botDetailsTwoEmail`}
               type="email"
               register={register}
-              registerOptions={{
-                required: "This field is required.",
-              }}
+              registerOptions={{}}
               errorMessage="This field is required"
             />
           </div>
@@ -153,9 +139,7 @@ const BotDetails = observer(({ method }: { method: any }) => {
               name={`botDetailsTwoPhoneNumber`}
               type="tel"
               register={register}
-              registerOptions={{
-                required: "This field is required.",
-              }}
+              registerOptions={{}}
               errorMessage="This field is required"
             />
           </div>

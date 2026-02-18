@@ -242,7 +242,7 @@ const EditTrustEstablishmentForm = observer(() => {
               <CustomRadio
                 name="trustRegisteredWithCAC"
                 control={control}
-                rules={{ required: "Please select a status" }}
+                rules={{}}
                 label="Trust registered with CAC"
                 options={[
                   { value: "1", label: "Yes" },
@@ -250,9 +250,6 @@ const EditTrustEstablishmentForm = observer(() => {
                   { value: "3", label: "No" },
                 ]}
               />
-              {errors.trustRegisteredWithCAC && (
-                <p className="text-red-500 text-xs mt-1">{String(errors?.trustRegisteredWithCAC?.message!)}</p>
-              )}
               <div>
                 <label className="text-[#8C94A6] text-base mb-2 block">
                   CAC document upload is optional.
@@ -297,7 +294,7 @@ const EditTrustEstablishmentForm = observer(() => {
                   <Controller
                     control={control}
                     name="yearIncorporated"
-                    rules={{ required: Number(watchedTrustRegisteredWithCAC) === 1 ? "Please select year" : false }}
+                    rules={{}}
                     render={({ field }) => (
                       <CustomSelect
                         id="year"
@@ -309,9 +306,6 @@ const EditTrustEstablishmentForm = observer(() => {
                       />
                     )}
                   />
-                  {errors.yearIncorporated && (
-                    <p className="text-red-500 text-xs mt-1">Please select year</p>
-                  )}
                 </div>
 
               </>
@@ -321,7 +315,7 @@ const EditTrustEstablishmentForm = observer(() => {
               <CustomRadio
                 name="botConstitutedAndInaugurated"
                 control={control}
-                rules={{ required: "Please select a status" }}
+                rules={{}}
                 label="BoT constituted and Inaugurated"
                 options={[
                   { value: "1", label: "Yes" },
@@ -329,13 +323,10 @@ const EditTrustEstablishmentForm = observer(() => {
                   { value: "3", label: "No" },
                 ]}
               />
-              {errors.botConstitutedAndInaugurated && (
-                <p className="text-red-500 text-xs mt-1">{String(errors?.botConstitutedAndInaugurated?.message!)}</p>
-              )}
               <CustomRadio
                 name="managementCommitteeConstitutedAndInaugurated"
                 control={control}
-                rules={{ required: "Please select a status" }}
+                rules={{}}
                 label="Management committee Constituted and Inaugurated"
                 options={[
                   { value: "1", label: "Yes" },
@@ -343,13 +334,10 @@ const EditTrustEstablishmentForm = observer(() => {
                   { value: "3", label: "No" },
                 ]}
               />
-              {errors.managementCommitteeConstitutedAndInaugurated && (
-                <p className="text-red-500 text-xs mt-1">{String(errors?.managementCommitteeConstitutedAndInaugurated?.message!)}</p>
-              )}
               <CustomRadio
                 name="advisoryCommitteeConstitutedAndInaugurated"
                 control={control}
-                rules={{ required: "Please select a status" }}
+                rules={{}}
                 label="Advisory committee has been constituted and inaugurated"
                 options={[
                   { value: "1", label: "Yes" },
@@ -357,9 +345,6 @@ const EditTrustEstablishmentForm = observer(() => {
                   { value: "3", label: "No" },
                 ]}
               />
-              {errors.advisoryCommitteeConstitutedAndInaugurated && (
-                <p className="text-red-500 text-xs mt-1">{String(errors?.advisoryCommitteeConstitutedAndInaugurated?.message!)}</p>
-              )}
             </div>
           </section>
 
@@ -375,7 +360,7 @@ const EditTrustEstablishmentForm = observer(() => {
               <CustomRadio
                 name="isTrustDevelopmentPlanReadilyAvailable"
                 control={control}
-                rules={{ required: "Please select a status" }}
+                rules={{}}
                 label="Is the trust development plan readily available?"
                 options={[
                   { value: "1", label: "Yes" },
@@ -383,9 +368,6 @@ const EditTrustEstablishmentForm = observer(() => {
                   { value: "3", label: "No" },
                 ]}
               />
-              {errors.isTrustDevelopmentPlanReadilyAvailable && (
-                <p className="text-red-500 text-xs mt-1">{String(errors?.isTrustDevelopmentPlanReadilyAvailable?.message!)}</p>
-              )}
               {Number(watchedIsTrustDevelopmentPlanReadilyAvailable) === 1 && (
                 <>
                   <div className="lg:flex gap-x-4 justify-between">
@@ -399,9 +381,7 @@ const EditTrustEstablishmentForm = observer(() => {
                         type="text"
                         placeholder="2021"
                         register={register}
-                        registerOptions={{
-                          required: Number(watchedIsTrustDevelopmentPlanReadilyAvailable) === 1 ? "Field is required" : false,
-                        }}
+                        registerOptions={{}}
                         className="mt-4 w-full border py-3 text-center  border-[#525866] focus:border-primary-100 rounded-md"
                         error={errors.yearDeveloped}
                       />
@@ -417,9 +397,7 @@ const EditTrustEstablishmentForm = observer(() => {
                         type="text"
                         placeholder="2021"
                         register={register}
-                        registerOptions={{
-                          required: Number(watchedIsTrustDevelopmentPlanReadilyAvailable) === 1 ? "Field is required" : false,
-                        }}
+                        registerOptions={{}}
                         className="mt-4 w-full border py-3 text-center  border-[#525866] focus:border-primary-100 rounded-md"
                         error={errors.yearExpired}
                       />
@@ -461,7 +439,7 @@ const EditTrustEstablishmentForm = observer(() => {
               <CustomRadio
                 name="isTrustDevelopmentPlanBudgetReadilyAvailable"
                 control={control}
-                rules={{ required: "Please select a status" }}
+                rules={{}}
                 label="Is the trust development plan budget readily available?"
                 options={[
                   { value: "1", label: "Yes" },
@@ -469,9 +447,6 @@ const EditTrustEstablishmentForm = observer(() => {
                   { value: "3", label: "No" },
                 ]}
               />
-              {errors.isTrustDevelopmentPlanBudgetReadilyAvailable && (
-                <p className="text-red-500 text-xs mt-1">{String(errors?.isTrustDevelopmentPlanBudgetReadilyAvailable?.message!)}</p>
-              )}
               {watchedIsTrustDevelopmentPlanBudgetReadilyAvailable === "1" && (
                 <div>
                   <FileUpload
@@ -516,7 +491,7 @@ const EditTrustEstablishmentForm = observer(() => {
               <Controller
                 control={control}
                 name="admin"
-                rules={{ required: true }}
+                rules={{}}
                 render={({ field }) => (
                   <CustomSelect
                     id="admin"
@@ -532,9 +507,6 @@ const EditTrustEstablishmentForm = observer(() => {
                   />
                 )}
               />
-              {errors.admin && (
-                <p className="text-red-500 text-xs mt-1">Select an admin</p>
-              )}
             </div>
           </section>
         </div>
@@ -560,16 +532,13 @@ const EditTrustEstablishmentForm = observer(() => {
                 name="statusOfNeedsAssessment"
                 control={control}
                 label="Status of needs assessment"
-                rules={{ required: "Please select a status" }}
+                rules={{}}
                 options={[
                   { value: "1", label: "Completed" },
                   { value: "2", label: "In progress" },
                   { value: "3", label: "yet to be conducted" },
                 ]}
               />
-              {errors.statusOfNeedsAssessment && (
-                <p className="text-red-500 text-xs mt-1">{String(errors?.statusOfNeedsAssessment?.message!)}</p>
-              )}
               {Number(watchedStatusOfNeedsAssessment) === 1 && (
                 <>
                   {/* <h3 className="font-semibold text-xl text-black capitalize">
@@ -578,7 +547,7 @@ const EditTrustEstablishmentForm = observer(() => {
                   <Controller
                     control={control}
                     name="yearOfNeedsAssessment"
-                    rules={{ required: true }}
+                    rules={{}}
                     render={({ field }) => (
                       <CustomSelect
                         label="Year Conducted"
@@ -590,15 +559,12 @@ const EditTrustEstablishmentForm = observer(() => {
                       />
                     )}
                   />
-                  {errors.yearOfNeedsAssessment && (
-                    <p className="text-red-500 text-xs mt-1">Pleas select year</p>
-                  )}
 
                   {/* Were the community women consulted? */}
                   <CustomRadio
                     name="communityWomenConsulted"
                     control={control}
-                    rules={{ required: "Please select a status" }}
+                    rules={{}}
                     label="Were the community women consulted?"
                     options={[
                       { value: "1", label: "Yes, jointly consulted" },
@@ -607,14 +573,11 @@ const EditTrustEstablishmentForm = observer(() => {
                       { value: "4", label: "Not in all communities" },
                     ]}
                   />
-                  {errors.communityWomenConsulted && (
-                    <p className="text-red-500 text-xs mt-1">{String(errors?.communityWomenConsulted?.message!)}</p>
-                  )}
                   {/* Were the PwDs consulted? */}
                   <CustomRadio
                     name="pwDsConsulted"
                     control={control}
-                    rules={{ required: "Please select a status" }}
+                    rules={{}}
                     label="Were the PwDs consulted?"
                     options={[
                       { value: "1", label: "Yes, jointly consulted" },
@@ -623,14 +586,11 @@ const EditTrustEstablishmentForm = observer(() => {
                       { value: "4", label: "Not in all communities" },
                     ]}
                   />
-                  {errors.pwDsConsulted && (
-                    <p className="text-red-500 text-xs mt-1">{String(errors?.pwDsConsulted?.message!)}</p>
-                  )}
                   {/* Were community Youths consulted? */}
                   <CustomRadio
                     name="communityYouthsConsulted"
                     control={control}
-                    rules={{ required: "Please select a status" }}
+                    rules={{}}
                     label="Were community Youths consulted?"
                     options={[
                       { value: "1", label: "Yes, jointly consulted" },
@@ -639,14 +599,11 @@ const EditTrustEstablishmentForm = observer(() => {
                       { value: "4", label: "Not in all communities" },
                     ]}
                   />
-                  {errors.communityYouthsConsulted && (
-                    <p className="text-red-500 text-xs mt-1">{String(errors?.communityYouthsConsulted?.message!)}</p>
-                  )}
                   {/* Were community leadership consulted? */}
                   <CustomRadio
                     name="communityLeadershipConsulted"
                     control={control}
-                    rules={{ required: "Please select a status" }}
+                    rules={{}}
                     label="Were community leadership consulted?"
                     options={[
                       { value: "1", label: "Yes, jointly consulted" },
@@ -655,9 +612,6 @@ const EditTrustEstablishmentForm = observer(() => {
                       { value: "4", label: "Not in all communities" },
                     ]}
                   />
-                  {errors.communityLeadershipConsulted && (
-                    <p className="text-red-500 text-xs mt-1">{String(errors?.communityLeadershipConsulted?.message!)}</p>
-                  )}
 
                 </>
               )}
@@ -691,16 +645,13 @@ const EditTrustEstablishmentForm = observer(() => {
               <CustomRadio
                 name="distributionMatrixDevelopedBySettlor"
                 control={control}
-                rules={{ required: "Please select a status" }}
+                rules={{}}
                 options={[
                   { value: "1", label: "Yes" },
                   { value: "2", label: "In progress" },
                   { value: "3", label: "No" },
                 ]}
               />
-              {errors.distributionMatrixDevelopedBySettlor && (
-                <p className="text-red-500 text-xs mt-1">{String(errors?.distributionMatrixDevelopedBySettlor?.message!)}</p>
-              )}
             </div>
             {/* If yes? Attach */}
             <div>

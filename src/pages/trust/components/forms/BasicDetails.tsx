@@ -25,13 +25,13 @@ const BasicDetails = observer(({ method }: { method: any }) => {
     const trustFormData: ITrustPayloadData = {
       ...trustStore.trustFormData,
       trustName: data.trustName,
-      settlor: data.settlor.value,
+      settlor: data.settlor?.value ?? data.settlor ?? "",
       nameOfOmls: data.nameOfOmls,
       userId: authStore.user.userId,
-      country: data.country.value,
-      state: data.state.value,
-      localGovernmentArea: data.localGovernmentArea.value,
-      trustCommunities: data.trustCommunities.join(","),
+      country: data.country?.value ?? data.country ?? "",
+      state: data.state?.value ?? data.state ?? "",
+      localGovernmentArea: data.localGovernmentArea?.value ?? data.localGovernmentArea ?? "",
+      trustCommunities: Array.isArray(data.trustCommunities) ? data.trustCommunities.join(",") : (data.trustCommunities ?? ""),
       numberOfTrustCommunities: data.numberOfTrustCommunities
     }
 
@@ -73,13 +73,9 @@ const BasicDetails = observer(({ method }: { method: any }) => {
               name="trustName"
               type="text"
               register={register}
-              registerOptions={{
-                required: "This field is required.",
-              }}
+              registerOptions={{}}
               placeholder="Enter trust name"
               error={errors.trustName}
-              errorMessage={`This field  is required`}
-              required
             />
           </div>
           <div className="flex-1">
@@ -88,13 +84,9 @@ const BasicDetails = observer(({ method }: { method: any }) => {
               name="nameOfOmls"
               type="text"
               register={register}
-              registerOptions={{
-                required: "This field is required.",
-              }}
+              registerOptions={{}}
               placeholder="Enter oml name"
-              error={errors.trustName}
-              errorMessage={`This field  is required`}
-              required
+              error={errors.nameOfOmls}
             />
 
           </div>
@@ -104,7 +96,7 @@ const BasicDetails = observer(({ method }: { method: any }) => {
           <Controller
             control={control}
             name="settlor"
-            rules={{ required: true }}
+            rules={{}}
             render={({ field }) => (
               <CustomSelect
                 id="settlor-select"
@@ -122,16 +114,13 @@ const BasicDetails = observer(({ method }: { method: any }) => {
               />
             )}
           />
-          {errors.settlorId && (
-            <p className="mt-2 mb-4 text-xs  text-red-400 ">Assign a Settlor</p>
-          )}
         </div>
 
         <div>
           <Controller
             control={control}
             name="country"
-            rules={{ required: true }}
+            rules={{}}
             render={({ field }) => (
               <CustomSelect
                 id="country-select"
@@ -144,9 +133,6 @@ const BasicDetails = observer(({ method }: { method: any }) => {
               />
             )}
           />
-          {errors.country && (
-            <p className="mt-2 mb-4 text-xs  text-red-400 ">Assign a Country</p>
-          )}
         </div>
 
         <div className="lg:flex-row flex flex-col  lg:items-center gap-x-4 gap-y-6">
@@ -233,8 +219,8 @@ const BasicDetails = observer(({ method }: { method: any }) => {
               type="number"
               placeholder="Enter total communities"
               register={register}
-              registerOptions={{ required: "Total communities is required." }}
-              error={errors.totalBudget}
+              registerOptions={{}}
+              error={errors.numberOfTrustCommunities}
             />
           </div>
           <div className="flex-1">
