@@ -31,7 +31,7 @@ const TrustEstablishmentForm = observer(() => {
   const { name } = useParams();
   // const navigate = useNavigate();
 
-  const { control, handleSubmit, reset, register, watch, setValue, formState: { errors }, } = useForm();
+  const { control, handleSubmit, reset, register, watch, setValue } = useForm();
   const watchedTrustRegisteredWithCAC = watch("trustRegisteredWithCAC");
   const watchedIsTrustDevelopmentPlanReadilyAvailable = watch("isTrustDevelopmentPlanReadilyAvailable");
   const watchedStatusOfNeedsAssessment = watch("statusOfNeedsAssessment");
