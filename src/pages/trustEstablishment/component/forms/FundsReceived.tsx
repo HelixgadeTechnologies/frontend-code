@@ -20,7 +20,6 @@ export const FundsReceived = observer(({ control, register }: { control: any, re
                             <Controller
                                 control={control}
                                 name={`totalFunds.${idx}.year`}
-                                rules={{ required: true }}
                                 render={({ field }) => (
                                     <CustomSelect
                                         label=""
@@ -64,13 +63,6 @@ export const FundsReceived = observer(({ control, register }: { control: any, re
                                 type="number"
                                 placeholder="Capital Expenditure"
                                 register={register}
-                                registerOptions={{
-                                    required: "Amount is required",
-                                    pattern: {
-                                        value: /^[0-9]+(\.[0-9]{1,2})?$/,
-                                        message: "Please enter a valid amount",
-                                    },
-                                }}
                                 className="!border-0 !shadow-none focus:!border-blue-500 w-full focus:!border-0 focus:!ring-0 focus:outline-none"
                             // error={errors?.opex?.[idx]?.amount}
                             />
@@ -80,13 +72,6 @@ export const FundsReceived = observer(({ control, register }: { control: any, re
                                 type="number"
                                 placeholder="Reserved"
                                 register={register}
-                                registerOptions={{
-                                    required: "Amount is required",
-                                    pattern: {
-                                        value: /^[0-9]+(\.[0-9]{1,2})?$/,
-                                        message: "Please enter a valid amount",
-                                    },
-                                }}
                                 className="!border-0 !shadow-none focus:!border-blue-500 w-full focus:!border-0 focus:!ring-0 focus:outline-none"
                             // error={errors?.opex?.[idx]?.amount}
                             />
@@ -125,7 +110,6 @@ export const FundsReceived = observer(({ control, register }: { control: any, re
                         <CustomRadio
                             name={`totalFunds.${idx}.paymentCheck`}
                             control={control}
-                            rules={{ required: "Please select a status" }}
                             label="what is the status of the funds received"
                             options={[
                                 { value: "1", label: "Fully Received" },

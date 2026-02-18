@@ -70,35 +70,30 @@ const TrustEstablishmentForm = observer(() => {
   }, [watchedIsTrustDevelopmentPlanReadilyAvailable]);
   const onSubmit = async (data: any) => {
     try {
-      // 
-      // console.log("Form Data:", data);
       trustEstablishmentStore.isSubmitting = true;
       let opex: Array<IOperationalExpenditure> = [];
 
       if (data.opex && data.opex.length > 0) {
-        // Map through the opex array and create IOperationalExpenditure objects  
         data.opex.forEach((op: any) => {
           opex.push({
             OperationalExpenditureId: "",
-            settlorOperationalExpenditureYear: Number(op.year.value),
-            settlorOperationalExpenditure: Number(op.amount),
+            settlorOperationalExpenditureYear: Number(op.year?.value || 0),
+            settlorOperationalExpenditure: Number(op.amount || 0),
             trustEstablishmentStatusId: ""
           } as IOperationalExpenditure);
         });
-
       }
 
       let totalFunds: Array<IFundsReceived> = [];
 
       if (data.totalFunds && data.totalFunds.length > 0) {
-        // Map through the totalFunds array and create IFundsReceived objects  
         data.totalFunds.forEach((fn: any) => {
           totalFunds.push({
-            yearReceived: Number(fn.year.value),
-            reserveReceived: Number(fn.reserved),
-            capitalExpenditureReceived: Number(fn.capitalExpenditure),
-            paymentCheck: Number(fn.paymentCheck),
-            totalFundsReceived: (Number(fn.reserved) + Number(fn.capitalExpenditure)),
+            yearReceived: Number(fn.year?.value || 0),
+            reserveReceived: Number(fn.reserved || 0),
+            capitalExpenditureReceived: Number(fn.capitalExpenditure || 0),
+            paymentCheck: Number(fn.paymentCheck || 0),
+            totalFundsReceived: (Number(fn.reserved || 0) + Number(fn.capitalExpenditure || 0)),
             trustEstablishmentStatusId: ""
           } as IFundsReceived);
         });
@@ -115,28 +110,28 @@ const TrustEstablishmentForm = observer(() => {
 
       let trustDistributionMatrixDocument = data.trustDistributionMatrixDocument == undefined ? undefined : await convertFileToBase64(data.trustDistributionMatrixDocument)
       const uploadResTrustDistributionMatrixDocument = trustDistributionMatrixDocument == undefined ? { success: false, message: "", data: "" } : await trustEstablishmentStore.uploadFile(trustDistributionMatrixDocument)
+
       const establishmentData: ITrustEstablishmentPayload = {
         trustEstablishmentStatusId: "",
         trustId: trustStore.selectedTrustId as string,
-        admin: data.admin.value as string,
-        advisoryCommitteeConstitutedAndInaugurated: Number(data.advisoryCommitteeConstitutedAndInaugurated),
-        // attendanceSheet: Number(data.attendanceSheet),
-        botConstitutedAndInaugurated: Number(data.botConstitutedAndInaugurated),
-        communityLeadershipConsulted: Number(data.statusOfNeedsAssessment) === 1 ? Number(data.communityLeadershipConsulted) : null,
-        communityWomenConsulted: Number(data.statusOfNeedsAssessment) === 1 ? Number(data.communityWomenConsulted) : null,
-        communityYouthsConsulted: Number(data.statusOfNeedsAssessment) === 1 ? Number(data.communityYouthsConsulted) : null,
-        distributionMatrixDevelopedBySettlor: Number(data.distributionMatrixDevelopedBySettlor),
-        isTrustDevelopmentPlanBudgetReadilyAvailable: Number(data.isTrustDevelopmentPlanBudgetReadilyAvailable),
-        isTrustDevelopmentPlanReadilyAvailable: Number(data.isTrustDevelopmentPlanReadilyAvailable),
-        managementCommitteeConstitutedAndInaugurated: Number(data.managementCommitteeConstitutedAndInaugurated),
-        pwDsConsulted: Number(data.statusOfNeedsAssessment) === 1 ? Number(data.pwDsConsulted) : null,
-        statusOfNeedAssessment: Number(data.statusOfNeedsAssessment),
+        admin: data.admin?.value as string || "",
+        advisoryCommitteeConstitutedAndInaugurated: Number(data.advisoryCommitteeConstitutedAndInaugurated || 0),
+        botConstitutedAndInaugurated: Number(data.botConstitutedAndInaugurated || 0),
+        communityLeadershipConsulted: Number(data.statusOfNeedsAssessment) === 1 ? Number(data.communityLeadershipConsulted || 0) : null,
+        communityWomenConsulted: Number(data.statusOfNeedsAssessment) === 1 ? Number(data.communityWomenConsulted || 0) : null,
+        communityYouthsConsulted: Number(data.statusOfNeedsAssessment) === 1 ? Number(data.communityYouthsConsulted || 0) : null,
+        distributionMatrixDevelopedBySettlor: Number(data.distributionMatrixDevelopedBySettlor || 0),
+        isTrustDevelopmentPlanBudgetReadilyAvailable: Number(data.isTrustDevelopmentPlanBudgetReadilyAvailable || 0),
+        isTrustDevelopmentPlanReadilyAvailable: Number(data.isTrustDevelopmentPlanReadilyAvailable || 0),
+        managementCommitteeConstitutedAndInaugurated: Number(data.managementCommitteeConstitutedAndInaugurated || 0),
+        pwDsConsulted: Number(data.statusOfNeedsAssessment) === 1 ? Number(data.pwDsConsulted || 0) : null,
+        statusOfNeedAssessment: Number(data.statusOfNeedsAssessment || 0),
         fundsReceive: totalFunds,
-        trustRegisteredWithCAC: Number(data.trustRegisteredWithCAC),
-        yearDeveloped: Number(data.isTrustDevelopmentPlanReadilyAvailable) == 1 ? Number(data.yearDeveloped) : null,
-        yearExpired: Number(data.isTrustDevelopmentPlanReadilyAvailable) == 1 ? Number(data.yearExpired) : null,
-        yearIncorporated: Number(data.trustRegisteredWithCAC) == 1 ? Number(data.yearIncorporated.value) : null,
-        yearOfNeedsAssessment: Number(data.statusOfNeedsAssessment) === 1 ? Number(data.yearOfNeedsAssessment.value) : null,
+        trustRegisteredWithCAC: Number(data.trustRegisteredWithCAC || 0),
+        yearDeveloped: Number(data.isTrustDevelopmentPlanReadilyAvailable) == 1 ? Number(data.yearDeveloped || 0) : null,
+        yearExpired: Number(data.isTrustDevelopmentPlanReadilyAvailable) == 1 ? Number(data.yearExpired || 0) : null,
+        yearIncorporated: Number(data.trustRegisteredWithCAC) == 1 ? Number(data.yearIncorporated?.value || 0) : null,
+        yearOfNeedsAssessment: Number(data.statusOfNeedsAssessment) === 1 ? Number(data.yearOfNeedsAssessment?.value || 0) : null,
         settlorOperationalExpenditures: opex,
         cscDocument: uploadResCscDocument.success ? uploadResCscDocument.data : "",
         cscDocumentMimeType: cscDocument == undefined ? "" : cscDocument.mimeType,
@@ -147,7 +142,7 @@ const TrustEstablishmentForm = observer(() => {
         trustDistributionMatrixDocument: uploadResTrustDistributionMatrixDocument.success ? uploadResTrustDistributionMatrixDocument.data : "",
         trustDistributionMatrixDocumentMimeType: trustDistributionMatrixDocument == undefined ? "" : trustDistributionMatrixDocument.mimeType
       };
-      // console.log("payload", establishmentData)
+
       const completion = trustEstablishmentStore.calculateTrustEstablishmentCompletion(establishmentData);
       establishmentData.completionStatus = completion;
 
@@ -200,7 +195,6 @@ const TrustEstablishmentForm = observer(() => {
               <CustomRadio
                 name="trustRegisteredWithCAC"
                 control={control}
-                rules={{ required: "Please select a status" }}
                 label="Trust registered with CAC"
                 options={[
                   { value: "1", label: "Yes" },
@@ -208,9 +202,6 @@ const TrustEstablishmentForm = observer(() => {
                   { value: "3", label: "No" },
                 ]}
               />
-              {errors.trustRegisteredWithCAC && (
-                <p className="text-red-500 text-xs mt-1">{String(errors?.trustRegisteredWithCAC?.message!)}</p>
-              )}
               <div>
                 <label className="text-[#8C94A6] text-base mb-2 block">
                   CAC document upload is optional.
@@ -224,9 +215,6 @@ const TrustEstablishmentForm = observer(() => {
                   maxSize={5 * 1024 * 1024} // 5MB
                   buttonText="Upload"
                 />
-                {errors.cscDocument && (
-                  <p className="text-red-500 text-xs mt-1">Please select a file</p>
-                )}
               </div>
             </div>
           </section>
@@ -253,9 +241,6 @@ const TrustEstablishmentForm = observer(() => {
                       />
                     )}
                   />
-                  {errors.yearIncorporated && (
-                    <p className="text-red-500 text-xs mt-1">Please select year</p>
-                  )}
                 </div>
               </>
             )}
@@ -264,7 +249,6 @@ const TrustEstablishmentForm = observer(() => {
               <CustomRadio
                 name="botConstitutedAndInaugurated"
                 control={control}
-                rules={{ required: "Please select a status" }}
                 label="BoT constituted and Inaugurated"
                 options={[
                   { value: "1", label: "Yes" },
@@ -272,13 +256,9 @@ const TrustEstablishmentForm = observer(() => {
                   { value: "3", label: "No" },
                 ]}
               />
-              {errors.botConstitutedAndInaugurated && (
-                <p className="text-red-500 text-xs mt-1">{String(errors?.botConstitutedAndInaugurated?.message!)}</p>
-              )}
               <CustomRadio
                 name="managementCommitteeConstitutedAndInaugurated"
                 control={control}
-                rules={{ required: "Please select a status" }}
                 label="Management committee Constituted and Inaugrated"
                 options={[
                   { value: "1", label: "Yes" },
@@ -286,13 +266,9 @@ const TrustEstablishmentForm = observer(() => {
                   { value: "3", label: "No" },
                 ]}
               />
-              {errors.managementCommitteeConstitutedAndInaugurated && (
-                <p className="text-red-500 text-xs mt-1">{String(errors?.managementCommitteeConstitutedAndInaugurated?.message!)}</p>
-              )}
               <CustomRadio
                 name="advisoryCommitteeConstitutedAndInaugurated"
                 control={control}
-                rules={{ required: "Please select a status" }}
                 label="Advisory committee has been constituted and inaugurated"
                 options={[
                   { value: "1", label: "Yes" },
@@ -300,9 +276,6 @@ const TrustEstablishmentForm = observer(() => {
                   { value: "3", label: "No" },
                 ]}
               />
-              {errors.advisoryCommitteeConstitutedAndInaugurated && (
-                <p className="text-red-500 text-xs mt-1">{String(errors?.advisoryCommitteeConstitutedAndInaugurated?.message!)}</p>
-              )}
             </div>
           </section>
 
@@ -318,7 +291,6 @@ const TrustEstablishmentForm = observer(() => {
               <CustomRadio
                 name="isTrustDevelopmentPlanReadilyAvailable"
                 control={control}
-                rules={{ required: "Please select a status" }}
                 label="Is the trust development plan readily available?"
                 options={[
                   { value: "1", label: "Yes" },
@@ -326,9 +298,6 @@ const TrustEstablishmentForm = observer(() => {
                   { value: "3", label: "No" },
                 ]}
               />
-              {errors.isTrustDevelopmentPlanReadilyAvailable && (
-                <p className="text-red-500 text-xs mt-1">{String(errors?.isTrustDevelopmentPlanReadilyAvailable?.message!)}</p>
-              )}
 
 
               {Number(watchedIsTrustDevelopmentPlanReadilyAvailable) === 1 && (
@@ -382,11 +351,7 @@ const TrustEstablishmentForm = observer(() => {
                       accept="application/pdf"
                       maxSize={5 * 1024 * 1024} // 5MB
                       buttonText="Upload"
-
                     />
-                    {errors.developmentPlanDocument && (
-                      <p className="text-red-500 text-xs mt-1">select a file</p>
-                    )}
                   </div>
                 </>
               )}
@@ -395,7 +360,6 @@ const TrustEstablishmentForm = observer(() => {
               <CustomRadio
                 name="isTrustDevelopmentPlanBudgetReadilyAvailable"
                 control={control}
-                rules={{ required: "Please select a status" }}
                 label="Is the trust development plan budget readily available?"
                 options={[
                   { value: "1", label: "Yes" },
@@ -403,9 +367,6 @@ const TrustEstablishmentForm = observer(() => {
                   { value: "3", label: "No" },
                 ]}
               />
-              {errors.isTrustDevelopmentPlanBudgetReadilyAvailable && (
-                <p className="text-red-500 text-xs mt-1">{String(errors?.isTrustDevelopmentPlanBudgetReadilyAvailable?.message!)}</p>
-              )}
               {watchedIsTrustDevelopmentPlanBudgetReadilyAvailable === "1" && (
                 <div>
                   <FileUpload
@@ -417,9 +378,6 @@ const TrustEstablishmentForm = observer(() => {
                     maxSize={5 * 1024 * 1024} // 5MB
                     buttonText="Upload"
                   />
-                  {errors.developmentPlanBudgetDocument && (
-                    <p className="text-red-500 text-xs mt-1">{String(errors?.developmentPlanBudgetDocument?.message!)}</p>
-                  )}
                 </div>
 
               )}
@@ -441,7 +399,6 @@ const TrustEstablishmentForm = observer(() => {
               <Controller
                 control={control}
                 name="admin"
-                rules={{ required: true }}
                 render={({ field }) => (
                   <CustomSelect
                     id="admin"
@@ -457,9 +414,6 @@ const TrustEstablishmentForm = observer(() => {
                   />
                 )}
               />
-              {errors.admin && (
-                <p className="text-red-500 text-xs mt-1">Select an admin</p>
-              )}
             </div>
           </section>
         </div>
@@ -485,7 +439,6 @@ const TrustEstablishmentForm = observer(() => {
                 name="statusOfNeedsAssessment"
                 control={control}
                 label="Status of needs assessment"
-                rules={{ required: "Please select a status" }}
                 options={[
                   { value: "1", label: "Completed" },
                   { value: "2", label: "In progress" },
@@ -493,9 +446,6 @@ const TrustEstablishmentForm = observer(() => {
                 ]}
 
               />
-              {errors.statusOfNeedsAssessment && (
-                <p className="text-red-500 text-xs mt-1">{String(errors?.statusOfNeedsAssessment?.message!)}</p>
-              )}
               {Number(watchedStatusOfNeedsAssessment) === 1 && (
                 <>
                   {/* <h3 className="font-semibold text-xl text-black capitalize">
@@ -516,15 +466,11 @@ const TrustEstablishmentForm = observer(() => {
                       />
                     )}
                   />
-                  {errors.yearOfNeedsAssessment && (
-                    <p className="text-red-500 text-xs mt-1">Pleas select year</p>
-                  )}
 
                   {/* Were the community women consulted? */}
                   <CustomRadio
                     name="communityWomenConsulted"
                     control={control}
-                    rules={{ required: "Please select a status" }}
                     label="Were the community women consulted?"
                     options={[
                       { value: "1", label: "Yes, jointly consulted" },
@@ -533,14 +479,10 @@ const TrustEstablishmentForm = observer(() => {
                       { value: "4", label: "Not in all communities" },
                     ]}
                   />
-                  {errors.communityWomenConsulted && (
-                    <p className="text-red-500 text-xs mt-1">{String(errors?.communityWomenConsulted?.message!)}</p>
-                  )}
                   {/* Were the PwDs consulted? */}
                   <CustomRadio
                     name="pwDsConsulted"
                     control={control}
-                    rules={{ required: "Please select a status" }}
                     label="Were the PwDs consulted?"
                     options={[
                       { value: "1", label: "Yes, jointly consulted" },
@@ -549,14 +491,10 @@ const TrustEstablishmentForm = observer(() => {
                       { value: "4", label: "Not in all communities" },
                     ]}
                   />
-                  {errors.pwDsConsulted && (
-                    <p className="text-red-500 text-xs mt-1">{String(errors?.pwDsConsulted?.message!)}</p>
-                  )}
                   {/* Were community Youths consulted? */}
                   <CustomRadio
                     name="communityYouthsConsulted"
                     control={control}
-                    rules={{ required: "Please select a status" }}
                     label="Were community Youths consulted?"
                     options={[
                       { value: "1", label: "Yes, jointly consulted" },
@@ -565,14 +503,10 @@ const TrustEstablishmentForm = observer(() => {
                       { value: "4", label: "Not in all communities" },
                     ]}
                   />
-                  {errors.communityYouthsConsulted && (
-                    <p className="text-red-500 text-xs mt-1">{String(errors?.communityYouthsConsulted?.message!)}</p>
-                  )}
                   {/* Were community leadership consulted? */}
                   <CustomRadio
                     name="communityLeadershipConsulted"
                     control={control}
-                    rules={{ required: "Please select a status" }}
                     label="Were community leadership consulted?"
                     options={[
                       { value: "1", label: "Yes, jointly consulted" },
@@ -581,9 +515,6 @@ const TrustEstablishmentForm = observer(() => {
                       { value: "4", label: "Not in all communities" },
                     ]}
                   />
-                  {errors.communityLeadershipConsulted && (
-                    <p className="text-red-500 text-xs mt-1">{String(errors?.communityLeadershipConsulted?.message!)}</p>
-                  )}
 
                 </>
               )}
@@ -617,16 +548,12 @@ const TrustEstablishmentForm = observer(() => {
               <CustomRadio
                 name="distributionMatrixDevelopedBySettlor"
                 control={control}
-                rules={{ required: "Please select a status" }}
                 options={[
                   { value: "1", label: "Yes" },
                   { value: "2", label: "In progress" },
                   { value: "3", label: "No" },
                 ]}
               />
-              {errors.distributionMatrixDevelopedBySettlor && (
-                <p className="text-red-500 text-xs mt-1">{String(errors?.distributionMatrixDevelopedBySettlor?.message!)}</p>
-              )}
             </div>
             {/* If yes? Attach */}
             <div>
@@ -642,9 +569,6 @@ const TrustEstablishmentForm = observer(() => {
                 maxSize={5 * 1024 * 1024} // 5MB
                 buttonText="Upload"
               />
-              {errors.trustDistributionMatrixDocument && (
-                <p className="text-red-500 text-xs mt-1">{String(errors?.trustDistributionMatrixDocument?.message!)}</p>
-              )}
             </div>
 
             {/* Settlor Operational Expenditure (OPEX) */}
