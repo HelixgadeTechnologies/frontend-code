@@ -3,6 +3,7 @@ import { Button, CustomSelect, FormInput } from "../../../../components/elements
 import { createDraPayload, IDraPayloadData, IDropdownProp, ISettingStore } from "../../types/interface";
 import { ITrustList, ITrustStore } from "../../../trust/types/interface";
 import { toast } from "react-toastify";
+import { toJS } from "mobx";
 
 interface AddCommitteeMemberProps {
     roleName: string;
@@ -25,7 +26,7 @@ export const AddCommitteeMember = ({ roleName, close, settingStore, trustStore }
 
             // Find roleId for the given roleName
             const role = [...settingStore.allRole.values()].find(r => r.roleName === roleName);
-            console.log(role)
+            console.log(toJS(role))
             const trustData = data.trust as IDropdownProp;
 
             const formData = {
@@ -33,12 +34,12 @@ export const AddCommitteeMember = ({ roleName, close, settingStore, trustStore }
                 roleId: role ? role.roleId : "",
                 trustId: trustData.value
             }
-            const payload: createDraPayload = {
+            const payload: any = {
                 isCreate: true,
                 data: formData
             };
 
-            const response = await settingStore.createDra(payload)
+            const response = await settingStore.registerAllUser(payload)
             if (response) {
                 if (roleName === "Data Reporting Agent (DRA)") await settingStore.getAllDra();
                 else if (roleName === "Board of Trustee (BoT)") await settingStore.getAllBoT();
