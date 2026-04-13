@@ -51,7 +51,7 @@ export const PendingDraTable = observer(() => {
                 email: user.email as string,
                 firstName: user.firstName as string,
                 lastName: user.lastName as string,
-                // roleId: user.roleId as string,
+                roleId: user.roleId as string,
                 trusts: user.trusts as string,
                 userId: user.userId,
                 status: 1,

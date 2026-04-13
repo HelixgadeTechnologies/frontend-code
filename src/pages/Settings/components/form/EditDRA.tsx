@@ -47,11 +47,11 @@ export const EditDRA = observer(({ close, user, settingStore, trustStore }: { cl
             const trustData = data.trust as IDropdownProp
             const formData: IDraPayloadData = {
                 ...data,
-                // roleId: roleData.value,
+                roleId: user.roleId as string,
                 trusts: trustData.value,
                 userId: user.userId,
-                status: user.status,
-                phoneNumber: user.phoneNumber,
+                status: user.status as number,
+                phoneNumber: user.phoneNumber as string,
             }
             const payload: createDraPayload = {
                 isCreate: false,
