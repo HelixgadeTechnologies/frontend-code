@@ -2,7 +2,7 @@ import { makeAutoObservable, ObservableMap, remove } from "mobx"
 import { CreateAdminPayload, createDraPayload, createNuprcPayload, CreateSettlorPayload, IAdmin, IChangePassword, IDra, ILoginUpdate, INuprc, IProfilePicsPayload, IRole, ISettingStore, ISettlor } from "../types/interface";
 import { SettingService } from "../service/settingService";
 import { committeeRoleIds } from "../constants/roleIds";
-import { IAuthPayload, IUser } from "../../auth/types/interface";
+import { IAuthPayload} from "../../auth/types/interface";
 import { HCDTRequestResponse } from "../../../infrastructure/HCDTRequestResponse";
 
 class SettingStore implements ISettingStore {

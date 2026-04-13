@@ -4,14 +4,14 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import { caretDownIcon, filterIcon, sortIcon, crossIcon, checkIcon } from "../../../../assets/icons";
 import { EmptyTable, LoadingTable, Modal, Table, Tag } from "../../../../components/elements";
 import { settingStore as SettingStore } from "../../store/settingStore"
-import { trustStore as TrustStore } from "../../../trust/store/trustStore";
+//import { trustStore as TrustStore } from "../../../trust/store/trustStore";
 import { toast } from "react-toastify";
 import { DeleteDRA } from "../form/DeleteDRA";
 import { createDraPayload, IDra, IDraPayloadData } from "../../types/interface";
 
 
 const SettingsStoreCtx = createContext(SettingStore);
-const TrustStoreCtx = createContext(TrustStore);
+//const TrustStoreCtx = createContext(TrustStore);
 
 interface PendingCommitteeTableProps {
     data: IDra[];
@@ -20,7 +20,7 @@ interface PendingCommitteeTableProps {
 
 export const PendingCommitteeTable = observer(({ data, type }: PendingCommitteeTableProps) => {
     const settingStore = useContext(SettingsStoreCtx);
-    const trustStore = useContext(TrustStoreCtx);
+    //const trustStore = useContext(TrustStoreCtx);
 
     const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
     const [activeMenu, setActiveMenu] = useState<string | null>(null);

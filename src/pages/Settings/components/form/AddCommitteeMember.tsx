@@ -1,6 +1,6 @@
 import { Controller, useForm } from "react-hook-form";
 import { Button, CustomSelect, FormInput } from "../../../../components/elements";
-import { createDraPayload, IDraPayloadData, IDropdownProp, ISettingStore } from "../../types/interface";
+import {IDropdownProp, ISettingStore } from "../../types/interface";
 import { ITrustList, ITrustStore } from "../../../trust/types/interface";
 import { toast } from "react-toastify";
 import { toJS } from "mobx";
