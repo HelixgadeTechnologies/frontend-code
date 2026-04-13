@@ -6,9 +6,9 @@ import DashboardLayout from "../../layouts/DashboardLayout";
 import Trusts from "../trust/components";
 import ProfileSettings from "../Settings/components";
 import ManageAdmin from "../Settings/components/ManageAdmin";
-import ManageDRA from "../Settings/components/ManageDRA";
 import ManageNUPRC from "../Settings/components/ManageNUPRC";
 import ManageSettlor from "../Settings/components/ManageSettlor";
+import ManageCommittee from "../Settings/components/ManageCommittee";
 import { useCookies } from "react-cookie";
 import { authStore as AuthStore } from "../auth/store/authStore";
 import { IUser } from "../auth/types/interface";
@@ -49,7 +49,10 @@ const DashboardHome = observer(() => {
             <Route path="/trusts" element={<Trusts />} />
             <Route path="settings" element={<ProfileSettings />} />
             <Route path="settings/manage-admin" element={<ManageAdmin />} />
-            <Route path="settings/manage-dra" element={<ManageDRA />} />
+            <Route path="settings/manage-dra" element={<ManageCommittee type="DRA" roleName="Data Reporting Agent (DRA)" />} />
+            <Route path="settings/manage-bot" element={<ManageCommittee type="BoT" roleName="Board of Trustee (BoT)" />} />
+            <Route path="settings/manage-mc" element={<ManageCommittee type="MC" roleName="Management Committee (MC)" />} />
+            <Route path="settings/manage-ac" element={<ManageCommittee type="AC" roleName="Advisory Committee (AC)" />} />
             <Route path="settings/manage-nuprc" element={<ManageNUPRC />} />
             <Route
               path="settings/manage-settlors"

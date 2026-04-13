@@ -36,3 +36,17 @@ export interface ILoginCredentials {
     email: string,
     password: string
 }
+
+
+export interface IAuthPayload {
+    isCreate: boolean,
+    data: {
+        userId: string,
+        firstName: string,
+        lastName: string,
+        email: string,
+        roleId: string,
+        trustId: string,
+        status: number
+    }
+}

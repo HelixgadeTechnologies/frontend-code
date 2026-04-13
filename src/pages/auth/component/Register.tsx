@@ -1,13 +1,14 @@
-import React, { createContext, useCallback, useContext } from "react";
+import React, { createContext, useCallback, useContext, useEffect } from "react";
 import { Button, CustomSelect, FormInput } from "../../../components/elements";
 import { Controller, useForm } from "react-hook-form";
-import { createDraPayload, IDraPayloadData, IDropdownProp } from "../../Settings/types/interface";
+import { createDraPayload, IDraPayloadData, IDropdownProp, IRole } from "../../Settings/types/interface";
 import { observer } from "mobx-react-lite";
 import { trustStore as TrustStore } from "../../trust/store/trustStore";
 import { ITrustList } from "../../trust/types/interface";
 import { toast } from "react-toastify";
 import { settingStore as SettingStore } from "../../Settings/store/settingStore";
 import { authStore as AuthStore } from "../store/authStore";
+import { IAuthPayload } from "../types/interface";
 
 const AuthStoreCTX = createContext(AuthStore)
 const trustStoreCTX = createContext(TrustStore)
@@ -18,7 +19,9 @@ const Register: React.FC = observer(() => {
     const settingStore = useContext(settingStoreCTX)
     // const [lg, setSetLg] = useState<Array<string>>([]);
     const { control, handleSubmit, register, formState: { errors }, } = useForm();
-
+    // useEffect(() => {
+    //     settingStore.getRole();
+    // }, []);
     // const selectState = useCallback((v: IDropdownProp) => {
     //     trustStore.allLGA.clear();
     //     let localGov = trustStore.getLG(String(v?.value));
@@ -34,20 +37,19 @@ const Register: React.FC = observer(() => {
         try {
             // const roleData = data.role as IDropdownProp
             const trustData = data.trust as IDropdownProp
-            const formData: IDraPayloadData = {
+            const roleData = data.roleId as IDropdownProp
+            const formData: any = {
                 ...data,
-                // roleId: roleData.value,
-                trusts: trustData.value
+                roleId:roleData.value,
+                trustId: trustData.value
             }
-            const payload: createDraPayload = {
+            const payload: IAuthPayload = {
                 isCreate: true,
                 data: formData
             };
-            // console.log("data", payload)
-            const response = await settingStore.createDra(payload)
+            const response = await authStore.register(payload)
             if (response) {
-                await settingStore.getAllDra()
-                toast.success("DRA registration successful.");
+                toast.success("Registration successful.");
                 authStore.pageSwitch = 1;
             }
         } catch (error: any) {
@@ -197,6 +199,33 @@ const Register: React.FC = observer(() => {
                     )}
                 </div> */}
 
+                <div className="mb-4">
+                    <Controller
+                        control={control}
+                        name="roleId"
+                        rules={{ required: true }}
+                        render={({ field }) => (
+                            <CustomSelect
+                                id="role-select"
+                                {...field}
+                                options={[...settingStore.allRole.values()].filter((v: IRole) => ["Advisory Committee (AC)", "Data Reporting Agent (DRA)", "Management Committee (MC)", "Board of Trustee (BoT)"].includes(v?.roleName)).map((v: IRole) => {
+                                    return {
+                                        label: v?.roleName,
+                                        value: v?.roleId
+                                    }
+                                })}
+                                isLoading={trustStore.isLoading}
+                                label="Role"
+                                isMulti={false}
+                                placeholder=""
+                            />
+                        )}
+                    />
+                    {errors.trust && (
+                        <p className="mt-2 mb-4 text-xs  text-red-400 ">Assign a trust</p>
+                    )}
+
+                </div>
                 <div className="mb-4">
                     <Controller
                         control={control}

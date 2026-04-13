@@ -33,6 +33,7 @@ const ProfileSettings = observer(() => {
   useEffect(() => {
     async function getData() {
       trustStore.getAllStates()
+      await trustStore.getAllTrust()
     }
     getData();
     return () => { };

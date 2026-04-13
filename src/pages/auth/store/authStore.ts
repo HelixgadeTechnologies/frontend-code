@@ -1,6 +1,6 @@
 import { HCDTRequestResponse } from "../../../infrastructure/HCDTRequestResponse";
 import { AuthService } from "../service/authService";
-import { IAuthStore, ILoginCredentials, IUser } from "../types/interface";
+import { IAuthPayload, IAuthStore, ILoginCredentials, IUser } from "../types/interface";
 import { makeAutoObservable } from "mobx"
 // import { makeAutoObservable, observable, ObservableMap, remove, set, toJS } from "mobx"
 class AuthStore implements IAuthStore {
@@ -42,6 +42,20 @@ class AuthStore implements IAuthStore {
     }
     updateProfilePic(res: any): void {
         this.user = { ...this.user, profilePic: res.profilePic }
+    }
+    async register(credentials: IAuthPayload): Promise<HCDTRequestResponse> {
+        try {
+            this.isSubmitting = true;
+            let data = await AuthService.register(credentials)
+            if (data.success) {
+                this.user = {} as IUser;
+            }
+            return data
+        } catch (error) {
+            throw error
+        } finally {
+            this.isSubmitting = false;
+        }
     }
 
 }

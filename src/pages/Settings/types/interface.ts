@@ -1,4 +1,6 @@
 import { ObservableMap } from "mobx";
+import { IAuthPayload } from "../../auth/types/interface";
+import { HCDTRequestResponse } from "../../../infrastructure/HCDTRequestResponse";
 
 export interface ISettingStore {
     isLoading: boolean,
@@ -8,6 +10,14 @@ export interface ISettingStore {
     isPasswordModelClose: boolean,
     allAdmin: ObservableMap<string, IAdmin>,
     allPendingAdmin: ObservableMap<string, IAdmin>,
+    allPendingDra: ObservableMap<string, IDra>,
+    allDra: ObservableMap<string, IDra>,
+    allPendingBoT: ObservableMap<string, IDra>,
+    allBoT: ObservableMap<string, IDra>,
+    allPendingMC: ObservableMap<string, IDra>,
+    allMC: ObservableMap<string, IDra>,
+    allPendingAC: ObservableMap<string, IDra>,
+    allAC: ObservableMap<string, IDra>,
     allRole: ObservableMap<string, IRole>
     selectedUserId: string,
     openModal: boolean,
@@ -39,6 +49,10 @@ export interface ISettingStore {
     editSettlor(payload: CreateSettlorPayload): Promise<boolean>,
     removeSettlor(settlorId: string): Promise<boolean>,
     getRole(): Promise<void>,
+    getAllBoT(): Promise<void>,
+    getAllMC(): Promise<void>,
+    getAllAC(): Promise<void>,
+    registerAllUser(payload: IAuthPayload): Promise<HCDTRequestResponse>,
 }
 
 export interface IProfilePicsPayload {
@@ -147,7 +161,7 @@ export interface IDraPayloadData {
     lastName: string,
     email: string,
     phoneNumber: string,
-    // roleId: string,
+    roleId: string,
     trusts: string,
     status: number
 }

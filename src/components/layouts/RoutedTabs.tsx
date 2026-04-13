@@ -16,6 +16,18 @@ const tabRoutes = [
     link: "/dashboard/settings/manage-dra",
   },
   {
+    name: "Add BoT",
+    link: "/dashboard/settings/manage-bot",
+  },
+  {
+    name: "Add MC",
+    link: "/dashboard/settings/manage-mc",
+  },
+  {
+    name: "Add AC",
+    link: "/dashboard/settings/manage-ac",
+  },
+  {
     name: "NUPRC-ADR",
     link: "/dashboard/settings/manage-nuprc",
   },
@@ -32,6 +44,18 @@ const tabRoutesADMIN = [
   {
     name: "Add DRA",
     link: "/dashboard/settings/manage-dra",
+  },
+  {
+    name: "Add BoT",
+    link: "/dashboard/settings/manage-bot",
+  },
+  {
+    name: "Add MC",
+    link: "/dashboard/settings/manage-mc",
+  },
+  {
+    name: "Add AC",
+    link: "/dashboard/settings/manage-ac",
   },
   {
     name: "NUPRC-ADR",

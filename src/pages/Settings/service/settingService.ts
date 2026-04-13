@@ -1,9 +1,10 @@
 import { client } from "../../../infrastructure/agent"
 import { HCDTRequestResponse } from "../../../infrastructure/HCDTRequestResponse"
+import { IAuthPayload } from "../../auth/types/interface"
 import { CreateAdminPayload, createDraPayload, createNuprcPayload, CreateSettlorPayload, IChangePassword, ILoginUpdate, IProfilePicsPayload } from "../types/interface"
 export const SettingService = {
-    updateLoginUser:(payload:ILoginUpdate):Promise<HCDTRequestResponse> => client.put("/setting/update-login",{...payload}),
-    
+    updateLoginUser: (payload: ILoginUpdate): Promise<HCDTRequestResponse> => client.put("/setting/update-login", { ...payload }),
+
     // changePassword
     changePassword: (credentials: IChangePassword): Promise<HCDTRequestResponse> => client.post('/setting/change-password', { ...credentials }),
     changeProfilePicture: (credentials: IProfilePicsPayload): Promise<HCDTRequestResponse> => client.post('/setting/update-profile-picture', { ...credentials }),
@@ -32,4 +33,7 @@ export const SettingService = {
     allSettlor: (): Promise<HCDTRequestResponse> => client.get('/setting/allSettlor'),
     createEditSettlor: (payload: CreateSettlorPayload): Promise<HCDTRequestResponse> => client.post('/setting/addSettlor', { ...payload }),
     removeSettlor: (settlorId: string): Promise<HCDTRequestResponse> => client.post('/setting/removeSettlor', { settlorId }),
+
+    registerAllUser: (credentials: IAuthPayload): Promise<HCDTRequestResponse> => client.post('/setting/registerUser', { ...credentials }),
+    getAllUsersByRole: (roleId: string): Promise<HCDTRequestResponse> => client.get(`/setting/getUsersByRole/${roleId}`),
 }

@@ -1,6 +1,9 @@
 import { makeAutoObservable, ObservableMap, remove } from "mobx"
 import { CreateAdminPayload, createDraPayload, createNuprcPayload, CreateSettlorPayload, IAdmin, IChangePassword, IDra, ILoginUpdate, INuprc, IProfilePicsPayload, IRole, ISettingStore, ISettlor } from "../types/interface";
 import { SettingService } from "../service/settingService";
+import { committeeRoleIds } from "../constants/roleIds";
+import { IAuthPayload, IUser } from "../../auth/types/interface";
+import { HCDTRequestResponse } from "../../../infrastructure/HCDTRequestResponse";
 
 class SettingStore implements ISettingStore {
     isLoading = false;
@@ -13,6 +16,12 @@ class SettingStore implements ISettingStore {
     allPendingAdmin = new ObservableMap<string, IAdmin>();
     allPendingDra = new ObservableMap<string, IDra>();
     allDra = new ObservableMap<string, IDra>();
+    allPendingBoT = new ObservableMap<string, IDra>();
+    allBoT = new ObservableMap<string, IDra>();
+    allPendingMC = new ObservableMap<string, IDra>();
+    allMC = new ObservableMap<string, IDra>();
+    allPendingAC = new ObservableMap<string, IDra>();
+    allAC = new ObservableMap<string, IDra>();
     allNuprc = new ObservableMap<string, INuprc>();
     allSettlor = new ObservableMap<string, ISettlor>();
     allRole = new ObservableMap<string, IRole>();
@@ -143,18 +152,91 @@ class SettingStore implements ISettingStore {
         }
     }
 
+    async getAllBoT(): Promise<void> {
+        try {
+            this.isLoading = true;
+            let data = await SettingService.getAllUsersByRole(committeeRoleIds.BoT)
+            if (data.success) {
+                this.allBoT.clear();
+                this.allPendingBoT.clear();
+                data.data.forEach((d: IDra) => {
+                    if (d.status == 1) {
+                        this.allBoT.set(d.userId, d);
+                    } else {
+                        this.allPendingBoT.set(d.userId, d);
+                    }
+                });
+            }
+        } catch (error) {
+            throw error
+        } finally {
+            this.isLoading = false;
+        }
+    }
+
+    async getAllMC(): Promise<void> {
+        try {
+            this.isLoading = true;
+            let data = await SettingService.getAllUsersByRole(committeeRoleIds.MC)
+            if (data.success) {
+                this.allMC.clear();
+                this.allPendingMC.clear();
+                data.data.forEach((d: IDra) => {
+                    if (d.status == 1) {
+                        this.allMC.set(d.userId, d);
+                    } else {
+                        this.allPendingMC.set(d.userId, d);
+                    }
+                });
+            }
+        } catch (error) {
+            throw error
+        } finally {
+            this.isLoading = false;
+        }
+    }
+
+    async getAllAC(): Promise<void> {
+        try {
+            this.isLoading = true;
+            let data = await SettingService.getAllUsersByRole(committeeRoleIds.AC)
+            if (data.success) {
+                this.allAC.clear();
+                this.allPendingAC.clear();
+                data.data.forEach((d: IDra) => {
+                    if (d.status == 1) {
+                        this.allAC.set(d.userId, d);
+                    } else {
+                        this.allPendingAC.set(d.userId, d);
+                    }
+                });
+            }
+        } catch (error) {
+            throw error
+        } finally {
+            this.isLoading = false;
+        }
+    }
+
     // DRA
     async getAllDra(): Promise<boolean> {
         try {
             this.isLoading = true;
             let data = await SettingService.allDra()
             if (data.success) {
-                this.allAdmin.clear();
+                this.allDra.clear();
+                this.allPendingDra.clear();
+
                 data.data.forEach((d: IDra) => {
+                    const roleName = d.role;
                     if (d.status == 1) {
-                        this.allDra.set(d.userId, d);
+                        if (roleName === "Data Reporting Agent (DRA)") {
+                            this.allDra.set(d.userId, d);
+                        }
                     } else {
-                        this.allPendingDra.set(d.userId, d);
+                        if (roleName === "Data Reporting Agent (DRA)") {
+                            this.allPendingDra.set(d.userId, d);
+                        }
                     }
                 });
             }
@@ -420,7 +502,17 @@ class SettingStore implements ISettingStore {
             this.isLoading = false;
         }
     }
-
+    async registerAllUser(credentials: IAuthPayload): Promise<HCDTRequestResponse> {
+        try {
+            this.isSubmitting = true;
+            let data = await SettingService.registerAllUser(credentials)
+            return data
+        } catch (error) {
+            throw error
+        } finally {
+            this.isSubmitting = false;
+        }
+    }
 
 
 }
