@@ -22,7 +22,14 @@ export const EditAdmin = observer(({ close, user, settingStore, trustStore }: { 
             await trustStore.getAllTrust();
             if (user) {
                 const role = settingStore.allRole.get(user.roleId as string);
-                const trust = trustStore.allTrust.get(user.trusts as string);
+
+                // Handle multi-trust assignment
+                const assignedTrustIds = (user.trusts as string || "").split(",").map(id => id.trim()).filter(Boolean);
+                const assignedTrustOptions = assignedTrustIds.map(id => {
+                    const trust = trustStore.allTrust.get(id);
+                    return trust ? { label: trust.trustName, value: trust.trustId } : null;
+                }).filter(Boolean) as IDropdownProp[];
+
                 reset({
                     firstName: user.firstName || "",
                     lastName: user.lastName || "",
@@ -31,10 +38,7 @@ export const EditAdmin = observer(({ close, user, settingStore, trustStore }: { 
                         label: role?.roleName,
                         value: role?.roleId
                     } as IDropdownProp,
-                    trust: {
-                        label: trust?.trustName,
-                        value: trust?.trustId
-                    } as IDropdownProp,
+                    trust: assignedTrustOptions,
                 });
             }
         }
@@ -44,11 +48,15 @@ export const EditAdmin = observer(({ close, user, settingStore, trustStore }: { 
     const submit = async (data: any) => {
         try {
             const roleData = data.role as IDropdownProp
-            const trustData = data.trust as IDropdownProp
+            const trustData = data.trust as IDropdownProp[] | IDropdownProp
+            const trusts = Array.isArray(trustData)
+                ? trustData.map((t) => t.value).join(",")
+                : (trustData as IDropdownProp)?.value || "";
+
             const formData: IAdminPayloadData = {
                 ...data,
                 roleId: roleData.value,
-                trusts: trustData.value,
+                trusts: trusts,
                 userId: user.userId,
                 status: user.status,
                 phoneNumber: user.phoneNumber,
@@ -183,6 +191,7 @@ export const EditAdmin = observer(({ close, user, settingStore, trustStore }: { 
                                 })}
                                 isLoading={trustStore.isLoading}
                                 label="Trust"
+                                isMulti={true}
                                 placeholder="Assign Trust"
                             />
                         )}

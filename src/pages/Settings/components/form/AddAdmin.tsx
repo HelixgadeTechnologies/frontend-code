@@ -16,11 +16,15 @@ export const AddAdmin = observer(({ close, settingStore, trustStore }: { close: 
     const submit = async (data: any) => {
         try {
             const roleData = data.role as IDropdownProp
-            const trustData = data.trust as IDropdownProp
+            const trustData = data.trust as IDropdownProp[] | IDropdownProp
+            const trusts = Array.isArray(trustData)
+                ? trustData.map((t) => t.value).join(",")
+                : (trustData as IDropdownProp)?.value || "";
+
             const formData: IAdminPayloadData = {
                 ...data,
                 roleId: roleData.value,
-                trusts: trustData.value
+                trusts: trusts
             }
             const payload: CreateAdminPayload = {
                 isCreate: true,
@@ -166,7 +170,7 @@ export const AddAdmin = observer(({ close, settingStore, trustStore }: { close: 
                                 })}
                                 isLoading={trustStore.isLoading}
                                 label="Trust"
-                                isMulti={false}
+                                isMulti={true}
                                 placeholder="Assign Trust"
                             />
                         )}
