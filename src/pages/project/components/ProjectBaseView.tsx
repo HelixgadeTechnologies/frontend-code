@@ -50,13 +50,13 @@ const ProjectBaseView = observer(() => {
                             </label>
                             <span className="text-sm text-gray-600 ml-2">Table</span>
                         </div>
-                        {(authStore.user.role == "SUPER ADMIN" || authStore.user.role == "ADMIN") && (
-                            <Button
-                                buttonText="Add a Project"
-                                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-                                onClick={toForm}
-                            />
-                        )}
+                        <Button
+                            buttonText="Add a Project"
+                            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+                            onClick={toForm}
+                        />
+                        {/* {(authStore.user.role == "SUPER ADMIN" || authStore.user.role == "ADMIN") && (
+                        )} */}
                     </div>
                 </div>
 

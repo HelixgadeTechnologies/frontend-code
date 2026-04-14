@@ -99,38 +99,37 @@ const ProjectTable = observer(() => {
                 },
             ];
 
-            if (!(authStore.user.role === "Board of Trustee (BoT)" || authStore.user.role === "Management Committee (MC)" || authStore.user.role === "Advisory Committee (AC)")) {
-                baseColumns.push({
-                    id: "actions",
-                    header: "",
-                    cell: ({ row }: { row: { original: IProjectView } }) => {
-                        const economicImpact = row.original;
+            baseColumns.push({
+                id: "actions",
+                header: "",
+                cell: ({ row }: { row: { original: IProjectView } }) => {
+                    const economicImpact = row.original;
 
-                        return (
-                            <Observer>
-                                {() => (
-                                    <div className="flex gap-2">
+                    return (
+                        <Observer>
+                            {() => (
+                                <div className="flex gap-2">
+                                    <Tag
+                                        label="View"
+                                        type="default"
+                                        icon={checkIcon}
+                                        onClick={() => handleView(economicImpact)} // Add your view handler
+                                    />
+                                    {(authStore.user.role == "SUPER ADMIN" || authStore.user.role == "ADMIN") && (
                                         <Tag
-                                            label="View"
+                                            label="Edit"
                                             type="default"
-                                            icon={checkIcon}
-                                            onClick={() => handleView(economicImpact)} // Add your view handler
+                                            icon={<FaEdit />}
+                                            onClick={() => handleEdit(economicImpact)} // Add your Edit handler
                                         />
-                                        {(authStore.user.role == "SUPER ADMIN" || authStore.user.role == "ADMIN") && (
-                                            <Tag
-                                                label="Edit"
-                                                type="default"
-                                                icon={<FaEdit />}
-                                                onClick={() => handleEdit(economicImpact)} // Add your Edit handler
-                                            />
-                                        )}
-                                    </div>
-                                )}
-                            </Observer>
-                        );
-                    },
-                } as any);
-            }
+                                    )}
+                                </div>
+                            )}
+                        </Observer>
+                    );
+                },
+            } as any);
+
 
             return baseColumns;
         },

@@ -54,11 +54,11 @@ const TrustEstablishment = observer(() => {
                   <h2 className="font-semibold text-2xl text-black capitalize">
                     Trust Establishment and Governance <br /> Structure Dashboard
                   </h2>
-                  {!(authStore.user.role === "Board of Trustee (BoT)" || authStore.user.role === "Management Committee (MC)" || authStore.user.role === "Advisory Committee (AC)") && (
                     <button className="px-3 py-2 rounded-md border border-black text-black font-medium text-sm" onClick={setSwitch}>
                       {trustEstablishmentStore.isEstablishmentCreated ? "Edit Establishment" : "Create Establishment"}
                     </button>
-                  )}
+                  {/* {!(authStore.user.role === "Board of Trustee (BoT)" || authStore.user.role === "Management Committee (MC)" || authStore.user.role === "Advisory Committee (AC)") && (
+                  )} */}
                 </div>
                 <EstablishmentDashboard />
               </>
