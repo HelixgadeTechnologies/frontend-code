@@ -43,7 +43,7 @@ const TrustDashboard = observer(() => {
       <>
         <Routes>
           <Route element={<TrustBoardLayout />}>
-            {authStore.user.role === "DRA" ? (
+            {(authStore.user.role === "DRA" || authStore.user.role === "Data Reporting Agent (DRA)") ? (
               <>
                 <Route path="/" element={<HCDTProjects />} />
                 <Route
@@ -57,6 +57,15 @@ const TrustDashboard = observer(() => {
                 <Route path="economic-impact" element={<EconomicImpact />} />
 
 
+              </>
+            ) : (authStore.user.role === "Board of Trustee (BoT)" || authStore.user.role === "Management Committee (MC)" || authStore.user.role === "Advisory Committee (AC)") ? (
+              <>
+                <Route path="/" element={<TrustEstablishment />} />
+                <Route
+                  path="conflict-resolution"
+                  element={<ConflictResloution />}
+                />
+                <Route path="hdct-projects" element={<HCDTProjects />} />
               </>
             ) : (
               <>

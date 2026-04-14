@@ -7,14 +7,17 @@ import { settingStore as SettingStore } from "../../Settings/store/settingStore"
 import EstablishmentDashboard from "./chart/EstablishmentDashboard";
 import TrustEstablishmentForm from "./forms/TrustEstablishmentForm";
 import EditTrustEstablishmentForm from "./forms/EditTrustEstablishmentForm";
+import { authStore as AuthStore } from "../../auth/store/authStore";
 
 
 const SettingStoreCTx = createContext(SettingStore);
+const AuthStoreCtx = createContext(AuthStore);
 const trustEstablishmentStoreCTx = createContext(TrustEstablishmentStore);
 
 const TrustEstablishment = observer(() => {
   const trustEstablishmentStore = useContext(trustEstablishmentStoreCTx);
   const settingStore = useContext(SettingStoreCTx);
+  const authStore = useContext(AuthStoreCtx);
   const { name } = useParams();
   const navigate = useNavigate();
 
@@ -51,9 +54,11 @@ const TrustEstablishment = observer(() => {
                   <h2 className="font-semibold text-2xl text-black capitalize">
                     Trust Establishment and Governance <br /> Structure Dashboard
                   </h2>
-                  <button className="px-3 py-2 rounded-md border border-black text-black font-medium text-sm" onClick={setSwitch}>
-                    {trustEstablishmentStore.isEstablishmentCreated ? "Edit Establishment" : "Create Establishment"}
-                  </button>
+                  {!(authStore.user.role === "Board of Trustee (BoT)" || authStore.user.role === "Management Committee (MC)" || authStore.user.role === "Advisory Committee (AC)") && (
+                    <button className="px-3 py-2 rounded-md border border-black text-black font-medium text-sm" onClick={setSwitch}>
+                      {trustEstablishmentStore.isEstablishmentCreated ? "Edit Establishment" : "Create Establishment"}
+                    </button>
+                  )}
                 </div>
                 <EstablishmentDashboard />
               </>

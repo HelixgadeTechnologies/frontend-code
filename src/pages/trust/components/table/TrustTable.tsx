@@ -179,21 +179,55 @@ const TrustTable = observer(() => {
     [activeMenu, toggleMenu, handleDelete],
   );
 
-  const tableHead = ["Trust", "country", "Communities", "action"];
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 20;
+
+  const filteredData = useMemo(() => {
+    const allTrusts = [...trustStore.allTrust.values()];
+    const userRole = authStore.user.role;
+    const userTrusts = authStore.user.trusts;
+
+    let results: ITrustList[] = [];
+    if (userRole === "SUPER ADMIN") {
+      results = allTrusts;
+    } else if (userTrusts) {
+      const assignedTrustIds = userTrusts.split(",").map((id) => id.trim());
+      results = allTrusts.filter((trust) => assignedTrustIds.includes(trust.trustId));
+    }
+
+    return results;
+  }, [trustStore.allTrust.size, authStore.user.trusts, authStore.user.role]);
+
+  // Reset page to 1 when search or filtering changes the data set
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filteredData.length]);
+
+  const totalPage = Math.ceil(filteredData.length / pageSize);
+  const paginatedData = useMemo(() => {
+    const start = (currentPage - 1) * pageSize;
+    return filteredData.slice(start, start + pageSize);
+  }, [filteredData, currentPage, pageSize]);
+
+  const tableHead = ["Trust", "State", "Communities", "action"];
 
   return (
     <div className="mt-10 bg-white p-4 rounded-2xl border border-gray-8 ">
       <>
         {trustStore.isLoading ? (
           <LoadingTable headArr={tableHead} />
-        ) : trustStore.allTrust.size > 0 ? (
+        ) : paginatedData.length > 0 ? (
           <Table
             columns={columns}
-            data={(authStore.user.role == "DRA" ? [...trustStore.allTrust.values()].filter(e => e.trustId == authStore.user?.trusts!) : [...trustStore.allTrust.values()]).map((trust: ITrustList, i: number) => ({
+            data={paginatedData.map((trust: ITrustList, i: number) => ({
               ...trust, id: i.toString()
             } as ITrustList))
             }
-            count={trustStore.allTrust.size}
+            count={filteredData.length}
+            pageSize={pageSize}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            totalPage={totalPage}
             rowSelection={rowSelection}
             setRowSelection={setRowSelection}
           />

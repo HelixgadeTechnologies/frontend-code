@@ -112,6 +112,24 @@ const TrustSidebar = observer(() => {
     },
   ];
 
+  const subRoutesCommittee = [
+    {
+      id: 1,
+      name: "Trust Establishment and Governance Structure",
+      link: `/trust/${name}/${id}`,
+    },
+    {
+      id: 2,
+      name: "HCDT Development Projects",
+      link: `/trust/${name}/${id}/hdct-projects`,
+    },
+    {
+      id: 3,
+      name: "Conflict Resolution",
+      link: `/trust/${name}/${id}/conflict-resolution`,
+    },
+  ];
+
   return (
     <div
       //className="hidden lg:flex h-full bg-white border-r border-gray-5  flex-col w-[272px]  py-6 px-4"
@@ -178,7 +196,20 @@ const TrustSidebar = observer(() => {
               </Link>
             ))}
 
-            {authStore.user.role == "DRA" && subRoutesDRA.map((route) => (
+            {(authStore.user.role == "DRA" || authStore.user.role == "Data Reporting Agent (DRA)") && subRoutesDRA.map((route) => (
+              <Link key={route.link} to={route.link}>
+                <li
+                  className={`${pathname === route.link ? "bg-primary-200/20" : "bg-white"
+                    } hover:bg-primary-200/20  rounded transition-all px-4 py-3 flex items-center gap-x-2`}
+                >
+                  <span className="text-sm font-medium text-gray-3">
+                    {route.name}
+                  </span>
+                </li>
+              </Link>
+            ))}
+
+            {(authStore.user.role == "Board of Trustee (BoT)" || authStore.user.role == "Management Committee (MC)" || authStore.user.role == "Advisory Committee (AC)") && subRoutesCommittee.map((route) => (
               <Link key={route.link} to={route.link}>
                 <li
                   className={`${pathname === route.link ? "bg-primary-200/20" : "bg-white"

@@ -65,70 +65,76 @@ const ProjectTable = observer(() => {
 
     // Define columns with memoization
     const columns = useMemo(
-        () => [
-            {
-                id: "projectTitle",
-                header: "Project Title",
-                accessorKey: "projectTitle",
-            },
-            {
-                id: "projectCategory",
-                header: "Project Category",
-                accessorKey: "projectCategory",
-            },
-            {
-                id: "date",
-                header: "Award Date",
-                accessorKey: "date",
-                cell: ({ row }: { row: { original: IProjectView } }) => {
-                    const economicImpact = row.original;
-                    const data = economicImpact.createAt ? new Date(economicImpact.createAt).toDateString() : "";
-                    return <span>{data}</span>;
+        () => {
+            const baseColumns = [
+                {
+                    id: "projectTitle",
+                    header: "Project Title",
+                    accessorKey: "projectTitle",
                 },
-            },
-            {
-                id: "community",
-                header: "Community",
-                accessorKey: "community",
-            },
-            {
-                id: "projectStatusName",
-                header: "Project Status",
-                accessorKey: "projectStatusName",
+                {
+                    id: "projectCategory",
+                    header: "Project Category",
+                    accessorKey: "projectCategory",
+                },
+                {
+                    id: "date",
+                    header: "Award Date",
+                    accessorKey: "date",
+                    cell: ({ row }: { row: { original: IProjectView } }) => {
+                        const economicImpact = row.original;
+                        const data = economicImpact.createAt ? new Date(economicImpact.createAt).toDateString() : "";
+                        return <span>{data}</span>;
+                    },
+                },
+                {
+                    id: "community",
+                    header: "Community",
+                    accessorKey: "community",
+                },
+                {
+                    id: "projectStatusName",
+                    header: "Project Status",
+                    accessorKey: "projectStatusName",
+                },
+            ];
 
-            },
-            {
-                id: "actions",
-                header: "",
-                cell: ({ row }: { row: { original: IProjectView } }) => {
-                    const economicImpact = row.original;
+            if (!(authStore.user.role === "Board of Trustee (BoT)" || authStore.user.role === "Management Committee (MC)" || authStore.user.role === "Advisory Committee (AC)")) {
+                baseColumns.push({
+                    id: "actions",
+                    header: "",
+                    cell: ({ row }: { row: { original: IProjectView } }) => {
+                        const economicImpact = row.original;
 
-                    return (
-                        <Observer>
-                            {() => (
-                                <div className="flex gap-2">
-                                    <Tag
-                                        label="View"
-                                        type="default"
-                                        icon={checkIcon}
-                                        onClick={() => handleView(economicImpact)} // Add your view handler
-                                    />
-                                    {(authStore.user.role == "SUPER ADMIN" || authStore.user.role == "ADMIN") && (
+                        return (
+                            <Observer>
+                                {() => (
+                                    <div className="flex gap-2">
                                         <Tag
-                                            label="Edit"
+                                            label="View"
                                             type="default"
-                                            icon={<FaEdit />}
-                                            onClick={() => handleEdit(economicImpact)} // Add your Edit handler
+                                            icon={checkIcon}
+                                            onClick={() => handleView(economicImpact)} // Add your view handler
                                         />
-                                    )}
-                                </div>
-                            )}
-                        </Observer>
-                    );
-                },
-            },
-        ],
-        [handleView],
+                                        {(authStore.user.role == "SUPER ADMIN" || authStore.user.role == "ADMIN") && (
+                                            <Tag
+                                                label="Edit"
+                                                type="default"
+                                                icon={<FaEdit />}
+                                                onClick={() => handleEdit(economicImpact)} // Add your Edit handler
+                                            />
+                                        )}
+                                    </div>
+                                )}
+                            </Observer>
+                        );
+                    },
+                } as any);
+            }
+
+            return baseColumns;
+        },
+        [handleView, authStore.user.role],
     );
     const handleCreate = useCallback(() => {
         projectStore.isViewDialogOpen = true

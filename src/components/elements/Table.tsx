@@ -27,6 +27,7 @@ interface TableProps<T extends BaseItem> {
   pageLink?: string;
   rowSelection?: RowSelectionState;
   setRowSelection?: React.Dispatch<React.SetStateAction<RowSelectionState>>;
+  pageSize?: number;
   enableClickToNavigate?: boolean; // Optional prop to enable/disable row click navigation
 }
 
@@ -64,6 +65,7 @@ const Table = <T extends BaseItem>({
   setCurrentPage,
   totalPage,
   count,
+  pageSize = 10,
   rowSelection = {},
   setRowSelection,
   enableClickToNavigate = true,
@@ -164,9 +166,10 @@ const Table = <T extends BaseItem>({
 
       {totalPage && (
         <div className="flex w-full items-center justify-between bg-white px-6 pb-6 pt-8">
-          {currentPage && (
-            <div className="text-gray-5 font-normal text-base">
-              Showing {currentPage} to {totalPage} of {count} entries
+          {currentPage && count !== undefined && (
+            <div className="text-gray-5 font-normal text-base text-nowrap">
+              Showing {count > 0 ? (currentPage - 1) * pageSize + 1 : 0} to{" "}
+              {Math.min(currentPage * pageSize, count)} of {count} entries
             </div>
           )}
 
