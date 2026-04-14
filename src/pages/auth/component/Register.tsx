@@ -71,7 +71,7 @@ const Register: React.FC = observer(() => {
             <form onSubmit={handleSubmit(submit)} className="w-full max-w-md bg-white p-8 rounded">
                 <h2 className="text-2xl font-semibold text-center mb-2 text-gray-900">Complete Account</h2>
                 <p className="text-center text-gray-500 mb-6">
-                    Enter your credentials to create your DRA account
+                    Enter your credentials to create your account
                 </p>
 
                 <div className="mb-4">
