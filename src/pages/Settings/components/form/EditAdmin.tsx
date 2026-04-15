@@ -24,11 +24,16 @@ export const EditAdmin = observer(({ close, user, settingStore, trustStore }: { 
                 const role = settingStore.allRole.get(user.roleId as string);
 
                 // Handle multi-trust assignment
-                const assignedTrustIds = (user.trusts as string || "").split(",").map(id => id.trim()).filter(Boolean);
-                const assignedTrustOptions = assignedTrustIds.map(id => {
-                    const trust = trustStore.allTrust.get(id);
-                    return trust ? { label: trust.trustName, value: trust.trustId } : null;
-                }).filter(Boolean) as IDropdownProp[];
+                let assignedTrustOptions: IDropdownProp[] = [];
+                if (user.trusts === "ALL") {
+                    assignedTrustOptions = [{ label: "All", value: "ALL" }];
+                } else {
+                    const assignedTrustIds = (user.trusts as string || "").split(",").map(id => id.trim()).filter(Boolean);
+                    assignedTrustOptions = assignedTrustIds.map(id => {
+                        const trust = trustStore.allTrust.get(id);
+                        return trust ? { label: trust.trustName, value: trust.trustId } : null;
+                    }).filter(Boolean) as IDropdownProp[];
+                }
 
                 reset({
                     firstName: user.firstName || "",
@@ -49,9 +54,16 @@ export const EditAdmin = observer(({ close, user, settingStore, trustStore }: { 
         try {
             const roleData = data.role as IDropdownProp
             const trustData = data.trust as IDropdownProp[] | IDropdownProp
-            const trusts = Array.isArray(trustData)
-                ? trustData.map((t) => t.value).join(",")
-                : (trustData as IDropdownProp)?.value || "";
+            let trusts = ""
+            if (Array.isArray(trustData)) {
+                if (trustData.some(t => t.value === "ALL")) {
+                    trusts = "ALL";
+                } else {
+                    trusts = trustData.map((t) => t.value).join(",");
+                }
+            } else {
+                trusts = (trustData as IDropdownProp)?.value === "ALL" ? "ALL" : (trustData as IDropdownProp)?.value || "";
+            }
 
             const formData: IAdminPayloadData = {
                 ...data,
@@ -183,12 +195,15 @@ export const EditAdmin = observer(({ close, user, settingStore, trustStore }: { 
                             <CustomSelect
                                 id="trust-select"
                                 {...field}
-                                options={[...trustStore.allTrust.values()].map((v: ITrustList) => {
-                                    return {
-                                        label: v?.trustName,
-                                        value: v?.trustId
-                                    }
-                                })}
+                                options={[
+                                    { label: "All", value: "ALL" },
+                                    ...[...trustStore.allTrust.values()].map((v: ITrustList) => {
+                                        return {
+                                            label: v?.trustName,
+                                            value: v?.trustId
+                                        }
+                                    })
+                                ]}
                                 isLoading={trustStore.isLoading}
                                 label="Trust"
                                 isMulti={true}

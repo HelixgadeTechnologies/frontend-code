@@ -188,7 +188,7 @@ const TrustTable = observer(() => {
     const userTrusts = authStore.user.trusts;
 
     let results: ITrustList[] = [];
-    if (userRole === "SUPER ADMIN") {
+    if (userRole === "SUPER ADMIN" || userTrusts === "ALL") {
       results = allTrusts;
     } else if (userTrusts) {
       const assignedTrustIds = userTrusts.split(",").map((id) => id.trim());

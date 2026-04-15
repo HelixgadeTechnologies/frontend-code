@@ -17,9 +17,16 @@ export const AddAdmin = observer(({ close, settingStore, trustStore }: { close: 
         try {
             const roleData = data.role as IDropdownProp
             const trustData = data.trust as IDropdownProp[] | IDropdownProp
-            const trusts = Array.isArray(trustData)
-                ? trustData.map((t) => t.value).join(",")
-                : (trustData as IDropdownProp)?.value || "";
+            let trusts = ""
+            if (Array.isArray(trustData)) {
+                if (trustData.some(t => t.value === "ALL")) {
+                    trusts = "ALL";
+                } else {
+                    trusts = trustData.map((t) => t.value).join(",");
+                }
+            } else {
+                trusts = (trustData as IDropdownProp)?.value === "ALL" ? "ALL" : (trustData as IDropdownProp)?.value || "";
+            }
 
             const formData: IAdminPayloadData = {
                 ...data,
@@ -162,12 +169,15 @@ export const AddAdmin = observer(({ close, settingStore, trustStore }: { close: 
                             <CustomSelect
                                 id="trust-select"
                                 {...field}
-                                options={[...trustStore.allTrust.values()].map((v: ITrustList) => {
-                                    return {
-                                        label: v?.trustName,
-                                        value: v?.trustId
-                                    }
-                                })}
+                                options={[
+                                    { label: "All", value: "ALL" },
+                                    ...[...trustStore.allTrust.values()].map((v: ITrustList) => {
+                                        return {
+                                            label: v?.trustName,
+                                            value: v?.trustId
+                                        }
+                                    })
+                                ]}
                                 isLoading={trustStore.isLoading}
                                 label="Trust"
                                 isMulti={true}
