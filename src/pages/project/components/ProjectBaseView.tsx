@@ -5,12 +5,12 @@ import { projectStore as ProjectStore } from "../store/projectStore";
 import ProjectDashboard from "./chat/ProjectDashboard";
 import ProjectTable from "./table/ProjectTable";
 import { useNavigate, useParams } from "react-router-dom";
-import { authStore as AuthStore } from "../../auth/store/authStore";
+//import { authStore as AuthStore } from "../../auth/store/authStore";
 
-const AuthStoreCTX = createContext(AuthStore)
+//const AuthStoreCTX = createContext(AuthStore)
 const ProjectStoreCTX = createContext(ProjectStore)
 const ProjectBaseView = observer(() => {
-    const authStore = useContext(AuthStoreCTX)
+    //const authStore = useContext(AuthStoreCTX)
     const projectStore = useContext(ProjectStoreCTX)
     const { name } = useParams();
     const navigate = useNavigate();

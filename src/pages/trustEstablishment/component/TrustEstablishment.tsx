@@ -7,17 +7,17 @@ import { settingStore as SettingStore } from "../../Settings/store/settingStore"
 import EstablishmentDashboard from "./chart/EstablishmentDashboard";
 import TrustEstablishmentForm from "./forms/TrustEstablishmentForm";
 import EditTrustEstablishmentForm from "./forms/EditTrustEstablishmentForm";
-import { authStore as AuthStore } from "../../auth/store/authStore";
+//import { authStore as AuthStore } from "../../auth/store/authStore";
 
 
 const SettingStoreCTx = createContext(SettingStore);
-const AuthStoreCtx = createContext(AuthStore);
+//const AuthStoreCtx = createContext(AuthStore);
 const trustEstablishmentStoreCTx = createContext(TrustEstablishmentStore);
 
 const TrustEstablishment = observer(() => {
   const trustEstablishmentStore = useContext(trustEstablishmentStoreCTx);
   const settingStore = useContext(SettingStoreCTx);
-  const authStore = useContext(AuthStoreCtx);
+  //const authStore = useContext(AuthStoreCtx);
   const { name } = useParams();
   const navigate = useNavigate();
 
