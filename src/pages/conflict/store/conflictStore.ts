@@ -64,6 +64,7 @@ class ConflictStore implements IConflictStore {
             let data = await conflictService.getByTrustId(trustId);
             if (data.success) {
                 this.conflicts.clear();
+                this.filteredConflicts.clear();
                 data.data.forEach((conflict: IConflictView) => {
                     this.conflicts.set(conflict.conflictId, conflict);
                     this.filteredConflicts.set(conflict.conflictId, conflict);
