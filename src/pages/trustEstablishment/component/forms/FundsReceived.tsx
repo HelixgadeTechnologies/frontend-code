@@ -15,8 +15,8 @@ export const FundsReceived = observer(({ control, register }: { control: any, re
         <div>
             {fields.map((field, idx) => (
                 <div key={field.id} className="mb-3">
-                    <div className="flex items-center rounded-md border border-blue-200 bg-white focus-within:border-blue-500 transition">
-                        <div className="border-r border-blue-200 h-12 flex items-center bg-white">
+                    <div className="flex flex-col md:flex-row md:items-center rounded-md border border-blue-200 bg-white focus-within:border-blue-500 transition overflow-hidden">
+                        <div className="border-b md:border-b-0 md:border-r border-blue-200 h-12 flex items-center bg-white w-full md:w-auto">
                             <Controller
                                 control={control}
                                 name={`totalFunds.${idx}.year`}
@@ -28,14 +28,14 @@ export const FundsReceived = observer(({ control, register }: { control: any, re
                                         options={year}
                                         isMulti={false}
                                         placeholder="Year"
-                                        className="!h-12 !border-0 !shadow-none focus:!border-0 focus:!ring-0 focus:outline-none"
+                                        className="!h-12 !border-0 !shadow-none focus:!border-0 focus:!ring-0 focus:outline-none w-full"
                                         menuPlacement="auto"
                                     />
                                 )}
                             />
                         </div>
                         {/* Currency Select */}
-                        <div className="w-24 border-r border-blue-200 flex items-center bg-white" style={{ width: "97px" }}>
+                        <div className="border-b md:border-b-0 md:border-r border-blue-200 flex items-center bg-white w-full md:w-[97px]">
                             <Controller
                                 name={`totalFunds.${idx}.currency`}
                                 control={control}
@@ -49,21 +49,21 @@ export const FundsReceived = observer(({ control, register }: { control: any, re
                                         }
                                         placeholder="NGN"
                                         defaultValue={currencyOptions[0]}
-                                        className="!h-12 !border-0 !shadow-none focus:!border-0 focus:!ring-0 focus:outline-none"
+                                        className="!h-12 !border-0 !shadow-none focus:!border-0 focus:!ring-0 focus:outline-none w-full"
                                         menuPlacement="auto"
                                     />
                                 )}
                             />
                         </div>
                         {/* Amount Input */}
-                        <div className="flex-1 h-12 flex items-center" style={{ paddingBottom: "10px" }}>
+                        <div className="flex-1 flex flex-col sm:flex-row items-center gap-2 p-2 md:p-0 md:h-12" style={{ paddingBottom: "10px" }}>
                             <FormInput
                                 label=""
                                 name={`totalFunds.${idx}.capitalExpenditure`}
                                 type="number"
                                 placeholder="Capital Expenditure"
                                 register={register}
-                                className="!border-0 !shadow-none focus:!border-blue-500 w-full focus:!border-0 focus:!ring-0 focus:outline-none"
+                                className="!border-0 !shadow-none focus:!border-blue-500 w-full focus:!border-0 focus:!ring-0 focus:outline-none h-full"
                             // error={errors?.opex?.[idx]?.amount}
                             />
                             <FormInput
@@ -72,32 +72,14 @@ export const FundsReceived = observer(({ control, register }: { control: any, re
                                 type="number"
                                 placeholder="Reserved"
                                 register={register}
-                                className="!border-0 !shadow-none focus:!border-blue-500 w-full focus:!border-0 focus:!ring-0 focus:outline-none"
+                                className="!border-0 !shadow-none focus:!border-blue-500 w-full focus:!border-0 focus:!ring-0 focus:outline-none h-full"
                             // error={errors?.opex?.[idx]?.amount}
                             />
 
-                            {/* {errors.managementCommitteeConstitutedAndInaugurated && (
-                                <p className="text-red-500 text-xs mt-1">{String(errors?.managementCommitteeConstitutedAndInaugurated?.message!)}</p>
-                                )} */}
-                            {/* <FormInput
-                                label=""
-                                name={`funds-total.${idx}.total`}
-                                type="number"
-                                placeholder="Total"
-                                register={register}
-                                registerOptions={{
-                                    required: "Amount is required",
-                                    pattern: {
-                                        value: /^[0-9]+(\.[0-9]{1,2})?$/,
-                                        message: "Please enter a valid amount",
-                                        },
-                                        }}
-                                        className="!border-0 !shadow-none focus:!border-blue-500 w-full focus:!border-0 focus:!ring-0 focus:outline-none"
-                                        /> */}
                             {fields.length > 1 && (
                                 <button
                                     type="button"
-                                    className="ml-2 text-red-500"
+                                    className="ml-2 text-red-500 pr-4"
                                     onClick={() => remove(idx)}
                                     title="Remove"
                                 >

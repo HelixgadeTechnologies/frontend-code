@@ -166,16 +166,16 @@ const TrustEstablishmentForm = observer(() => {
     trustEstablishmentStore.pageSwitch = 1;
   }, [trustEstablishmentStore]);
   return (
-    <div className="py-4 px-7">
+    <div className="py-4 px-4 sm:px-7">
       <GoBack action={setSwitch} page="Trust Establishment" trustName={name || ""} />
 
-      <div className="my-7 flex items-center justify-between">
-        <h2 className="font-semibold text-2xl text-black capitalize">
-          Trust Establishment and Governance <br /> Structure Dashboard
-        </h2>
+      <div className="my-7 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <h1 className="font-semibold text-xl sm:text-2xl text-black capitalize">
+          Trust Establishment and Governance Structure Dashboard
+        </h1>
 
 
-        <button className="px-3 py-2 rounded-md border border-black text-black font-medium text-sm" onClick={setSwitch}>
+        <button className="w-fit px-3 py-2 rounded-md border border-black text-black font-medium text-sm" onClick={setSwitch}>
           Back to Dashboard
         </button>
 
@@ -421,14 +421,14 @@ const TrustEstablishmentForm = observer(() => {
         <div className="bg-white p-3">
           <div className="bg-white p-6 rounded-lg">
             {/* Header */}
-            <div className="flex items-center justify-between bg-gray-100 rounded-md px-4 py-3 mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-gray-100 rounded-md px-4 py-3 mb-6 gap-4">
               <div>
-                <h2 className="font-semibold text-xl text-gray-800">Status of Needs Assessment</h2>
+                <h2 className="font-semibold text-lg sm:text-xl text-gray-800">Status of Needs Assessment</h2>
                 <p className="text-sm text-gray-500 mt-1">
                   These are your personal details, they are visible to the public
                 </p>
               </div>
-              <div className="w-40">
+              <div className="w-full sm:w-40">
 
               </div>
             </div>
@@ -544,7 +544,7 @@ const TrustEstablishmentForm = observer(() => {
               Trust has a distribution matrix developed by settlor
             </h2>
             <label className="block text-sm font-medium text-gray-700 mb-2">Options</label>
-            <div className="flex items-center gap-8 mb-4">
+            <div className="mb-4">
               <CustomRadio
                 name="distributionMatrixDevelopedBySettlor"
                 control={control}
@@ -584,7 +584,7 @@ const TrustEstablishmentForm = observer(() => {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Is the trust development plan budget readily available?
               </label>
-              <div className="flex items-center gap-8 mb-4">
+              <div className="mb-4">
                 <CustomRadio
                   name="isTrustDevPlanBudgetAvailable"
                   control={control}
@@ -602,7 +602,7 @@ const TrustEstablishmentForm = observer(() => {
             </div> */}
 
             {/* Action Buttons */}
-            <div className="mt-8 flex flex-col lg:flex-row items-center gap-8 justify-between">
+            <div className="mt-8 flex flex-col items-center gap-8 justify-between">
 
               <Button
                 onClick={reset}

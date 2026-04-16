@@ -273,7 +273,17 @@ class ConflictStore implements IConflictStore {
         }
     }
 
-
+    async deleteConflict(conflictId: string): Promise<boolean> {
+        try {
+            this.isSubmitting = true;
+            await conflictService.deleteConflict(conflictId);
+            return true;
+        } catch (error) {
+            throw error;
+        } finally {
+            this.isSubmitting = false;
+        }
+    }
 
 }
 

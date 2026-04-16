@@ -1,7 +1,7 @@
 import { RowSelectionState } from "@tanstack/react-table";
 import { Observer, observer } from "mobx-react-lite";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { EmptyTable, LoadingTable, Modal, Table } from "../../../../components/elements";
+import { Button, EmptyTable, LoadingTable, Modal, Table } from "../../../../components/elements";
 import { conflictStore as ConflictStore } from "../../store/conflictStore"
 import { trustStore as TrustStore } from "../../../trust/store/trustStore"
 import { IConflictView } from "../../types/interface";
@@ -11,6 +11,8 @@ import ConflictTableHeader from "./ConflictTableHeader";
 import EditConflict from "../form/EditConflict";
 import IMG from "../../../../assets/svgs/dashboardConflictNotFound.svg"
 import ConflictForm from "../form/ConflictForm";
+import { authStore } from "../../../auth/store/authStore";
+import { toast } from "react-toastify";
 
 const ConflictStoreCtx = createContext(ConflictStore);
 const TrustStoreCtx = createContext(TrustStore);
@@ -28,6 +30,7 @@ export const ConflictTable = observer(() => {
         loadRequests();
     }, []);
     const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+    const [conflictToDelete, setConflictToDelete] = useState<IConflictView | null>(null);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [pageSize] = useState<number>(10); // items per page
 
@@ -46,6 +49,21 @@ export const ConflictTable = observer(() => {
     const handleEdit = useCallback(async (conflict: IConflictView) => {
         conflictStore.selectedConflict = conflict;
         conflictStore.isEditDialogVisible = true;
+    }, [conflictStore]);
+
+    const confirmDelete = useCallback(async (conflict: IConflictView) => {
+        try {
+            const response = await conflictStore.deleteConflict(conflict.conflictId as string);
+            if (response) {
+                toast.success("Conflict deleted successfully.");
+                let selectedTrustId = window.sessionStorage.getItem("selectedTrustId");
+                await conflictStore.getConflicts(selectedTrustId as string);
+                setConflictToDelete(null);
+            }
+        } catch (error: any) {
+            const message = error?.response?.body?.error || "Failed to delete conflict";
+            toast.error(message);
+        }
     }, [conflictStore]);
 
 
@@ -96,6 +114,13 @@ export const ConflictTable = observer(() => {
                                     type="default"
                                     onClick={() => handleEdit(conflict)}
                                 />
+                                {authStore?.user?.role === "SUPER ADMIN" && (
+                                    <Tag
+                                        label="Delete"
+                                        type="reject"
+                                        onClick={() => setConflictToDelete(conflict)}
+                                    />
+                                )}
                             </div>
                         )}
                     </Observer>
@@ -147,6 +172,36 @@ export const ConflictTable = observer(() => {
                     )}
                 </>
                 {/* Modals */}
+                {conflictToDelete && (
+                    <Modal
+                        body={
+                            <div className="p-6 bg-white rounded-lg">
+                                <h3 className="text-xl font-bold text-gray-800 mb-4">Confirm Deletion</h3>
+                                <p className="text-gray-600 mb-8">Are you sure you want to delete this conflict? This action cannot be undone.</p>
+                                <div className="flex justify-end space-x-4">
+                                    <Button
+                                        onClick={() => setConflictToDelete(null)}
+                                        border={true}
+                                        buttonText="Cancel"
+                                        type="button"
+                                        padding="py-2.5 px-6"
+                                        width="w-auto"
+                                    />
+                                    <Button
+                                        onClick={() => confirmDelete(conflictToDelete)}
+                                        bg="bg-red-600 hover:bg-red-700 text-white"
+                                        buttonText={conflictStore.isSubmitting ? "Deleting..." : "Delete"}
+                                        type="button"
+                                        padding="py-2.5 px-6"
+                                        width="w-auto"
+                                        disabled={conflictStore.isSubmitting}
+                                    />
+                                </div>
+                            </div>
+                        }
+                        close={() => setConflictToDelete(null)}
+                    />
+                )}
                 {/* {conflictStore.selectedConflict && !conflictStore.isEditDialogVisible && (
                     <Modal
                         body={

@@ -71,7 +71,7 @@ const FileUpload = <T extends FieldValues>({
 
   return (
     <div className={`space-y-2 ${className}`}>
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         {label && (
           <label className="flex items-center gap-x-3  text-sm font-medium text-gray-700">
             <span className="bg-off-white-2 h-12 w-12 rounded-full flex items-center justify-center">

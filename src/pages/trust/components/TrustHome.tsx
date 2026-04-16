@@ -4,6 +4,7 @@ import { Navigate, useLocation, Route, Routes, } from "react-router-dom";
 import TrustBoardLayout from "../../../layouts/TrustBoardLayout";
 
 import EconomicImpact from "../../EconomicImpact/components/EconomicImpact";
+import EconomicImpactFormPage from "../../EconomicImpact/components/form/EconomicImpactFormPage";
 import HCDTProjects from "../../project/components/HCDTProjects";
 // import ConflictResloution from "./ConflictResloution";
 import TrustEstablishment from "../../trustEstablishment/component/TrustEstablishment";
@@ -55,7 +56,7 @@ const TrustDashboard = observer(() => {
                   element={<CommunitySatisfaction />}
                 />
                 <Route path="economic-impact" element={<EconomicImpact />} />
-
+                <Route path="economic-impact/add" element={<EconomicImpactFormPage />} />
 
               </>
             ) : (authStore.user.role === "Board of Trustee (BoT)" || authStore.user.role === "Management Committee (MC)" || authStore.user.role === "Advisory Committee (AC)") ? (
@@ -79,6 +80,7 @@ const TrustDashboard = observer(() => {
                   element={<CommunitySatisfaction />}
                 />
                 <Route path="economic-impact" element={<EconomicImpact />} />
+                <Route path="economic-impact/add" element={<EconomicImpactFormPage />} />
 
                 <Route path="hdct-projects" element={<HCDTProjects />} />
                 <Route path="settings" element={<TrustSettingsPage />} />

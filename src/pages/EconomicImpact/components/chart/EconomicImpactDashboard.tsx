@@ -104,25 +104,27 @@ const EconomicImpactDashboard = observer(({ economicImpactStore }: { economicImp
                 {/* Pie Charts */}
                 <Observer>
                     {() => (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
+                            <div className="bg-white shadow-md rounded-lg p-4 sm:p-6 flex flex-col justify-between h-full">
                                 <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
                                     My business is generating more money since they implemented some
                                     of the HCDT projects in my community.
                                 </h3>
-                                <div className="h-48 sm:h-56">
+                                <div className="relative h-[250px] w-full flex items-center justify-center">
                                     <Pie
                                         data={pieData1}
                                         options={{
+                                            maintainAspectRatio: false,
                                             plugins: {
                                                 datalabels: {
                                                     color: "#222",
                                                     font: { weight: "bold" },
                                                     formatter: (value: number, context: any) => {
+                                                        if (!value || Number(value) === 0) return null;
                                                         const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
                                                         const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
                                                         const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
-                                                        return `${percent}%`;
+                                                        return percent === "0" ? null : `${percent}%`;
                                                     },
                                                 },
                                                 legend: {
@@ -142,24 +144,26 @@ const EconomicImpactDashboard = observer(({ economicImpactStore }: { economicImp
                                     />
                                 </div>
                             </div>
-                            <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
+                            <div className="bg-white shadow-md rounded-lg p-4 sm:p-6 flex flex-col justify-between h-full">
                                 <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
                                     My income has increased since the implementation of some of the
                                     HCDT projects in my community.
                                 </h3>
-                                <div className="h-48 sm:h-56">
+                                <div className="relative h-[250px] w-full flex items-center justify-center">
                                     <Pie
                                         data={pieData2}
                                         options={{
+                                            maintainAspectRatio: false,
                                             plugins: {
                                                 datalabels: {
                                                     color: "#222",
                                                     font: { weight: "bold" },
                                                     formatter: (value: number, context: any) => {
+                                                        if (!value || Number(value) === 0) return null;
                                                         const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
                                                         const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
                                                         const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
-                                                        return `${percent}%`;
+                                                        return percent === "0" ? null : `${percent}%`;
                                                     },
                                                 },
                                                 legend: {
@@ -180,24 +184,26 @@ const EconomicImpactDashboard = observer(({ economicImpactStore }: { economicImp
                                     />
                                 </div>
                             </div>
-                            <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
+                            <div className="bg-white shadow-md rounded-lg p-4 sm:p-6 flex flex-col justify-between h-full">
                                 <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
                                     The implemented HCDT projects have bettered my livelihood and
                                     quality of lives.
                                 </h3>
-                                <div className="h-48 sm:h-56">
+                                <div className="relative h-[250px] w-full flex items-center justify-center">
                                     <Pie
                                         data={pieData3}
                                         options={{
+                                            maintainAspectRatio: false,
                                             plugins: {
                                                 datalabels: {
                                                     color: "#222",
                                                     font: { weight: "bold" },
                                                     formatter: (value: number, context: any) => {
+                                                        if (!value || Number(value) === 0) return null;
                                                         const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
                                                         const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
                                                         const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
-                                                        return `${percent}%`;
+                                                        return percent === "0" ? null : `${percent}%`;
                                                     },
                                                 },
                                                 legend: {

@@ -1,25 +1,21 @@
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
-import { Button, DashboardSkeleton, GoBack, Modal } from "../../../components/elements";
+import { createContext, useContext, useEffect, useState } from "react";
+import { Button, DashboardSkeleton, GoBack } from "../../../components/elements";
 import { EconomicImpactTable } from "./table/EconomicImpactTable";
 import EconomicImpactDashboard from "./chart/EconomicImpactDashboard";
 import { economicImpactStore as EconomicImpactStore } from "../store/economicImpactStore";
-import { trustStore as TrustStore } from "../../trust/store/trustStore";
-import EconomicImpactForm from "./form/EconomicImpactForm";
+// removed trustStore import
 import { observer } from "mobx-react-lite";
 import { useNavigate, useParams } from "react-router-dom";
 const EconomicImpactStoreCtx = createContext(EconomicImpactStore);
-const TrustStoreCtx = createContext(TrustStore);
+// removed TrustStoreCtx
 
 const EconomicImpact = observer(() => {
   const economicImpactStore = useContext(EconomicImpactStoreCtx);
-  const trustStore = useContext(TrustStoreCtx);
+  // removed trustStore context usage
   const [isTableView, setIsTableView] = useState(true);
   const { name } = useParams();
   const navigate = useNavigate();
 
-  const openModal = useCallback(() => {
-    economicImpactStore.isAddModelOpen = true;
-  }, [economicImpactStore]);
 
    useEffect(() => {
           async function loadRequests() {
@@ -54,7 +50,7 @@ const EconomicImpact = observer(() => {
             <span className="text-sm text-gray-600 ml-2">Table</span>
           </div>
           <Button
-            onClick={openModal}
+            onClick={() => navigate("add")}
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
             buttonText="Add Report"
             width="w-fit"
@@ -84,19 +80,6 @@ const EconomicImpact = observer(() => {
           <div><EconomicImpactTable /></div>
         )}
       </div>
-      {/* Modals */}
-      {economicImpactStore.isAddModelOpen && (
-        <Modal
-          body={
-            <EconomicImpactForm
-              close={() => economicImpactStore.isAddModelOpen = false}
-              economicImpactStore={economicImpactStore}
-              trustStore={trustStore}
-            />
-          }
-          close={() => economicImpactStore.isAddModelOpen = false}
-        />
-      )}
     </div>
   );
 });

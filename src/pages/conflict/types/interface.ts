@@ -32,7 +32,7 @@ export interface IConflictStore {
   filterMajorConflict(cc: Array<ICauseOfConflictDashboard>): Array<IDropdownProp>;
   transformConflictDashboard(data: IConflictDashboard): IConflictDashboardOutput;
   getConflictDashboardByTrustId(trustId: string, selectedYear: number, selectedState: string, settlor: string): Promise<void>;
-
+  deleteConflict(conflictId: string): Promise<boolean>;
 }
 
 

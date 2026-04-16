@@ -39,7 +39,7 @@ const CustomRadio = <T extends FieldValues>({
           {label}
         </label>
       )}
-      <div className="flex space-x-20">
+      <div className="flex flex-col md:flex-row md:flex-wrap gap-2 md:gap-6">
         {options.map((option) => (
           <div key={option.value} className="flex items-center">
             <input

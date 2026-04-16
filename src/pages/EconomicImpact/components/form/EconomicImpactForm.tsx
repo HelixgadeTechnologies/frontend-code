@@ -42,15 +42,9 @@ const EconomicImpactForm = observer(({ close, economicImpactStore, trustStore }:
   };
 
   return (
-    <div className="p-6 bg-gray-100">
-      <div className="relative mx-auto bg-white shadow-md rounded-lg p-8">
-        <button
-          onClick={close}
-          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
-          aria-label="Close"
-        >
-          ✕
-        </button>
+    <div className="w-full">
+      <div className="relative mx-auto bg-white shadow-sm md:shadow-md rounded-lg p-4 sm:p-8">
+        {/* Removed internal close button for standalone page */}
         <h1 className="text-2xl font-bold text-gray-800 mb-4">
           Economic Impact of HCDT in Host Communities
         </h1>
