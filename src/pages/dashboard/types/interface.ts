@@ -33,9 +33,10 @@ export interface IFinishedDashboard {
     BOT_DISPLAY: { male: number[]; female: number[]; pwd: number[] };
     // CONFLICT_RESOLUTION_OVER: IConflictResolutionOverTime[];
     BOT_INAUGURATION_CHECK: IBotInauguration;
-    COMMUNITY_LEADERSHIP_PERCENTAGE: {COMMUNITY_LEADERSHIP_PERCENTAGE:Array<number>; COMMUNITY_YOUTHS_PERCENTAGE: Array<number>; COMMUNITY_WOMEN_PERCENTAGE: Array<number>; PWDS_PERCENTAGE: Array<number>; };
+    COMMUNITY_LEADERSHIP_PERCENTAGE: { COMMUNITY_LEADERSHIP_PERCENTAGE: Array<number>; COMMUNITY_YOUTHS_PERCENTAGE: Array<number>; COMMUNITY_WOMEN_PERCENTAGE: Array<number>; PWDS_PERCENTAGE: Array<number>; };
     NEEDS_ASSESSMENT_PERCENTAGE: INeedsAssessmentStatusP;
     FUNDS_DISTRIBUTION_PERCENTAGE: { yearReceived: Array<number>; pct_paymentCheck_1: Array<number>; pct_paymentCheck_2: Array<number>; pct_paymentCheck_3: Array<number>; };
+    STATE_WISE_TRUST_COUNT: { state: string[]; trustCount: number[] };
 }
 
 interface ConflictStatusPercentage {
@@ -77,6 +78,13 @@ export interface IGeneralDashboard {
     COMMUNITY_LEADERSHIP_PERCENTAGE: ICommunityConsultationBreakdown[];
     NEEDS_ASSESSMENT_PERCENTAGE: INeedsAssessmentStatusP[];
     FUNDS_DISTRIBUTION_PERCENTAGE: IFundsReceivedG[];
+    STATE_WISE_TRUST_COUNT: IStateWiseTrustCount[];
+}
+
+export interface IStateWiseTrustCount {
+    state: string;
+
+    totalTrust: number;
 }
 export interface IFundsReceivedG {
     yearReceived: number;
@@ -90,32 +98,32 @@ export interface INeedsAssessmentStatusP {
     percentage_status_3: number,
 }
 export interface ICommunityConsultationBreakdown {
-  // Leadership consulted (options 1..4)
-  communityLeadership_opt1_pct: number;
-  communityLeadership_opt2_pct: number;
-  communityLeadership_opt3_pct: number;
-  communityLeadership_opt4_pct: number;
+    // Leadership consulted (options 1..4)
+    communityLeadership_opt1_pct: number;
+    communityLeadership_opt2_pct: number;
+    communityLeadership_opt3_pct: number;
+    communityLeadership_opt4_pct: number;
 
-  // Women consulted (options 1..4)
-  communityWomen_opt1_pct: number;
-  communityWomen_opt2_pct: number;
-  communityWomen_opt3_pct: number;
-  communityWomen_opt4_pct: number;
+    // Women consulted (options 1..4)
+    communityWomen_opt1_pct: number;
+    communityWomen_opt2_pct: number;
+    communityWomen_opt3_pct: number;
+    communityWomen_opt4_pct: number;
 
-  // Youths consulted (options 1..4)
-  communityYouths_opt1_pct: number;
-  communityYouths_opt2_pct: number;
-  communityYouths_opt3_pct: number;
-  communityYouths_opt4_pct: number;
+    // Youths consulted (options 1..4)
+    communityYouths_opt1_pct: number;
+    communityYouths_opt2_pct: number;
+    communityYouths_opt3_pct: number;
+    communityYouths_opt4_pct: number;
 
-  // PwDs consulted (options 1..4)
-  pwDs_opt1_pct: number;
-  pwDs_opt2_pct: number;
-  pwDs_opt3_pct: number; // mapped from row.f15 in your snippet — verify f14/f15 mapping
-  pwDs_opt4_pct: number;
+    // PwDs consulted (options 1..4)
+    pwDs_opt1_pct: number;
+    pwDs_opt2_pct: number;
+    pwDs_opt3_pct: number; // mapped from row.f15 in your snippet — verify f14/f15 mapping
+    pwDs_opt4_pct: number;
 }
 // export interface ICommunityLeadersP {
-    
+
 //     communityLeadershipPercentage: number,
 //     communityYouthsPercentage: number,
 //     communityWomenPercentage: number,

@@ -78,6 +78,20 @@ const GeneralDashboard: React.FC = observer(() => {
     ],
   };
 
+  const stateWiseTrustData = {
+    labels: dashboardStore.dashboardData?.STATE_WISE_TRUST_COUNT?.state ?? [],
+    datasets: [
+      {
+        label: "Trusts",
+        data:
+          dashboardStore.dashboardData?.STATE_WISE_TRUST_COUNT?.trustCount ?? [],
+        backgroundColor: "#3366CC",
+        borderRadius: 6,
+        barThickness: 24,
+      },
+    ],
+  };
+
   const barOptions = {
     plugins: {
       legend: { display: false },
@@ -1353,7 +1367,29 @@ const GeneralDashboard: React.FC = observer(() => {
           </div>
         </div>
       </div>
-      {/* ...existing code above... */}
+
+      {/* Number of Incorporated Trust by State */}
+      <div className="bg-white rounded-xl p-6 shadow mt-6 mb-6">
+        <div className="flex items-center justify-between mb-4">
+          <span className="text-sm text-gray-700 font-medium uppercase">
+            NUMBER OF INCORPORATED TRUST BY STATE
+          </span>
+          <span className="text-xs text-gray-500 font-medium">
+            Total Number of Incorporated Trusts |{" "}
+            {(
+              dashboardStore.dashboardData?.STATE_WISE_TRUST_COUNT
+                ?.trustCount ?? []
+            ).reduce((sum: any, num: any) => sum + num, 0)}
+          </span>
+        </div>
+        <div className="w-full h-80 flex items-end justify-center">
+          <Bar
+            data={stateWiseTrustData}
+            options={barOptions}
+            plugins={[ChartDataLabels]}
+          />
+        </div>
+      </div>
 
       {/* Statistics and Expenditure Row */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">

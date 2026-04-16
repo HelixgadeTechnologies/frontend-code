@@ -95,6 +95,10 @@ class DashboardStore implements IDashboardStore {
                 pct_paymentCheck_1: data.FUNDS_DISTRIBUTION_PERCENTAGE.map(item => item.pct_paymentCheck_1),
                 pct_paymentCheck_2: data.FUNDS_DISTRIBUTION_PERCENTAGE.map(item => item.pct_paymentCheck_2),
                 pct_paymentCheck_3: data.FUNDS_DISTRIBUTION_PERCENTAGE.map(item => item.pct_paymentCheck_3),
+            },
+            STATE_WISE_TRUST_COUNT: {
+                state: data.STATE_WISE_TRUST_COUNT.map(item => item.state),
+                trustCount: data.STATE_WISE_TRUST_COUNT.map(item => item.totalTrust),
             }
         };
     }
@@ -105,10 +109,10 @@ class DashboardStore implements IDashboardStore {
             this.isLoading = true;
             let data = await dashboardService.generalDashboard(trustId, year, state, settlor);
             if (data.success) {
-                // toJS(console.log("data444", data.data));
+                //toJS(console.log("data444", data.data));
                 const processedData = this.transformDashboard(data.data);
                 this.dashboardData = processedData;
-                // toJS(console.log("data333", processedData.COMMUNITY_LEADERSHIP_PERCENTAGE));
+                //toJS(console.log("data333", processedData.STATE_WISE_TRUST_COUNT));
             }
         } catch (error) {
             throw error;
