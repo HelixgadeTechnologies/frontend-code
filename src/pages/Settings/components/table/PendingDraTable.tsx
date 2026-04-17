@@ -33,6 +33,7 @@ export const PendingDraTable = observer(() => {
     const menuRef = useRef<HTMLDivElement>(null);
 
     // State to track which user is being deleted
+    const [searchTerm, setSearchTerm] = useState("");
     const [deleteUserId, setDeleteUserId] = useState<string | null>(null);
 
     // Toggle action menu
@@ -174,32 +175,55 @@ export const PendingDraTable = observer(() => {
 
     const tableHead = ["Team Member Name", "Email", "Account Type", "action"];
 
+    const filteredData = useMemo(() => {
+        const pendingDras = [...settingStore.allPendingDra.values()];
+        if (!searchTerm) return pendingDras;
+
+        return pendingDras.filter((user) => {
+            const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
+            const email = user?.email?.toLowerCase();
+            const search = searchTerm.toLowerCase();
+            return fullName.includes(search) || email?.includes(search);
+        });
+    }, [settingStore.allPendingDra, searchTerm]);
+
     return (
         <div className="mt-10 bg-white p-4 rounded-2xl border border-gray-8 ">
-            <section className="mb-4 flex items-center justify-end gap-x-3">
-                <button className=" shadow-sm border border-gray-10 px-3 py-2  rounded-xl flex items-center gap-x-2">
-                    <img src={filterIcon} alt="filter admin table" />
-                    <span className="font-medium text-sm  text-[#525866]">Filter</span>
-                </button>
+            <section className="mb-4 flex items-center justify-between gap-x-3">
+                <div className="flex-1 max-w-sm">
+                    <input
+                        type="text"
+                        placeholder="Search pending members..."
+                        className="w-full bg-white border border-gray-10 px-4 py-2 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-50"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                </div>
+                <div className="flex items-center gap-x-3">
+                    <button className=" shadow-sm border border-gray-10 px-3 py-2  rounded-xl flex items-center gap-x-2">
+                        <img src={filterIcon} alt="filter admin table" />
+                        <span className="font-medium text-sm  text-[#525866]">Filter</span>
+                    </button>
 
-                <button className="shadow-sm border border-gray-10 px-3 py-2  rounded-xl flex items-center gap-x-2">
-                    <img src={sortIcon} alt="filter admin table" />
-                    <span className="font-medium text-sm  text-[#525866]">Sort</span>
-                    <img src={caretDownIcon} alt="filter admin table" />
-                </button>
+                    <button className="shadow-sm border border-gray-10 px-3 py-2  rounded-xl flex items-center gap-x-2">
+                        <img src={sortIcon} alt="filter admin table" />
+                        <span className="font-medium text-sm  text-[#525866]">Sort</span>
+                        <img src={caretDownIcon} alt="filter admin table" />
+                    </button>
+                </div>
             </section>
 
             <>
                 {settingStore.isLoading ? (
                     <LoadingTable headArr={tableHead} />
-                ) : settingStore.allPendingDra.size > 0 ? (
+                ) : filteredData.length > 0 ? (
                     <Table
                         columns={columns}
-                        data={[...settingStore.allPendingDra.values()].map((user, i: number) => ({
+                        data={filteredData.map((user, i: number) => ({
                             ...user, id: i.toString()
                         } as IDra))
                         }
-                        count={settingStore.allPendingDra.size}
+                        count={filteredData.length}
                         rowSelection={rowSelection}
                         setRowSelection={setRowSelection}
                     />

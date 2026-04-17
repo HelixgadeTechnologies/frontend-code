@@ -28,6 +28,8 @@ export const SettlorsTable = observer(() => {
     }, [settingStore]);
 
     // Toggle action menu
+    const [searchTerm, setSearchTerm] = useState("");
+
     const toggleMenu = useCallback(
         (userId: string) => {
             setActiveMenu(activeMenu === userId ? null : userId);
@@ -129,34 +131,62 @@ export const SettlorsTable = observer(() => {
 
     const tableHead = ["Contact Name", "Settlor Name", "Email", "Phone Number", "action"];
 
+    const filteredData = useMemo(() => {
+        const settlors = [...settingStore.allSettlor.values()];
+        if (!searchTerm) return settlors;
+
+        return settlors.filter((item) => {
+            const contactName = item.contactName?.toLowerCase() || "";
+            const settlorName = item.settlorName?.toLowerCase() || "";
+            const email = item.contactEmail?.toLowerCase() || "";
+            const search = searchTerm.toLowerCase();
+            return (
+                contactName.includes(search) ||
+                settlorName.includes(search) ||
+                email.includes(search)
+            );
+        });
+    }, [settingStore.allSettlor, searchTerm]);
+
     return (
         <div className="mt-10 bg-white p-4 rounded-2xl border border-gray-8">
-            <section className="mb-4 flex items-center justify-end gap-x-3">
-                <button className="shadow-sm border border-gray-10 px-3 py-2 rounded-xl flex items-center gap-x-2">
-                    <img src={filterIcon} alt="filter admin table" />
-                    <span className="font-medium text-sm text-[#525866]">Filter</span>
-                </button>
+            <section className="mb-4 flex items-center justify-between gap-x-3">
+                <div className="flex-1 max-w-sm">
+                    <input
+                        type="text"
+                        placeholder="Search settlors..."
+                        className="w-full bg-white border border-gray-10 px-4 py-2 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-50"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                </div>
+                <div className="flex items-center gap-x-3">
+                    <button className="shadow-sm border border-gray-10 px-3 py-2 rounded-xl flex items-center gap-x-2">
+                        <img src={filterIcon} alt="filter admin table" />
+                        <span className="font-medium text-sm text-[#525866]">Filter</span>
+                    </button>
 
-                <button className="shadow-sm border border-gray-10 px-3 py-2 rounded-xl flex items-center gap-x-2">
-                    <img src={sortIcon} alt="filter admin table" />
-                    <span className="font-medium text-sm text-[#525866]">Sort</span>
-                    <img src={caretDownIcon} alt="filter admin table" />
-                </button>
+                    <button className="shadow-sm border border-gray-10 px-3 py-2 rounded-xl flex items-center gap-x-2">
+                        <img src={sortIcon} alt="filter admin table" />
+                        <span className="font-medium text-sm text-[#525866]">Sort</span>
+                        <img src={caretDownIcon} alt="filter admin table" />
+                    </button>
+                </div>
             </section>
             <>
                 {settingStore.isLoading ? (
                     <LoadingTable headArr={tableHead} />
-                ) : settingStore.allSettlor.size > 0 ? (
+                ) : filteredData.length > 0 ? (
                     <Table
                         columns={columns}
-                        data={[...settingStore.allSettlor.values()].map(
+                        data={filteredData.map(
                             (settlor, i: number) =>
                             ({
                                 ...settlor,
                                 id: i.toString(),
                             } as ISettlor)
                         )}
-                        count={settingStore.allSettlor.size}
+                        count={filteredData.length}
                         rowSelection={rowSelection}
                         setRowSelection={setRowSelection}
                     />
