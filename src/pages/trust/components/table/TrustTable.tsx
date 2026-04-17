@@ -82,15 +82,17 @@ const TrustTable = observer(() => {
     loadRequests();
   }, [trustStore]);
 
-  const trustAction = useCallback((trustId: string) => {
+  const trustAction = useCallback((trustId: string, trustName: string) => {
     async function loadRequests() {
       trustStore.selectedTrustId = trustId; // Set selected trust ID in the store
       sessionStorage.setItem("selectedTrustId", trustId); // Store selected trust ID in sessionStorage
+      trustStore.selectedTrustName = trustName;
+      sessionStorage.setItem("selectedTrustName", trustName);
       trustEstablishmentStore.selectedYear = 0;
       await trustEstablishmentStore.getSingleTrustEstablishmentStatus(trustId)
     }
     loadRequests();
-  }, [trustEstablishmentStore]);
+  }, [trustEstablishmentStore, trustStore]);
 
   // Define columns with memoization
   const columns = useMemo(
@@ -109,7 +111,7 @@ const TrustTable = observer(() => {
               to={`/trust/${formattedName}/${trust.trustId}`}
               onClick={async (e) => {
                 e.stopPropagation(); // Prevent row click event
-                trustAction(trust.trustId)
+                trustAction(trust.trustId, trustName)
               }}
             >
               {trustName}

@@ -6,6 +6,12 @@ export interface IEconomicImpactStore {
     isDeleting: boolean;
     isAddModelOpen: boolean;
     isDashboardLoading: boolean;
+    activeUploadTab: number;
+    uploadErrorCount: number;
+    isValidate: boolean;
+    isBulkUploadMode: boolean;
+    uploadValidationResult: IEconomicImpactUploadValidationResponse;
+    uploadResponse: IEconomicImpactUploadResponse;
     selectedEconomicImpact: IEconomicImpactView | null;
     economicImpact: IEconomicImpactView;
     allEconomicImpacts: ObservableMap<string, IEconomicImpactView>;
@@ -23,6 +29,8 @@ export interface IEconomicImpactStore {
     getEconomicImpactByEconomicImpactId(economicImpactId: string): Promise<boolean>;
     getImpactOptionOne(): Promise<boolean>;
     getImpactOptionTwo(): Promise<boolean>;
+    validateEconomicImpactExcel(file: File): Promise<void>;
+    saveValidatedEconomicImpactData(records: any[]): Promise<boolean>;
 }
 
 export interface IEconomicImpactPayloadData {
@@ -110,4 +118,25 @@ export interface IEconomicImpactDashboard {
     incomeIncrease: Array<IEconomicImpactDashboardOptionOneData>;
     livelihoodImprove: Array<IEconomicImpactDashboardOptionOneData>;
     accessAmenities: Array<IEconomicImpactDashboardOptionTwoData>;
+}
+
+export interface IEconomicImpactUploadValidationResponse {
+    totalRecords: number;
+    totalInvalid: number;
+    allEconomicImpactData: any[];
+    validationSummary: IEconomicImpactValidationSummary[];
+}
+
+export interface IEconomicImpactValidationSummary {
+    rowNumber: number;
+    message: string;
+    field: string;
+    value: any;
+}
+
+export interface IEconomicImpactUploadResponse {
+    totalRecords: number;
+    totalInserted: number;
+    totalFailed: number;
+    failed: any[];
 }

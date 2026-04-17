@@ -11,6 +11,7 @@ export interface ITrustStore {
     pageSwitched: number;
     pageSwitchedG: number;
     selectedTrust: ITrustList | null;
+    selectedTrustName: string;
     selectedTrustId: string | undefined;
     selectedTrustIdG: string | undefined;
     trust: ITrust;
@@ -27,7 +28,7 @@ export interface ITrustStore {
     uploadResponse: IUploadResponse;
     activeUploadTab: number;
     uploadErrorCount: number;
-    isValidate:boolean ;
+    isValidate: boolean;
     calculateTrustCompletion(data: ITrustPayloadData): number;
     getFormSteps(): void;
     setActiveTab(active: TabType): void;
@@ -80,7 +81,7 @@ export interface ITrust extends BaseItem {
     disableConflictSurvey: number;
     disableSatisfactionSurvey: number;
     disableEconomicImpactSurvey: number;
-    completionStatus?:number
+    completionStatus?: number
 }
 interface BaseItem {
     id: string;

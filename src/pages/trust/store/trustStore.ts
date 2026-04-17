@@ -14,6 +14,7 @@ class TrustStore implements ITrustStore {
     pageSwitched: number = 1;
     pageSwitchedG: number = 1;
     selectedTrust: ITrustList | null = {} as ITrustList;
+    selectedTrustName: string = "";
     trust: ITrust = {} as ITrust;
     allTrust = new ObservableMap<string, ITrustList>();
     allTrustList = new ObservableMap<string, ITrustList>();

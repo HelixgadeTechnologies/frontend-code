@@ -19,4 +19,7 @@ export const economicImpactService = {
 
     getEconomicImpactDashboardByTrustId: (trustId: string, selectedYear: number, selectedState: string,settlor:string): Promise<HCDTRequestResponse> => client.get(`/economic-impact/dashboard/${trustId}/${selectedYear}/${selectedState}/${settlor}`),
 
+    validateUpload: (payload: any): Promise<HCDTRequestResponse> => client.post('/economic-impact/validate-upload', { payload }),
+
+    bulkUpload: (payload: any[]): Promise<HCDTRequestResponse> => client.post('/economic-impact/bulk-upload', { payload }),
 }

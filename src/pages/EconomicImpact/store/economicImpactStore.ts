@@ -1,5 +1,5 @@
 import { makeAutoObservable, ObservableMap } from "mobx";
-import { IEconomicImpactDashboard, IEconomicImpactDashboardData, IEconomicImpactPayload, IEconomicImpactStore, IEconomicImpactView, IImpactOptionOne, IImpactOptionTwo } from "../types/interface";
+import { IEconomicImpactDashboard, IEconomicImpactDashboardData, IEconomicImpactPayload, IEconomicImpactStore, IEconomicImpactUploadResponse, IEconomicImpactUploadValidationResponse, IEconomicImpactView, IImpactOptionOne, IImpactOptionTwo } from "../types/interface";
 import { economicImpactService } from "../service/economicImpactService";
 
 class EconomicImpactStore implements IEconomicImpactStore {
@@ -14,7 +14,13 @@ class EconomicImpactStore implements IEconomicImpactStore {
     economicImpactsByTrust = new ObservableMap<string, IEconomicImpactView>();
     impactOptionOne = new ObservableMap<number, IImpactOptionOne>();
     impactOptionTwo = new ObservableMap<number, IImpactOptionTwo>();
-    dashboardData: IEconomicImpactDashboardData | null = null
+    dashboardData: IEconomicImpactDashboardData | null = null;
+    activeUploadTab: number = 0;
+    uploadErrorCount: number = 0;
+    isValidate: boolean = true;
+    isBulkUploadMode: boolean = false;
+    uploadValidationResult: IEconomicImpactUploadValidationResponse = {} as IEconomicImpactUploadValidationResponse;
+    uploadResponse: IEconomicImpactUploadResponse = {} as IEconomicImpactUploadResponse;
     constructor() {
         makeAutoObservable(this);
     }
@@ -201,6 +207,45 @@ class EconomicImpactStore implements IEconomicImpactStore {
             throw error;
         } finally {
             this.isLoading = false;
+        }
+    }
+
+    async validateEconomicImpactExcel(file: File): Promise<void> {
+        try {
+            this.isSubmitting = true;
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = async () => {
+                const base64String = (reader.result as string).split(',')[1];
+                const res = await economicImpactService.validateUpload(base64String);
+                if (res.success) {
+                    this.uploadValidationResult = res.data;
+                    this.uploadErrorCount = res.data.totalInvalid;
+                    this.isValidate = res.data.totalInvalid === 0;
+                }
+            };
+        } catch (error) {
+            console.error("Validation failed:", error);
+        } finally {
+            this.isSubmitting = false;
+        }
+    }
+
+    async saveValidatedEconomicImpactData(records: any[]): Promise<boolean> {
+        try {
+            this.isSubmitting = true;
+            const res = await economicImpactService.bulkUpload(records);
+            if (res.success) {
+                this.uploadResponse = res.data;
+                await this.getEconomicImpact();
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.error("Bulk upload failed:", error);
+            return false;
+        } finally {
+            this.isSubmitting = false;
         }
     }
 
