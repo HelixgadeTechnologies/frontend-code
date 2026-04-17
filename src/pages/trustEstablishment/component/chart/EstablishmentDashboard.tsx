@@ -90,6 +90,7 @@ const EstablishmentDashboard = observer(() => {
 
   const options: ChartOptions<"doughnut"> = {
     cutout: "70%",
+    maintainAspectRatio: false,
     plugins: {
       legend: { display: false },
       tooltip: { enabled: false },
@@ -230,6 +231,7 @@ const EstablishmentDashboard = observer(() => {
                       ],
                     }}
                     options={{
+                      maintainAspectRatio: false,
                       plugins: {
                         legend: { display: false },
                         tooltip: { enabled: false },
@@ -258,7 +260,7 @@ const EstablishmentDashboard = observer(() => {
               </div>
             </>
           ) : (
-            <div className="rounded-xl mt-2 col-span-2 overflow-hidden">
+            <div className="rounded-xl mt-2 lg:col-span-2 overflow-hidden">
               <div className="flex items-center justify-between px-6 py-4">
                 <h3 className="font-semibold text-lg text-gray-900">Status of Trust Funding</h3>
               </div>
@@ -284,7 +286,7 @@ const EstablishmentDashboard = observer(() => {
         </div>
 
         {/* Trust Establishment and Governance */}
-        <div className="bg-white rounded-lg p-5 flex flex-col gap-4 shadow col-span-2">
+        <div className="bg-white rounded-lg p-5 flex flex-col gap-4 shadow lg:col-span-2">
           <h3 className="font-semibold text-lg mb-2">Trust Establishment and Governance</h3>
           {/* <div>
             <div className="flex justify-between items-center mb-1">
@@ -300,7 +302,7 @@ const EstablishmentDashboard = observer(() => {
               <span className="text-gray-600">Trust Registered with CAC</span>
               <span className={classColors(trustEstablishmentStore.dashboardData?.CAC_STATUS!)}>{translator1(trustEstablishmentStore.dashboardData?.CAC_STATUS!)}</span>
             </div>
-            <div className="flex items-center gap-2 mt-4">
+            <div className="flex flex-wrap items-center gap-2 mt-4">
               <label htmlFor="year-select" className="text-gray-500 text-sm mr-2"> Year Registered</label>
               <div
                 id="year-select"
@@ -323,7 +325,7 @@ const EstablishmentDashboard = observer(() => {
               />
             ) : "No CAC Registration Uploaded"}
           </div>
-          <div className="rounded-xl mt-6 col-span-2 overflow-hidden">
+          <div className="rounded-xl mt-6 lg:col-span-2 overflow-hidden">
 
             <div className="bg-[#F3F5F7] flex items-center justify-between px-6 py-4">
               <div>
@@ -358,7 +360,7 @@ const EstablishmentDashboard = observer(() => {
             <Line options={chartOptions} data={data1} />
           </div>
         </div> */}
-         <div className="rounded-xl mt-6 col-span-2 overflow-hidden">
+         <div className="rounded-xl mt-6 lg:col-span-2 overflow-hidden">
 
           <div className="bg-[#F3F5F7] flex items-center justify-between px-6 py-4">
             <div>
@@ -366,7 +368,7 @@ const EstablishmentDashboard = observer(() => {
               <p className="text-gray-500 text-sm mt-6">Status needs assessment for the trust</p>
             </div>
             <div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <label htmlFor="year-select" className="text-gray-500 text-sm mr-2">Selected Year</label>
                 <div
                   id="year-select"
