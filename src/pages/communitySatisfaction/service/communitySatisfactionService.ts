@@ -15,6 +15,9 @@ export const satisfactionService = {
 
     getOptionTwo: (): Promise<HCDTRequestResponse> => client.get('/average-community-satisfaction/acsOptionTwo'),
 
-    getSatisfactionDashboardByTrustId: (trustId: string, selectedYear: number, selectedState: string,settlor:string): Promise<HCDTRequestResponse> => client.get(`/average-community-satisfaction/dashboard/${trustId}/${selectedYear}/${selectedState}/${settlor}`),
+    getSatisfactionDashboardByTrustId: (trustId: string, selectedYear: number, selectedState: string, settlor: string): Promise<HCDTRequestResponse> => client.get(`/average-community-satisfaction/dashboard/${trustId}/${selectedYear}/${selectedState}/${settlor}`),
 
+    // bulk upload
+    uploadSatisfactionForValidationBase64: (payload: string): Promise<HCDTRequestResponse> => client.post(`/average-community-satisfaction/validate-upload`, { payload }),
+    bulkCreateSatisfaction: (payload: Array<any>): Promise<HCDTRequestResponse> => client.post(`/average-community-satisfaction/bulk-upload`, { payload }),
 }

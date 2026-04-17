@@ -7,6 +7,7 @@ export interface ISatisfactionStore {
     isAddModelOpen: boolean;
     isDashboardLoading: boolean;
     isAddFunctionalityNeeded: boolean;
+    isBulkUploadMode: boolean;
     selectedSatisfaction: IAverageCommunitySatisfactionView | null;
     satisfaction: IAverageCommunitySatisfactionView;
     allSatisfaction: ObservableMap<string, IAverageCommunitySatisfactionView>;
@@ -23,6 +24,16 @@ export interface ISatisfactionStore {
     getSatisfactionById(satisfactionId: string): Promise<boolean>
     getOptionOne(): Promise<boolean>;
     getOptionTwo(): Promise<boolean>;
+
+    // bulk upload
+    uploadValidationResult: ISatisfactionUploadValidationResponse;
+    uploadResponse: ISatisfactionUploadResponse;
+    activeUploadTab: number;
+    uploadErrorCount: number;
+    isValidate: boolean;
+    isSaving: boolean;
+    validateSatisfactionExcel(file: File): Promise<void>;
+    saveBulkSatisfactionData(): Promise<boolean>;
 }
 
 export interface ISatisfactionPayloadData {
@@ -150,4 +161,26 @@ export interface ISatisfactionDashboardData {
     projectHandover: Array<number>;
     maintenanceConsult: Array<number>;
     incomeProject: Array<number>;
+}
+
+export interface ISatisfactionValidationSummary {
+    rowNumber: number;
+    message: string;
+    field: string;
+    value: any;
+    data: any;
+}
+
+export interface ISatisfactionUploadResponse {
+    totalRecords: number;
+    totalInserted: number;
+    totalFailed: number;
+    failed: Array<any>;
+}
+
+export interface ISatisfactionUploadValidationResponse {
+    totalRecords: number;
+    totalInvalid: number;
+    allSatisfactionData: Array<any>;
+    validationSummary: Array<ISatisfactionValidationSummary>;
 }

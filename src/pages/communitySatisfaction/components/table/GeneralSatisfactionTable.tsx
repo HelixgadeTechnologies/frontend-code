@@ -59,11 +59,20 @@ export const GeneralSatisfactionTable = observer(() => {
                 accessorKey: "communityConsultStatus",
             },
             {
+                id: "localParticipationStatus",
+                header: "Local Participation",
+                accessorKey: "localParticipationStatus",
+            },
+            {
+                id: "reportMechanismStatus",
+                header: "Report Mechanism",
+                accessorKey: "reportMechanismStatus",
+            },
+            {
                 id: "actions",
                 header: "",
                 cell: ({ row }: { row: { original: IAverageCommunitySatisfactionView } }) => {
                     const satisfaction = row.original;
-
                     return (
                         <div className="flex gap-2">
                             <Tag

@@ -8,13 +8,16 @@ import Tag from "../../../../components/elements/Tag";
 import { satisfactionStore as SatisfactionStore } from "../../store/satisfactionStore";
 import { IAverageCommunitySatisfactionView } from "../../types/interface";
 import CommunitySatisfactionView from "../modal/CommunitysatisfactionView";
+// import { authStore as AuthStore } from "../../../auth/store/authStore";
 
 
 const SatisfactionStoreCtx = createContext(SatisfactionStore);
+// const authStoreCtx = createContext(AuthStore);
 // const TrustStoreCtx = createContext(TrustStore);
 
 export const CommunitySatisfactionTable = observer(() => {
     const satisfactionStore = useContext(SatisfactionStoreCtx);
+    // const authStore = useContext(authStoreCtx);
     // const trustStore = useContext(TrustStoreCtx);
 
     useEffect(() => {
@@ -119,6 +122,7 @@ export const CommunitySatisfactionTable = observer(() => {
                         count={satisfactionStore.satisfactionByTrust.size}
                         rowSelection={rowSelection}
                         setRowSelection={setRowSelection}
+                        totalPage={satisfactionStore.satisfactionByTrust.size}
                     // refresh={()=>economicImpactStore.getEconomicImpactByTrustId(trustStore.selectedTrustId)}
                     />
                 ) : (

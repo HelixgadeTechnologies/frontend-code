@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { Button, DashboardSkeleton, GoBack } from "../../../components/elements";
+import { authStore as AuthStore } from "../../../pages/auth/store/authStore";
 // import { EconomicImpactTable } from "./table/EconomicImpactTable";
 // import EconomicImpactDashboard from "./chart/EconomicImpactDashboard";
 import { satisfactionStore as SatisfactionStore } from "../store/satisfactionStore";
@@ -10,17 +11,21 @@ import { useNavigate, useParams } from "react-router-dom";
 import CommunitySatisfactionForm from "./form/CommunitySatisfactionForm";
 import { CommunitySatisfactionTable } from "./table/CommunitySatisfactionTable";
 import CommunitySatisfactionDashboard from "./chart/CommunitySatisfactionDasboard";
+import CommunitySatisfactionUpload from "./upload/CommunitySatisfactionUpload";
 const SatisfactionStoreCtx = createContext(SatisfactionStore);
 const TrustStoreCtx = createContext(TrustStore);
+const AuthStoreCtx = createContext(AuthStore);
 
 const CommunitySatisfaction = observer(() => {
     const satisfactionStore = useContext(SatisfactionStoreCtx);
     const trustStore = useContext(TrustStoreCtx);
+    const authStore = useContext(AuthStoreCtx);
     const [isTableView, setIsTableView] = useState(true);
     const { name } = useParams();
     const navigate = useNavigate();
 
     const openAddForm = useCallback(() => {
+        satisfactionStore.isBulkUploadMode = false;
         satisfactionStore.isAddFunctionalityNeeded = true;
     }, [satisfactionStore]);
 
@@ -28,7 +33,7 @@ const CommunitySatisfaction = observer(() => {
         async function loadRequests() {
             let selectedTrustId = window.sessionStorage.getItem("selectedTrustId")
             satisfactionStore.dashboardData = null;
-            await satisfactionStore.getSatisfactionDashboardByTrustId(selectedTrustId as string,0,"ALL","ALL");
+            await satisfactionStore.getSatisfactionDashboardByTrustId(selectedTrustId as string, 0, "ALL", "ALL");
         }
         loadRequests();
     }, []);
@@ -36,10 +41,14 @@ const CommunitySatisfaction = observer(() => {
     return (
 
         satisfactionStore.isAddFunctionalityNeeded ? (
-            <CommunitySatisfactionForm
-                satisfactionStore={satisfactionStore}
-                trustStore={trustStore}
-            />
+            satisfactionStore.isBulkUploadMode ? (
+                <CommunitySatisfactionUpload />
+            ) : (
+                <CommunitySatisfactionForm
+                    satisfactionStore={satisfactionStore}
+                    trustStore={trustStore}
+                />
+            )
         ) : (
             <div className=" mx-auto p-8">
                 <GoBack action={() => navigate(-1)} trustName={name || ""} page="Average Community Satisfaction" />
@@ -69,6 +78,22 @@ const CommunitySatisfaction = observer(() => {
                             width="w-fit"
                             type="button"
                         />
+                        {authStore.user.role === "SUPER ADMIN" && (
+                            <Button
+                                onClick={() => {
+                                    satisfactionStore.isBulkUploadMode = true;
+                                    satisfactionStore.isAddFunctionalityNeeded = true;
+                                }}
+                                buttonText="Bulk Upload"
+                                width="w-fit"
+                                padding="px-4 py-2"
+                                iconLeft={
+                                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                    </svg>
+                                }
+                            />
+                        )}
                     </div>
                 </div>
 

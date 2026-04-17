@@ -157,6 +157,7 @@ const EntryDashboard: React.FC<LayoutProps> = observer(({ children }) => {
           {dashboardStore.selectedTab === 4 && (<GeneralConflict />)}
           {dashboardStore.selectedTab === 44 && (<GeneralConflictView />)}
 
+
           {dashboardStore.selectedTab === 5 && (<GeneralSatisfactionChart satisfactionStore={satisfactionStore} />)}
           {dashboardStore.selectedTab === 55 && (<GeneralSatisfactionModel satisfactionStore={satisfactionStore} />)}
 

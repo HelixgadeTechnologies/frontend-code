@@ -1,5 +1,5 @@
 import { makeAutoObservable, ObservableMap } from "mobx";
-import { IAcsOptionOne, IAcsOptionTwo, IAverageCommunitySatisfactionDashboardData, IAverageCommunitySatisfactionView, ISatisfactionDashboardData, ISatisfactionPayload, ISatisfactionStore } from "../types/interface";
+import { IAcsOptionOne, IAcsOptionTwo, IAverageCommunitySatisfactionDashboardData, IAverageCommunitySatisfactionView, ISatisfactionDashboardData, ISatisfactionPayload, ISatisfactionStore, ISatisfactionUploadResponse, ISatisfactionUploadValidationResponse } from "../types/interface";
 import { satisfactionService } from "../service/communitySatisfactionService";
 
 class SatisfactionStore implements ISatisfactionStore {
@@ -7,8 +7,15 @@ class SatisfactionStore implements ISatisfactionStore {
     isSubmitting: boolean = false;
     isDeleting: boolean = false;
     isAddModelOpen: boolean = false;
-    isDashboardLoading: boolean = false;
-    isAddFunctionalityNeeded: boolean = false;
+    isDashboardLoading = false;
+    isAddFunctionalityNeeded = false;
+    isBulkUploadMode = false;
+    isSaving = false;
+    isValidate: boolean = true;
+    uploadValidationResult: ISatisfactionUploadValidationResponse = {} as ISatisfactionUploadValidationResponse;
+    uploadResponse: ISatisfactionUploadResponse = {} as ISatisfactionUploadResponse;
+    activeUploadTab: number = 0;
+    uploadErrorCount: number = 0;
     selectedSatisfaction: IAverageCommunitySatisfactionView | null = null;
     satisfaction: IAverageCommunitySatisfactionView = {} as IAverageCommunitySatisfactionView;
     allSatisfaction = new ObservableMap<string, IAverageCommunitySatisfactionView>();
@@ -195,6 +202,52 @@ class SatisfactionStore implements ISatisfactionStore {
         }
     }
 
+    async validateSatisfactionExcel(payload: File): Promise<void> {
+        try {
+            this.isLoading = true;
+            // convert File to base64 string
+            const base64 = await new Promise<string>((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const result = reader.result as string;
+                    const commaIndex = result.indexOf(',');
+                    const onlyBase64 = commaIndex >= 0 ? result.slice(commaIndex + 1) : result;
+                    resolve(onlyBase64);
+                };
+                reader.onerror = (err) => reject(err);
+                reader.readAsDataURL(payload);
+            });
+
+            const res = await satisfactionService.uploadSatisfactionForValidationBase64(base64);
+            let data: ISatisfactionUploadValidationResponse = res.data;
+            if (data.validationSummary.length > 0) {
+                this.activeUploadTab = 1;
+                this.uploadErrorCount = data.validationSummary.length;
+            } else {
+                this.uploadErrorCount = 0;
+            }
+            this.uploadValidationResult = res.data;
+        } catch (error) {
+            throw error;
+        } finally {
+            this.isLoading = false;
+        }
+    }
+
+    async saveBulkSatisfactionData(): Promise<boolean> {
+        try {
+            this.isSaving = true;
+            const res = await satisfactionService.bulkCreateSatisfaction(this.uploadValidationResult.allSatisfactionData);
+            const data: ISatisfactionUploadResponse = res.data;
+            this.uploadResponse = data;
+            this.uploadErrorCount = data.totalFailed;
+            return true;
+        } catch (error) {
+            throw error;
+        } finally {
+            this.isSaving = false;
+        }
+    }
 }
 
 

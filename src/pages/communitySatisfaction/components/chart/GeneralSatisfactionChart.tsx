@@ -238,7 +238,6 @@ const GeneralSatisfactionChart = observer(
                             </label>
                             <span className="text-sm text-gray-600 ml-2">Table</span>
                         </div>
-
                     </div>
                 </div>
                 <br />
