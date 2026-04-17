@@ -173,7 +173,7 @@ const GeneralTEstablishment = observer(() => {
       <h1 className="text-xl font-bold text-gray-800 mb-6">
         Trust Establishment and Governance Structure Dashboard
       </h1>
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 w-full">
         {/* Financial Summary */}
         <div className="bg-white rounded-xl p-5 flex flex-col gap-4 shadow min-h-[320px]">
           {/* <div className="flex items-center justify-between mb-2">
@@ -249,7 +249,7 @@ const GeneralTEstablishment = observer(() => {
               </li>
             </ul>
           </div> */}
-          <div className="rounded-xl mt-2 col-span-2 overflow-hidden">
+          <div className="rounded-xl mt-2 overflow-hidden w-full">
             <div className="flex items-center justify-between px-6 py-4">
               <h3 className="font-semibold text-lg text-gray-900">Status of Trust Funding</h3>
             </div>
@@ -274,7 +274,7 @@ const GeneralTEstablishment = observer(() => {
         </div>
 
         {/* Trust Establishment and Governance */}
-        <div className="bg-white rounded-lg p-5 flex flex-col gap-4 shadow col-span-2">
+        <div className="bg-white rounded-lg p-5 flex flex-col gap-4 shadow lg:col-span-2 xl:col-span-2 w-full min-w-0">
           <h3 className="font-semibold text-lg mb-2">Trust Establishment and Governance</h3>
           {/* <div>
             <div className="flex justify-between items-center mb-1">
@@ -313,11 +313,11 @@ const GeneralTEstablishment = observer(() => {
               />
             ) : "No CAC Registration Uploaded"}
           </div>
-          <div className="rounded-xl mt-6 col-span-2 overflow-hidden">
+          <div className="rounded-xl mt-6 overflow-hidden w-full">
 
-            <div className="bg-[#F3F5F7] flex items-center justify-between px-6 py-4">
+            <div className="bg-[#F3F5F7] flex flex-wrap items-center justify-between px-6 py-4 gap-4">
               <div>
-                <h3 className="font-semibold text-lg text-gray-900"> Status of Trust Board of Trustee and Management Committee and Advisory Committee</h3>
+                <h3 className="font-semibold text-lg text-gray-900 break-words"> Status of Trust Board of Trustee and Management Committee and Advisory Committee</h3>
               </div>
             </div>
 
@@ -348,16 +348,16 @@ const GeneralTEstablishment = observer(() => {
             <Line options={chartOptions} data={data1} />
           </div>
         </div> */}
-         <div className="rounded-xl mt-6 col-span-2 overflow-hidden">
+         <div className="rounded-xl lg:col-span-2 xl:col-span-2 overflow-hidden w-full border border-gray-100 min-w-0">
 
-          <div className="bg-[#F3F5F7] flex items-center justify-between px-6 py-4">
-            <div>
-              <h3 className="font-semibold text-lg text-gray-900">Status of Needs Assessment</h3>
-              <p className="text-gray-500 text-sm mt-6">Status needs assessment for the trust</p>
+          <div className="bg-[#F3F5F7] flex flex-wrap items-center justify-between px-6 py-4 gap-4">
+            <div className="min-w-0 flex-1">
+              <h3 className="font-semibold text-lg text-gray-900 break-words">Status of Needs Assessment</h3>
+              <p className="text-gray-500 text-sm mt-2">Status needs assessment for the trust</p>
             </div>
-            <div>
+            <div className="flex flex-col sm:items-end gap-2 shrink-0">
               <div className="flex items-center gap-2">
-                <label htmlFor="year-select" className="text-gray-500 text-sm mr-2">Select Year</label>
+                <label htmlFor="year-select" className="text-gray-500 text-sm">Select Year</label>
                 <select
                   id="year-select"
                   className="border rounded px-3 py-1 text-sm bg-white focus:outline-none"
@@ -366,9 +366,8 @@ const GeneralTEstablishment = observer(() => {
                 >
                   <option>{trustEstablishmentStore.dashboardData?.YEAR_NEEDS}</option>
                 </select>
-                <br />
               </div>
-              <p className="text-gray-500 text-sm mt-6"><span className={`${classColors(trustEstablishmentStore.dashboardData?.STATUS_OF_NEED_ASSESSMENT!)}`}>{translator3(trustEstablishmentStore.dashboardData?.STATUS_OF_NEED_ASSESSMENT!)}</span></p>
+              <p className="text-md mt-2"><span className={`${classColors(trustEstablishmentStore.dashboardData?.STATUS_OF_NEED_ASSESSMENT!)}`}>{translator3(trustEstablishmentStore.dashboardData?.STATUS_OF_NEED_ASSESSMENT!)}</span></p>
 
             </div>
           </div>
@@ -396,8 +395,8 @@ const GeneralTEstablishment = observer(() => {
         </div>
 
         {/* Trust Development Plan & Budget */}
-        <div className="bg-white rounded-lg p-5 shadow mt-6 flex flex-col items-center justify-center">
-          <h3 className="font-semibold text-lg mb-2">Trust Development Plan & Budget</h3>
+        <div className="bg-white rounded-lg p-5 shadow flex flex-col items-center justify-center w-full min-w-0">
+          <h3 className="font-semibold text-lg mb-2 text-center">Trust Development Plan & Budget</h3>
           {/* Replace this with your actual progress component */}
           <div className="relative flex items-center justify-center w-44 h-44 my-4">
             <Doughnut data={data} options={options} />
@@ -442,7 +441,7 @@ const GeneralTEstablishment = observer(() => {
           </div>
         </div>
       </div> */}
-        <div className="bg-white rounded-xl p-6 shadow mt-6 flex-1">
+        <div className="bg-white rounded-xl p-6 shadow w-full lg:col-span-2 xl:col-span-3 min-w-0">
           <div className="flex items-center justify-between mb-2">
             <h3 className="font-semibold text-lg">Trust Compliance</h3>
           </div>
