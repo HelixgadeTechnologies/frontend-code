@@ -63,10 +63,10 @@ export const EconomicImpactView = observer(({ close, economicImpactStore }: { cl
                         These are your personal details, they are visible to the public
                     </p>
 
-                    <div className="space-y-4">
+                    <div className="space-y-6">
                         {/* Question 1 */}
-                        <div className="flex justify-between items-center">
-                            <p className="text-gray-700">
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 border-b pb-4">
+                            <p className="text-sm text-gray-700 max-w-2xl">
                                 (i). My business is generating more money since they implemented
                                 some of the HCDT projects in my community.
                             </p>
@@ -76,8 +76,8 @@ export const EconomicImpactView = observer(({ close, economicImpactStore }: { cl
                         </div>
 
                         {/* Question 2 */}
-                        <div className="flex justify-between items-center">
-                            <p className="text-gray-700">
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 border-b pb-4">
+                            <p className="text-sm text-gray-700 max-w-2xl">
                                 (ii). My income has increased since the implementation of some
                                 of the HCDT projects in my community.
                             </p>
@@ -87,8 +87,8 @@ export const EconomicImpactView = observer(({ close, economicImpactStore }: { cl
                         </div>
 
                         {/* Question 3 */}
-                        <div className="flex justify-between items-center">
-                            <p className="text-gray-700">
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 border-b pb-4">
+                            <p className="text-sm text-gray-700 max-w-2xl">
                                 (iii). The implemented HCDT projects have bettered my livelihood
                                 and quality of lives.
                             </p>
@@ -98,8 +98,8 @@ export const EconomicImpactView = observer(({ close, economicImpactStore }: { cl
                         </div>
 
                         {/* Question 4 */}
-                        <div className="flex justify-between items-center">
-                            <p className="text-gray-700">
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 border-b pb-4">
+                            <p className="text-sm text-gray-700 max-w-2xl">
                                 (iv). As a result of the HCDT projects, my household/I now have
                                 access to these basic amenities than before.
                             </p>

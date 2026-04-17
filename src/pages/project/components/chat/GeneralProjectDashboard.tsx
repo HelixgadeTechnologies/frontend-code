@@ -185,7 +185,7 @@ const GeneralProjectDashboard = observer(() => {
     <div className="p-6 bg-gray-100 min-h-screen">
       <GoBackT action={closeTable} page="Trust table" />
       <br />
-      <div className="flex items-center justify-between mb-9">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-9 gap-4">
         {/* Title */}
         <h1 className="text-xl font-bold text-gray-800">
           Development Projects{" "}

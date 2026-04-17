@@ -96,9 +96,9 @@ const EntryDashboard: React.FC<LayoutProps> = observer(({ children }) => {
       />
 
       {/* Main content wrapper */}
-      <div className="flex-1 flex flex-col min-h-screen ml-0 lg:ml-52">
+      <div className="flex-1 flex flex-col min-h-screen ml-0 lg:ml-52 w-full min-w-0 overflow-x-hidden">
         {/* Header */}
-        <header className="w-full bg-white shadow-md sticky top-0 z-30 flex items-center px-4 py-3" style={{ height: "85px" }}>
+        <header className="w-full bg-white shadow-md sticky top-0 z-30 flex items-center px-4 py-3 shrink-0" style={{ height: "85px" }}>
           <button
             className="lg:hidden mr-4 text-2xl"
             onClick={() => setSidebarOpen(true)}
@@ -109,7 +109,7 @@ const EntryDashboard: React.FC<LayoutProps> = observer(({ children }) => {
             <div>
               <div
                 onClick={() => window.location.href = "https://hcdtmonitor.org"}
-                className="text-xl lg:text-2xl font-bold relative w-fit cursor-pointer block md:hidden"
+                className="text-xl lg:text-2xl font-bold relative w-fit cursor-pointer block lg:hidden"
               >
                 <span className="text-2xl font-bold text-black block">I-HCDT</span>
                 <span className="text-xs block text-[#003B99] mt-1 tracking-widest">
@@ -167,7 +167,7 @@ const EntryDashboard: React.FC<LayoutProps> = observer(({ children }) => {
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-30 z-20 lg:hidden"
+          className="fixed inset-0 bg-black bg-opacity-30 z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
@@ -199,12 +199,10 @@ const Sidebar: React.FC<SidebarProps> = ({
 }) => (
   <aside
     className={`
-      ${!sidebarOpen ? "hidden lg:block" : ""}
-      z-40 bg-white shadow-lg 
-      lg:fixed lg:inset-y-0 lg:left-0 lg:w-52
-      transform transition-transform duration-200 ease-in-out
+      fixed inset-y-0 left-0 z-50 bg-white shadow-lg w-64 lg:w-52
+      transform transition-transform duration-300 ease-in-out
       ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
-      lg:translate-x-0
+      lg:translate-x-0 h-full overflow-hidden flex flex-col
     `}
   >
     <div className="flex flex-col h-full">
@@ -225,7 +223,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           ✕
         </button>
       </div>
-      <div className="flex-1 flex flex-col py-8">
+      <div className="flex-1 flex flex-col py-8 overflow-y-auto">
         <nav className="flex flex-col gap-1 px-4">
           {navData.map((route) => (
             <div key={route.link}>

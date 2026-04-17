@@ -1169,8 +1169,8 @@ const GeneralDashboard: React.FC = observer(() => {
           {/* <p className="text-gray-500 text-sm">Control your profile setup and integrations</p> */}
         </div>
         <div>
-          <div className="flex flex-col md:flex-row gap-4 md:gap-8 mb-8 w-full justify-end">
-            <div className="flex flex-col">
+          <div className="flex flex-wrap gap-4 md:gap-6 mb-8 w-full justify-start md:justify-end">
+            <div className="flex flex-col w-full sm:w-auto">
               <Observer>
                 {() => (
                   <>
@@ -1178,8 +1178,7 @@ const GeneralDashboard: React.FC = observer(() => {
                       Select Trust
                     </label>
                     <select
-                      style={{ width: "160px" }}
-                      className="border border-gray-300 rounded px-4 py-2 min-w-[160px] focus:outline-none focus:ring-2 focus:ring-primary-200 bg-white text-gray-700"
+                      className="border border-gray-300 rounded px-4 py-2 w-full sm:w-40 focus:outline-none focus:ring-2 focus:ring-primary-200 bg-white text-gray-700"
                       value={dashboardStore.selectedTrust}
                       onChange={(e) => selectTrust(e.target.value)}>
                       <option key="ALL" value="ALL">
@@ -1197,7 +1196,7 @@ const GeneralDashboard: React.FC = observer(() => {
                 )}
               </Observer>
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col w-full sm:w-auto">
               <Observer>
                 {() => (
                   <>
@@ -1205,8 +1204,7 @@ const GeneralDashboard: React.FC = observer(() => {
                       Select Settlor
                     </label>
                     <select
-                      style={{ width: "160px" }}
-                      className="border border-gray-300 rounded px-4 py-2 min-w-[160px] focus:outline-none focus:ring-2 focus:ring-primary-200 bg-white text-gray-700"
+                      className="border border-gray-300 rounded px-4 py-2 w-full sm:w-40 focus:outline-none focus:ring-2 focus:ring-primary-200 bg-white text-gray-700"
                       value={dashboardStore.selectedSettlor}
                       onChange={(e) => selectSettlor(e.target.value)}>
                       <option key="ALL" value="ALL">
@@ -1224,7 +1222,7 @@ const GeneralDashboard: React.FC = observer(() => {
                 )}
               </Observer>
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col w-full sm:w-auto">
               <Observer>
                 {() => (
                   <>
@@ -1232,7 +1230,7 @@ const GeneralDashboard: React.FC = observer(() => {
                       Select State
                     </label>
                     <select
-                      className="border border-gray-300 rounded px-4 py-2 min-w-[160px] focus:outline-none focus:ring-2 focus:ring-primary-200 bg-white text-gray-700"
+                      className="border border-gray-300 rounded px-4 py-2 w-full sm:w-40 focus:outline-none focus:ring-2 focus:ring-primary-200 bg-white text-gray-700"
                       value={dashboardStore.selectedState}
                       onChange={(e) => selectState(e.target.value)}>
                       {[...trustStore.allStates.values()].map((s: string) => (
@@ -1245,12 +1243,12 @@ const GeneralDashboard: React.FC = observer(() => {
                 )}
               </Observer>
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col w-full sm:w-auto">
               <label className="text-sm font-medium text-gray-700 mb-1">
                 Select Year
               </label>
               <select
-                className="border border-gray-300 rounded px-4 py-2 min-w-[120px] focus:outline-none focus:ring-2 focus:ring-primary-200 bg-white text-gray-700"
+                className="border border-gray-300 rounded px-4 py-2 w-full sm:w-32 focus:outline-none focus:ring-2 focus:ring-primary-200 bg-white text-gray-700"
                 value={dashboardStore.selectedYear}
                 onChange={(e) => setSelectedYear(e.target.value)}>
                 {year.map((year) => (
@@ -1998,7 +1996,7 @@ const GeneralDashboard: React.FC = observer(() => {
             </div>
           </div>
           {/* Conflict Details Table - take more space */}
-          <div className="col-span-2 flex flex-col">
+          <div className="md:col-span-2 flex flex-col min-w-0 w-full overflow-hidden">
             <DashboardTable
               header="Conflict Details"
               data={dashboardStore.dashboardData?.CONFLICT_RESOLUTION_DETAILS}

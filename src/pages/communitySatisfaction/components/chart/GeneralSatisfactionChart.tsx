@@ -221,7 +221,7 @@ const GeneralSatisfactionChart = observer(
                 <GoBackT action={closeTable} page="Trust table" />
                 <br />
                 {/* Header Section */}
-                <div className="flex justify-between items-center mb-6">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
                     <h1 className="text-xl font-bold text-gray-800">Average Community Satisfaction {dashboardStore.satisfactionSwitch ? "Table" : "Dashboard"}</h1>
                     <div className="flex items-center space-x-4">
                         <div className="flex items-center">

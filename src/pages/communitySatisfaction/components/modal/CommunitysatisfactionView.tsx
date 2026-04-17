@@ -47,10 +47,10 @@ const CommunitySatisfactionView = observer(
                     </p>
 
                     {/* Questions Section */}
-                    <div className="space-y-4">
+                    <div className="space-y-6">
                         {/* Question 1 */}
-                        <div className="flex justify-between items-center">
-                            <p className="text-sm text-gray-700" style={{ width: "600px" }}>
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 border-b pb-4">
+                            <p className="text-sm text-gray-700 max-w-2xl">
                                 (i). We feel well-informed about the implemented projects by the Trust governing structure.
                             </p>
                             <span className={getStatusClass(satisfactionStore.selectedSatisfaction?.infoProjectsStatus!)}>
@@ -59,8 +59,8 @@ const CommunitySatisfactionView = observer(
                         </div>
 
                         {/* Question 2 */}
-                        <div className="flex justify-between items-center">
-                            <p className="text-sm text-gray-700" style={{ width: "600px" }}>
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 border-b pb-4">
+                            <p className="text-sm text-gray-700 max-w-2xl">
                                 (ii). We feel the community has been sufficiently consulted about the implemented projects by the Trust governing structure.
                             </p>
                             <span className={getStatusClass(satisfactionStore.selectedSatisfaction?.communityConsultStatus!)}>
@@ -69,8 +69,8 @@ const CommunitySatisfactionView = observer(
                         </div>
 
                         {/* Question 3 */}
-                        <div className="flex justify-between items-center">
-                            <p className="text-sm text-gray-700" style={{ width: "600px" }}>
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 border-b pb-4">
+                            <p className="text-sm text-gray-700 max-w-2xl">
                                 (iii). We feel sufficient opportunities have been given to local community members to participate in the HCDT projects.
                             </p>
                             <span className={getStatusClass(satisfactionStore.selectedSatisfaction?.localParticipationStatus!)}>
@@ -79,8 +79,8 @@ const CommunitySatisfactionView = observer(
                         </div>
 
                         {/* Question 4 */}
-                        <div className="flex justify-between items-center">
-                            <p className="text-sm text-gray-700" style={{ width: "600px" }}>
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 border-b pb-4">
+                            <p className="text-sm text-gray-700 max-w-2xl">
                                 (iv). There is a clear mechanism to report concerns to the governing structures and community complaints/concerns are efficiently addressed.
                             </p>
                             <span className={getStatusClass(satisfactionStore.selectedSatisfaction?.reportMechanismStatus!)}>
@@ -89,8 +89,8 @@ const CommunitySatisfactionView = observer(
                         </div>
 
                         {/* Question 5 */}
-                        <div className="flex justify-between items-center">
-                            <p className="text-sm text-gray-700" style={{ width: "600px" }}>
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 border-b pb-4">
+                            <p className="text-sm text-gray-700 max-w-2xl">
                                 (v). The way the governing structures have acted has minimized the potential for conflict in my community.
                             </p>
                             <span className={getStatusClass(satisfactionStore.selectedSatisfaction?.conflictMinimizationStatus!)}>
@@ -98,8 +98,8 @@ const CommunitySatisfactionView = observer(
                             </span>
                         </div>
                         {/* Question 6 */}
-                        <div className="flex justify-between items-center">
-                            <p className="text-sm text-gray-700" style={{ width: "600px" }}>
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 border-b pb-4">
+                            <p className="text-sm text-gray-700 max-w-2xl">
                                 (vi) Communities Satisfaction with the the Settlor's.
                             </p>
                             <span className={getStatusClass(satisfactionStore.selectedSatisfaction?.settlorActionStatus!)}>
@@ -107,8 +107,8 @@ const CommunitySatisfactionView = observer(
                             </span>
                         </div>
                         {/* Question 7 */}
-                        <div className="flex justify-between items-center">
-                            <p className="text-sm text-gray-700" style={{ width: "600px" }}>
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 border-b pb-4">
+                            <p className="text-sm text-gray-700 max-w-2xl">
                                 (vii)   Communities Satisfaction with the the NUPRC’s.
                             </p>
                             <span className={getStatusClass(satisfactionStore.selectedSatisfaction?.nuprcActionStatus!)}>
@@ -118,19 +118,18 @@ const CommunitySatisfactionView = observer(
                     </div>
 
                     {/* Section 2 */}
-                    <h1 className="text-lg sm:text-xl font-bold text-gray-800 mt-6 mb-2">
+                    <h1 className="text-lg sm:text-xl font-bold text-gray-800 mt-8 mb-2">
                         Existence, and activeness of sustainability management structure/committees established by the Trust
                     </h1>
-                    <p className="text-xs text-gray-600 mb-4">
-                        These are your personal details, they are visible to the public
+                    <p className="text-xs text-gray-600 mb-6">
+                        These are details visible to the public
                     </p>
 
-                    <div className="space-y-4">
+                    <div className="space-y-6">
                         {/* Question 6 */}
-                        <div className="flex justify-between items-center">
-                            <p className="text-sm text-gray-700" style={{ width: "600px" }}>
-                                (i). The Trust commissioned and handed over completed projects <br />
-                                in our community to the community leadership.
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 border-b pb-4">
+                            <p className="text-sm text-gray-700 max-w-2xl">
+                                (i). The Trust commissioned and handed over completed projects in our community to the community leadership.
                             </p>
                             <span className={getStatusClass(satisfactionStore.selectedSatisfaction?.projectHandoverStatus!)}>
                                 {satisfactionStore.selectedSatisfaction?.projectHandoverStatus}
@@ -138,8 +137,8 @@ const CommunitySatisfactionView = observer(
                         </div>
 
                         {/* Question 7 */}
-                        <div className="flex justify-between items-center">
-                            <p className="text-sm text-gray-700" style={{ width: "600px" }}>
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 border-b pb-4">
+                            <p className="text-sm text-gray-700 max-w-2xl">
                                 (ii). The Trust has consulted our community leadership to discuss or develop maintenance plans for all the completed projects implemented in our community.
                             </p>
                             <span className={getStatusClass(satisfactionStore.selectedSatisfaction?.maintenanceConsultStatus!)}>
@@ -148,8 +147,8 @@ const CommunitySatisfactionView = observer(
                         </div>
 
                         {/* Question 8 */}
-                        <div className="flex justify-between items-center">
-                            <p className="text-sm text-gray-700" style={{ width: "600px" }}>
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 border-b pb-4">
+                            <p className="text-sm text-gray-700 max-w-2xl">
                                 (iii). The Trust implemented or is implementing at least one income-generating project for the host communities.
                             </p>
                             <span className={getStatusClass(satisfactionStore.selectedSatisfaction?.incomeProjectStatus!)}>
