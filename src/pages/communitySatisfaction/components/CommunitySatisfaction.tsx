@@ -78,7 +78,7 @@ const CommunitySatisfaction = observer(() => {
                             width="w-fit"
                             type="button"
                         />
-                        {authStore.user.role === "SUPER ADMIN" && (
+                        {authStore.user.role === "SUPER ADMIN" || authStore.user.role === "ADMIN" && (
                             <Button
                                 onClick={() => {
                                     satisfactionStore.isBulkUploadMode = true;
