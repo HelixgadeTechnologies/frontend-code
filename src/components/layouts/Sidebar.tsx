@@ -90,23 +90,29 @@ const Sidebar = observer(() => {
               {/* Children */}
               {route.children && route.children.length > 0 && open === route.id && (
                 <ul className="ml-8 mt-1 space-y-1">
-                  {route.children.map(child => (
-                    <li key={child.id}>
-                      <button
-                        className={`block px-3 py-1 rounded transition ${location.pathname.includes(child.link)
-                          ? "bg-blue-50 text-blue-700"
-                          : "hover:bg-gray-50 text-gray-600"
+                  {route.children.map((child) => {
+                    const searchParams = new URLSearchParams(window.location.search);
+                    const isActive = 
+                      pathname === "/dashboard" && 
+                      searchParams.get("section") === child.link;
+                    
+                    return (
+                      <li key={child.id}>
+                        <button
+                          className={`block px-3 py-1 rounded transition text-sm text-left w-full ${
+                            isActive
+                              ? "bg-blue-50 text-blue-700 font-semibold"
+                              : "hover:bg-gray-50 text-gray-600"
                           }`}
-                        onClick={() => {
-                          const el = document.getElementById(child.link);
-                          if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-                        }}
-                        type="button"
-                      >
-                        {child.name}
-                      </button>
-                    </li>
-                  ))}
+                          onClick={() => {
+                            navigate(`/dashboard?section=${child.link}`);
+                          }}
+                          type="button">
+                          {child.name}
+                        </button>
+                      </li>
+                    );
+                  })}
                 </ul>
               )}
             </>

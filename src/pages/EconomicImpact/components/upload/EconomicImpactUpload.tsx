@@ -20,7 +20,11 @@ const economicImpactKeys = [
     "accessAmenities",
 ];
 
-const EconomicImpactUpload = observer(() => {
+interface UploadProps {
+    onBack?: () => void;
+}
+
+const EconomicImpactUpload = observer(({ onBack }: UploadProps) => {
     const economicImpactStore = useContext(economicImpactStoreCTX);
     const trustStore = useContext(trustStoreCTX);
     // const { name } = useParams();
@@ -91,9 +95,17 @@ const EconomicImpactUpload = observer(() => {
         }
     };
 
+    const switchUploadPage = useCallback(() => {
+        if (onBack) {
+            onBack();
+        } else {
+            economicImpactStore.isBulkUploadMode = false;
+        }
+    }, [economicImpactStore, onBack]);
+
     return (
         <div className="py-6 px-4 max-w-7xl mx-auto">
-            <GoBackT action={() => economicImpactStore.isBulkUploadMode = false} page="Economic Impact table" />
+            <GoBackT action={switchUploadPage} page="Economic Impact table" />
             <br />
             <h2 className="text-lg lg:text-2xl font-bold text-gray-800 mb-6">
                 Bulk Upload Economic Impact

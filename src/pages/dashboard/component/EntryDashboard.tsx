@@ -1,5 +1,5 @@
 import React, { createContext, ReactNode, useCallback, useContext, useEffect, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useLocation, useSearchParams } from "react-router-dom";
 import { dashboardStore as DashboardStore } from "./../store/dashboardStore"
 import { economicImpactStore as EconomicImpactStore } from "../../EconomicImpact/store/economicImpactStore";
 import { satisfactionStore as SatisfactionStore } from "../../communitySatisfaction/store/satisfactionStore";
@@ -44,6 +44,8 @@ const EntryDashboard: React.FC<LayoutProps> = observer(({ children }) => {
   const projectStore = useContext(projectStoreCTX)
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [open, setOpen] = useState<number | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
 
 
   useEffect(() => {
@@ -92,6 +94,8 @@ const EntryDashboard: React.FC<LayoutProps> = observer(({ children }) => {
         open={open}
         setOpen={setOpen}
         location={location}
+        searchParams={searchParams}
+        setSearchParams={setSearchParams}
         navData={dashboardStore.selectedTab > 1 ? routes2T : routes2}
       />
 
@@ -184,7 +188,9 @@ interface SidebarProps {
   selectTab: (v: number) => void;
   open: number | null;
   setOpen: (v: number | null) => void;
-  location: Location;
+  location: any;
+  searchParams: any;
+  setSearchParams: any;
   navData: Array<INavData>
 }
 
@@ -196,6 +202,8 @@ const Sidebar: React.FC<SidebarProps> = ({
   open,
   setOpen,
   location,
+  searchParams,
+  setSearchParams,
   navData
 }) => (
   <aside
@@ -256,23 +264,27 @@ const Sidebar: React.FC<SidebarProps> = ({
               {/* Children */}
               {route.children && route.children.length > 0 && open === route.id && (
                 <ul className="ml-6 mt-1 flex flex-col gap-1">
-                  {route.children.map(child => (
-                    <li key={child.id}>
-                      <button
-                        className={`w-full text-left px-3 py-1 rounded text-sm transition ${location.pathname.includes(child.link)
-                          ? "bg-blue-50 text-blue-700 font-semibold"
-                          : "hover:bg-gray-50 text-gray-600"
-                          }`}
-                        onClick={() => {
-                          const el = document.getElementById(child.link);
-                          if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-                        }}
-                        type="button"
-                      >
-                        <span className="font-medium text-xs text-gray-600">{child.name}</span>
-                      </button>
-                    </li>
-                  ))}
+                  {route.children.map(child => {
+                    const isActive = location.pathname === "/" && searchParams.get("section") === child.link;
+                    return (
+                      <li key={child.id}>
+                        <button
+                          className={`w-full text-left px-3 py-1 rounded text-sm transition ${isActive
+                            ? "bg-blue-50 text-blue-700 font-semibold"
+                            : "hover:bg-gray-50 text-gray-600"
+                            }`}
+                          onClick={() => {
+                            selectTab(0);
+                            setSearchParams({ section: child.link });
+                            setSidebarOpen(false);
+                          }}
+                          type="button"
+                        >
+                          <span className="font-medium text-xs text-gray-600">{child.name}</span>
+                        </button>
+                      </li>
+                    );
+                  })}
                 </ul>
               )}
             </div>

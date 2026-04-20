@@ -4,7 +4,8 @@ import { Doughnut, Bar, Line, Pie } from "react-chartjs-2";
 import DashboardTable, { DashboardTableColumn } from "../table/DashboardTable";
 import { Observer, observer } from "mobx-react-lite";
 import { dashboardStore as DashboardStore } from "../store/dashboardStore";
-import { useContext, createContext, useCallback } from "react";
+import { useContext, createContext, useCallback, useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import dayjs from "dayjs";
 import { IConflictView } from "../../conflict/types/interface";
 import IMG from "../../../assets/svgs/dashboardConflictNotFound.svg";
@@ -28,6 +29,20 @@ const economicImpactStoreCTX = createContext(EconomicImpactStore);
 const satisfactionStoreCTX = createContext(SatisfactionStore);
 const conflictStoreCTX = createContext(ConflictStore);
 const projectStoreCTX = createContext(ProjectStore);
+
+const SECTION_MAP: Record<string, number> = {
+  "trust-establishment": 0,
+  project: 1,
+  conflict: 2,
+  "community-satisfaction": 3,
+  "economic-impact": 4,
+};
+
+const STEP_TO_SECTION = Object.entries(SECTION_MAP).reduce(
+  (acc, [key, val]) => ({ ...acc, [val]: key }),
+  {} as Record<number, string>
+);
+
 const DashboardPage: React.FC = observer(() => {
   const dashboardStore = useContext(dashboardStoreCTX);
   const settingStore = useContext(settingStoreCTX);
@@ -36,6 +51,31 @@ const DashboardPage: React.FC = observer(() => {
   const satisfactionStore = useContext(satisfactionStoreCTX);
   const conflictStore = useContext(conflictStoreCTX);
   const projectStore = useContext(projectStoreCTX);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [currentStep, setCurrentStep] = useState(0);
+  // const totalSteps = 5;
+
+  // Sync state with URL parameter
+  useEffect(() => {
+    const section = searchParams.get("section");
+    if (section && SECTION_MAP[section] !== undefined) {
+      setCurrentStep(SECTION_MAP[section]);
+    } else {
+      // Default to step 0 if no section is specified
+      setCurrentStep(0);
+    }
+  }, [searchParams]);
+
+  const goToStep = (step: number) => {
+    const section = STEP_TO_SECTION[step];
+    if (section) {
+      setSearchParams({ section });
+    } else {
+      setCurrentStep(step);
+    }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const doughnutColors = [
     "#FF6384", // pink/red
@@ -115,7 +155,6 @@ const DashboardPage: React.FC = observer(() => {
     labels: ["Completed", "Not Completed"],
     datasets: [
       {
-        // ensure we send numeric values (default to 0)
         data: (() => {
           const v =
             dashboardStore.dashboardData?.COMPLETION_STATUS
@@ -138,63 +177,33 @@ const DashboardPage: React.FC = observer(() => {
 
   // Add this before your return statement
   const localEmploymentBarData = {
-    labels:
-      dashboardStore.dashboardData?.EMPLOYEE_PER_PROJECT?.map(
-        (e) => e.projectTitle
-      ) ?? [],
+    labels: (dashboardStore.dashboardData?.EMPLOYEE_PER_PROJECT ?? []).map(
+      (e) => e?.projectTitle ?? ""
+    ),
     datasets: [
       {
         label: "Male",
-        data:
-          dashboardStore.dashboardData?.EMPLOYEE_PER_PROJECT?.map(
-            (e) => e.numberOfMaleEmployedByContractor
-          ) ?? [],
+        data: (dashboardStore.dashboardData?.EMPLOYEE_PER_PROJECT ?? []).map(
+          (e) => Number(e?.numberOfMaleEmployedByContractor) || 0
+        ),
         backgroundColor: "#22C55E",
         borderRadius: 4,
         stack: "Stack 0",
       },
       {
         label: "Female",
-        data:
-          dashboardStore.dashboardData?.EMPLOYEE_PER_PROJECT?.map(
-            (e) => e.numberOfFemaleEmployedByContractor
-          ) ?? [],
+        data: (dashboardStore.dashboardData?.EMPLOYEE_PER_PROJECT ?? []).map(
+          (e) => Number(e?.numberOfFemaleEmployedByContractor) || 0
+        ),
         backgroundColor: "#EF4444",
         borderRadius: 4,
         stack: "Stack 0",
       },
       {
         label: "Pwds",
-        data:
-          dashboardStore.dashboardData?.EMPLOYEE_PER_PROJECT?.map(
-            (e) => e.numberOfPwDsEmployedByContractor
-          ) ?? [],
-        backgroundColor: "#EF8",
-        borderRadius: 4,
-        stack: "Stack 0",
-      },
-    ],
-  };
-  const BoTData = {
-    labels: ["BoT Committee", "Advisory Committee", "Management Committee"],
-    datasets: [
-      {
-        label: "Male",
-        data: dashboardStore.dashboardData?.BOT_DISPLAY?.male ?? [],
-        backgroundColor: "#22C55E",
-        borderRadius: 4,
-        stack: "Stack 0",
-      },
-      {
-        label: "Female",
-        data: dashboardStore.dashboardData?.BOT_DISPLAY?.female ?? [],
-        backgroundColor: "#EF4444",
-        borderRadius: 4,
-        stack: "Stack 0",
-      },
-      {
-        label: "Pwds",
-        data: dashboardStore.dashboardData?.BOT_DISPLAY?.pwd ?? [],
+        data: (dashboardStore.dashboardData?.EMPLOYEE_PER_PROJECT ?? []).map(
+          (e) => Number(e?.numberOfPwDsEmployedByContractor) || 0
+        ),
         backgroundColor: "#EF8",
         borderRadius: 4,
         stack: "Stack 0",
@@ -247,6 +256,39 @@ const DashboardPage: React.FC = observer(() => {
       },
     ],
   };
+  const BoTData = {
+    labels: ["BoT Committee", "Advisory Committee", "Management Committee"],
+    datasets: [
+      {
+        label: "Male",
+        data: (dashboardStore.dashboardData?.BOT_DISPLAY?.male ?? []).map(
+          (v: any) => Number(v) || 0
+        ),
+        backgroundColor: "#22C55E",
+        borderRadius: 4,
+        stack: "Stack 0",
+      },
+      {
+        label: "Female",
+        data: (dashboardStore.dashboardData?.BOT_DISPLAY?.female ?? []).map(
+          (v: any) => Number(v) || 0
+        ),
+        backgroundColor: "#EF4444",
+        borderRadius: 4,
+        stack: "Stack 0",
+      },
+      {
+        label: "Pwds",
+        data: (dashboardStore.dashboardData?.BOT_DISPLAY?.pwd ?? []).map(
+          (v: any) => Number(v) || 0
+        ),
+        backgroundColor: "#EF8",
+        borderRadius: 4,
+        stack: "Stack 0",
+      },
+    ],
+  };
+
   const FundsData = {
     labels:
       dashboardStore.dashboardData?.FUNDS_DISTRIBUTION_PERCENTAGE
@@ -254,34 +296,36 @@ const DashboardPage: React.FC = observer(() => {
     datasets: [
       {
         label: "Fully Received",
-        data:
+        data: (
           dashboardStore.dashboardData?.FUNDS_DISTRIBUTION_PERCENTAGE
-            ?.pct_paymentCheck_1 ?? [],
+            ?.pct_paymentCheck_1 ?? []
+        ).map((v: any) => Number(v) || 0),
         backgroundColor: "#22C55E",
         borderRadius: 4,
         stack: "Stack 0",
       },
       {
         label: "Partly Received",
-        data:
+        data: (
           dashboardStore.dashboardData?.FUNDS_DISTRIBUTION_PERCENTAGE
-            ?.pct_paymentCheck_2 ?? [],
+            ?.pct_paymentCheck_2 ?? []
+        ).map((v: any) => Number(v) || 0),
         backgroundColor: "#EF8",
         borderRadius: 4,
         stack: "Stack 0",
       },
       {
         label: "Not Received",
-        data:
+        data: (
           dashboardStore.dashboardData?.FUNDS_DISTRIBUTION_PERCENTAGE
-            ?.pct_paymentCheck_3 ?? [],
+            ?.pct_paymentCheck_3 ?? []
+        ).map((v: any) => Number(v) || 0),
         backgroundColor: "#EF4444",
         borderRadius: 4,
         stack: "Stack 0",
       },
     ],
   };
-
   const conflictBarOptions = {
     plugins: {
       legend: {
@@ -603,32 +647,6 @@ const DashboardPage: React.FC = observer(() => {
     ],
   });
 
-  // const pieOptions = {
-  //   // plugins: {
-  //   //   legend: {
-  //   //     position: "bottom" as const, // Fix the type error
-  //   //   },
-  //   // },
-  //   plugins: {
-  //     datalabels: {
-  //       color: "#222",
-  //       font: { weight: "bold" },
-  //       formatter: (value: number, context: any) => {
-  //         const dataArr = context.chart.data.datasets[0].data;
-  //         const total = dataArr.reduce((a: number, b: number) => a + b, 0);
-  //         const percent = total ? ((value / total) * 100).toFixed(0) : 0;
-  //         return `${percent}%`;
-  //       },
-  //     },
-  //     legend: {
-  //       position: "bottom" as const, // Fix the type error
-  //     },
-  //     // legend: { display: true },
-  //   },
-  //   responsive: true,
-  //   maintainAspectRatio: false,
-  // };
-
   // Conflict
   const pieDataStatusOfConflict = {
     labels: [
@@ -742,9 +760,11 @@ const DashboardPage: React.FC = observer(() => {
     datasets: [
       {
         label: "Report Frequency",
-        data: conflictStore.dashboardData?.REPORT_FREQUENCY! || [
-          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        ],
+        data: (
+          conflictStore.dashboardData?.REPORT_FREQUENCY ?? [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          ]
+        ).map((v: any) => Number(v) || 0),
         borderColor: "#3B82F6",
         backgroundColor: "rgba(59, 130, 246, 0.2)",
         fill: true,
@@ -791,7 +811,9 @@ const DashboardPage: React.FC = observer(() => {
     datasets: [
       {
         label: "Community Members Benefitting",
-        data: projectStore.dashboardData?.BENEFITS || [0, 0, 0],
+        data: (projectStore.dashboardData?.BENEFITS ?? [0, 0, 0]).map(
+          (v: any) => Number(v) || 0
+        ),
         borderColor: "rgb(54, 162, 235)",
         backgroundColor: "rgba(54, 162, 235, 0.5)",
       },
@@ -803,7 +825,9 @@ const DashboardPage: React.FC = observer(() => {
     datasets: [
       {
         label: "Trust Community Members Employed",
-        data: projectStore.dashboardData?.EMPLOYMENT || [0, 0, 0],
+        data: (projectStore.dashboardData?.EMPLOYMENT ?? [0, 0, 0]).map(
+          (v: any) => Number(v) || 0
+        ),
         borderColor: "rgb(54, 162, 235)",
         backgroundColor: "rgba(54, 162, 235, 0.5)",
       },
@@ -823,7 +847,9 @@ const DashboardPage: React.FC = observer(() => {
     datasets: [
       {
         label: "Number of Trust Project by Category",
-        data: projectStore.dashboardData?.CATEGORY || [0, 0, 0, 0, 0, 0],
+        data: (projectStore.dashboardData?.CATEGORY ?? [0, 0, 0, 0, 0, 0]).map(
+          (v: any) => Number(v) || 0
+        ),
         backgroundColor: [
           "rgb(54, 162, 235)",
           "rgb(75, 192, 192)",
@@ -842,7 +868,9 @@ const DashboardPage: React.FC = observer(() => {
     datasets: [
       {
         label: "Number of Trust Project by status",
-        data: projectStore.dashboardData?.STATUS || [0, 0, 0, 0],
+        data: (projectStore.dashboardData?.STATUS ?? [0, 0, 0, 0]).map(
+          (v: any) => Number(v) || 0
+        ),
         backgroundColor: [
           "rgb(54, 162, 235)",
           "rgb(255, 205, 86)",
@@ -1162,7 +1190,6 @@ const DashboardPage: React.FC = observer(() => {
       color: doughnutColors[2],
     },
   ];
-
   const calculateEstablishedTrusts = (
     percentage: number,
     totalTrusts: number
@@ -1170,7 +1197,6 @@ const DashboardPage: React.FC = observer(() => {
     const establishedTrusts = Math.round((percentage / 100) * totalTrusts);
     return establishedTrusts;
   };
-
   return (
     <div className="bg-[#F3F5F7] min-h-screen p-6">
       <div
@@ -1178,7 +1204,7 @@ const DashboardPage: React.FC = observer(() => {
         className="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-4">
         <div>
           <h2 className="font-semibold text-xl text-gray-900">
-            Aggregated Dashboard
+            General Dashboard
           </h2>
           {/* <p className="text-gray-500 text-sm">Control your profile setup and integrations</p> */}
         </div>
@@ -1276,10 +1302,12 @@ const DashboardPage: React.FC = observer(() => {
         </div>
       </div>
 
-      {/* Main Grid */}
-      <h2 className="font-semibold text-xl text-gray-900 mb-4">
-        Trust Establishment and Governance
-      </h2>
+      {/* Step 0: Trust Establishment and Governance */}
+      {currentStep === 0 && (
+        <>
+          <h2 className="font-semibold text-xl text-gray-900 mb-4">
+            Trust Establishment and Governance
+          </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-stretch">
         {/* Left Column */}
         <div className="flex flex-col gap-5 h-full">
@@ -1303,12 +1331,11 @@ const DashboardPage: React.FC = observer(() => {
             </div>
             <div className="text-xs text-gray-500 mt-1">
               {calculateEstablishedTrusts(
-                dashboardStore.dashboardData?.FIELDS_COMPLETION as number,
-                dashboardStore.dashboardData?.COMPLETION_STATUS
-                  .totalTrust as number
+                (dashboardStore.dashboardData?.FIELDS_COMPLETION ?? 0) as number,
+                (dashboardStore.dashboardData?.COMPLETION_STATUS?.totalTrust ?? 0) as number
               )}{" "}
               out of{" "}
-              {dashboardStore.dashboardData?.COMPLETION_STATUS.totalTrust}{" "}
+              {dashboardStore.dashboardData?.COMPLETION_STATUS?.totalTrust ?? 0}{" "}
               Trusts is fully Established
             </div>
           </div>
@@ -1321,7 +1348,7 @@ const DashboardPage: React.FC = observer(() => {
               </span>
               <span className="text-xs text-gray-500 font-medium">
                 Total Number of all Benefiting Communities |{" "}
-                {dashboardStore.dashboardData?.COMMUNITY_BENEFIT.numberOfTrustCommunities.reduce(
+                {(dashboardStore.dashboardData?.COMMUNITY_BENEFIT?.numberOfTrustCommunities ?? []).reduce(
                   (sum: any, num: any) => sum + num,
                   0
                 )}
@@ -1348,7 +1375,7 @@ const DashboardPage: React.FC = observer(() => {
               <span className="absolute text-3xl font-bold text-gray-900">
                 {
                   dashboardStore.dashboardData?.COMPLETION_STATUS
-                    .percentFullyEstablished
+                    ?.percentFullyEstablished
                 }
                 %
               </span>
@@ -1358,7 +1385,7 @@ const DashboardPage: React.FC = observer(() => {
                 <span className="font-semibold text-lg text-gray-900">
                   {
                     dashboardStore.dashboardData?.COMPLETION_STATUS
-                      .totalCompleteTrust
+                      ?.totalCompleteTrust ?? 0
                   }
                 </span>
                 <span>Completed Development plan</span>
@@ -1366,7 +1393,7 @@ const DashboardPage: React.FC = observer(() => {
 
               <div className="flex flex-col items-center flex-1">
                 <span className="font-semibold text-lg text-gray-900">
-                  {dashboardStore.dashboardData?.COMPLETION_STATUS.totalTrust}
+                  {dashboardStore.dashboardData?.COMPLETION_STATUS?.totalTrust ?? 0}
                 </span>
                 <span>Total number of Trust</span>
               </div>
@@ -1402,7 +1429,6 @@ const DashboardPage: React.FC = observer(() => {
           />
         </div>
       </div>
-      {/* ...existing code above... */}
 
       {/* Statistics and Expenditure Row */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
@@ -1414,7 +1440,7 @@ const DashboardPage: React.FC = observer(() => {
           </span>
           <div>
             <span className="font-bold text-3xl text-gray-900 align-middle">
-              {dashboardStore.dashboardData?.DISTRIBUTION_MATRIX.total_complete}
+              {dashboardStore.dashboardData?.DISTRIBUTION_MATRIX?.total_complete ?? 0}
             </span>
             <span className="text-base text-gray-700 ml-2 align-middle">
               Trust with agreed distribution matrix
@@ -1460,16 +1486,17 @@ const DashboardPage: React.FC = observer(() => {
                   label: "Percentage",
                   data: [
                     dashboardStore.dashboardData?.BOT_INAUGURATION_CHECK
-                      .botYesPercentage,
+                      ?.botYesPercentage ?? 0,
                     dashboardStore.dashboardData?.BOT_INAUGURATION_CHECK
-                      .managementYesPercentage,
+                      ?.managementYesPercentage ?? 0,
                     dashboardStore.dashboardData?.BOT_INAUGURATION_CHECK
-                      .advisoryYesPercentage,
+                      ?.advisoryYesPercentage ?? 0,
                   ],
                   backgroundColor: [
                     doughnutColors[0],
                     doughnutColors[1],
                     doughnutColors[2],
+                    doughnutColors[3],
                   ],
                   borderRadius: 8,
                   barPercentage: 0.5,
@@ -1520,80 +1547,13 @@ const DashboardPage: React.FC = observer(() => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 min-h-[220px]">
         <div className="bg-white rounded-xl p-6 shadow flex flex-col items-center ">
           <span className="font-semibold text-base text-gray-900 mb-4 self-start">
-           Percentage of HCDTs that consulted with community leaders, women, youth, and PwDs during the needs assessment – <i>disaggregate by process of consultation</i>
+            Percentage of HCDTs that consulted with community leaders, women, youth, and PwDs during the needs assessment – <i>disaggregate by process of consultation</i>
           </span>
           <div
             className="w-full max-w-4xl mx-auto"
             style={{ minHeight: "220px" }}>
             <Bar data={BoTData2} options={conflictBarOptions} />
           </div>
-          {/* <Bar
-            data={{
-              labels: [
-                "Leadership consulted",
-                "Women Consulted",
-                "Youths Consulted",
-                "PwDs Consulted"
-              ],
-              datasets: [
-                {
-                  label: "Percentage",
-                  data: [
-                    dashboardStore.dashboardData?.COMMUNITY_LEADERSHIP_PERCENTAGE?.communityLeadershipPercentage,
-                    dashboardStore.dashboardData?.COMMUNITY_LEADERSHIP_PERCENTAGE?.communityWomenPercentage,
-                    dashboardStore.dashboardData?.COMMUNITY_LEADERSHIP_PERCENTAGE?.communityYouthsPercentage,
-                    dashboardStore.dashboardData?.COMMUNITY_LEADERSHIP_PERCENTAGE?.pwDsPercentage,
-                  ],
-                  backgroundColor: [
-                    doughnutColors[0],
-                    doughnutColors[1],
-                    doughnutColors[2],
-                    doughnutColors[3]
-                  ],
-                  borderRadius: 8,
-                  barPercentage: 0.5,
-                  categoryPercentage: 0.5,
-                }
-              ]
-            }}
-            options={{
-              indexAxis: "y",
-              plugins: {
-                legend: { display: false },
-                tooltip: { enabled: true },
-                datalabels: {
-                  anchor: 'center' as const,
-                  align: 'center' as const,
-                  formatter: function (value) {
-                    return `${value}%`;
-                  },
-                  color: '#222',
-                  font: {
-                    weight: 'bold'
-                  }
-                }
-              },
-              scales: {
-                x: {
-                  min: 0,
-                  max: 100,
-                  ticks: {
-                    callback: function (tickValue) {
-                      return `${tickValue}%`;
-                    }
-                  },
-                  title: {
-                    display: false
-                  }
-                },
-                y: {
-                  title: {
-                    display: false
-                  }
-                }
-              }
-            }}
-          />  */}
         </div>
         <div className="bg-white rounded-xl p-8 shadow flex flex-col md:flex-row items-center min-h-[320px]">
           <div className="flex flex-col items-center ">
@@ -1653,8 +1613,13 @@ const DashboardPage: React.FC = observer(() => {
           </div>
         </div>
       </div>
+      </>
+    )}
 
-      {/* Project */}
+      {/* Step 1: Project implementation and quality assessment */}
+      {currentStep === 1 && (
+        <>
+          {/* Project */}
       <div
         id="project"
         className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
@@ -1693,16 +1658,16 @@ const DashboardPage: React.FC = observer(() => {
                   <Doughnut
                     data={{
                       // labels: ["Worse", "Good", "Fair", "Excellent", "Bad"],
-                      labels: dashboardStore.dashboardData?.QUALITY_RATINGS.map(
+                      labels: (dashboardStore.dashboardData?.QUALITY_RATINGS ?? []).map(
                         (e) => e.qualityRating
                       ),
                       datasets: [
                         {
-                          data: dashboardStore.dashboardData?.QUALITY_RATINGS.map(
+                          data: (dashboardStore.dashboardData?.QUALITY_RATINGS ?? []).map(
                             (e) => e.percentage
                           ),
                           backgroundColor:
-                            dashboardStore.dashboardData?.QUALITY_RATINGS.map(
+                            (dashboardStore.dashboardData?.QUALITY_RATINGS ?? []).map(
                               (e) => e.color
                             ),
                           borderWidth: 0,
@@ -1719,7 +1684,7 @@ const DashboardPage: React.FC = observer(() => {
                   />
                 </div>
                 <div className="ml-6 flex flex-col gap-2">
-                  {dashboardStore.dashboardData?.QUALITY_RATINGS.map((e, i) => (
+                  {(dashboardStore.dashboardData?.QUALITY_RATINGS ?? []).map((e, i) => (
                     <div key={i}>
                       <div className="flex items-center text-sm text-gray-700 gap-2">
                         <span
@@ -1746,12 +1711,12 @@ const DashboardPage: React.FC = observer(() => {
                 data={{
                   labels:
                     dashboardStore.dashboardData?.COMPLETION_OVER_MONTH
-                      .monthName,
+                      ?.monthName ?? [],
                   datasets: [
                     {
                       label: "Completion",
                       data: dashboardStore.dashboardData?.COMPLETION_OVER_MONTH
-                        .total,
+                        ?.total ?? [],
                       borderColor: "#3366CC",
                       backgroundColor: "#3366CC",
                       tension: 0.4,
@@ -1892,8 +1857,13 @@ const DashboardPage: React.FC = observer(() => {
           </div>
         </div>
       </div>
+      </>
+    )}
 
-      {/* Conflict Resolution */}
+      {/* Step 2: Conflict Resolution */}
+      {currentStep === 2 && (
+        <>
+          {/* Conflict Resolution */}
       <div
         id="conflict"
         className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
@@ -1931,41 +1901,41 @@ const DashboardPage: React.FC = observer(() => {
           ))}
         </div>
         {/* <div className="bg-white rounded-xl p-8 shadow flex flex-col md:flex-row items-center min-h-[320px]">
-          <div className="flex flex-col items-center w-full">
-            <span className="font-semibold text-base text-gray-900 mb-4 self-start">Percentage of issues being addressed by the different stakeholder</span>
-            <div className="flex flex-row items-center justify-center w-full">
-              <div className="w-40 h-40 flex items-center justify-center">
-                <Doughnut
-                  data={{
-                    labels: dashboardStore.dashboardData?.CONFLICT_RESOLUTION_OVER.map((e: IConflictResolutionOverTime) => e.partyName),
-                    datasets: [
-                      {
-                        data: dashboardStore.dashboardData?.CONFLICT_RESOLUTION_OVER.map((e: IConflictResolutionOverTime) => e.percentage),
-                        backgroundColor: doughnutColors,
-                        borderWidth: 0,
-                      },
-                    ],
-                  }}
-                  options={{
-                    plugins: { legend: { display: false }, tooltip: { enabled: false } },
-                    cutout: "60%",
-                  }}
-                />
-              </div>
-              <div className="ml-6 flex flex-col gap-2">
-                {dashboardStore.dashboardData?.CONFLICT_RESOLUTION_OVER.map((e: IConflictResolutionOverTime, i: number) => (
-                  <div key={i}>
-                    <div className="flex items-center text-sm text-gray-700 gap-2">
-                      <span className="inline-block w-3 h-3 rounded-full" style={{ background: doughnutColors[i] }}></span>
-                      {e.partyName}
-                      <span className="ml-2 text-gray-500">{e.percentage}%</span>
+                    <div className="flex flex-col items-center w-full">
+                        <span className="font-semibold text-base text-gray-900 mb-4 self-start">Percentage of issues being addressed by the different stakeholder</span>
+                        <div className="flex flex-row items-center justify-center w-full">
+                            <div className="w-40 h-40 flex items-center justify-center">
+                                <Doughnut
+                                    data={{
+                                        labels: dashboardStore.dashboardData?.CONFLICT_RESOLUTION_OVER.map((e: IConflictResolutionOverTime) => e.partyName),
+                                        datasets: [
+                                            {
+                                                data: dashboardStore.dashboardData?.CONFLICT_RESOLUTION_OVER.map((e: IConflictResolutionOverTime) => e.percentage),
+                                                backgroundColor: doughnutColors,
+                                                borderWidth: 0,
+                                            },
+                                        ],
+                                    }}
+                                    options={{
+                                        plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                                        cutout: "60%",
+                                    }}
+                                />
+                            </div>
+                            <div className="ml-6 flex flex-col gap-2">
+                                {dashboardStore.dashboardData?.CONFLICT_RESOLUTION_OVER.map((e: IConflictResolutionOverTime, i: number) => (
+                                    <div key={i}>
+                                        <div className="flex items-center text-sm text-gray-700 gap-2">
+                                            <span className="inline-block w-3 h-3 rounded-full" style={{ background: doughnutColors[i] }}></span>
+                                            {e.partyName}
+                                            <span className="ml-2 text-gray-500">{e.percentage}%</span>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div> */}
+                </div> */}
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10 pb-6">
           {/* Conflict resolution status chart */}
@@ -1990,7 +1960,7 @@ const DashboardPage: React.FC = observer(() => {
                 <span className="font-semibold text-gray-900">
                   {
                     dashboardStore.dashboardData?.CONFLICT_RESOLUTION_PERCENTAGE
-                      .resolvedPercentage
+                      ?.resolvedPercentage ?? 0
                   }
                 </span>
               </div>
@@ -2004,7 +1974,7 @@ const DashboardPage: React.FC = observer(() => {
                 <span className="font-semibold text-gray-900">
                   {
                     dashboardStore.dashboardData?.CONFLICT_RESOLUTION_PERCENTAGE
-                      .unresolvedPercentage
+                      ?.unresolvedPercentage ?? 0
                   }
                 </span>
               </div>
@@ -2109,7 +2079,7 @@ const DashboardPage: React.FC = observer(() => {
             {(conflictStore.dashboardData?.CAUSE_OF_CONFLICT ?? []).length >
             0 ? (
               <ul className="space-y-2">
-                {conflictStore.dashboardData?.CAUSE_OF_CONFLICT.map(
+                {(conflictStore.dashboardData?.CAUSE_OF_CONFLICT ?? []).map(
                   (cause, index) => (
                     <li
                       key={index}
@@ -2147,7 +2117,7 @@ const DashboardPage: React.FC = observer(() => {
           <div className="bg-white p-4 rounded-lg shadow-md">
             <DashboardTable
               header={"Top Resolved Conflict"}
-              data={conflictStore?.dashboardData?.RESOLVED_CONFLICTS.map(
+              data={(conflictStore?.dashboardData?.RESOLVED_CONFLICTS ?? []).map(
                 (conflict: IConflictView) => {
                   return {
                     trustName: conflict.trustName,
@@ -2164,7 +2134,7 @@ const DashboardPage: React.FC = observer(() => {
           <div className="bg-white p-4 rounded-lg shadow-md">
             <DashboardTable
               header={"Top Unresolved Conflict"}
-              data={conflictStore?.dashboardData?.UNRESOLVED_CONFLICTS.map(
+              data={(conflictStore?.dashboardData?.UNRESOLVED_CONFLICTS ?? []).map(
                 (conflict: IConflictView) => {
                   return {
                     trustName: conflict.trustName,
@@ -2180,8 +2150,13 @@ const DashboardPage: React.FC = observer(() => {
           </div>
         </div>
       </div>
+      </>
+    )}
 
-      {/* Community Satisfaction */}
+      {/* Step 3: Community Satisfaction */}
+      {currentStep === 3 && (
+        <>
+          {/* Community Satisfaction */}
       <div
         id="community-satisfaction"
         className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
@@ -2308,38 +2283,7 @@ const DashboardPage: React.FC = observer(() => {
             structure/committees established by the Trust
           </h1>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Question 1 */}
-            {/* <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
-              <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
-                The Trust commissioned and handed over completed projects in our community to the community leadership?
-              </h3>
-              <div className="h-40 sm:h-48">
-                <Pie
-                  data={generatePieData(
-                    satisfactionStore.dashboardData?.projectHandover || [0, 0, 0, 0]
-                  )}
-                  options={{
-                    plugins: {
-                      datalabels: {
-                        color: "#222",
-                        font: { weight: "bold" },
-                            formatter: (value: number, context: any) => {
-                            const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
-                            const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
-                            const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
-                            return `${percent}%`;
-                          },
-                      },
-                      legend: {
-                        position: "bottom" as const,
-                        align: "end" as const, // Align legend to the end
-                      },
-                    },
-                  }}
-                  plugins={[ChartDataLabels]}
-                />
-              </div>
-            </div> */}
+
             <div className="bg-white shadow-md rounded-lg p-4 sm:p-6 flex flex-col items-center">
               <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4 text-center">
                 The Trust commissioned and handed over completed projects in our
@@ -2503,8 +2447,13 @@ const DashboardPage: React.FC = observer(() => {
           {/* Pie Charts Section */}
         </div>
       </div>
+      </>
+    )}
 
-      {/* Economic impact */}
+      {/* Step 4: Economic Impact */}
+      {currentStep === 4 && (
+        <>
+          {/* Economic impact */}
       <div
         id="economic-impact"
         className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
@@ -2700,8 +2649,10 @@ const DashboardPage: React.FC = observer(() => {
           </Observer>
         </div>
       </div>
+        </>
+      )}
       {/* // Place this at the root of your dashboard page (outside your main content) */}
-      <FloatingStepper />
+      <FloatingStepper setCurrentStep={goToStep} />
     </div>
   );
 });

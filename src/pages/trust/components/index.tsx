@@ -7,6 +7,8 @@ import CreateTrust from "./forms/CreateTrust";
 import EditTrust from "./forms/EditTrust";
 import { authStore as AuthStore} from "../../auth/store/authStore";
 import TrustUpload from "./upload/TrustUpload";
+import CommunitySatisfactionUpload from "../../communitySatisfaction/components/upload/CommunitySatisfactionUpload";
+import EconomicImpactUpload from "../../EconomicImpact/components/upload/EconomicImpactUpload";
 
 const trustStoreCTX = createContext(TrustStore);
 const AuthStoreCTX = createContext(AuthStore);
@@ -26,6 +28,14 @@ const Trusts = observer(() => {
     trustStore.trustFormData = {} as any;
     trustStore.pageSwitched = 4;
   }, [trustStore]);
+
+  const switchSatisfactionUploadPage = useCallback(() => {
+    trustStore.pageSwitched = 5;
+  }, [trustStore]);
+
+  const switchEconomicImpactUploadPage = useCallback(() => {
+    trustStore.pageSwitched = 6;
+  }, [trustStore]);
   return (
     <>
       {trustStore.pageSwitched == 1 && (
@@ -37,7 +47,35 @@ const Trusts = observer(() => {
             <p className="mt-1 text-xs text-gray-4">
               Control your profile setup and integrations
             </p>
-
+            <div className="mt-4 flex flex-wrap gap-4">
+               {(authStore.user.role == "SUPER ADMIN" || authStore.user.role == "ADMIN" ) && (
+                 <>
+                  <Button
+                    onClick={switchSatisfactionUploadPage}
+                    padding="py-2 px-4"
+                    buttonText="Bulk Upload Satisfaction"
+                    width="w-fit"
+                    iconLeft={
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                      </svg>
+                    }
+                  />
+                  <Button
+                    onClick={switchEconomicImpactUploadPage}
+                    padding="py-2 px-4"
+                    buttonText="Bulk Upload Economic Impact"
+                    width="w-fit"
+                    iconLeft={
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                      </svg>
+                    }
+                  />
+                 </>
+               )}
+            </div>
+            {/* hear */}
             <div className=" mt-4 flex flex-col lg:flex-row lg:items-center justify-between gap-x-8 gap-y-4">
               <input
                 className="flex-1 bg-white  py-3 px-4 rounded-lg"
@@ -84,6 +122,14 @@ const Trusts = observer(() => {
 
       {trustStore.pageSwitched == 4 && (
         <TrustUpload />
+      )}
+
+      {trustStore.pageSwitched == 5 && (
+        <CommunitySatisfactionUpload onBack={() => trustStore.pageSwitched = 1} />
+      )}
+
+      {trustStore.pageSwitched == 6 && (
+        <EconomicImpactUpload onBack={() => trustStore.pageSwitched = 1} />
       )}
     </>
   );

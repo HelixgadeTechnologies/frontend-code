@@ -26,7 +26,11 @@ const satisfactionKeys = [
     "incomeProject",
 ];
 
-const CommunitySatisfactionUpload = observer(() => {
+interface UploadProps {
+    onBack?: () => void;
+}
+
+const CommunitySatisfactionUpload = observer(({ onBack }: UploadProps) => {
     const satisfactionStore = useContext(satisfactionStoreCTX);
     const trustStore = useContext(trustStoreCTX);
     // const { name } = useParams();
@@ -98,8 +102,12 @@ const CommunitySatisfactionUpload = observer(() => {
     };
 
     const switchUploadPage = useCallback(() => {
-        satisfactionStore.isAddFunctionalityNeeded = false;
-    }, [satisfactionStore]);
+        if (onBack) {
+            onBack();
+        } else {
+            satisfactionStore.isAddFunctionalityNeeded = false;
+        }
+    }, [satisfactionStore, onBack]);
 
     return (
         <div className="py-6 px-4 max-w-7xl mx-auto">

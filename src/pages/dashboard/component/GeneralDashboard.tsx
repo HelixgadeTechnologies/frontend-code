@@ -4,7 +4,8 @@ import { Doughnut, Bar, Line, Pie } from "react-chartjs-2";
 import DashboardTable, { DashboardTableColumn } from "../table/DashboardTable";
 import { Observer, observer } from "mobx-react-lite";
 import { dashboardStore as DashboardStore } from "../store/dashboardStore";
-import { useContext, createContext, useCallback } from "react";
+import { useContext, createContext, useCallback, useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import dayjs from "dayjs";
 import { IConflictView } from "../../conflict/types/interface";
 import IMG from "../../../assets/svgs/dashboardConflictNotFound.svg";
@@ -28,6 +29,20 @@ const economicImpactStoreCTX = createContext(EconomicImpactStore);
 const satisfactionStoreCTX = createContext(SatisfactionStore);
 const conflictStoreCTX = createContext(ConflictStore);
 const projectStoreCTX = createContext(ProjectStore);
+
+const SECTION_MAP: Record<string, number> = {
+  "trust-establishment": 0,
+  project: 1,
+  conflict: 2,
+  "community-satisfaction": 3,
+  "economic-impact": 4,
+};
+
+const STEP_TO_SECTION = Object.entries(SECTION_MAP).reduce(
+  (acc, [key, val]) => ({ ...acc, [val]: key }),
+  {} as Record<number, string>
+);
+
 const GeneralDashboard: React.FC = observer(() => {
   const dashboardStore = useContext(dashboardStoreCTX);
   const settingStore = useContext(settingStoreCTX);
@@ -36,6 +51,31 @@ const GeneralDashboard: React.FC = observer(() => {
   const satisfactionStore = useContext(satisfactionStoreCTX);
   const conflictStore = useContext(conflictStoreCTX);
   const projectStore = useContext(projectStoreCTX);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [currentStep, setCurrentStep] = useState(0);
+  // const totalSteps = 5;
+
+  // Sync state with URL parameter
+  useEffect(() => {
+    const section = searchParams.get("section");
+    if (section && SECTION_MAP[section] !== undefined) {
+      setCurrentStep(SECTION_MAP[section]);
+    } else {
+      // Default to step 0 if no section is specified
+      setCurrentStep(0);
+    }
+  }, [searchParams]);
+
+  const goToStep = (step: number) => {
+    const section = STEP_TO_SECTION[step];
+    if (section) {
+      setSearchParams({ section });
+    } else {
+      setCurrentStep(step);
+    }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const doughnutColors = [
     "#FF6384", // pink/red
@@ -1262,10 +1302,12 @@ const GeneralDashboard: React.FC = observer(() => {
         </div>
       </div>
 
-      {/* Main Grid */}
-      <h2 className="font-semibold text-xl text-gray-900 mb-4">
-        Trust Establishment and Governance
-      </h2>
+      {/* Step 0: Trust Establishment and Governance */}
+      {currentStep === 0 && (
+        <>
+          <h2 className="font-semibold text-xl text-gray-900 mb-4">
+            Trust Establishment and Governance
+          </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-stretch">
         {/* Left Column */}
         <div className="flex flex-col gap-5 h-full">
@@ -1638,8 +1680,13 @@ const GeneralDashboard: React.FC = observer(() => {
           </div>
         </div>
       </div>
+      </>
+    )}
 
-      {/* Project */}
+      {/* Step 1: Project implementation and quality assessment */}
+      {currentStep === 1 && (
+        <>
+          {/* Project */}
       <div
         id="project"
         className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
@@ -1877,8 +1924,13 @@ const GeneralDashboard: React.FC = observer(() => {
           </div>
         </div>
       </div>
+      </>
+    )}
 
-      {/* Conflict Resolution */}
+      {/* Step 2: Conflict Resolution */}
+      {currentStep === 2 && (
+        <>
+          {/* Conflict Resolution */}
       <div
         id="conflict"
         className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
@@ -2165,8 +2217,13 @@ const GeneralDashboard: React.FC = observer(() => {
           </div>
         </div>
       </div>
+      </>
+    )}
 
-      {/* Community Satisfaction */}
+      {/* Step 3: Community Satisfaction */}
+      {currentStep === 3 && (
+        <>
+          {/* Community Satisfaction */}
       <div
         id="community-satisfaction"
         className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
@@ -2293,38 +2350,7 @@ const GeneralDashboard: React.FC = observer(() => {
             structure/committees established by the Trust
           </h1>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Question 1 */}
-            {/* <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
-              <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
-                The Trust commissioned and handed over completed projects in our community to the community leadership?
-              </h3>
-              <div className="h-40 sm:h-48">
-                <Pie
-                  data={generatePieData(
-                    satisfactionStore.dashboardData?.projectHandover || [0, 0, 0, 0]
-                  )}
-                  options={{
-                    plugins: {
-                      datalabels: {
-                        color: "#222",
-                        font: { weight: "bold" },
-                                            formatter: (value: number, context: any) => {
-                                                const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
-                                                const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
-                                                const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
-                                                return `${percent}%`;
-                                            },
-                      },
-                      legend: {
-                        position: "bottom" as const,
-                        align: "end" as const, // Align legend to the end
-                      },
-                    },
-                  }}
-                  plugins={[ChartDataLabels]}
-                />
-              </div>
-            </div> */}
+ 
             <div className="bg-white shadow-md rounded-lg p-4 sm:p-6 flex flex-col items-center">
               <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4 text-center">
                 The Trust commissioned and handed over completed projects in our
@@ -2488,8 +2514,13 @@ const GeneralDashboard: React.FC = observer(() => {
           {/* Pie Charts Section */}
         </div>
       </div>
+      </>
+    )}
 
-      {/* Economic impact */}
+      {/* Step 4: Economic Impact */}
+      {currentStep === 4 && (
+        <>
+          {/* Economic impact */}
       <div
         id="economic-impact"
         className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
@@ -2685,8 +2716,10 @@ const GeneralDashboard: React.FC = observer(() => {
           </Observer>
         </div>
       </div>
+        </>
+      )}
       {/* // Place this at the root of your dashboard page (outside your main content) */}
-      <FloatingStepper />
+      <FloatingStepper setCurrentStep={goToStep} />
     </div>
   );
 });
