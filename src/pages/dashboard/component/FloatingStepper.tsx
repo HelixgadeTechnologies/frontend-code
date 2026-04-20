@@ -39,11 +39,12 @@ const FloatingStepper = ({
   const [open, setOpen] = useState(false);
 
   const steps = [
-    { label: "Trust Establishment", target: "trust-establishment", index: 0 },
-    { label: "Project", target: "project", index: 1 },
-    { label: "Conflict", target: "conflict", index: 2 },
-    { label: "Community Satisfaction", target: "community-satisfaction", index: 3 },
-    { label: "Economic Impact", target: "economic-impact", index: 4 },
+    { label: "Trusts", target: "trusts", index: 0 },
+    { label: "Trust Establishment", target: "trust-establishment", index: 1 },
+    { label: "Project", target: "project", index: 2 },
+    { label: "Conflict", target: "conflict", index: 3 },
+    { label: "Community Satisfaction", target: "community-satisfaction", index: 4 },
+    { label: "Economic Impact", target: "economic-impact", index: 5 },
   ];
 
   return (
@@ -85,4 +86,4 @@ const FloatingStepper = ({
   );
 };
 
-export default FloatingStepper;
+export default FloatingStepper;

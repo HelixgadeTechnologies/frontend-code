@@ -26,6 +26,11 @@ const TrustSidebar = observer(() => {
 
   const subRoutes = [
     {
+      id: 0,
+      name: "Trusts",
+      link: `/dashboard/trusts`,
+    },
+    {
       id: 1,
       name: "Trust Establishment and Governance Structure",
       link: `/trust/${name}/${id}`,
