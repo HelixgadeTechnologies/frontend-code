@@ -1,9 +1,9 @@
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { logoutIcon, settingsIcon, trustIcon } from "../../assets/icons";
 import { authStore as AuthStore } from "../../pages/auth/store/authStore"
 import { useCookies } from "react-cookie";
 import { observer } from "mobx-react-lite";
-import { createContext, useContext } from "react";
+import { createContext, useContext, useState } from "react";
 
 const authStoreCTX = createContext(AuthStore);
 const TrustSidebar = observer(() => {
@@ -11,7 +11,9 @@ const TrustSidebar = observer(() => {
   const { id, name } = useParams();
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [, removeCookie] = useCookies(["hcdt_admin"]);
+  const [open, setOpen] = useState<number | null>(null);
 
   const handleLogout = () => {
     removeCookie("hcdt_admin", null, { path: "/" });
@@ -24,53 +26,112 @@ const TrustSidebar = observer(() => {
     }
   };
 
+  const dashboardChildren = [
+    { id: 1, name: "Trust Establishment", link: "trust-establishment" },
+    { id: 2, name: "Project", link: "project" },
+    { id: 3, name: "Conflict", link: "conflict" },
+    { id: 4, name: "Community Satisfaction", link: "community-satisfaction" },
+    { id: 5, name: "Economic Impact", link: "economic-impact" },
+  ];
+
   const subRoutes = [
     {
       id: 0,
+      name: "Dashboard",
+      link: `#`,
+      children: dashboardChildren,
+    },
+    {
+      id: 1,
       name: "Trusts",
       link: `/dashboard/trusts`,
     },
     {
-      id: 1,
+      id: 2,
       name: "Trust Establishment and Governance Structure",
       link: `/trust/${name}/${id}`,
     },
     {
-      id: 2,
+      id: 3,
       name: "HCDT Development Projects",
       link: `/trust/${name}/${id}/hdct-projects`,
     },
     {
-      id: 3,
+      id: 4,
       name: "Conflict Resolution",
       link: `/trust/${name}/${id}/conflict-resolution`,
     },
     {
-      id: 4,
+      id: 5,
       name: "Community Satisfaction",
       link: `/trust/${name}/${id}/community-satisfaction`,
     },
     {
-      id: 5,
+      id: 6,
       name: "Economic Impact of HCDT",
       link: `/trust/${name}/${id}/economic-impact`,
     },
     {
-      id: 6,
+      id: 7,
       name: `${name?.toLocaleUpperCase()} Surveys Settings`,
       link: `/trust/${name}/${id}/settings`,
     },
   ];
   const adminRoutes = [
     {
+      id: 0,
+      name: "Dashboard",
+      link: `/dashboard`,
+      children: dashboardChildren,
+    },
+    {
       id: 1,
+      name: "Trusts",
+      link: `/dashboard/trusts`
+    },
+    {
+      id: 2,
       name: "Trust Establishment and Governance Structure",
       link: `/trust/${name}/${id}`,
     },
     {
-      id: 2,
+      id: 3,
       name: "HCDT Development Projects",
       link: `/trust/${name}/${id}/hdct-projects`,
+    },
+    {
+      id: 4,
+      name: "Conflict Resolution",
+      link: `/trust/${name}/${id}/conflict-resolution`,
+    },
+    {
+      id: 5,
+      name: "Community Satisfaction",
+      link: `/trust/${name}/${id}/community-satisfaction`,
+    },
+    {
+      id: 6,
+      name: "Economic Impact of HCDT",
+      link: `/trust/${name}/${id}/economic-impact`,
+    },
+
+  ];
+  const subRoutesDRA = [
+    {
+      id: 0,
+      name: "Dashboard",
+      link: `/dashboard`,
+      children: dashboardChildren,
+    },
+    {
+      id: 1,
+      name: "Trusts",
+      link: `/dashboard/trusts`,
+    },
+    {
+      id: 2,
+      name: "HCDT Development Projects",
+      link: `/trust/${name}/${id}/`,
     },
     {
       id: 3,
@@ -84,34 +145,6 @@ const TrustSidebar = observer(() => {
     },
     {
       id: 5,
-      name: "Economic Impact of HCDT",
-      link: `/trust/${name}/${id}/economic-impact`,
-    },
-
-  ];
-  const subRoutesDRA = [
-    // {
-    //   id: 1,
-    //   name: "Trust Establishment and Governance Structure",
-    //   link: `/trust/${name}/${id}`,
-    // },
-    {
-      id: 1,
-      name: "HCDT Development Projects",
-      link: `/trust/${name}/${id}/`,
-    },
-    {
-      id: 2,
-      name: "Conflict Resolution",
-      link: `/trust/${name}/${id}/conflict-resolution`,
-    },
-    {
-      id: 3,
-      name: "Community Satisfaction",
-      link: `/trust/${name}/${id}/community-satisfaction`,
-    },
-    {
-      id: 4,
       name: "Economic Impact of HCDT",
       link: `/trust/${name}/${id}/economic-impact`,
     },
@@ -119,17 +152,28 @@ const TrustSidebar = observer(() => {
 
   const subRoutesCommittee = [
     {
+      id: 0,
+      name: "Dashboard",
+      link: `/dashboard`,
+      children: dashboardChildren,
+    },
+    {
       id: 1,
+      name: "Trusts",
+      link: `/dashboard/trusts`,
+    },
+    {
+      id: 2,
       name: "Trust Establishment and Governance Structure",
       link: `/trust/${name}/${id}`,
     },
     {
-      id: 2,
+      id: 3,
       name: "HCDT Development Projects",
       link: `/trust/${name}/${id}/hdct-projects`,
     },
     {
-      id: 3,
+      id: 4,
       name: "Conflict Resolution",
       link: `/trust/${name}/${id}/conflict-resolution`,
     },
@@ -173,59 +217,82 @@ const TrustSidebar = observer(() => {
               <img src={trustIcon} alt={"trust"} />
               <span className="text-sm font-medium text-gray-3">Trusts</span>
             </li>
-          </Link>
-          {/* Sub routes */}
-          <div>
-            {(authStore.user.role == "SUPER ADMIN") && subRoutes.map((route) => (
-              <Link key={route.link} to={route.link}>
-                <li
-                  className={`${pathname === route.link ? "bg-primary-200/20" : "bg-white"
-                    } hover:bg-primary-200/20  rounded transition-all px-4 py-3 flex items-center gap-x-2`}
-                >
-                  <span className="text-sm font-medium text-gray-3">
-                    {route.name}
-                  </span>
-                </li>
-              </Link>
-            ))}
-            {(authStore.user.role == "ADMIN") && adminRoutes.map((route) => (
-              <Link key={route.link} to={route.link}>
-                <li
-                  className={`${pathname === route.link ? "bg-primary-200/20" : "bg-white"
-                    } hover:bg-primary-200/20  rounded transition-all px-4 py-3 flex items-center gap-x-2`}
-                >
-                  <span className="text-sm font-medium text-gray-3">
-                    {route.name}
-                  </span>
-                </li>
-              </Link>
-            ))}
+          </Link>          {/* Sub routes */}
+          <div className="space-y-1">
+            {((authStore.user.role == "SUPER ADMIN") ? subRoutes :
+              (authStore.user.role == "ADMIN") ? adminRoutes :
+                (authStore.user.role == "DRA" || authStore.user.role == "Data Reporting Agent (DRA)") ? subRoutesDRA :
+                  (authStore.user.role == "Board of Trustee (BoT)" || authStore.user.role == "Management Committee (MC)" || authStore.user.role == "Advisory Committee (AC)") ? subRoutesCommittee : []
+            ).map((route) => {
+              const hasChildren = route.children && route.children.length > 0;
+              const isExpanded = open === route.id;
 
-            {(authStore.user.role == "DRA" || authStore.user.role == "Data Reporting Agent (DRA)") && subRoutesDRA.map((route) => (
-              <Link key={route.link} to={route.link}>
-                <li
-                  className={`${pathname === route.link ? "bg-primary-200/20" : "bg-white"
-                    } hover:bg-primary-200/20  rounded transition-all px-4 py-3 flex items-center gap-x-2`}
-                >
-                  <span className="text-sm font-medium text-gray-3">
-                    {route.name}
-                  </span>
-                </li>
-              </Link>
-            ))}
+              return (
+                <div key={route.id}>
+                  {hasChildren ? (
+                    <div
+                      onClick={() => {
+                        setOpen(isExpanded ? null : route.id);
+                        if (route.link) navigate(route.link);
+                      }}
+                      className={`${pathname === route.link ? "bg-primary-200/20" : "bg-white"} 
+                        hover:bg-primary-200/20 rounded transition-all px-4 py-3 flex items-center justify-between cursor-pointer`}
+                    >
+                      <span className="text-sm font-medium text-gray-3">
+                        {route.name}
+                      </span>
+                      <svg
+                        className={`w-4 h-4 transition-transform ${isExpanded ? "rotate-90" : ""}`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </div>
+                  ) : (
+                    <Link to={route.link}>
+                      <li
+                        className={`${pathname === route.link ? "bg-primary-200/20" : "bg-white"} 
+                          hover:bg-primary-200/20 rounded transition-all px-4 py-3 flex items-center gap-x-2`}
+                      >
+                        <span className="text-sm font-medium text-gray-3">
+                          {route.name}
+                        </span>
+                      </li>
+                    </Link>
+                  )}
 
-            {(authStore.user.role == "Board of Trustee (BoT)" || authStore.user.role == "Management Committee (MC)" || authStore.user.role == "Advisory Committee (AC)") && subRoutesCommittee.map((route) => (
-              <Link key={route.link} to={route.link}>
-                <li
-                  className={`${pathname === route.link ? "bg-primary-200/20" : "bg-white"
-                    } hover:bg-primary-200/20  rounded transition-all px-4 py-3 flex items-center gap-x-2`}
-                >
-                  <span className="text-sm font-medium text-gray-3">
-                    {route.name}
-                  </span>
-                </li>
-              </Link>
-            ))}
+                  {/* Render children if expanded */}
+                  {hasChildren && isExpanded && (
+                    <ul className="ml-8 mt-1 space-y-1">
+                      {route.children?.map((child) => {
+                        const isActive =
+                          pathname === "/dashboard" &&
+                          searchParams.get("section") === child.link;
+
+                        return (
+                          <li key={child.id}>
+                            <button
+                              className={`block px-3 py-2 rounded transition text-xs text-left w-full ${isActive
+                                ? "bg-blue-50 text-blue-700 font-semibold"
+                                : "hover:bg-gray-50 text-gray-600"
+                                }`}
+                              onClick={() => {
+                                navigate(`/dashboard?section=${child.link}`);
+                                authStore.trustSidebarOpen = false;
+                              }}
+                              type="button">
+                              {child.name}
+                            </button>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
 
