@@ -57,23 +57,12 @@ const ProjectReportForm = observer(() => {
     const onSubmit = async (data: any) => {
         try {
             projectStore.isSaving = true;
-            let uploadRes: string | undefined = undefined;
-            let mimetype: string | undefined = undefined;
-
-            if (data.projectVideo && data.projectVideo instanceof FileList && data.projectVideo.length > 0) {
-                const uploadPayload = await convertFileToBase64(data.projectVideo[0])
-                uploadRes = (await projectStore.uploadFile(uploadPayload)).data
-                mimetype = uploadPayload.mimeType;
-            } else if (projectStore.projectFormData.projectVideo) {
-                uploadRes = projectStore.projectFormData.projectVideo;
-                mimetype = projectStore.selectedProject?.projectVideoMimeType!;
-            }
 
             const reportData: any = {
                 projectStatus: data.projectStatus.value,
                 qualityRatingId: data.qualityRatingId.value,
-                projectVideo: uploadRes,
-                projectVideoMimeType: mimetype,
+                projectVideo: data.projectVideo,
+                projectVideoMimeType: data.projectVideoMimeType || projectStore.selectedProject?.projectVideoMimeType,
                 numberOfFemaleEmployedByContractor: Number(data.numberOfFemaleEmployedByContractor),
                 numberOfMaleEmployedByContractor: Number(data.numberOfMaleEmployedByContractor),
                 numberOfPwDsEmployedByContractor: Number(data.numberOfPwDsEmployedByContractor),
@@ -265,14 +254,29 @@ const ProjectReportForm = observer(() => {
                             <FileUpload
                                 name="projectVideo"
                                 control={control}
-                                label="Update Project Document/Video"
-                                helperText="PDF/Video format • Max. 5MB"
-                                accept="application/pdf,video/*"
+                                label="Update Project Document/Video/Image"
+                                helperText="PDF/Video/Image format • Max. 5MB"
+                                accept="application/pdf,video/*,image/*"
                                 maxSize={5 * 1024 * 1024}
                                 buttonText="Upload"
+                                onFileSelected={async (file) => {
+                                    if (file) {
+                                        try {
+                                            const payload = await convertFileToBase64(file);
+                                            const res = await projectStore.uploadFile(payload);
+                                            if (res.success) {
+                                                method.setValue("projectVideo", res.data);
+                                                method.setValue("projectVideoMimeType", file.type);
+                                                toast.success("File uploaded successfully");
+                                            }
+                                        } catch (error) {
+                                            toast.error("Upload failed");
+                                        }
+                                    }
+                                }}
                             />
-                            {projectStore.selectedProject?.projectVideo && (
-                                <p className="text-xs text-gray-500 mt-1">Existing file: <a href={projectStore.selectedProject.projectVideo} target="_blank" className="text-blue-600 hover:underline">View here</a></p>
+                            {method.watch("projectVideo") && (
+                                <p className="text-xs text-gray-500 mt-1">Uploaded file: <a href={method.watch("projectVideo")} target="_blank" className="text-blue-600 hover:underline">View here</a></p>
                             )}
                         </div>
 

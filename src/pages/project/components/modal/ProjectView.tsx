@@ -122,33 +122,73 @@ const ProjectView = observer(({ projectData, projectStore }: { projectData: IPro
                     {/* Right Column */}
 
                     <div className="space-y-4">
-                        <div className="w-full bg-gray-200 rounded-lg overflow-hidden">
-                            {projectData.projectVideoMimeType?.startsWith("image/") && (
-                                <a href={projectData.projectVideo as string} target="_blank" rel="noopener noreferrer">
-                                    <img
-                                        src={projectData.projectVideo as string}
-                                        alt="Project Media"
-                                        className="w-full h-64 object-cover rounded-lg shadow-md"
-                                    />
-                                </a>
-                            )}
-                            {projectData.projectVideoMimeType?.startsWith("video/") && (
-                                <video
-                                    src={projectData.projectVideo as string}
-                                    controls
-                                    className="w-full h-64 object-cover rounded-lg shadow-md"
-                                />
-                            )}
-                            {projectData.projectVideoMimeType === "application/pdf" && (
-                                <iframe
-                                    src={projectData.projectVideo as string}
-                                    title="Project PDF"
-                                    className="w-full h-64 rounded-lg shadow-md"
-                                />
-                            )}
-                            {!projectData.projectVideoMimeType && (
-                                <p className="text-sm text-gray-600">No media available</p>
-                            )}
+                        <div className="w-full bg-gray-50 rounded-lg overflow-hidden border border-gray-200">
+                            {(() => {
+                                const url = projectData.projectVideo as string;
+                                const mimeType = projectData.projectVideoMimeType;
+                                
+                                if (!url) {
+                                    return (
+                                        <div className="w-full h-64 flex flex-col items-center justify-center bg-gray-50 rounded-lg border-2 border-dashed border-gray-200">
+                                            <p className="text-gray-400 text-sm italic">No media available</p>
+                                        </div>
+                                    );
+                                }
+
+                                const type = mimeType?.toLowerCase() || "";
+                                const isImage = type.startsWith("image/") || /\.(jpg|jpeg|png|gif|webp)$/i.test(url);
+                                const isVideo = type.startsWith("video/") || /\.(mp4|webm|ogg)$/i.test(url);
+                                const isPdf = type === "application/pdf" || /\.pdf$/i.test(url);
+
+                                if (isImage) {
+                                    return (
+                                        <a href={url} target="_blank" rel="noopener noreferrer" className="block group">
+                                            <div className="relative overflow-hidden rounded-lg shadow-md">
+                                                <img src={url} alt="Project Media" className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105" />
+                                                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                    <span className="text-white text-xs font-medium bg-black/50 px-3 py-1 rounded-full">View Full Image</span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    );
+                                }
+
+                                if (isVideo) {
+                                    return (
+                                        <video src={url} controls className="w-full h-64 object-cover rounded-lg shadow-md" />
+                                    );
+                                }
+
+                                if (isPdf) {
+                                    return (
+                                        <div className="flex flex-col items-center justify-center h-64 bg-white rounded-lg border border-gray-200 p-4">
+                                            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4 text-red-500">
+                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                                </svg>
+                                            </div>
+                                            <p className="text-sm font-medium text-gray-700 mb-4">Project Document (PDF)</p>
+                                            <a 
+                                                href={url} 
+                                                target="_blank" 
+                                                rel="noopener noreferrer"
+                                                className="px-6 py-2 bg-red-500 text-white text-sm font-semibold rounded-lg hover:bg-red-600 transition-colors"
+                                            >
+                                                View PDF
+                                            </a>
+                                        </div>
+                                    );
+                                }
+
+                                return (
+                                    <div className="flex flex-col items-center justify-center h-64 bg-gray-50 rounded-lg border border-gray-200 p-4 text-center">
+                                        <p className="text-sm text-gray-600 mb-4 font-medium">Attached File</p>
+                                        <a href={url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline text-sm break-all px-4">
+                                            {url.split('/').pop() || 'Download File'}
+                                        </a>
+                                    </div>
+                                );
+                            })()}
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                             <p className="text-sm text-gray-600">

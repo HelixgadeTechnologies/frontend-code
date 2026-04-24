@@ -24,7 +24,7 @@ const FileUpload = <T extends FieldValues>({
   rules,
   label,
   helperText,
-  // accept,
+  accept,
   maxSize,
   className = "",
   buttonText = "Upload",
@@ -165,7 +165,7 @@ const FileUpload = <T extends FieldValues>({
         }}
         className="hidden"
         onChange={handleFileChange}
-        // accept={accept}
+        accept={accept}
         disabled={disabled}
         onBlur={field.onBlur}
       />
