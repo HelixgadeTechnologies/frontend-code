@@ -61,6 +61,35 @@ const ProjectTable = observer(() => {
         projectStore.selectedProjectScreen = 4
 
     }, []);
+    const handleReport = useCallback(async (project: IProjectView) => {
+        const pCategory = [...projectStore.projectCategories.values()].find((category) => category.categoryName?.toLowerCase() === project.projectCategory?.toLowerCase());
+        projectStore.projectFormData = {
+            projectId: project.projectId,
+            projectTitle: project.projectTitle as string,
+            projectCategoryId: pCategory?.projectCategoryId,
+            totalBudget: project.totalBudget as number,
+            community: project.community as string,
+            awardDate: project.awardDate as string,
+            nameOfContractor: project.nameOfContractor as string,
+            annualApprovedBudget: project.annualApprovedBudget as string,
+            projectStatus: project.projectStatus as number,
+            qualityRatingId: project.qualityRatingId as number,
+            projectVideo: project.projectVideo as string,
+            projectVideoMimeType: project.projectVideoMimeType as string,
+            numberOfMaleEmployedByContractor: project.numberOfMaleEmployedByContractor as number,
+            numberOfFemaleEmployedByContractor: project.numberOfFemaleEmployedByContractor as number,
+            numberOfPwDsEmployedByContractor: project.numberOfPwDsEmployedByContractor as number,
+            typeOfWork: project.typeOfWork as string,
+            numberOfHostCommunityMemberContracted: project.numberOfHostCommunityMemberContracted as number,
+            numberOfMaleBenefited: project.numberOfMaleBenefited as number,
+            numberOfFemaleBenefited: project.numberOfFemaleBenefited as number,
+            numberOfPwDsBenefited: project.numberOfPwDsBenefited as number,
+            trustId: project.trustId as string,
+        };
+        projectStore.selectedProject = project
+        projectStore.selectedProjectScreen = 5
+
+    }, []);
 
 
     // Define columns with memoization
@@ -115,12 +144,20 @@ const ProjectTable = observer(() => {
                                         icon={checkIcon}
                                         onClick={() => handleView(economicImpact)} // Add your view handler
                                     />
-                                    {(authStore.user.role == "SUPER ADMIN" || authStore.user.role == "ADMIN") && (
+                                    {(authStore.user.role == "SUPER ADMIN" || authStore.user.role == "ADMIN" || authStore.user.role === "Board of Trustee (BoT)" || authStore.user.role === "Management Committee (MC)" || authStore.user.role === "Advisory Committee (AC)") && (
                                         <Tag
                                             label="Edit"
                                             type="default"
                                             icon={<FaEdit />}
                                             onClick={() => handleEdit(economicImpact)} // Add your Edit handler
+                                        />
+                                    )}
+                                    {(authStore.user.role == "SUPER ADMIN" || authStore.user.role == "ADMIN" || authStore.user.role === "DRA" || authStore.user.role === "Data Reporting Agent (DRA)") && (
+                                        <Tag
+                                            label="Report"
+                                            type="default"
+                                            icon={checkIcon}
+                                            onClick={() => handleReport(economicImpact)} // Add your Report handler
                                         />
                                     )}
                                 </div>
@@ -175,7 +212,13 @@ const ProjectTable = observer(() => {
                     <EmptyTable
                         headArr={tableHead}
                         heading="No project data available."
-                        text={<span>You can  <button className="text-blue-600 text-md font-medium hover:underline" onClick={handleCreate}>click here</button> to create a project</span>}
+                        text={
+                            ["SUPER ADMIN", "ADMIN", "Board of Trustee (BoT)", "Management Committee (MC)", "Advisory Committee (AC)"].includes(authStore.user.role as string) ? (
+                                <span>You can  <button className="text-blue-600 text-md font-medium hover:underline" onClick={handleCreate}>click here</button> to create a project</span>
+                            ) : (
+                                <span>No project data found for this trust.</span>
+                            )
+                        }
                         img={IMG}
                     />
                 )}

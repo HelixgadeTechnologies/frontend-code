@@ -17,10 +17,13 @@ const ProjectBaseForm = observer(() => {
   const method = useForm({
     defaultValues: projectStore.projectFormData,
     shouldUnregister: false,
+    mode: "onChange"
   })
   const { name } = useParams();
   useEffect(() => {
     async function loadRequests() {
+      let selectedTrustId = window.sessionStorage.getItem("selectedTrustId")
+      projectStore.projectFormData.trustId = selectedTrustId as string
       projectStore.getFormSteps()
       await projectStore.getCategory()
       await projectStore.getTypeOfWork()

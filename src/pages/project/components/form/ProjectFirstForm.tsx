@@ -11,7 +11,7 @@ import "react-datepicker/dist/react-datepicker.css";
 const ProjectStoreCTX = createContext(ProjectStore);
 const ProjectFirstForm = observer(({ method }: { method: any }) => {
     const projectStore = useContext(ProjectStoreCTX);
-    const { control, register, handleSubmit, formState: { errors } } = method;
+    const { control, register, handleSubmit, formState: { errors }, watch } = method;
 
     const onSubmit = (data: any) => {
         projectStore.isSaving = true
@@ -154,14 +154,21 @@ const ProjectFirstForm = observer(({ method }: { method: any }) => {
 
                     {/* Annual Approved Budget */}
                     <FormInput
-                        label="Annual Approved Budget"
+                        label="Annual Approved Budget (Note: Should not be greater than Total Budget)"
                         name="annualApprovedBudget"
                         type="text"
                         placeholder="Enter approved budget"
                         register={register}
-                        registerOptions={{ required: "Approved Budget is required." }}
+                        registerOptions={{
+                            required: "Approved Budget is required.",
+                            validate: (value: string) => {
+                                const totalBudget = watch("totalBudget");
+                                return Number(value) <= Number(totalBudget) || "Annual Approved Budget cannot exceed Total Budget";
+                            }
+                        }}
                         error={errors.annualApprovedBudget}
                     />
+                 
 
                     {/* Submit Button */}
                     <Button

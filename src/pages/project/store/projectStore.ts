@@ -175,6 +175,23 @@ class ProjectStore implements IProjectStore {
         }
     }
 
+    async reportProject(projectId: string, data: any): Promise<boolean> {
+        try {
+            this.isSubmitting = true;
+            this.isDashboardLoading = false;
+            this.dashboardData = null;
+            await projectService.reportProject(projectId, data);
+            let selectedTrustId = window.sessionStorage.getItem("selectedTrustId")
+            await this.getProjects(selectedTrustId || "");
+            await this.getProjectDashboardByTrustId(selectedTrustId || "ALL", 0, "ALL", "ALL")
+            return true;
+        } catch (error) {
+            throw error;
+        } finally {
+            this.isSubmitting = false;
+        }
+    }
+
     async getCategory(): Promise<boolean> {
         try {
             if ([...this.projectCategories.values()].length == 0) {

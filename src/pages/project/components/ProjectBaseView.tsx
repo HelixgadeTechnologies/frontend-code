@@ -5,12 +5,12 @@ import { projectStore as ProjectStore } from "../store/projectStore";
 import ProjectDashboard from "./chat/ProjectDashboard";
 import ProjectTable from "./table/ProjectTable";
 import { useNavigate, useParams } from "react-router-dom";
-//import { authStore as AuthStore } from "../../auth/store/authStore";
+import { authStore as AuthStore } from "../../auth/store/authStore";
 
-//const AuthStoreCTX = createContext(AuthStore)
+const AuthStoreCTX = createContext(AuthStore)
 const ProjectStoreCTX = createContext(ProjectStore)
 const ProjectBaseView = observer(() => {
-    //const authStore = useContext(AuthStoreCTX)
+    const authStore = useContext(AuthStoreCTX)
     const projectStore = useContext(ProjectStoreCTX)
     const { name } = useParams();
     const navigate = useNavigate();
@@ -50,13 +50,13 @@ const ProjectBaseView = observer(() => {
                             </label>
                             <span className="text-sm text-gray-600 ml-2">Table</span>
                         </div>
-                        <Button
-                            buttonText="Add a Project"
-                            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-                            onClick={toForm}
-                        />
-                        {/* {(authStore.user.role == "SUPER ADMIN" || authStore.user.role == "ADMIN") && (
-                        )} */}
+                        {(authStore.user.role == "SUPER ADMIN" || authStore.user.role == "ADMIN" || authStore.user.role === "Board of Trustee (BoT)" || authStore.user.role === "Management Committee (MC)" || authStore.user.role === "Advisory Committee (AC)") && (
+                            <Button
+                                buttonText="Add a Project"
+                                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+                                onClick={toForm}
+                            />
+                        )}
                     </div>
                 </div>
 

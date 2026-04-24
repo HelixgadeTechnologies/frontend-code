@@ -7,6 +7,8 @@ export const projectService = {
 
     createAndUpdateProject: (credentials: IProjectPayload): Promise<HCDTRequestResponse> => client.post('/project/save', { ...credentials }),
 
+    reportProject: (projectId: string, data: any): Promise<HCDTRequestResponse> => client.post('/project/report', { projectId, data }),
+
     getById: (projectId: string): Promise<HCDTRequestResponse> => client.get(`/project/project/${projectId}`),
 
     getByTrustId: (trustId: string): Promise<HCDTRequestResponse> => client.get(`/project/project-by-trust/${trustId}`),

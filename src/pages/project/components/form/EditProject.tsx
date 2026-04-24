@@ -17,16 +17,19 @@ const EditProject = observer(() => {
   const method = useForm({
     defaultValues: {
       ...projectStore.projectFormData,
-      projectCategoryId: { value: projectStore.projectFormData.projectCategoryId!, label: projectStore.selectedProject?.projectCategory },
+      projectCategoryId: { value: projectStore.projectFormData.projectCategoryId!, label: projectStore.selectedProject?.projectCategory || "" },
       typeOfWork: projectStore.projectFormData.typeOfWork?.split(",").map((item: string) => ({ value: item, label: item })),
-      projectStatus: { value: projectStore.projectFormData.projectStatus!, label: projectStore.selectedProject?.projectStatusName },
-      qualityRatingId: { value: projectStore.projectFormData.qualityRatingId!, label: projectStore.selectedProject?.qualityRatingName },
+      projectStatus: { value: projectStore.projectFormData.projectStatus!, label: projectStore.selectedProject?.projectStatusName || "" },
+      qualityRatingId: { value: projectStore.projectFormData.qualityRatingId!, label: projectStore.selectedProject?.qualityRatingName || "" },
     },
     shouldUnregister: false,
+    mode: "onChange"
   })
   const { name } = useParams();
   useEffect(() => {
     async function loadRequests() {
+      let selectedTrustId = window.sessionStorage.getItem("selectedTrustId")
+      projectStore.projectFormData.trustId = selectedTrustId as string
       projectStore.getFormSteps()
       await projectStore.getCategory()
       await projectStore.getTypeOfWork()
