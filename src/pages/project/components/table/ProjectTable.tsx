@@ -8,6 +8,10 @@ import { caretDownIcon, checkIcon, filterIcon, sortIcon } from "../../../../asse
 import IMG from "../../../../assets/svgs/dashboardConflictNotFound.svg";
 import { FaEdit } from "react-icons/fa";
 import { authStore as AuthStore } from "../../../auth/store/authStore";
+import { toast } from "react-toastify";
+import { MdDelete } from "react-icons/md";
+import { Modal } from "../../../../components/elements";
+import { DeleteProjectModal } from "../modal/DeleteProjectModal";
 
 const ProjectStoreCTX = createContext(ProjectStore)
 const authStoreCTX = createContext(AuthStore)
@@ -25,6 +29,8 @@ const ProjectTable = observer(() => {
     }, []);
 
     const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+    const [projectToDelete, setProjectToDelete] = useState<IProjectView | null>(null);
 
     const handleView = useCallback(async (project: IProjectView) => {
         // console.log(`Approved user : ${project}`);
@@ -91,6 +97,22 @@ const ProjectTable = observer(() => {
 
     }, []);
 
+    const handleDelete = useCallback(async (project: IProjectView) => {
+        setProjectToDelete(project);
+        setIsDeleteDialogOpen(true);
+    }, []);
+
+    const confirmDelete = async () => {
+        if (!projectToDelete) return;
+        try {
+            await projectStore.deleteProject(projectToDelete.projectId);
+            toast.success("Project deleted successfully");
+            setIsDeleteDialogOpen(false);
+            setProjectToDelete(null);
+        } catch (error: any) {
+            toast.error(error?.response?.body?.message || "Failed to delete project");
+        }
+    };
 
     // Define columns with memoization
     const columns = useMemo(
@@ -160,6 +182,14 @@ const ProjectTable = observer(() => {
                                             onClick={() => handleReport(economicImpact)} // Add your Report handler
                                         />
                                     )}
+                                    {(authStore.user.role == "SUPER ADMIN" || authStore.user.role == "ADMIN") && (
+                                        <Tag
+                                            label="Delete"
+                                            type="default"
+                                            icon={<MdDelete className="text-red-500" />}
+                                            onClick={() => handleDelete(economicImpact)} // Add your Delete handler
+                                        />
+                                    )}
                                 </div>
                             )}
                         </Observer>
@@ -223,6 +253,20 @@ const ProjectTable = observer(() => {
                     />
                 )}
             </>
+
+            {isDeleteDialogOpen && projectToDelete && (
+                <Modal
+                    close={() => setIsDeleteDialogOpen(false)}
+                    body={
+                        <DeleteProjectModal
+                            projectTitle={projectToDelete.projectTitle as string}
+                            onDelete={confirmDelete}
+                            onClose={() => setIsDeleteDialogOpen(false)}
+                            isDeleting={projectStore.isSaving}
+                        />
+                    }
+                />
+            )}
         </div>
     );
 });

@@ -9,7 +9,7 @@ import "react-datepicker/dist/react-datepicker.css";
 
 
 const ProjectStoreCTX = createContext(ProjectStore);
-const ProjectFirstForm = observer(({ method }: { method: any }) => {
+const ProjectFirstForm = observer(({ method, onSave }: { method: any, onSave?: () => void }) => {
     const projectStore = useContext(ProjectStoreCTX);
     const { control, register, handleSubmit, formState: { errors }, watch } = method;
 
@@ -33,9 +33,14 @@ const ProjectFirstForm = observer(({ method }: { method: any }) => {
 
         //save to store
         projectStore.projectFormData = projectFormData
-        projectStore.isSaving = false
-        //move to the next form
-        projectStore.setCompletedTab();
+        
+        if (onSave) {
+            onSave()
+        } else {
+            projectStore.isSaving = false
+            //move to the next form
+            projectStore.setCompletedTab();
+        }
     };
 
 
@@ -173,7 +178,7 @@ const ProjectFirstForm = observer(({ method }: { method: any }) => {
                     {/* Submit Button */}
                     <Button
                         type="submit"
-                        buttonText={projectStore.isSaving ? "Saving data..." : "Next"}
+                        buttonText={projectStore.isSaving ? "Saving data..." : onSave ? "Submit" : "Next"}
                         className="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
 
                     />

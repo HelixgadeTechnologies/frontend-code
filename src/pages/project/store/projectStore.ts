@@ -192,6 +192,21 @@ class ProjectStore implements IProjectStore {
         }
     }
 
+    async deleteProject(projectId: string): Promise<boolean> {
+        try {
+            this.isSaving = true;
+            await projectService.deleteProject(projectId);
+            let selectedTrustId = window.sessionStorage.getItem("selectedTrustId")
+            await this.getProjects(selectedTrustId || "");
+            await this.getProjectDashboardByTrustId(selectedTrustId || "ALL", 0, "ALL", "ALL")
+            return true;
+        } catch (error) {
+            throw error;
+        } finally {
+            this.isSaving = false;
+        }
+    }
+
     async getCategory(): Promise<boolean> {
         try {
             if ([...this.projectCategories.values()].length == 0) {

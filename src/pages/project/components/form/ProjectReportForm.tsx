@@ -26,6 +26,7 @@ const ProjectReportForm = observer(() => {
     const { control, register, handleSubmit, formState: { errors }, reset } = method;
 
     useEffect(() => {
+        projectStore.isSaving = false; // Reset stale loading state on mount
         async function loadRequests() {
             await projectStore.getCategory()
             await projectStore.getTypeOfWork()

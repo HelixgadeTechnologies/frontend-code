@@ -9,6 +9,8 @@ export const projectService = {
 
     reportProject: (projectId: string, data: any): Promise<HCDTRequestResponse> => client.post('/project/report', { projectId, data }),
 
+    deleteProject: (projectId: string): Promise<HCDTRequestResponse> => client.post(`/project/delete/${projectId}`, {}),
+
     getById: (projectId: string): Promise<HCDTRequestResponse> => client.get(`/project/project/${projectId}`),
 
     getByTrustId: (trustId: string): Promise<HCDTRequestResponse> => client.get(`/project/project-by-trust/${trustId}`),
