@@ -288,7 +288,6 @@ const DashboardPage: React.FC = observer(() => {
       },
     ],
   };
-
   const FundsData = {
     labels:
       dashboardStore.dashboardData?.FUNDS_DISTRIBUTION_PERCENTAGE
