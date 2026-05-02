@@ -1,5 +1,5 @@
 import React, { createContext, ReactNode, useCallback, useContext, useEffect, useState } from "react";
-import { NavLink, useLocation, useSearchParams } from "react-router-dom";
+import { NavLink, Link, useLocation, useSearchParams } from "react-router-dom";
 import EntryDashboardHeader from "../../../components/layouts/EntryDashboardHeader";
 import { dashboardStore as DashboardStore } from "./../store/dashboardStore"
 import { economicImpactStore as EconomicImpactStore } from "../../EconomicImpact/store/economicImpactStore";
@@ -24,7 +24,7 @@ import GeneralSatisfactionModel from "../../communitySatisfaction/components/mod
 import GeneralImpact from "../../EconomicImpact/components/chart/GeneralImpact";
 
 interface LayoutProps {
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 const DashboardStoreCTX = createContext(DashboardStore)
@@ -103,7 +103,7 @@ const EntryDashboard: React.FC<LayoutProps> = observer(({ children }) => {
   return (
     <div className="h-screen bg-gray-50 flex flex-col overflow-hidden">
       {/* EntryDashboardHeader uses simple routing now */}
-      <EntryDashboardHeader />
+      <EntryDashboardHeader onMenuClick={() => setSidebarOpen(true)} />
 
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar */}
@@ -219,6 +219,45 @@ const Sidebar: React.FC<SidebarProps> = ({
       </div>
       <div className="flex-1 flex flex-col py-4 overflow-y-auto">
         <nav className="flex flex-col gap-1 px-3">
+          {/* Header links visible only on mobile */}
+          <div className="block lg:hidden mb-4 border-b border-gray-100 pb-4">
+            <a
+              href="https://hcdtmonitor.org/"
+              className="flex items-center px-4 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-blue-600 transition-all duration-200"
+              onClick={() => setSidebarOpen(false)}
+            >
+              Home
+            </a>
+            <a
+              href="https://hcdtmonitor.org/about"
+              className="flex items-center px-4 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-blue-600 transition-all duration-200"
+              onClick={() => setSidebarOpen(false)}
+            >
+              About
+            </a>
+            <Link
+              to="/"
+              className="flex items-center px-4 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-blue-600 transition-all duration-200"
+              onClick={() => setSidebarOpen(false)}
+            >
+              Aggregated Dashboard
+            </Link>
+            <Link
+              to="/trusts"
+              className="flex items-center px-4 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-blue-600 transition-all duration-200"
+              onClick={() => setSidebarOpen(false)}
+            >
+              Trust Dashboard
+            </Link>
+            <a
+              href="https://hcdtmonitor.org/contact"
+              className="flex items-center px-4 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-blue-600 transition-all duration-200"
+              onClick={() => setSidebarOpen(false)}
+            >
+              Contact
+            </a>
+          </div>
+
           {navData.map((route) => (
             <div key={route.link}>
               <NavLink

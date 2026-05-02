@@ -7,7 +7,11 @@ const INACTIVE_CLS = "text-gray-600 hover:text-[#003B99] font-bold text-lg lg:te
 const MOBILE_ACTIVE_CLS = "block text-[#003B99] font-bold text-lg";
 const MOBILE_INACTIVE_CLS = "block text-gray-600 font-bold text-lg";
 
-const EntryDashboardHeader = () => {
+interface EntryDashboardHeaderProps {
+  onMenuClick?: () => void;
+}
+
+const EntryDashboardHeader = ({ onMenuClick }: EntryDashboardHeaderProps = {}) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
 
@@ -128,8 +132,11 @@ const EntryDashboardHeader = () => {
 
             {/* Mobile menu button */}
             <div className="md:hidden flex items-center">
-              <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-gray-700 p-2">
-                {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+              <button 
+                onClick={() => onMenuClick ? onMenuClick() : setIsMenuOpen(!isMenuOpen)} 
+                className="text-gray-700 p-2"
+              >
+                {isMenuOpen && !onMenuClick ? <X size={28} /> : <Menu size={28} />}
               </button>
             </div>
           </div>
@@ -137,7 +144,7 @@ const EntryDashboardHeader = () => {
       </nav>
 
       {/* Mobile Menu */}
-      {isMenuOpen && (
+      {isMenuOpen && !onMenuClick && (
         <div className="md:hidden bg-white border-t border-gray-200">
           <div className="px-4 py-4 space-y-4">
             {links.map((link, idx) => renderNavLink(link, idx, true))}

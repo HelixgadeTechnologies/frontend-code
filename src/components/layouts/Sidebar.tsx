@@ -40,15 +40,15 @@ const Sidebar = observer(() => {
 
     >
       {/* <div className=" font-bold text-4xl text-primary-300">I-HCDT-M</div> */}
-      <div className="flex items-center justify-between px-6 py-4 border-b">
-        <div
+      <div className="flex items-center justify-between px-6 py-4">
+        {/* <div
           className="text-xl lg:text-2xl font-bold relative w-fit cursor-pointer"
         >
           <span className="text-2xl font-bold text-black block">I-HCDT</span>
           <span className="text-xs block text-[#003B99] mt-1 tracking-widest">
             Monitor
           </span>
-        </div>
+        </div> */}
         <button
           className="lg:hidden text-gray-500"
           onClick={() => authStore.sidebarOpen = false}
@@ -59,6 +59,45 @@ const Sidebar = observer(() => {
       {/* <p className="text-gray-500 text-lg text-[##003B99]" >monitor</p> */}
       <div className="flex-1 flex flex-col justify-between py-8">
         <div>
+          {/* Header links visible only on mobile */}
+          <div className="block lg:hidden mb-6 border-b border-gray-100 pb-4">
+            <a
+              href="https://hcdtmonitor.org/"
+              className="block hover:bg-primary-200/20 rounded transition-all px-4 py-3 text-sm font-bold text-gray-600"
+              onClick={() => authStore.sidebarOpen = false}
+            >
+              Home
+            </a>
+            <a
+              href="https://hcdtmonitor.org/about"
+              className="block hover:bg-primary-200/20 rounded transition-all px-4 py-3 text-sm font-bold text-gray-600"
+              onClick={() => authStore.sidebarOpen = false}
+            >
+              About
+            </a>
+            <Link
+              to="/"
+              className="block hover:bg-primary-200/20 rounded transition-all px-4 py-3 text-sm font-bold text-gray-600"
+              onClick={() => authStore.sidebarOpen = false}
+            >
+              Aggregated Dashboard
+            </Link>
+            <Link
+              to="/trusts"
+              className="block hover:bg-primary-200/20 rounded transition-all px-4 py-3 text-sm font-bold text-gray-600"
+              onClick={() => authStore.sidebarOpen = false}
+            >
+              Trust Dashboard
+            </Link>
+            <a
+              href="https://hcdtmonitor.org/contact"
+              className="block hover:bg-primary-200/20 rounded transition-all px-4 py-3 text-sm font-bold text-gray-600"
+              onClick={() => authStore.sidebarOpen = false}
+            >
+              Contact
+            </a>
+          </div>
+
           {routes.slice(0, 2).map((route) => (
             <>
               <Link
