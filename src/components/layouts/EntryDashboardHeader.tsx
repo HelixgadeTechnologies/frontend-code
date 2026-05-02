@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { useCookies } from "react-cookie";
 
@@ -15,7 +15,7 @@ interface EntryDashboardHeaderProps {
 const EntryDashboardHeader = ({ onMenuClick }: EntryDashboardHeaderProps = {}) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [, removeCookie] = useCookies(["hcdt_admin"]);
 
   const handleLogout = () => {
