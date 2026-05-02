@@ -4,3 +4,4 @@ export { default as PageHeader } from "./PageHeader";
 export { default as RoutedTabs } from "./RoutedTabs";
 export { default as TrustHeader } from "./TrustHeader";
 export { default as TrustSidebar } from "./TrustSidebar";
+export { default as EntryDashboardHeader } from "./EntryDashboardHeader";

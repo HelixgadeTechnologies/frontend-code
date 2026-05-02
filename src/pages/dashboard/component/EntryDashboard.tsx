@@ -1,5 +1,6 @@
 import React, { createContext, ReactNode, useCallback, useContext, useEffect, useState } from "react";
 import { Link, NavLink, useLocation, useSearchParams } from "react-router-dom";
+import EntryDashboardHeader from "../../../components/layouts/EntryDashboardHeader";
 import { dashboardStore as DashboardStore } from "./../store/dashboardStore"
 import { economicImpactStore as EconomicImpactStore } from "../../EconomicImpact/store/economicImpactStore";
 import { satisfactionStore as SatisfactionStore } from "../../communitySatisfaction/store/satisfactionStore";
@@ -84,66 +85,21 @@ const EntryDashboard: React.FC<LayoutProps> = observer(({ children }) => {
   }, [dashboardStore]);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      {/* Redesigned Header */}
-      <header className="w-full sticky top-0 z-40 flex flex-col shadow-sm bg-white" style={{ minHeight: "106px" }}>
-        {/* Top Tier */}
-        <div className="bg-[#002060] text-white px-4 lg:px-8 flex items-center justify-between py-2 lg:py-0 lg:h-[34px]">
-          <div className="flex-1 text-center text-sm lg:text-base font-bold tracking-[0.05em] uppercase leading-tight lg:leading-normal">
-            INDEPENDENT HOST COMMUNITY DEVELOPMENT TRUST MONITORING AND EVALUATION PLATFORM
-          </div>
-          <div className="flex items-center gap-3 ml-4 shrink-0">
-            <Link
-              to={`/auth/${1}`}
-              className="text-[10px] lg:text-xs font-semibold px-3 py-1 rounded hover:bg-white/10 transition uppercase tracking-wider"
-            >
-              Login
-            </Link>
-            <Link
-              to={`/auth/${2}`}
-              className="text-[10px] lg:text-xs font-semibold px-4 py-1 bg-[#1671D9] text-white rounded hover:bg-blue-600 transition uppercase tracking-wider"
-            >
-              Sign Up Free
-            </Link>
-          </div>
-        </div>
+    <div className="h-screen bg-gray-50 flex flex-col overflow-hidden">
+      {/* Entry Dashboard Header */}
+      <EntryDashboardHeader
+        onAggregatedClick={() => selectTab(0)}
+        onTrustClick={() => selectTab(1)}
+        activeNavKey={
+          dashboardStore.selectedTab === 0
+            ? "aggregated"
+            : dashboardStore.selectedTab === 1
+            ? "trust"
+            : undefined
+        }
+      />
 
-        {/* Bottom Tier */}
-        <div className="bg-[#E9E9E9] px-4 lg:px-12 flex items-center justify-between border-b border-gray-300" style={{ height: "72px" }}>
-          <div
-            onClick={() => window.location.href = "https://hcdtmonitor.org"}
-            className="cursor-pointer flex flex-col leading-none shrink-0"
-          >
-            <span className="text-xl lg:text-2xl font-bold text-black">I-HCDT</span>
-            <span className="text-[9px] lg:text-[10px] font-bold text-[#003B99] tracking-[0.2em] uppercase mt-1">
-              Monitor
-            </span>
-          </div>
-
-          <div className="flex items-center gap-4 lg:gap-8 ml-auto">
-            <nav className="flex items-center gap-3 lg:gap-8">
-              <a href="https://hcdtmonitor.org/" className="text-gray-700 hover:text-blue-700 font-medium transition text-[11px] lg:text-sm whitespace-nowrap">Home</a>
-              <a href="https://hcdtmonitor.org/about" className="text-gray-700 hover:text-blue-700 font-medium transition text-[11px] lg:text-sm whitespace-nowrap">About</a>
-              <button
-                onClick={() => selectTab(0)}
-                className={`font-medium transition pb-1 text-[11px] lg:text-sm whitespace-nowrap ${dashboardStore.selectedTab === 0 ? "text-blue-700 border-b-2 border-blue-700" : "text-gray-700 hover:text-blue-700"}`}
-              >
-                Aggregated Dashboard
-              </button>
-           
-            </nav>
-
-            <button
-              className="lg:hidden text-2xl"
-              onClick={() => setSidebarOpen(true)}
-            >
-              ☰
-            </button>
-          </div>
-        </div>
-      </header>
-
-      <div className="flex flex-1 relative">
+      <div className="flex flex-1 overflow-hidden">
         {/* Sidebar */}
         <Sidebar
           sidebarOpen={sidebarOpen}
@@ -159,7 +115,7 @@ const EntryDashboard: React.FC<LayoutProps> = observer(({ children }) => {
         />
 
         {/* Main content wrapper */}
-        <div className="flex-1 flex flex-col min-h-screen ml-0 lg:ml-52 w-full min-w-0 overflow-x-hidden">
+        <div className="flex-1 flex flex-col overflow-y-auto w-full min-w-0 overflow-x-hidden">
           {/* Main Content */}
           <main className="flex-1 w-full px-2 sm:px-6 py-4">
           {dashboardStore.selectedTab === 0 && (
@@ -231,10 +187,10 @@ const Sidebar: React.FC<SidebarProps> = ({
 }) => (
   <aside
     className={`
-      fixed inset-y-0 lg:top-[106px] lg:bottom-0 left-0 z-50 bg-white border-r border-gray-200 w-64 lg:w-52
+      fixed inset-y-0 left-0 z-50 bg-white border-r border-gray-200 w-64
       transform transition-transform duration-300 ease-in-out
       ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
-      lg:translate-x-0 lg:h-[calc(100vh-106px)] h-full overflow-hidden flex flex-col
+      lg:relative lg:inset-auto lg:translate-x-0 lg:w-52 lg:h-full overflow-hidden flex flex-col
     `}
   >
     <div className="flex flex-col h-full">
