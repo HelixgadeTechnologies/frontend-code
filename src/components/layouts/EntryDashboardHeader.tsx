@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
+import { useCookies } from "react-cookie";
 
 const ACTIVE_CLS = "text-[#003B99] font-bold text-lg lg:text-xl transition-colors";
 const INACTIVE_CLS = "text-gray-600 hover:text-[#003B99] font-bold text-lg lg:text-xl transition-colors";
@@ -14,6 +15,17 @@ interface EntryDashboardHeaderProps {
 const EntryDashboardHeader = ({ onMenuClick }: EntryDashboardHeaderProps = {}) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const [, removeCookie] = useCookies(["hcdt_admin"]);
+
+  const handleLogout = () => {
+    removeCookie("hcdt_admin", null, { path: "/auth/1" });
+    sessionStorage.removeItem("qrjwt");
+    sessionStorage.removeItem("selectedTrustId");
+    // If we need to go to admin vs normal login, we could decode the JWT
+    // For now, redirect to login and let ProtectedRoute or AuthMasterPage handle it
+    window.location.href = "/auth/1";
+  };
 
   const isActive = (path: string) => {
     if (path === "/" && location.pathname !== "/") return false;
@@ -95,16 +107,27 @@ const EntryDashboardHeader = ({ onMenuClick }: EntryDashboardHeaderProps = {}) =
             </div>
 
             <div className="flex items-center gap-x-2 lg:gap-x-3 mt-2 lg:mt-0">
-              <Link to="/auth/1">
-                <button className="px-4 lg:px-6 py-1.5 lg:py-3 text-xs lg:text-sm font-bold text-white bg-white/20 hover:bg-white/30 rounded transition-all">
-                  Login
+              {sessionStorage.getItem("qrjwt") ? (
+                <button
+                  onClick={handleLogout}
+                  className="px-4 lg:px-6 py-1.5 lg:py-3 text-xs lg:text-sm font-bold text-white bg-red-500 hover:bg-red-600 rounded transition-all"
+                >
+                  Logout
                 </button>
-              </Link>
-              <Link to="/auth/2">
-                <button className="px-4 lg:px-6 py-1.5 lg:py-3 text-xs lg:text-sm font-bold text-white bg-[#1671D9] hover:bg-blue-600 rounded transition-all">
-                  Sign Up Free
-                </button>
-              </Link>
+              ) : (
+                <>
+                  <Link to="/auth/1">
+                    <button className="px-4 lg:px-6 py-1.5 lg:py-3 text-xs lg:text-sm font-bold text-white bg-white/20 hover:bg-white/30 rounded transition-all">
+                      Login
+                    </button>
+                  </Link>
+                  <Link to="/auth/2">
+                    <button className="px-4 lg:px-6 py-1.5 lg:py-3 text-xs lg:text-sm font-bold text-white bg-[#1671D9] hover:bg-blue-600 rounded transition-all">
+                      Sign Up Free
+                    </button>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>

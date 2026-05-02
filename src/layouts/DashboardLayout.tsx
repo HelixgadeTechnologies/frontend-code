@@ -15,7 +15,6 @@ const DashboardLayout = () => {
       <div className="flex flex-1 overflow-hidden">
         <Sidebar />
         <main className="flex-1 h-full overflow-y-auto">
-          <Header />
           <Outlet />
         </main>
       </div>

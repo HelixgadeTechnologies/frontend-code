@@ -36,8 +36,6 @@ const Sidebar = observer(() => {
       h-full bg-white border-r border-gray-5 flex-col w-[272px] py-6 px-4
       transition-transform duration-200
     `}
-      style={{ minHeight: "100vh" }}
-
     >
       {/* <div className=" font-bold text-4xl text-primary-300">I-HCDT-M</div> */}
       <div className="flex items-center justify-between px-6 py-4">
