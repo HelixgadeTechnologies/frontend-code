@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 
-import { Sidebar, Header, EntryDashboardHeader } from "../components/layouts";
+import { Sidebar, EntryDashboardHeader } from "../components/layouts";
 
 import { useContext, createContext } from "react";
 import { authStore as AuthStore } from "../pages/auth/store/authStore";

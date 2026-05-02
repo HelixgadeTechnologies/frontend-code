@@ -4,6 +4,7 @@ import { authStore as AuthStore } from "../store/authStore"
 import { authBg } from "../../../assets/images";
 import AdminLogin from "./AdminLogin";
 import ForgotPasswordA from "./ForgotPasswordA";
+import { EntryDashboardHeader } from "../../../components/layouts";
 
 const AuthStoreCTX = createContext(AuthStore)
 const AdminAuthPage = observer(() => {
