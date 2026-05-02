@@ -1,4 +1,5 @@
 import { observer } from "mobx-react-lite";
+import EntryDashboardHeader from "../../components/layouts/EntryDashboardHeader";
 import { createContext, useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useForm, Controller } from "react-hook-form";
@@ -94,7 +95,9 @@ const ConflictDataForm = observer(() => {
   };
 
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
+      <EntryDashboardHeader />
+      <div className="flex-1">
       {!submitted && (
         <>
           {trustStore.trust?.disableConflictSurvey == 1 && (
@@ -301,7 +304,8 @@ const ConflictDataForm = observer(() => {
       )}
 
 
-    </>
+      </div>
+    </div>
   );
 });
 

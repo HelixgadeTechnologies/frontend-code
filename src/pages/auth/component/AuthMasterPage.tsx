@@ -23,18 +23,19 @@ const AuthMasterPage = observer(() => {
     useEffect(() => {
         async function getInfo() {
             settingStore.getRole();
-            if (option) {
-                await trustStore.getAllTrust()
-                authStore.pageSwitch = Number(option);
-            } else {
-                await trustStore.getAllTrust()
-                authStore.pageSwitch = 1; // Default to Login
-            }
-
+            await trustStore.getAllTrust()
         }
         getInfo();
         return () => { };
     }, []);
+
+    useEffect(() => {
+        if (option) {
+            authStore.pageSwitch = Number(option);
+        } else {
+            authStore.pageSwitch = 1; // Default to Login
+        }
+    }, [option, authStore]);
 
 
     return (

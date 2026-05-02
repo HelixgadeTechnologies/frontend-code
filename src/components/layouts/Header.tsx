@@ -30,12 +30,6 @@ const Header = observer(() => {
   return (
     <header className="bg-white border-b border-gray-5 py-4 pl-4 pr-10 flex items-center justify-between">
       <h1 className="font-semibold  text-black text-lg lg:text-3xl">
-        <button
-          className="lg:hidden mr-4 text-2xl"
-        onClick={() => authStore.sidebarOpen = !authStore.sidebarOpen}
-        >
-          ☰
-        </button>
         {route?.title}
       </h1>
 

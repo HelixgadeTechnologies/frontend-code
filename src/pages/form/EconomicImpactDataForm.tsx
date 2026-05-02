@@ -1,4 +1,5 @@
 import { observer } from "mobx-react-lite";
+import EntryDashboardHeader from "../../components/layouts/EntryDashboardHeader";
 import { createContext, useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
@@ -68,7 +69,9 @@ const EconomicImpactDataForm = observer(() => {
     };
 
     return (
-        <>
+        <div className="flex flex-col min-h-screen">
+            <EntryDashboardHeader />
+            <div className="flex-1">
             {!submitted && (
                 <>
                     {trustStore.trust?.disableEconomicImpactSurvey == 1 && (
@@ -271,7 +274,8 @@ const EconomicImpactDataForm = observer(() => {
             )}
 
 
-        </>
+            </div>
+        </div>
     );
 });
 
