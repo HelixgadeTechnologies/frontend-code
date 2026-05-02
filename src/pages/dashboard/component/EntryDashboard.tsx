@@ -24,7 +24,7 @@ import GeneralSatisfactionModel from "../../communitySatisfaction/components/mod
 import GeneralImpact from "../../EconomicImpact/components/chart/GeneralImpact";
 
 interface LayoutProps {
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 const DashboardStoreCTX = createContext(DashboardStore)

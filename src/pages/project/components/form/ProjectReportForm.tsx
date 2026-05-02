@@ -154,7 +154,7 @@ const ProjectReportForm = observer(() => {
                         </div>
 
                         <FormInput
-                            label="Females employed by contractor"
+                            label="Number ofFemales employed by contractor"
                             name="numberOfFemaleEmployedByContractor"
                             type="number"
                             placeholder="0"
@@ -164,7 +164,7 @@ const ProjectReportForm = observer(() => {
                         />
 
                         <FormInput
-                            label="Males employed by contractor"
+                            label="Number of Males employed by contractor"
                             name="numberOfMaleEmployedByContractor"
                             type="number"
                             placeholder="0"
@@ -211,7 +211,7 @@ const ProjectReportForm = observer(() => {
                         </div>
 
                         <FormInput
-                            label="Community members contracted"
+                            label="Host community members contracted by project"
                             name="numberOfHostCommunityMemberContracted"
                             type="number"
                             placeholder="0"
@@ -221,7 +221,7 @@ const ProjectReportForm = observer(() => {
                         />
 
                         <FormInput
-                            label="Females benefited"
+                            label="Female beneficiary"
                             name="numberOfFemaleBenefited"
                             type="number"
                             placeholder="0"
@@ -231,7 +231,7 @@ const ProjectReportForm = observer(() => {
                         />
 
                         <FormInput
-                            label="Males benefited"
+                            label="Male beneficiary"
                             name="numberOfMaleBenefited"
                             type="number"
                             placeholder="0"
@@ -241,7 +241,7 @@ const ProjectReportForm = observer(() => {
                         />
 
                         <FormInput
-                            label="PwDs benefited"
+                            label="PwDs beneficiary"
                             name="numberOfPwDsBenefited"
                             type="number"
                             placeholder="0"

@@ -1313,7 +1313,7 @@ const DashboardPage: React.FC = observer(() => {
           {/* HCDT Establishment and Governance */}
           <div className="bg-white rounded-xl p-4 shadow flex flex-col gap-2">
             <div className="text-xs text-gray-700 mb-1">
-              Number of HCDTs established by the Nigerian Upstream Petroleum
+              Number of HCDTs incorporated by the Nigerian Upstream Petroleum
               Regulatory Commission (NUPRC)
             </div>
             <div className="flex items-center gap-2">
@@ -1335,7 +1335,7 @@ const DashboardPage: React.FC = observer(() => {
               )}{" "}
               out of{" "}
               {dashboardStore.dashboardData?.COMPLETION_STATUS?.totalTrust ?? 0}{" "}
-              Trusts is fully Established
+              Trusts is fully Incorporated
             </div>
           </div>
           {/* Communities benefiting by state */}
