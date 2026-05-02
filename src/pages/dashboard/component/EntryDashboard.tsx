@@ -84,62 +84,84 @@ const EntryDashboard: React.FC<LayoutProps> = observer(({ children }) => {
   }, [dashboardStore]);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      {/* Sidebar */}
-      <Sidebar
-        sidebarOpen={sidebarOpen}
-        setSidebarOpen={setSidebarOpen}
-        dashboardStore={dashboardStore}
-        selectTab={selectTab}
-        open={open}
-        setOpen={setOpen}
-        location={location}
-        searchParams={searchParams}
-        setSearchParams={setSearchParams}
-        navData={dashboardStore.selectedTab > 1 ? routes2T : routes2}
-      />
-
-      {/* Main content wrapper */}
-      <div className="flex-1 flex flex-col min-h-screen ml-0 lg:ml-52 w-full min-w-0 overflow-x-hidden">
-        {/* Header */}
-        <header className="w-full bg-white shadow-md sticky top-0 z-30 flex items-center px-4 py-3 shrink-0" style={{ height: "85px" }}>
-          <button
-            className="lg:hidden mr-4 text-2xl"
-            onClick={() => setSidebarOpen(true)}
-          >
-            ☰
-          </button>
-          <div className="flex-1 flex items-center justify-between">
-            <div>
-              <div
-                onClick={() => window.location.href = "https://hcdtmonitor.org"}
-                className="text-xl lg:text-2xl font-bold relative w-fit cursor-pointer block lg:hidden"
-              >
-                <span className="text-2xl font-bold text-black block">I-HCDT</span>
-                <span className="text-xs block text-[#003B99] mt-1 tracking-widest">
-                  Monitor
-                </span>
-              </div>
-            </div>
-            <div className="flex items-center space-x-4">
-              <Link
-                to={`/auth/${1}`}
-                className="px-4 py-2 text-sm font-medium text-blue-600 border border-blue-600 rounded hover:bg-blue-50 transition"
-              >
-                Login
-              </Link>
-              <Link
-                to={`/auth/${2}`}
-                className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded hover:bg-blue-700 transition"
-              >
-                Sign Up
-              </Link>
-            </div>
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+      {/* Redesigned Header */}
+      <header className="w-full sticky top-0 z-40 flex flex-col shadow-sm bg-white" style={{ minHeight: "106px" }}>
+        {/* Top Tier */}
+        <div className="bg-[#002060] text-white px-4 lg:px-8 flex items-center justify-between py-2 lg:py-0 lg:h-[34px]">
+          <div className="flex-1 text-center text-sm lg:text-base font-bold tracking-[0.05em] uppercase leading-tight lg:leading-normal">
+            INDEPENDENT HOST COMMUNITY DEVELOPMENT TRUST MONITORING AND EVALUATION PLATFORM
           </div>
-        </header>
+          <div className="flex items-center gap-3 ml-4 shrink-0">
+            <Link
+              to={`/auth/${1}`}
+              className="text-[10px] lg:text-xs font-semibold px-3 py-1 rounded hover:bg-white/10 transition uppercase tracking-wider"
+            >
+              Login
+            </Link>
+            <Link
+              to={`/auth/${2}`}
+              className="text-[10px] lg:text-xs font-semibold px-4 py-1 bg-[#1671D9] text-white rounded hover:bg-blue-600 transition uppercase tracking-wider"
+            >
+              Sign Up Free
+            </Link>
+          </div>
+        </div>
 
-        {/* Main Content */}
-        <main className="flex-1 w-full px-2 sm:px-6 py-2">
+        {/* Bottom Tier */}
+        <div className="bg-[#E9E9E9] px-4 lg:px-12 flex items-center justify-between border-b border-gray-300" style={{ height: "72px" }}>
+          <div
+            onClick={() => window.location.href = "https://hcdtmonitor.org"}
+            className="cursor-pointer flex flex-col leading-none shrink-0"
+          >
+            <span className="text-xl lg:text-2xl font-bold text-black">I-HCDT</span>
+            <span className="text-[9px] lg:text-[10px] font-bold text-[#003B99] tracking-[0.2em] uppercase mt-1">
+              Monitor
+            </span>
+          </div>
+
+          <div className="flex items-center gap-4 lg:gap-8 ml-auto">
+            <nav className="flex items-center gap-3 lg:gap-8">
+              <a href="https://hcdtmonitor.org/" className="text-gray-700 hover:text-blue-700 font-medium transition text-[11px] lg:text-sm whitespace-nowrap">Home</a>
+              <a href="https://hcdtmonitor.org/about" className="text-gray-700 hover:text-blue-700 font-medium transition text-[11px] lg:text-sm whitespace-nowrap">About</a>
+              <button
+                onClick={() => selectTab(0)}
+                className={`font-medium transition pb-1 text-[11px] lg:text-sm whitespace-nowrap ${dashboardStore.selectedTab === 0 ? "text-blue-700 border-b-2 border-blue-700" : "text-gray-700 hover:text-blue-700"}`}
+              >
+                Aggregated Dashboard
+              </button>
+           
+            </nav>
+
+            <button
+              className="lg:hidden text-2xl"
+              onClick={() => setSidebarOpen(true)}
+            >
+              ☰
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <div className="flex flex-1 relative">
+        {/* Sidebar */}
+        <Sidebar
+          sidebarOpen={sidebarOpen}
+          setSidebarOpen={setSidebarOpen}
+          dashboardStore={dashboardStore}
+          selectTab={selectTab}
+          open={open}
+          setOpen={setOpen}
+          location={location}
+          searchParams={searchParams}
+          setSearchParams={setSearchParams}
+          navData={dashboardStore.selectedTab > 1 ? routes2T : routes2}
+        />
+
+        {/* Main content wrapper */}
+        <div className="flex-1 flex flex-col min-h-screen ml-0 lg:ml-52 w-full min-w-0 overflow-x-hidden">
+          {/* Main Content */}
+          <main className="flex-1 w-full px-2 sm:px-6 py-4">
           {dashboardStore.selectedTab === 0 && (
             <>
               {dashboardStore.isLoading || settingStore.isLoading ? (
@@ -167,6 +189,7 @@ const EntryDashboard: React.FC<LayoutProps> = observer(({ children }) => {
 
           {dashboardStore.selectedTab === 6 && (<GeneralImpact economicImpactStore={economicImpactStore} />)}
         </main>
+        </div>
       </div>
 
       {/* Mobile sidebar overlay */}
@@ -208,20 +231,20 @@ const Sidebar: React.FC<SidebarProps> = ({
 }) => (
   <aside
     className={`
-      fixed inset-y-0 left-0 z-50 bg-white shadow-lg w-64 lg:w-52
+      fixed inset-y-0 lg:top-[106px] lg:bottom-0 left-0 z-50 bg-white border-r border-gray-200 w-64 lg:w-52
       transform transition-transform duration-300 ease-in-out
       ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
-      lg:translate-x-0 h-full overflow-hidden flex flex-col
+      lg:translate-x-0 lg:h-[calc(100vh-106px)] h-full overflow-hidden flex flex-col
     `}
   >
     <div className="flex flex-col h-full">
-      <div className="flex items-center justify-between px-6 py-4 border-b">
+      <div className="flex items-center justify-between px-6 py-4 border-b lg:hidden">
         <div
           onClick={() => window.location.href = "https://hcdtmonitor.org"}
           className="text-xl lg:text-2xl font-bold relative w-fit cursor-pointer"
         >
           <span className="text-2xl font-bold text-black block">I-HCDT</span>
-          <span className="text-xs block text-[#003B99] mt-1 tracking-widest">
+          <span className="text-[10px] block text-[#003B99] mt-1 tracking-[0.2em] uppercase">
             Monitor
           </span>
         </div>
@@ -232,16 +255,16 @@ const Sidebar: React.FC<SidebarProps> = ({
           ✕
         </button>
       </div>
-      <div className="flex-1 flex flex-col py-8 overflow-y-auto">
-        <nav className="flex flex-col gap-1 px-4">
+      <div className="flex-1 flex flex-col py-4 overflow-y-auto">
+        <nav className="flex flex-col gap-1 px-3">
           {navData.map((route) => (
             <div key={route.link}>
               <NavLink
                 to="#"
                 className={
                   dashboardStore.selectedTab === route.link
-                    ? "flex items-center px-4 py-2 rounded bg-blue-50 text-blue-700 font-semibold transition"
-                    : "flex items-center px-4 py-2 rounded text-gray-700 hover:bg-gray-100 transition"
+                    ? "flex items-center px-4 py-2.5 rounded-lg bg-blue-50 text-blue-700 font-semibold transition-all duration-200 shadow-sm border border-blue-100"
+                    : "flex items-center px-4 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-blue-600 transition-all duration-200"
                 }
                 onClick={() => {
                   selectTab(route.link);
@@ -252,7 +275,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 <span className="text-sm font-medium">{route.name}</span>
                 {route.children && route.children.length > 0 && (
                   <svg
-                    className={`ml-auto w-4 h-4 transition-transform ${open === route.id ? "rotate-90" : ""}`}
+                    className={`ml-auto w-4 h-4 transition-transform duration-200 ${open === route.id ? "rotate-90" : ""}`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
