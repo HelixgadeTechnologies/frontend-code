@@ -1218,16 +1218,18 @@ const GeneralDashboard: React.FC = observer(() => {
                       Select Trust
                     </label>
                     <select
-                      className="border border-gray-300 rounded px-4 py-2 w-full sm:w-40 focus:outline-none focus:ring-2 focus:ring-primary-200 bg-white text-gray-700"
+                      className="border border-gray-300 rounded px-4 py-2 w-full sm:w-40 focus:outline-none focus:ring-2 focus:ring-primary-200 bg-white text-gray-700 truncate"
                       value={dashboardStore.selectedTrust}
-                      onChange={(e) => selectTrust(e.target.value)}>
+                      onChange={(e) => selectTrust(e.target.value)}
+                      title={dashboardStore.selectedTrust === "ALL" ? "ALL" : trustStore.allTrustList.get(dashboardStore.selectedTrust)?.trustName}
+                    >
                       <option key="ALL" value="ALL">
                         ALL
                       </option>
                       {[...trustStore.allTrustList.values()].map(
                         (v: ITrustList) => (
-                          <option key={v.trustName} value={v.trustId}>
-                            {v.trustName}
+                          <option key={v.trustName} value={v.trustId} title={v.trustName}>
+                            {v.trustName.length > 35 ? v.trustName.substring(0, 35) + "..." : v.trustName}
                           </option>
                         )
                       )}
@@ -1244,16 +1246,18 @@ const GeneralDashboard: React.FC = observer(() => {
                       Select Settlor
                     </label>
                     <select
-                      className="border border-gray-300 rounded px-4 py-2 w-full sm:w-40 focus:outline-none focus:ring-2 focus:ring-primary-200 bg-white text-gray-700"
+                      className="border border-gray-300 rounded px-4 py-2 w-full sm:w-40 focus:outline-none focus:ring-2 focus:ring-primary-200 bg-white text-gray-700 truncate"
                       value={dashboardStore.selectedSettlor}
-                      onChange={(e) => selectSettlor(e.target.value)}>
+                      onChange={(e) => selectSettlor(e.target.value)}
+                      title={dashboardStore.selectedSettlor}
+                    >
                       <option key="ALL" value="ALL">
                         ALL
                       </option>
                       {[...settingStore.allSettlor.values()].map(
                         (v: ISettlor) => (
-                          <option key={v.settlorName} value={v.settlorName}>
-                            {v.settlorName}
+                          <option key={v.settlorName} value={v.settlorName} title={v.settlorName}>
+                            {v.settlorName.length > 35 ? v.settlorName.substring(0, 35) + "..." : v.settlorName}
                           </option>
                         )
                       )}
@@ -1270,11 +1274,13 @@ const GeneralDashboard: React.FC = observer(() => {
                       Select State
                     </label>
                     <select
-                      className="border border-gray-300 rounded px-4 py-2 w-full sm:w-40 focus:outline-none focus:ring-2 focus:ring-primary-200 bg-white text-gray-700"
+                      className="border border-gray-300 rounded px-4 py-2 w-full sm:w-40 focus:outline-none focus:ring-2 focus:ring-primary-200 bg-white text-gray-700 truncate"
                       value={dashboardStore.selectedState}
-                      onChange={(e) => selectState(e.target.value)}>
+                      onChange={(e) => selectState(e.target.value)}
+                      title={dashboardStore.selectedState}
+                    >
                       {[...trustStore.allStates.values()].map((s: string) => (
-                        <option key={s} value={s}>
+                        <option key={s} value={s} title={s}>
                           {s}
                         </option>
                       ))}
@@ -1288,9 +1294,11 @@ const GeneralDashboard: React.FC = observer(() => {
                 Select Year
               </label>
               <select
-                className="border border-gray-300 rounded px-4 py-2 w-full sm:w-32 focus:outline-none focus:ring-2 focus:ring-primary-200 bg-white text-gray-700"
+                className="border border-gray-300 rounded px-4 py-2 w-full sm:w-32 focus:outline-none focus:ring-2 focus:ring-primary-200 bg-white text-gray-700 truncate"
                 value={dashboardStore.selectedYear}
-                onChange={(e) => setSelectedYear(e.target.value)}>
+                onChange={(e) => setSelectedYear(e.target.value)}
+                title={String(dashboardStore.selectedYear)}
+              >
                 {year.map((year) => (
                   <option key={year.value} value={year.value}>
                     {year.label}
