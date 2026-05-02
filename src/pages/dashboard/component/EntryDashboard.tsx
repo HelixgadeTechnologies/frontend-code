@@ -1,5 +1,5 @@
 import React, { createContext, ReactNode, useCallback, useContext, useEffect, useState } from "react";
-import { Link, NavLink, useLocation, useSearchParams } from "react-router-dom";
+import { NavLink, useLocation, useSearchParams } from "react-router-dom";
 import EntryDashboardHeader from "../../../components/layouts/EntryDashboardHeader";
 import { dashboardStore as DashboardStore } from "./../store/dashboardStore"
 import { economicImpactStore as EconomicImpactStore } from "../../EconomicImpact/store/economicImpactStore";
@@ -75,10 +75,26 @@ const EntryDashboard: React.FC<LayoutProps> = observer(({ children }) => {
       await settingStore.getAllSettlor();
       await trustStore.getAllTrust();
       dashboardStore.isLoading = false;
+
+      // Sync initial tab based on route
+      if (location.pathname === "/trusts") {
+        dashboardStore.selectedTab = 1;
+      } else if (location.pathname === "/") {
+        dashboardStore.selectedTab = 0;
+      }
     }
     getInfo();
     return () => { };
-  }, [dashboardStore, settingStore, trustStore, economicImpactStore, satisfactionStore, conflictStore, projectStore]);
+  }, [dashboardStore, settingStore, trustStore, economicImpactStore, satisfactionStore, conflictStore, projectStore, location.pathname]);
+
+  // Sync tab when route changes without remounting
+  useEffect(() => {
+    if (location.pathname === "/trusts") {
+      dashboardStore.selectedTab = 1;
+    } else if (location.pathname === "/") {
+      dashboardStore.selectedTab = 0;
+    }
+  }, [location.pathname, dashboardStore]);
 
   const selectTab = useCallback((v: number) => {
     dashboardStore.selectedTab = v;
@@ -86,18 +102,8 @@ const EntryDashboard: React.FC<LayoutProps> = observer(({ children }) => {
 
   return (
     <div className="h-screen bg-gray-50 flex flex-col overflow-hidden">
-      {/* Entry Dashboard Header */}
-      <EntryDashboardHeader
-        onAggregatedClick={() => selectTab(0)}
-        onTrustClick={() => selectTab(1)}
-        activeNavKey={
-          dashboardStore.selectedTab === 0
-            ? "aggregated"
-            : dashboardStore.selectedTab === 1
-            ? "trust"
-            : undefined
-        }
-      />
+      {/* EntryDashboardHeader uses simple routing now */}
+      <EntryDashboardHeader />
 
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar */}

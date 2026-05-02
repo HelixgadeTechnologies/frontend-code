@@ -29,6 +29,7 @@ function App() {
           <Route path="/trust/:name/:id/*" element={<TrustDashboard />} />
         </Route>
         <Route path="/" element={<EntryDashboard><GeneralDashboard /></EntryDashboard>} />
+        <Route path="/trusts" element={<EntryDashboard />} />
         <Route path="/auth/:option" element={<AuthMasterPage />} />
         <Route path="/auth/admin" element={<AdminAuthPage />} />
         <Route path="/conflict/:trustId" element={<ConflictDataForm />} />

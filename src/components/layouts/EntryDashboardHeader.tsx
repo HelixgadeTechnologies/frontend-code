@@ -2,37 +2,25 @@ import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 
-interface EntryDashboardHeaderProps {
-  /** Called when "Aggregated Dashboard" is clicked. If omitted, the link is a plain anchor. */
-  onAggregatedClick?: () => void;
-  /** Called when "Trust Dashboard" is clicked. If omitted, the link is a plain anchor. */
-  onTrustClick?: () => void;
-  /** Highlights the matching nav item ('aggregated' | 'trust') regardless of URL. */
-  activeNavKey?: "aggregated" | "trust";
-}
-
 const ACTIVE_CLS = "text-[#003B99] font-bold text-lg lg:text-xl transition-colors";
 const INACTIVE_CLS = "text-gray-600 hover:text-[#003B99] font-bold text-lg lg:text-xl transition-colors";
 const MOBILE_ACTIVE_CLS = "block text-[#003B99] font-bold text-lg";
 const MOBILE_INACTIVE_CLS = "block text-gray-600 font-bold text-lg";
 
-const EntryDashboardHeader = ({
-  onAggregatedClick,
-  onTrustClick,
-  activeNavKey,
-}: EntryDashboardHeaderProps) => {
+const EntryDashboardHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
 
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path: string) => {
+    if (path === "/" && location.pathname !== "/") return false;
+    return location.pathname === path;
+  };
 
-  const getLinkClasses = (path: string, navKey?: string) => {
-    if (navKey && activeNavKey) return navKey === activeNavKey ? ACTIVE_CLS : INACTIVE_CLS;
+  const getLinkClasses = (path: string) => {
     return isActive(path) ? ACTIVE_CLS : INACTIVE_CLS;
   };
 
-  const getMobileLinkClasses = (path: string, navKey?: string) => {
-    if (navKey && activeNavKey) return navKey === activeNavKey ? MOBILE_ACTIVE_CLS : MOBILE_INACTIVE_CLS;
+  const getMobileLinkClasses = (path: string) => {
     return isActive(path) ? MOBILE_ACTIVE_CLS : MOBILE_INACTIVE_CLS;
   };
 
@@ -40,50 +28,27 @@ const EntryDashboardHeader = ({
     href: string;
     title: string;
     external?: boolean;
-    navKey?: string;
-    onClick?: () => void;
   }
 
   const links: LinkItem[] = [
-    { href: "https://hcdtmonitor.org/", title: "Home" },
-    { href: "https://hcdtmonitor.org/about", title: "About" },
+    { href: "https://hcdtmonitor.org/", title: "Home", external: true },
+    { href: "https://hcdtmonitor.org/about", title: "About", external: true },
     {
       href: "/",
       title: "Aggregated Dashboard",
-      navKey: "aggregated",
-      onClick: onAggregatedClick,
-      external: !onAggregatedClick,
     },
     {
-      href: "/",
+      href: "/trusts",
       title: "Trust Dashboard",
-      navKey: "trust",
-      onClick: onTrustClick,
-      external: !onTrustClick,
     },
-    { href: "https://hcdtmonitor.org/contact", title: "Contact" },
+    { href: "https://hcdtmonitor.org/contact", title: "Contact", external: true },
   ];
 
   const renderNavLink = (link: LinkItem, idx: number, mobile = false) => {
     const cls = mobile
-      ? getMobileLinkClasses(link.href, link.navKey)
-      : getLinkClasses(link.href, link.navKey);
+      ? getMobileLinkClasses(link.href)
+      : getLinkClasses(link.href);
 
-    const handleClick = () => {
-      if (link.onClick) link.onClick();
-      if (mobile) setIsMenuOpen(false);
-    };
-
-    // State-switching button (Aggregated / Trust Dashboard when callbacks provided)
-    if (link.onClick) {
-      return (
-        <button key={idx} onClick={handleClick} className={cls}>
-          {link.title}
-        </button>
-      );
-    }
-
-    // External anchor
     if (link.external) {
       return (
         <a
@@ -147,7 +112,7 @@ const EntryDashboardHeader = ({
             {/* Logo */}
             <div className="flex-shrink-0 flex items-center">
               <Link to="/" className="flex flex-col">
-                <span className="text-2xl lg:text-3xl font-black text-black leading-none">
+                <span className="text-2xl lg:text-3xl font-bold text-black leading-none">
                   I-HCDT
                 </span>
                 <span className="text-xs lg:text-sm font-bold text-[#003B99] tracking-[0.2em] uppercase">
