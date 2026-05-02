@@ -1337,7 +1337,7 @@ const GeneralDashboard: React.FC = observer(() => {
                 {dashboardStore.dashboardData?.FIELDS_COMPLETION}%
               </span>
             </div>
-            <div className="text-xs text-gray-500 mt-1">
+            <div className="text-sm font-bold text-gray-900 mt-2">
               {calculateEstablishedTrusts(
                 dashboardStore.dashboardData?.FIELDS_COMPLETION as number,
                 dashboardStore.dashboardData?.COMPLETION_STATUS
