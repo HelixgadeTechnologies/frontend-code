@@ -1,10 +1,11 @@
-import { makeAutoObservable, ObservableMap, toJS } from "mobx"
-import { IStateAndLGA, ISurveyTypePayload, ITrust, ITrustList, ITrustPayload, ITrustPayloadData, ITrustStore, IUploadResponse, IUploadValidationResponse } from "../types/interface";
-import { trustService } from "../service/trustService";
+import { makeAutoObservable, ObservableMap, toJS } from "mobx";
+import data from "../../../utils/stateAndLg.json";
 import { TabType } from "../../project/types/interface";
-import data from "../../../utils/stateAndLg.json"
+import { trustService } from "../service/trustService";
+import { IStateAndLGA, ISurveyTypePayload, ITrust, ITrustList, ITrustPayload, ITrustPayloadData, ITrustStore, IUploadResponse, IUploadValidationResponse } from "../types/interface";
 class TrustStore implements ITrustStore {
     isLoading = false;
+    isLoadingTrust = false;
     isSubmitting = false;
     isSaving = false;
     isDeleting = false;
@@ -170,7 +171,13 @@ class TrustStore implements ITrustStore {
         }
     }
     async getAllTrust(): Promise<void> {
+        if (this.allTrust.size > 0 && this.allTrustList.size > 0) {
+            this.isLoading = false;
+            this.isLoadingTrust = false;
+            return;
+        }
         try {
+            this.isLoadingTrust = true;
             this.isLoading = true;
             let data = await trustService.getAllTrust()
             if (data.success) {
@@ -179,11 +186,15 @@ class TrustStore implements ITrustStore {
                     this.allTrust.set(t.trustId, t);
                     this.allTrustList.set(t.trustId, t);
                 });
+                this.isLoading = false;
+                this.isLoadingTrust = false;
             }
+
         } catch (error) {
             throw error
         } finally {
             this.isLoading = false;
+            this.isLoadingTrust = false;
         }
     }
 

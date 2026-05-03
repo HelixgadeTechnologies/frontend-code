@@ -76,9 +76,8 @@ export const DRATable = observer(() => {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, [activeMenu]);
 
-    // Define columns with memoization
-    const columns = useMemo(
-        () => [
+    // Define columns - no useMemo so MobX observer() can trigger re-renders
+    const columns = [
             {
                 id: "name",
                 header: "Team member Name",
@@ -86,6 +85,16 @@ export const DRATable = observer(() => {
                 cell: ({ row }: { row: { original: IDra } }) => {
                     const fullName = `${row.original.firstName} ${row.original.lastName}`;
                     return <span>{fullName}</span>;
+                },
+            },
+            {
+                id: "trusts",
+                header: "Trust",
+                accessorKey: "trusts",
+                cell: ({ row }: { row: { original: IDra } }) => {
+                    const trustId = row.original.trusts;
+                    const trustName = trustId ? trustStore.allTrust.get(trustId)?.trustName : "N/A";
+                    return <span>{trustName || "N/A"}</span>;
                 },
             },
             {
@@ -141,11 +150,9 @@ export const DRATable = observer(() => {
                     );
                 },
             },
-        ],
-        [activeMenu, toggleMenu, handleEdit, handleDelete],
-    );
+        ];
 
-    const tableHead = ["Team Member Name", "Email", "Account Type", "action"];
+    const tableHead = ["Team Member Name", "Trust", "Email", "Account Type", "action"];
 
     const filteredData = useMemo(() => {
         const dras = [...settingStore.allDra.values()];

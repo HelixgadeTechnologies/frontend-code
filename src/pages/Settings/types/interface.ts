@@ -1,9 +1,10 @@
 import { ObservableMap } from "mobx";
-import { IAuthPayload } from "../../auth/types/interface";
 import { HCDTRequestResponse } from "../../../infrastructure/HCDTRequestResponse";
+import { IAuthPayload } from "../../auth/types/interface";
 
 export interface ISettingStore {
     isLoading: boolean,
+    isLoadingRole: boolean,
     isSubmitting: boolean,
     isDeleting: boolean,
     selectedAdmin: IAdmin,

@@ -51,6 +51,9 @@ const EntryDashboard: React.FC<LayoutProps> = observer(({ children }) => {
 
   useEffect(() => {
     async function getInfo() {
+      // await settingStore.getRole();
+      // await trustStore.getAllTrust();
+
       dashboardStore.isLoading = true;
       dashboardStore.selectedTrust = "ALL";
       dashboardStore.selectedSettlor = "ALL";

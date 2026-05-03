@@ -22,8 +22,10 @@ const AuthMasterPage = observer(() => {
    
     useEffect(() => {
         async function getInfo() {
-            settingStore.getRole();
-            await trustStore.getAllTrust()
+            await Promise.all([
+                settingStore.getRole(),
+                trustStore.getAllTrust()
+            ]);
         }
         getInfo();
         return () => { };

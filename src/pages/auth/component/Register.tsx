@@ -1,12 +1,12 @@
-import React, { createContext, useCallback, useContext } from "react";
-import { Button, CustomSelect, FormInput } from "../../../components/elements";
-import { Controller, useForm } from "react-hook-form";
-import { IDropdownProp, IRole } from "../../Settings/types/interface";
 import { observer } from "mobx-react-lite";
+import React, { createContext, useCallback, useContext } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { toast } from "react-toastify";
+import { Button, CustomSelect, FormInput } from "../../../components/elements";
+import { settingStore as SettingStore } from "../../Settings/store/settingStore";
+import { IDropdownProp, IRole } from "../../Settings/types/interface";
 import { trustStore as TrustStore } from "../../trust/store/trustStore";
 import { ITrustList } from "../../trust/types/interface";
-import { toast } from "react-toastify";
-import { settingStore as SettingStore } from "../../Settings/store/settingStore";
 import { authStore as AuthStore } from "../store/authStore";
 import { IAuthPayload } from "../types/interface";
 
@@ -20,7 +20,11 @@ const Register: React.FC = observer(() => {
     // const [lg, setSetLg] = useState<Array<string>>([]);
     const { control, handleSubmit, register, formState: { errors }, } = useForm();
     // useEffect(() => {
-    //     settingStore.getRole();
+    //     async function loadFun() {
+    //         await settingStore.getRole();
+    //         await trustStore.getAllTrust()
+    //     }
+    //     loadFun()
     // }, []);
     // const selectState = useCallback((v: IDropdownProp) => {
     //     trustStore.allLGA.clear();
@@ -29,9 +33,18 @@ const Register: React.FC = observer(() => {
     //         setSetLg(localGov);
     //     }
     //     trustStore.selectedState = String(v?.value);
-    //     setValue("state", v); //set state field
-    //     setValue("localGovernmentArea", null); // Reset LGA field
+
     // }, [trustStore]);
+
+    // Read observables here so observer() tracks them and re-renders when they change
+    const roleOptions = [...settingStore.allRole.values()]
+        .filter((v: IRole) => ["Advisory Committee (AC)", "Data Reporting Agent (DRA)", "Management Committee (MC)", "Board of Trustee (BoT)"].includes(v?.roleName))
+        .map((v: IRole) => ({ label: v?.roleName, value: v?.roleId }));
+    const isRoleLoading = settingStore.isLoadingRole;
+
+    const trustOptions = [...trustStore.allTrust.values()]
+        .map((v: ITrustList) => ({ label: v?.trustName, value: v?.trustId }));
+    const isTrustLoading = trustStore.isLoadingTrust;
 
     const submit = async (data: any) => {
         try {
@@ -40,7 +53,7 @@ const Register: React.FC = observer(() => {
             const roleData = data.roleId as IDropdownProp
             const formData: any = {
                 ...data,
-                roleId:roleData.value,
+                roleId: roleData.value,
                 trustId: trustData.value
             }
             const payload: IAuthPayload = {
@@ -208,23 +221,17 @@ const Register: React.FC = observer(() => {
                             <CustomSelect
                                 id="role-select"
                                 {...field}
-                                options={[...settingStore.allRole.values()].filter((v: IRole) => ["Advisory Committee (AC)", "Data Reporting Agent (DRA)", "Management Committee (MC)", "Board of Trustee (BoT)"].includes(v?.roleName)).map((v: IRole) => {
-                                    return {
-                                        label: v?.roleName,
-                                        value: v?.roleId
-                                    }
-                                })}
-                                isLoading={trustStore.isLoading}
+                                options={roleOptions}
+                                isLoading={isRoleLoading}
                                 label="Role"
                                 isMulti={false}
                                 placeholder=""
                             />
                         )}
                     />
-                    {errors.trust && (
-                        <p className="mt-2 mb-4 text-xs  text-red-400 ">Assign a trust</p>
+                    {errors.roleId && (
+                        <p className="mt-2 mb-4 text-xs  text-red-400 ">Assign a role</p>
                     )}
-
                 </div>
                 <div className="mb-4">
                     <Controller
@@ -235,13 +242,8 @@ const Register: React.FC = observer(() => {
                             <CustomSelect
                                 id="trust-select"
                                 {...field}
-                                options={[...trustStore.allTrust.values()].map((v: ITrustList) => {
-                                    return {
-                                        label: v?.trustName,
-                                        value: v?.trustId
-                                    }
-                                })}
-                                isLoading={trustStore.isLoading}
+                                options={trustOptions}
+                                isLoading={isTrustLoading}
                                 label="Trust"
                                 isMulti={false}
                                 placeholder="Assign Trust"

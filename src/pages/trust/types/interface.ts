@@ -2,6 +2,7 @@ import { ObservableMap } from "mobx";
 import { TabType } from "../../project/types/interface";
 export interface ITrustStore {
     isLoading: boolean;
+    isLoadingTrust: boolean;
     isSubmitting: boolean;
     isSaving: boolean;
     isDeleting: boolean;
