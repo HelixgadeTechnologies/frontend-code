@@ -148,6 +148,7 @@ export interface ISubFields {
     completionStatus: number,
     updateAt: string,
     statusOfNeedAssessment: number,
+    distributionMatrixDevelopedBySettlor: number,
 }
 
 export interface ITrends {
@@ -181,6 +182,7 @@ export interface IFinishedDashboard {
     WOMEN_CONSULTED: number,
     PWD_CONSULTED: number,
     DISTRIBUTION_MATRIX: string,
+    distributionMatrixDevelopedBySettlor?: number,
     DEVELOP_PLAN_AND_BUDGET_PERCENTAGE: number,
     TRENDS_YEAR: Array<string>,
     TRENDS_AMOUNT: Array<string>,

@@ -71,8 +71,6 @@ const EntryDashboardHeader = ({ onMenuClick }: EntryDashboardHeaderProps = {}) =
           key={idx}
           href={link.href}
           className={cls}
-          target="_blank"
-          rel="noopener noreferrer"
           onClick={mobile ? () => setIsMenuOpen(false) : undefined}
         >
           {link.title}

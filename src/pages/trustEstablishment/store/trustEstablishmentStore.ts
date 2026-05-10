@@ -170,6 +170,7 @@ class TrustEstablishmentStore implements ITrustEstablishmentStore {
             WOMEN_CONSULTED: data.SUB_FIELDS[0]?.communityWomenConsulted,
             PWD_CONSULTED: data.SUB_FIELDS[0]?.pwDsConsulted,
             DISTRIBUTION_MATRIX: data.SUB_FIELDS[0]?.trustDistributionMatrixDocument,
+            distributionMatrixDevelopedBySettlor: data.SUB_FIELDS[0]?.distributionMatrixDevelopedBySettlor,
             DEVELOP_PLAN_AND_BUDGET_PERCENTAGE: data.OPERATION_YEAR[0]?.trustDevPlanProgress,
             TRENDS_YEAR: data.TRENDS.sort((a, b) => a.settlorOperationalExpenditureYear - b.settlorOperationalExpenditureYear).map((year) => year.settlorOperationalExpenditureYear.toString()),
             TRENDS_AMOUNT: data.TRENDS.sort((a, b) => a.settlorOperationalExpenditureYear - b.settlorOperationalExpenditureYear).map((year) => year.settlorOperationalExpenditure.toString()),
