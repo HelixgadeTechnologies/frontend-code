@@ -31,6 +31,8 @@ const CommunitySatisfactionForm = observer((props: Props) => {
                 conflictMinimization: Number(data.conflictMinimization),
                 settlorAction: Number(data.settlorAction),
                 nuprcAction: Number(data.nuprcAction),
+                trustTransparencyAndAccountability: Number(data.trustTransparencyAndAccountability),
+                fairInvolvement: Number(data.fairInvolvement),
             
                 projectHandover: Number(data.projectHandover),
                 maintenanceConsult: Number(data.maintenanceConsult),
@@ -132,7 +134,7 @@ const CommunitySatisfactionForm = observer((props: Props) => {
                             ]}
                         />
 
-                        {/* Question 4 */}
+                        {/* Question 5 */}
                         <CustomRadio
                             name="conflictMinimization"
                             control={control}
@@ -145,7 +147,36 @@ const CommunitySatisfactionForm = observer((props: Props) => {
                                 { value: "5", label: "Strongly Agree" },
                             ]}
                         />
-                        {/* Question 5*/}
+                        
+                        {/* Question 6*/}
+                        <CustomRadio
+                            name="trustTransparencyAndAccountability"
+                            control={control}
+                            label="The trust processes and actions has shown good level of transparency and accountability with the host communities"
+                            options={[
+                                { value: "1", label: "Strongly Disagree" },
+                                { value: "2", label: "Disagree" },
+                                { value: "3", label: "Slightly Agree" },
+                                { value: "4", label: "Agree" },
+                                { value: "5", label: "Strongly Agree" },
+                            ]}
+                        />
+                        {/* Question 7 */}
+                      
+                        <CustomRadio
+                            name="fairInvolvement"
+                            control={control}
+                            label="We feel the trust has fairly considered women, young people, and person with disability (PwDs) in their engagements and project delivery"
+                            options={[
+                                { value: "1", label: "Strongly Disagree" },
+                                { value: "2", label: "Disagree" },
+                                { value: "3", label: "Slightly Agree" },
+                                { value: "4", label: "Agree" },
+                                { value: "5", label: "Strongly Agree" },
+                            ]}
+                        />
+                        
+                        {/* Question 8*/}
                         <CustomRadio
                             name="settlorAction"
                             control={control}
@@ -158,7 +189,7 @@ const CommunitySatisfactionForm = observer((props: Props) => {
                                 { value: "5", label: "Strongly Agree" },
                             ]}
                         />
-                        {/* Question 6 */}
+                        {/* Question 9 */}
                       
                         <CustomRadio
                             name="nuprcAction"
@@ -172,6 +203,7 @@ const CommunitySatisfactionForm = observer((props: Props) => {
                                 { value: "5", label: "Strongly Agree" },
                             ]}
                         />
+                      
 
                     </div>
                 </div>

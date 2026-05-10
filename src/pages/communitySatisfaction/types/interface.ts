@@ -45,6 +45,9 @@ export interface ISatisfactionPayloadData {
     conflictMinimization?: number,
     settlorAction?: number,
     nuprcAction?: number,
+    trustTransparencyAndAccountability?: number,
+    fairInvolvement?: number,
+
     projectHandover?: number,
     maintenanceConsult?: number,
     incomeProject?: number,
