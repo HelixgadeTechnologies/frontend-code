@@ -1,13 +1,13 @@
 import { RowSelectionState } from "@tanstack/react-table";
 import { Observer, observer } from "mobx-react-lite";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { caretDownIcon, filterIcon, sortIcon, crossIcon, checkIcon } from "../../../../assets/icons";
-import { EmptyTable, LoadingTable, Modal, Table, Tag } from "../../../../components/elements";
-import { settingStore as SettingStore } from "../../store/settingStore"
-import { trustStore as TrustStore } from "../../../trust/store/trustStore";
 import { toast } from "react-toastify";
-import { DeleteDRA } from "../form/DeleteDRA";
+import { caretDownIcon, checkIcon, crossIcon, filterIcon, sortIcon } from "../../../../assets/icons";
+import { EmptyTable, LoadingTable, Modal, Table, Tag } from "../../../../components/elements";
+import { trustStore as TrustStore } from "../../../trust/store/trustStore";
+import { settingStore as SettingStore } from "../../store/settingStore";
 import { createDraPayload, IDra, IDraPayloadData } from "../../types/interface";
+import { DeleteDRA } from "../form/DeleteDRA";
 
 
 const SettingsStoreCtx = createContext(SettingStore);
@@ -37,12 +37,6 @@ export const PendingDraTable = observer(() => {
     const [deleteUserId, setDeleteUserId] = useState<string | null>(null);
 
     // Toggle action menu
-    const toggleMenu = useCallback(
-        (userId: string) => {
-            setActiveMenu(activeMenu === userId ? null : userId);
-        },
-        [activeMenu],
-    );
 
     const handleApprove = useCallback(async (user: IDra) => {
         // console.log(`Approved user : ${user}`);
@@ -103,9 +97,8 @@ export const PendingDraTable = observer(() => {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, [activeMenu]);
 
-    // Define columns with memoization
-    const columns = useMemo(
-        () => [
+    // Define columns - no useMemo so MobX observer() can trigger re-renders
+    const columns = [
             {
                 id: "name",
                 header: "Team member Name",
@@ -113,6 +106,16 @@ export const PendingDraTable = observer(() => {
                 cell: ({ row }: { row: { original: IDra } }) => {
                     const fullName = `${row.original.firstName} ${row.original.lastName}`;
                     return <span>{fullName}</span>;
+                },
+            },
+            {
+                id: "trust",
+                header: "Trust",
+                accessorKey: "trusts",
+                cell: ({ row }: { row: { original: IDra } }) => {
+                    const trustId = row.original.trusts;
+                    const trustName = trustId ? trustStore.allTrust.get(trustId)?.trustName : "N/A";
+                    return <span>{trustName || "N/A"}</span>;
                 },
             },
             {
@@ -169,11 +172,9 @@ export const PendingDraTable = observer(() => {
                     );
                 },
             },
-        ],
-        [activeMenu, toggleMenu, handleApprove, handleReject],
-    );
+        ];
 
-    const tableHead = ["Team Member Name", "Email", "Account Type", "action"];
+    const tableHead = ["Team Member Name", "Trust", "Email", "Account Type", "action"];
 
     const filteredData = useMemo(() => {
         const pendingDras = [...settingStore.allPendingDra.values()];

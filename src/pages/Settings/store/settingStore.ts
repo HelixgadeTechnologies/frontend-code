@@ -1,12 +1,13 @@
-import { makeAutoObservable, ObservableMap, remove } from "mobx"
-import { CreateAdminPayload, createDraPayload, createNuprcPayload, CreateSettlorPayload, IAdmin, IChangePassword, IDra, ILoginUpdate, INuprc, IProfilePicsPayload, IRole, ISettingStore, ISettlor } from "../types/interface";
-import { SettingService } from "../service/settingService";
-import { committeeRoleIds } from "../constants/roleIds";
-import { IAuthPayload} from "../../auth/types/interface";
+import { makeAutoObservable, ObservableMap, remove, toJS } from "mobx";
 import { HCDTRequestResponse } from "../../../infrastructure/HCDTRequestResponse";
+import { IAuthPayload } from "../../auth/types/interface";
+import { committeeRoleIds } from "../constants/roleIds";
+import { SettingService } from "../service/settingService";
+import { CreateAdminPayload, createDraPayload, createNuprcPayload, CreateSettlorPayload, IAdmin, IChangePassword, IDra, ILoginUpdate, INuprc, IProfilePicsPayload, IRole, ISettingStore, ISettlor } from "../types/interface";
 
 class SettingStore implements ISettingStore {
     isLoading = false;
+    isLoadingRole = false;
     isSubmitting = false;
     isDeleting = false;
     isUploading = false;
@@ -228,6 +229,8 @@ class SettingStore implements ISettingStore {
                 this.allPendingDra.clear();
 
                 data.data.forEach((d: IDra) => {
+                    console.log('DRA Object:',toJS(d));
+
                     const roleName = d.role;
                     if (d.status == 1) {
                         if (roleName === "Data Reporting Agent (DRA)") {
@@ -484,22 +487,29 @@ class SettingStore implements ISettingStore {
     }
 
     async getRole(): Promise<void> {
+        if (this.allRole.size > 0) {
+            this.isLoading = false;
+            this.isLoadingRole = false;
+            return;
+        }
         try {
-            if ([...this.allRole.values()].length == 0) {
-                this.isLoading = true;
-                let data = await SettingService.roles()
-                // console.log("data2233333");
-                if (data?.success) {
-                    this.allRole.clear();
-                    data.data.forEach((r: IRole) => {
-                        this.allRole.set(r.roleId, r);
-                    });
-                }
+            this.isLoading = true;
+            this.isLoadingRole = true;
+            let data = await SettingService.roles()
+            // console.log("data2233333");
+            if (data?.success) {
+                this.allRole.clear();
+                data.data.forEach((r: IRole) => {
+                    this.allRole.set(r.roleId, r);
+                });
+                this.isLoading = false;
+                this.isLoadingRole = false;
             }
         } catch (error) {
             throw error
         } finally {
             this.isLoading = false;
+            this.isLoadingRole = false;
         }
     }
     async registerAllUser(credentials: IAuthPayload): Promise<HCDTRequestResponse> {
