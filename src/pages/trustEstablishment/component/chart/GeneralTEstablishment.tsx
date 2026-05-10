@@ -11,7 +11,7 @@ import {
   ChartOptions,
   ArcElement,
 } from "chart.js";
-import { Doughnut} from "react-chartjs-2";
+import { Doughnut } from "react-chartjs-2";
 import { trustEstablishmentStore as TrustEstablishmentStore } from "../../store/trustEstablishmentStore"
 import { observer } from "mobx-react-lite";
 import FileCard from "./FileCard";
@@ -348,7 +348,7 @@ const GeneralTEstablishment = observer(() => {
             <Line options={chartOptions} data={data1} />
           </div>
         </div> */}
-         <div className="rounded-xl lg:col-span-2 xl:col-span-2 overflow-hidden w-full border border-gray-100 min-w-0">
+        <div className="rounded-xl lg:col-span-2 xl:col-span-2 overflow-hidden w-full border border-gray-100 min-w-0">
 
           <div className="bg-[#F3F5F7] flex flex-wrap items-center justify-between px-6 py-4 gap-4">
             <div className="min-w-0 flex-1">
@@ -411,10 +411,18 @@ const GeneralTEstablishment = observer(() => {
             <span>{trustEstablishmentStore.dashboardData?.YEAR_START}<br /><span className="text-xs">Year Started</span></span>
             <span>{trustEstablishmentStore.dashboardData?.YEAR_EXPIRED}<br /><span className="text-xs">End Year</span></span>
           </div>
+           <div className="flex items-center justify-between">
+            <span>Status of Community Development Plan (CDP)</span>
+            <span className={classColors(trustEstablishmentStore.dashboardData?.STATUS_OF_COMMUNITY_DEVELOPMENT_PLAN!)}>{translator3(trustEstablishmentStore.dashboardData?.STATUS_OF_COMMUNITY_DEVELOPMENT_PLAN!)}</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span>Status of Trust Development Plan Budget</span>
+            <span className={classColors(trustEstablishmentStore.dashboardData?.STATUS_OF_TRUST_DEVELOPMENT_PLAN_BUDGET!)}>{translator3(trustEstablishmentStore.dashboardData?.STATUS_OF_TRUST_DEVELOPMENT_PLAN_BUDGET!)}</span>
+          </div>
         </div>
 
 
-       
+
 
         {/* Trust Compliance & Distribution Matrix */}
         {/* <div className="bg-white rounded-lg p-5 shadow mt-6 flex-1">
@@ -441,15 +449,15 @@ const GeneralTEstablishment = observer(() => {
           </div>
         </div>
       </div> */}
-        <div className="bg-white rounded-xl p-6 shadow w-full lg:col-span-2 xl:col-span-3 min-w-0">
+        <div className="bg-white rounded-xl p-6 shadow mt-6 flex-1">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="font-semibold text-lg">Trust Compliance</h3>
+            <h3 className="font-semibold text-lg">Trust Distribution Matrix</h3>
           </div>
           <div>
             <div className="flex items-center justify-between mb-2">
-              <span className="text-gray-700">Trust Distribution Matrix Upload</span>
-              <span className={classColors(trustEstablishmentStore.dashboardData?.DISTRIBUTION_MATRIX! ? 1 : undefined)}>
-                {translator2(trustEstablishmentStore.dashboardData?.DISTRIBUTION_MATRIX! ? 1 : 3)}
+              <span className="text-gray-700">Trust has a distribution matrix developed by settlor</span>
+              <span className={classColors(trustEstablishmentStore.dashboardData?.distributionMatrixDevelopedBySettlor)}>
+                {translator1(trustEstablishmentStore.dashboardData?.distributionMatrixDevelopedBySettlor)}
               </span>
             </div>
             <div className="flex items-center">
@@ -461,13 +469,18 @@ const GeneralTEstablishment = observer(() => {
                       fileUrl={trustEstablishmentStore.dashboardData?.DISTRIBUTION_MATRIX || "#"}
                       uploadedAt={dayjs(trustEstablishmentStore.dashboardData?.DATE_UPDATED as string).format("DD MMM, YYYY  h:mmA")}
                       fileSize="1.3MB"
-                    // onDelete={() => handelFileDelete(trustEstablishmentStore.dashboardData?.DISTRIBUTION_MATRIX!, "Matrix")}
+                      // onDelete={() => handelFileDelete(trustEstablishmentStore.dashboardData?.DISTRIBUTION_MATRIX!, "Matrix")}
                     />
                   </div>
                 </div>
-              ) : (
-                <span className="text-gray-400">No Distribution Matrix Uploaded</span>
-              )}
+              ) : (<>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-gray-700">Trust Distribution Matrix Upload</span>
+                  <span className={classColors(trustEstablishmentStore.dashboardData?.DISTRIBUTION_MATRIX! ? 1 : undefined)}>
+                    {translator2(trustEstablishmentStore.dashboardData?.DISTRIBUTION_MATRIX! ? 1 : 3)}
+                  </span>
+                </div>
+              </>)}
             </div>
           </div>
 

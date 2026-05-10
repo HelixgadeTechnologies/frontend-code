@@ -149,6 +149,8 @@ export interface ISubFields {
     updateAt: string,
     statusOfNeedAssessment: number,
     distributionMatrixDevelopedBySettlor: number,
+    isTrustDevelopmentPlanBudgetReadilyAvailable: number,
+    isTrustDevelopmentPlanReadilyAvailable: number,
 }
 
 export interface ITrends {
@@ -189,5 +191,7 @@ export interface IFinishedDashboard {
     COMPLETION_STATUS: number,
     DATE_UPDATED?: String,
     BOT_INAUGURATION_CHECK: IBotInauguration
+    STATUS_OF_TRUST_DEVELOPMENT_PLAN_BUDGET?: number,
+    STATUS_OF_COMMUNITY_DEVELOPMENT_PLAN?: number,
 }
 

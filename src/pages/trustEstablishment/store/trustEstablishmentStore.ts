@@ -174,7 +174,9 @@ class TrustEstablishmentStore implements ITrustEstablishmentStore {
             DEVELOP_PLAN_AND_BUDGET_PERCENTAGE: data.OPERATION_YEAR[0]?.trustDevPlanProgress,
             TRENDS_YEAR: data.TRENDS.sort((a, b) => a.settlorOperationalExpenditureYear - b.settlorOperationalExpenditureYear).map((year) => year.settlorOperationalExpenditureYear.toString()),
             TRENDS_AMOUNT: data.TRENDS.sort((a, b) => a.settlorOperationalExpenditureYear - b.settlorOperationalExpenditureYear).map((year) => year.settlorOperationalExpenditure.toString()),
-            BOT_INAUGURATION_CHECK: data.BOT_INAUGURATION_CHECK[0] || {} as IBotInauguration
+            BOT_INAUGURATION_CHECK: data.BOT_INAUGURATION_CHECK[0] || {} as IBotInauguration,
+            STATUS_OF_TRUST_DEVELOPMENT_PLAN_BUDGET: data.SUB_FIELDS[0]?.isTrustDevelopmentPlanBudgetReadilyAvailable,
+            STATUS_OF_COMMUNITY_DEVELOPMENT_PLAN: data.SUB_FIELDS[0]?.isTrustDevelopmentPlanReadilyAvailable,
         };
     }
 

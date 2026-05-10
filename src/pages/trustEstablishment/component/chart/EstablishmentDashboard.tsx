@@ -407,7 +407,7 @@ const EstablishmentDashboard = observer(() => {
 
         {/* Trust Development Plan & Budget */}
         <div className="bg-white rounded-lg p-5 shadow mt-6 flex flex-col items-center justify-center">
-          <h3 className="font-semibold text-lg mb-2">Trust Development Plan & Budget</h3>
+          <h3 className="font-semibold text-lg mb-2">Status of Trust Development Plan & Budget</h3>
           {/* Replace this with your actual progress component */}
           <div className="relative flex items-center justify-center w-44 h-44 my-4">
             <Doughnut data={data} options={options} />
@@ -421,6 +421,14 @@ const EstablishmentDashboard = observer(() => {
           <div className="flex justify-between w-full px-4 text-gray-500 text-sm">
             <span>{trustEstablishmentStore.dashboardData?.YEAR_START}<br /><span className="text-xs">Year Started</span></span>
             <span>{trustEstablishmentStore.dashboardData?.YEAR_EXPIRED}<br /><span className="text-xs">End Year</span></span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span>Status of Community Development Plan (CDP)</span>
+            <span className={classColors(trustEstablishmentStore.dashboardData?.STATUS_OF_COMMUNITY_DEVELOPMENT_PLAN!)}>{translator3(trustEstablishmentStore.dashboardData?.STATUS_OF_COMMUNITY_DEVELOPMENT_PLAN!)}</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span>Status of Trust Development Plan Budget</span>
+            <span className={classColors(trustEstablishmentStore.dashboardData?.STATUS_OF_TRUST_DEVELOPMENT_PLAN_BUDGET!)}>{translator3(trustEstablishmentStore.dashboardData?.STATUS_OF_TRUST_DEVELOPMENT_PLAN_BUDGET!)}</span>
           </div>
         </div>
 
