@@ -16,26 +16,9 @@ export const EconomicImpactView = observer(({ close, economicImpactStore }: { cl
         }
     };
 
-    const getAmenitiesClass = (option: number | null | undefined): string => {
-        switch (option) {
-          case 1:
-            return "px-4 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium"; // Healthcare
-          case 2:
-            return "px-4 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium"; // Education
-          case 3:
-            return "px-4 py-1 bg-teal-100 text-teal-700 rounded-full text-sm font-medium"; // Portable Water
-          case 4:
-            return "px-4 py-1 bg-yellow-100 text-yellow-700 rounded-full text-sm font-medium"; // Electricity
-          case 5:
-            return "px-4 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium"; // Good Roads
-          case 6:
-            return "px-4 py-1 bg-orange-100 text-orange-700 rounded-full text-sm font-medium"; // Market
-          case 7:
-            return "px-4 py-1 bg-pink-100 text-pink-700 rounded-full text-sm font-medium"; // Favourable Business Environment
-          default:
-            return "px-4 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium"; // Default class for unknown options
-        }
-      };
+    const getAmenitiesClass = (_option: string | null | undefined): string => {
+        return "px-4 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium";
+    };
     return (
         <div className="p-6 ">
             <div className="relative mx-auto bg-white shadow-md rounded-lg p-8">

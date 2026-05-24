@@ -44,7 +44,7 @@ const EconomicImpactDataForm = observer(() => {
                 businessGrowth: Number(data.businessGrowth),
                 incomeIncrease: Number(data.incomeIncrease),
                 livelihoodImprove: Number(data.livelihoodImprove),
-                accessAmenities: Number(data.accessAmenities),
+                accessAmenities: data.accessAmenities ?? null,
                 trustId: trustId ? trustId : "",
             };
             const payload: IEconomicImpactPayload = {
