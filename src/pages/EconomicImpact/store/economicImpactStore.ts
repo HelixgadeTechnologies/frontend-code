@@ -120,6 +120,7 @@ class EconomicImpactStore implements IEconomicImpactStore {
         const mapOptionTwoResponse = (data: any) => {
             const response = data[0].RESPONSE;
             return [
+                Number(response["NONE"]),
                 Number(response["HEALTHCARE"]),
                 Number(response["EDUCATION"]),
                 Number(response["PORTABLE WATER"]),

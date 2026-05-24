@@ -114,14 +114,15 @@ const EconomicImpactDashboard = observer(({ economicImpactStore }: { economicImp
                 {/* Pie Charts */}
                 <Observer>
                     {() => (
-                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
                             <div className="bg-white shadow-md rounded-lg p-4 sm:p-6 flex flex-col justify-between h-full">
                                 <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
                                     My business is generating more money since they implemented some
                                     of the HCDT projects in my community.
                                 </h3>
-                                <div className="relative h-[250px] w-full flex items-center justify-center">
+                                <div className="relative h-[320px] w-full flex items-center justify-center">
                                     <Pie
+                                        key="ei-pie1"
                                         data={pieData1}
                                         options={{
                                             maintainAspectRatio: false,
@@ -139,13 +140,12 @@ const EconomicImpactDashboard = observer(({ economicImpactStore }: { economicImp
                                                 },
                                                 legend: {
                                                     display: true,
-                                                    position: "bottom" as const,
-                                                    align: "center" as const,
+                                                    position: "right" as const,
                                                     labels: {
-                                                        boxWidth: 18,
-                                                        boxHeight: 18,
-                                                        padding: 10,
-                                                        font: { size: 9 },
+                                                        boxWidth: 14,
+                                                        boxHeight: 14,
+                                                        padding: 12,
+                                                        font: { size: 11 },
                                                     },
                                                 },
                                             },
@@ -159,8 +159,9 @@ const EconomicImpactDashboard = observer(({ economicImpactStore }: { economicImp
                                     My income has increased since the implementation of some of the
                                     HCDT projects in my community.
                                 </h3>
-                                <div className="relative h-[250px] w-full flex items-center justify-center">
+                                <div className="relative h-[320px] w-full flex items-center justify-center">
                                     <Pie
+                                        key="ei-pie2"
                                         data={pieData2}
                                         options={{
                                             maintainAspectRatio: false,
@@ -178,16 +179,14 @@ const EconomicImpactDashboard = observer(({ economicImpactStore }: { economicImp
                                                 },
                                                 legend: {
                                                     display: true,
-                                                    position: "bottom" as const,
-                                                    align: "center" as const,
+                                                    position: "right" as const,
                                                     labels: {
-                                                        boxWidth: 18,
-                                                        boxHeight: 18,
-                                                        padding: 10,
-                                                        font: { size: 9 },
+                                                        boxWidth: 14,
+                                                        boxHeight: 14,
+                                                        padding: 12,
+                                                        font: { size: 11 },
                                                     },
                                                 },
-                                                // legend: { display: true },
                                             },
                                         }}
                                         plugins={[ChartDataLabels]}
@@ -199,8 +198,9 @@ const EconomicImpactDashboard = observer(({ economicImpactStore }: { economicImp
                                     The implemented HCDT projects have bettered my livelihood and
                                     quality of lives.
                                 </h3>
-                                <div className="relative h-[250px] w-full flex items-center justify-center">
+                                <div className="relative h-[320px] w-full flex items-center justify-center">
                                     <Pie
+                                        key="ei-pie3"
                                         data={pieData3}
                                         options={{
                                             maintainAspectRatio: false,
@@ -218,13 +218,12 @@ const EconomicImpactDashboard = observer(({ economicImpactStore }: { economicImp
                                                 },
                                                 legend: {
                                                     display: true,
-                                                    position: "bottom" as const,
-                                                    align: "center" as const,
+                                                    position: "right" as const,
                                                     labels: {
-                                                        boxWidth: 18,
-                                                        boxHeight: 18,
-                                                        padding: 10,
-                                                        font: { size: 9 },
+                                                        boxWidth: 14,
+                                                        boxHeight: 14,
+                                                        padding: 12,
+                                                        font: { size: 11 },
                                                     },
                                                 },
                                             },
@@ -237,8 +236,9 @@ const EconomicImpactDashboard = observer(({ economicImpactStore }: { economicImp
                                 <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
                                    As a result of the HCDT projects, our host communities are now experiencing relative peace and security.
                                 </h3>
-                                <div className="relative h-[250px] w-full flex items-center justify-center">
+                                <div className="relative h-[320px] w-full flex items-center justify-center">
                                     <Pie
+                                        key="ei-pie4"
                                         data={pieData4}
                                         options={{
                                             maintainAspectRatio: false,
@@ -256,13 +256,12 @@ const EconomicImpactDashboard = observer(({ economicImpactStore }: { economicImp
                                                 },
                                                 legend: {
                                                     display: true,
-                                                    position: "bottom" as const,
-                                                    align: "center" as const,
+                                                    position: "right" as const,
                                                     labels: {
-                                                        boxWidth: 18,
-                                                        boxHeight: 18,
-                                                        padding: 10,
-                                                        font: { size: 9 },
+                                                        boxWidth: 14,
+                                                        boxHeight: 14,
+                                                        padding: 12,
+                                                        font: { size: 11 },
                                                     },
                                                 },
                                             },

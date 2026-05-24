@@ -1,4 +1,17 @@
+import {
+    ArcElement,
+    BarElement,
+    CategoryScale,
+    Chart as ChartJS,
+    Legend,
+    LinearScale,
+    LineElement,
+    PointElement,
+    Tooltip,
+} from "chart.js";
 import { ChartOptions } from "chart.js";
+
+ChartJS.register(ArcElement, BarElement, CategoryScale, Legend, LinearScale, LineElement, PointElement, Tooltip);
 import dayjs from "dayjs";
 import { Observer, observer } from "mobx-react-lite";
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
@@ -554,93 +567,38 @@ const GeneralDashboard: React.FC = observer(() => {
   };
 
   // community satisfaction
-  const groupedBarOptions = {
-    indexAxis: "y" as const,
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: "bottom" as const,
-      },
-      datalabels: {
-        anchor: "center" as const,
-        align: "center" as const,
-        color: "#222",
-        font: {
-          weight: "bold" as "bold",
-          size: 12,
-        },
-        formatter: function (value: number) {
-          return `${value}%`;
-        },
-      },
-    },
-    scales: {
-      x: {
-        stacked: true,
-        type: "linear" as const,
-        min: 0,
-        max: 100,
-        title: {
-          display: true,
-          text: "Percentage of Respondents",
-        },
-        ticks: {
-          stepSize: 20,
-          callback: function (tickValue: any) {
-            return `${tickValue}%`;
-          },
-        },
-      },
-      y: {
-        stacked: true,
-        type: "category" as const,
-        title: {
-          display: false,
-        },
-      },
-    },
-  };
-
-  const generateGroupedBarData = (data: number[][]) => ({
-    labels: [
-      "We feel well-informed about the implemented projects by the Trust leaderships.",
-      "We feel our community has been sufficiently consulted on projects by the Trust leaderships.",
-      "We feel suffient opportunities have been given to local community members to participate in the implemented HCDT projec.",
-      "There is a clear and effective mechnism in place to report community concerns to the Trust leadership.",
-      "The way the Trust leadership (BoT, MC and AC) have acted has minimized the potential conflicts in the host communities",
-      "The Trust processes and actions have shown good level of transparency and accountability with the host communities",
-      "We feel the Trust has fairly considered women, young people, and person with disability (PwDs) in their engagements and project delivery"
-    ],
-
+  const generateSatisfactionPieData = (data: number[]) => ({
+    labels: ["Strongly Disagree", "Disagree", "Slightly Agree", "Agree", "Strongly Agree"],
     datasets: [
       {
-        label: "Strongly Disagree",
-        data: data.map((d) => d[0]),
-        backgroundColor: "#EF4444",
-      },
-      {
-        label: "Disagree",
-        data: data.map((d) => d[1]),
-        backgroundColor: "#de9292",
-      },
-      {
-        label: "Slightly Agree",
-        data: data.map((d) => d[2]),
-        backgroundColor: "#FACC15",
-      },
-      {
-        label: "Agree",
-        data: data.map((d) => d[3]),
-        backgroundColor: "#3B82F6",
-      },
-      {
-        label: "Strongly Agree",
-        data: data.map((d) => d[4]),
-        backgroundColor: "#22C55E",
+        data,
+        backgroundColor: ["#EF4444", "#de9292", "#FACC15", "#3B82F6", "#22C55E"],
+        hoverBackgroundColor: ["#EF4444", "#de9292", "#FACC15", "#3B82F6", "#22C55E"],
       },
     ],
   });
+
+  const satisfactionPieOptions = {
+    maintainAspectRatio: false,
+    plugins: {
+      datalabels: {
+        color: "#222",
+        font: { weight: "bold" as const },
+        formatter: (value: number, context: any) => {
+          if (!value || Number(value) === 0) return null;
+          const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
+          const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
+          const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
+          return percent === "0" ? null : `${percent}%`;
+        },
+      },
+      legend: {
+        display: true,
+        position: "right" as const,
+        labels: { boxWidth: 14, boxHeight: 14, padding: 12, font: { size: 11 } },
+      },
+    },
+  };
 
   // Generate pie chart data dynamically
   const generatePieData = (data: number[]) => ({
@@ -1377,6 +1335,7 @@ const GeneralDashboard: React.FC = observer(() => {
                 </div>
                 <div className="w-full h-56 flex items-end">
                   <Bar
+                    key="gd-bar"
                     data={barData}
                     options={barOptions}
                     plugins={[ChartDataLabels]}
@@ -1392,7 +1351,7 @@ const GeneralDashboard: React.FC = observer(() => {
                   Number of HCDTs with approved Community Development Plans
                 </div>
                 <div className="relative flex items-center justify-center w-44 h-44 my-4">
-                  <Doughnut data={doughnutData} options={doughnutOptions} />
+                  <Doughnut key="gd-doughnut-main" data={doughnutData} options={doughnutOptions} />
                   <span className="absolute text-3xl font-bold text-gray-900">
                     {
                       dashboardStore.dashboardData?.COMPLETION_STATUS
@@ -2251,37 +2210,61 @@ const GeneralDashboard: React.FC = observer(() => {
               Average community satisfaction with the process, inclusion, approach
               and management of the HCDTs by the government structure (BoT, MC & AC)
             </h2>
-            <div className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
-              <div className="h-[400px] sm:h-[500px]">
-                <Bar
-                  data={generateGroupedBarData([
-                    satisfactionStore.dashboardData?.infoProjects || [
-                      0, 0, 0, 0, 0,
-                    ],
-                    satisfactionStore.dashboardData?.communityConsult || [
-                      0, 0, 0, 0, 0,
-                    ],
-                    satisfactionStore.dashboardData?.localParticipation || [
-                      0, 0, 0, 0, 0,
-                    ],
-                    satisfactionStore.dashboardData?.reportMechanism || [
-                      0, 0, 0, 0, 0,
-                    ],
-                    satisfactionStore.dashboardData?.conflictMinimization || [
-                      0, 0, 0, 0, 0,
-                    ],
-                    // satisfactionStore.dashboardData?.settlorAction || [0, 0, 0, 0, 0],
-                    // satisfactionStore.dashboardData?.nuprcAction || [0, 0, 0, 0, 0],
-                  ])}
-                  options={groupedBarOptions}
-                  plugins={[ChartDataLabels]}
-                />
+            {/* Row 1: 3 charts */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6">
+              <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
+                <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">We feel well-informed about the implemented projects by the Trust leaderships.</h3>
+                <div className="h-[320px]">
+                  <Pie key="gd-sat-infoProjects" data={generateSatisfactionPieData(satisfactionStore.dashboardData?.infoProjects || [0, 0, 0, 0, 0])} options={satisfactionPieOptions} plugins={[ChartDataLabels]} />
+                </div>
+              </div>
+              <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
+                <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">We feel our community has been sufficiently consulted on projects by the Trust leaderships.</h3>
+                <div className="h-[320px]">
+                  <Pie key="gd-sat-communityConsult" data={generateSatisfactionPieData(satisfactionStore.dashboardData?.communityConsult || [0, 0, 0, 0, 0])} options={satisfactionPieOptions} plugins={[ChartDataLabels]} />
+                </div>
+              </div>
+              <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
+                <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">We feel sufficient opportunities have been given to local community members to participate in the implemented HCDT projects.</h3>
+                <div className="h-[320px]">
+                  <Pie key="gd-sat-localParticipation" data={generateSatisfactionPieData(satisfactionStore.dashboardData?.localParticipation || [0, 0, 0, 0, 0])} options={satisfactionPieOptions} plugins={[ChartDataLabels]} />
+                </div>
+              </div>
+            </div>
+            {/* Row 2: 2+2 charts */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+              <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
+                <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">There is a clear and effective mechanism in place to report community concerns to the Trust leadership.</h3>
+                <div className="h-[320px]">
+                  <Pie key="gd-sat-reportMechanism" data={generateSatisfactionPieData(satisfactionStore.dashboardData?.reportMechanism || [0, 0, 0, 0, 0])} options={satisfactionPieOptions} plugins={[ChartDataLabels]} />
+                </div>
+              </div>
+              <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
+                <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">The way the Trust leadership (BoT, MC and AC) have acted has minimized the potential conflicts in the host communities.</h3>
+                <div className="h-[320px]">
+                  <Pie key="gd-sat-conflictMinimization" data={generateSatisfactionPieData(satisfactionStore.dashboardData?.conflictMinimization || [0, 0, 0, 0, 0])} options={satisfactionPieOptions} plugins={[ChartDataLabels]} />
+                </div>
+              </div>
+              <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
+                <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">The Trust processes and actions have shown good level of transparency and accountability with the host communities.</h3>
+                <div className="h-[320px]">
+                  <Pie key="gd-sat-trustTransparency" data={generateSatisfactionPieData(satisfactionStore.dashboardData?.trustTransparencyAndAccountability || [0, 0, 0, 0, 0])} options={satisfactionPieOptions} plugins={[ChartDataLabels]} />
+                </div>
+              </div>
+              <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
+                <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">We feel the Trust has fairly considered women, young people, and persons with disability (PwDs) in their engagements and project delivery.</h3>
+                <div className="h-[320px]">
+                  <Pie key="gd-sat-fairInvolvement" data={generateSatisfactionPieData(satisfactionStore.dashboardData?.fairInvolvement || [0, 0, 0, 0, 0])} options={satisfactionPieOptions} plugins={[ChartDataLabels]} />
+                </div>
               </div>
             </div>
 
             {/* Pie Charts Section */}
             {/* <br /> */}
             <br />
+             <h1 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4">
+                Average Community Satisfaction with Settlors and NUPRC
+              </h1>
             <br />
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mb-4">
               <div className="bg-white p-3 rounded-md shadow-sm">
@@ -2561,6 +2544,7 @@ const GeneralDashboard: React.FC = observer(() => {
                       </h3>
                       <div className="h-64 sm:h-72">
                         <Pie
+                          key="gd-pie1"
                           data={pieData1}
                           options={{
                             maintainAspectRatio: false,
@@ -2606,6 +2590,7 @@ const GeneralDashboard: React.FC = observer(() => {
                       </h3>
                       <div className="h-64 sm:h-72">
                         <Pie
+                          key="gd-pie2"
                           data={pieData2}
                           options={{
                             maintainAspectRatio: false,
@@ -2651,6 +2636,7 @@ const GeneralDashboard: React.FC = observer(() => {
                       </h3>
                       <div className="h-64 sm:h-72">
                         <Pie
+                          key="gd-pie3"
                           data={pieData3}
                           options={{
                             maintainAspectRatio: false,
@@ -2695,6 +2681,7 @@ const GeneralDashboard: React.FC = observer(() => {
                       </h3>
                       <div className="h-64 sm:h-72">
                         <Pie
+                          key="gd-pie4"
                           data={pieData4}
                           options={{
                             maintainAspectRatio: false,
@@ -2748,6 +2735,7 @@ const GeneralDashboard: React.FC = observer(() => {
                     </h3>
                     <div className="h-64 sm:h-80">
                       <Line
+                        key="gd-line"
                         data={lineData}
                         options={{
                           maintainAspectRatio: false,

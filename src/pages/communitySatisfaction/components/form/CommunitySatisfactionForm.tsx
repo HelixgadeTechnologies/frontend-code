@@ -152,7 +152,7 @@ const CommunitySatisfactionForm = observer((props: Props) => {
                         <CustomRadio
                             name="trustTransparencyAndAccountability"
                             control={control}
-                            label="The trust processes and actions has shown good level of transparency and accountability with the host communities"
+                            label="(vi). The trust processes and actions has shown good level of transparency and accountability with the host communities"
                             options={[
                                 { value: "1", label: "Strongly Disagree" },
                                 { value: "2", label: "Disagree" },
@@ -166,7 +166,7 @@ const CommunitySatisfactionForm = observer((props: Props) => {
                         <CustomRadio
                             name="fairInvolvement"
                             control={control}
-                            label="We feel the trust has fairly considered women, young people, and person with disability (PwDs) in their engagements and project delivery"
+                            label="(vii). We feel the trust has fairly considered women, young people, and person with disability (PwDs) in their engagements and project delivery"
                             options={[
                                 { value: "1", label: "Strongly Disagree" },
                                 { value: "2", label: "Disagree" },
@@ -180,7 +180,7 @@ const CommunitySatisfactionForm = observer((props: Props) => {
                         <CustomRadio
                             name="settlorAction"
                             control={control}
-                            label="The way the Settlor has acted has  minimized conflict and improved their relationship with the host communities."
+                            label="(viii).The way the Settlor has acted has  minimized conflict and improved their relationship with the host communities."
                             options={[
                                 { value: "1", label: "Strongly Disagree" },
                                 { value: "2", label: "Disagree" },
@@ -194,7 +194,7 @@ const CommunitySatisfactionForm = observer((props: Props) => {
                         <CustomRadio
                             name="nuprcAction"
                             control={control}
-                            label="The way NUPRC is regulating and responding is effectively addressing disputes emanating from the implementation of the HCDT, and promoting improved relationships between host communities and Settlor's."
+                            label="(ix). The way NUPRC is regulating and responding is effectively addressing disputes emanating from the implementation of the HCDT, and promoting improved relationships between host communities and Settlor's."
                             options={[
                                 { value: "1", label: "Strongly Disagree" },
                                 { value: "2", label: "Disagree" },
@@ -224,7 +224,7 @@ const CommunitySatisfactionForm = observer((props: Props) => {
                             label="(i). The Trust commissioned and handed over completed projects in our community to the community leadership?"
                             options={[
                                 { value: "3", label: "True" },
-                                { value: "2", label: "It Improves" },
+                                { value: "2", label: "In Progress" },
                                 { value: "1", label: "Not True" },
                                 { value: "4", label: "Project yet to be implemented in my community" },
                             ]}
@@ -238,7 +238,7 @@ const CommunitySatisfactionForm = observer((props: Props) => {
                             label="(ii). The Trust has consulted our community leadership to discuss or develop  maintenance plans for all the completed projects implemented in our community."
                             options={[
                                 { value: "3", label: "True" },
-                                { value: "2", label: "It Improves" },
+                                { value: "2", label: "In Progress" },
                                 { value: "1", label: "Not True" },
                                 { value: "4", label: "Project yet to be implemented in my community" },
                             ]}
@@ -251,7 +251,7 @@ const CommunitySatisfactionForm = observer((props: Props) => {
                             label="(iii). The Trust implemented or is implementing  at least one income generating project for the host communities"
                             options={[
                                 { value: "3", label: "True" },
-                                { value: "2", label: "It Improves" },
+                                { value: "2", label: "In Progress" },
                                 { value: "1", label: "Not True" },
                                 { value: "4", label: "Project yet to be implemented in my community" },
                             ]}

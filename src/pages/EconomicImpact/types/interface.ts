@@ -38,7 +38,7 @@ export interface IEconomicImpactPayloadData {
     businessGrowth?: number | null;
     incomeIncrease?: number | null;
     livelihoodImprove?: number | null;
-    accessAmenities?: number | null;
+    accessAmenities?: string | null;
     communityPeaceAndSecurity?: number | null;
     trustId?: string | null;
 }
@@ -52,7 +52,7 @@ export interface IEconomicImpact {
     businessGrowth?: number | null;
     incomeIncrease?: number | null;
     livelihoodImprove?: number | null;
-    accessAmenities?: number | null;
+    accessAmenities?: string | null;
     communityPeaceAndSecurity?: number | null;
     trustId?: string | null;
 }
@@ -67,7 +67,7 @@ export interface IEconomicImpactView extends BaseItem {
     businessGrowthStatus?: string | null;
     incomeIncreaseStatus?: string | null;
     livelihoodImproveStatus?: string | null;
-    accessAmenities?: number | null;
+    accessAmenities?: string | null;
     accessAmenitiesStatus?: string | null;
     communityPeaceAndSecurity?: number | null;
     communityPeaceAndSecurityStatus?: string | null;

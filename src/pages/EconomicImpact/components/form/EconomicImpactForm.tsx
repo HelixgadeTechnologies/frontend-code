@@ -1,10 +1,11 @@
-import { useForm } from "react-hook-form";
-import CustomRadio from "../../../../components/elements/Radio";
-import { Button } from "../../../../components/elements";
-import { IEconomicImpactPayload, IEconomicImpactPayloadData, IEconomicImpactStore } from "../../types/interface";
 import { observer } from "mobx-react-lite";
+import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import { Button } from "../../../../components/elements";
+import CustomCheckboxGroup from "../../../../components/elements/CheckboxGroup";
+import CustomRadio from "../../../../components/elements/Radio";
 import { ITrustStore } from "../../../trust/types/interface";
+import { IEconomicImpactPayload, IEconomicImpactPayloadData, IEconomicImpactStore } from "../../types/interface";
 
 const EconomicImpactForm = observer(({ close, economicImpactStore, trustStore }: { close: () => void, economicImpactStore: IEconomicImpactStore, trustStore: ITrustStore }) => {
   const { control, handleSubmit, reset } = useForm();
@@ -17,7 +18,7 @@ const EconomicImpactForm = observer(({ close, economicImpactStore, trustStore }:
         incomeIncrease: Number(data.incomeIncrease),
         livelihoodImprove: Number(data.livelihoodImprove),
         communityPeaceAndSecurity: Number(data.communityPeaceAndSecurity),
-        accessAmenities: Number(data.accessAmenities),
+        accessAmenities: data.accessAmenities ?? null,
         trustId: trustStore.selectedTrustId
       };
       const payload: IEconomicImpactPayload = {
@@ -120,12 +121,13 @@ const EconomicImpactForm = observer(({ close, economicImpactStore, trustStore }:
             </div>
 
             <div className="mb-4">
-              <CustomRadio
+              <CustomCheckboxGroup
                 name="accessAmenities"
                 control={control}
                 rules={{ required: "This field is required" }}
                 label="iv. As a result of the HCDT projects, my household/I now have access to these basic amenities than before."
                 options={[
+                  { value: "0", label: "None" },
                   { value: "1", label: "Healthcare" },
                   { value: "2", label: "Education" },
                   { value: "3", label: "Portable Water" },

@@ -1,19 +1,17 @@
-import { useEffect } from "react";
-import { Bar, Pie } from "react-chartjs-2";
 import {
+    ArcElement,
     Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    Tooltip,
     Legend,
+    Tooltip,
 } from "chart.js";
-import { observer } from "mobx-react-lite";
-import { ISatisfactionStore } from "../../types/interface";
 import ChartDataLabels from "chartjs-plugin-datalabels";
+import { observer } from "mobx-react-lite";
+import { useEffect } from "react";
+import { Pie } from "react-chartjs-2";
+import { ISatisfactionStore } from "../../types/interface";
 
 // Register Chart.js components
-ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 const CommunitySatisfactionDashboard = observer(
     ({ satisfactionStore }: { satisfactionStore: ISatisfactionStore }) => {
@@ -92,92 +90,39 @@ const CommunitySatisfactionDashboard = observer(
         });
 
 
-        // ...existing imports...
-
-        // Add this function to generate grouped horizontal stacked bar data
-        const generateGroupedBarData = (data: number[][]) => ({
-            labels: [
-                "We feel well-informed about the implemented projects by the Trust leaderships.",
-                "We feel our community has been sufficiently consulted on projects by the Trust leaderships.",
-                "We feel suffient opportunities have been given to local community members to participate in the implemented HCDT projec.",
-                "There is a clear and effective mechnism in place to report community concerns to the Trust leadership.",
-                "The way the Trust leadership (BoT, MC and AC) have acted has minimized the potential conflicts in the host communities", 
-                "The Trust processes and actions have shown good level of transparency and accountability with the host communities",        
-                "We feel the Trust has fairly considered women, young people, and person with disability (PwDs) in their engagements and project delivery"
-            ],
+        const generateSatisfactionPieData = (data: number[]) => ({
+            labels: ["Strongly Disagree", "Disagree", "Slightly Agree", "Agree", "Strongly Agree"],
             datasets: [
                 {
-                    label: "Strongly Disagree",
-                    data: data.map(d => d[0]),
-                    backgroundColor: "#EF4444",
-                },
-                {
-                    label: "Disagree",
-                    data: data.map(d => d[1]),
-                    backgroundColor: "#de9292",
-                },
-                {
-                    label: "Slightly Agree",
-                    data: data.map(d => d[2]),
-                    backgroundColor: "#FACC15",
-                },
-                {
-                    label: "Agree",
-                    data: data.map(d => d[3]),
-                    backgroundColor: "#3B82F6",
-                },
-                {
-                    label: "Strongly Agree",
-                    data: data.map(d => d[4]),
-                    backgroundColor: "#22C55E",
+                    data,
+                    backgroundColor: ["#EF4444", "#de9292", "#FACC15", "#3B82F6", "#22C55E"],
+                    hoverBackgroundColor: ["#EF4444", "#de9292", "#FACC15", "#3B82F6", "#22C55E"],
                 },
             ],
         });
 
-
-        const groupedBarOptions = {
-            indexAxis: 'y' as const,
-            responsive: true,
+        const satisfactionPieOptions = {
             maintainAspectRatio: false,
             plugins: {
-                legend: {
-                    position: 'bottom' as const,
-                },
                 datalabels: {
-                    anchor: 'center' as const,
-                    align: 'center' as const,
-                    color: '#222',
-                    font: {
-                        weight: 'bold' as 'bold',
-                        size: 12,
-                    },
-                    formatter: function (value: number) {
-                        return `${value}%`;
-                    },
-                },
-            },
-            scales: {
-                x: {
-                    stacked: true,
-                    type: 'linear' as const,
-                    min: 0,
-                    max: 100,
-                    title: {
-                        display: true,
-                        text: 'Percentage of Respondents',
-                    },
-                    ticks: {
-                        stepSize: 20,
-                        callback: function (tickValue: any) {
-                            return `${tickValue}%`;
-                        },
+                    color: "#222",
+                    font: { weight: "bold" as const },
+                    formatter: (value: number, context: any) => {
+                        if (!value || Number(value) === 0) return null;
+                        const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
+                        const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
+                        const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
+                        return percent === "0" ? null : `${percent}%`;
                     },
                 },
-                y: {
-                    stacked: true,
-                    type: 'category' as const,
-                    title: {
-                        display: false,
+                legend: {
+                    display: true,
+                    position: "right" as const,
+                    labels: {
+                        boxWidth: 14,
+                        boxHeight: 14,
+                        padding: 12,
+                        font: { size: 11 },
                     },
                 },
             },
@@ -207,31 +152,80 @@ const CommunitySatisfactionDashboard = observer(
 
         return (
             <div className="p-6 ">
-                <div className=" mx-auto space-y-8">
-                    <div className="h-[400px] sm:h-[500px]">
-                        <Bar
-                            data={generateGroupedBarData([
-                                satisfactionStore.dashboardData?.infoProjects || [0, 0, 0, 0, 0],
-                                satisfactionStore.dashboardData?.communityConsult || [0, 0, 0, 0, 0],
-                                satisfactionStore.dashboardData?.localParticipation || [0, 0, 0, 0, 0],
-                                satisfactionStore.dashboardData?.reportMechanism || [0, 0, 0, 0, 0],
-                                satisfactionStore.dashboardData?.conflictMinimization || [0, 0, 0, 0, 0],
-                                // satisfactionStore.dashboardData?.settlorAction || [0, 0, 0, 0, 0],
-                                // satisfactionStore.dashboardData?.nuprcAction || [0, 0, 0, 0, 0],
-                            ])}
-                            options={groupedBarOptions}
-                            plugins={[ChartDataLabels]}
-                        />
+                {/* Row 1: 3 charts */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6">
+                    <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
+                        <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
+                            We feel well-informed about the implemented projects by the Trust leaderships.
+                        </h3>
+                        <div className="h-[320px]">
+                            <Pie key="cs-infoProjects" data={generateSatisfactionPieData(satisfactionStore.dashboardData?.infoProjects || [0, 0, 0, 0, 0])} options={satisfactionPieOptions} plugins={[ChartDataLabels]} />
+                        </div>
                     </div>
-
+                    <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
+                        <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
+                            We feel our community has been sufficiently consulted on projects by the Trust leaderships.
+                        </h3>
+                        <div className="h-[320px]">
+                            <Pie key="cs-communityConsult" data={generateSatisfactionPieData(satisfactionStore.dashboardData?.communityConsult || [0, 0, 0, 0, 0])} options={satisfactionPieOptions} plugins={[ChartDataLabels]} />
+                        </div>
+                    </div>
+                    <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
+                        <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
+                            We feel sufficient opportunities have been given to local community members to participate in the implemented HCDT projects.
+                        </h3>
+                        <div className="h-[320px]">
+                            <Pie key="cs-localParticipation" data={generateSatisfactionPieData(satisfactionStore.dashboardData?.localParticipation || [0, 0, 0, 0, 0])} options={satisfactionPieOptions} plugins={[ChartDataLabels]} />
+                        </div>
+                    </div>
+                </div>
+                {/* Row 2: 2 charts */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+                    <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
+                        <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
+                            There is a clear and effective mechanism in place to report community concerns to the Trust leadership.
+                        </h3>
+                        <div className="h-[320px]">
+                            <Pie key="cs-reportMechanism" data={generateSatisfactionPieData(satisfactionStore.dashboardData?.reportMechanism || [0, 0, 0, 0, 0])} options={satisfactionPieOptions} plugins={[ChartDataLabels]} />
+                        </div>
+                    </div>
+                    <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
+                        <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
+                            The way the Trust leadership (BoT, MC and AC) have acted has minimized the potential conflicts in the host communities.
+                        </h3>
+                        <div className="h-[320px]">
+                            <Pie key="cs-conflictMinimization" data={generateSatisfactionPieData(satisfactionStore.dashboardData?.conflictMinimization || [0, 0, 0, 0, 0])} options={satisfactionPieOptions} plugins={[ChartDataLabels]} />
+                        </div>
+                    </div>
+                    <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
+                        <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
+                            The Trust processes and actions have shown good level of transparency and accountability with the host communities.
+                        </h3>
+                        <div className="h-[320px]">
+                            <Pie key="cs-trustTransparency" data={generateSatisfactionPieData(satisfactionStore.dashboardData?.trustTransparencyAndAccountability || [0, 0, 0, 0, 0])} options={satisfactionPieOptions} plugins={[ChartDataLabels]} />
+                        </div>
+                    </div>
+                    <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
+                        <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
+                            We feel the Trust has fairly considered women, young people, and persons with disability (PwDs) in their engagements and project delivery.
+                        </h3>
+                        <div className="h-[320px]">
+                            <Pie key="cs-fairInvolvement" data={generateSatisfactionPieData(satisfactionStore.dashboardData?.fairInvolvement || [0, 0, 0, 0, 0])} options={satisfactionPieOptions} plugins={[ChartDataLabels]} />
+                        </div>
+                    </div>
                 </div>
                 <br />
+
+                <h1 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4">
+                    Community Satisfaction with Settlors and NUPRC
+                </h1>
                 <br />
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mb-4">
                     <div className="bg-white p-3 rounded-md shadow-sm">
                         <h2 className="text-s font-medium text-gray-800 mb-2">The way the Settlor has acted has  minimized conflict and improved their relationship with the host communities.</h2>
                         <div className="h-80 flex items-center justify-center">
                             <Pie
+                                key="cs-settlor"
                                 data={pieDataForSettlorSatisfaction}
                                 options={{
                                     plugins: {
@@ -255,10 +249,12 @@ const CommunitySatisfactionDashboard = observer(
                             />
                         </div>
                     </div>
+
                     <div className="bg-white p-3 rounded-md shadow-sm">
                         <h2 className="text-s font-medium text-gray-800 mb-2">The way NUPRC is regulating and responding is effectively addressing disputes emanating from the implementation of the HCDT, and promoting improved relationships between host communities and Settlor's.</h2>
                         <div className="h-80 flex items-center justify-center">
                             <Pie
+                                key="cs-nuprc"
                                 data={pieDataForNUPRCSatisfaction}
                                 options={{
                                     plugins: {
@@ -303,6 +299,7 @@ const CommunitySatisfactionDashboard = observer(
                         <div className="flex flex-col items-center">
                             <div className="h-52 w-52 mb-4">
                                 <Pie
+                                    key="cs-projectHandover"
                                     data={generatePieData(
                                         satisfactionStore.dashboardData?.projectHandover || [0, 0, 0, 0]
                                     )}
@@ -344,6 +341,7 @@ const CommunitySatisfactionDashboard = observer(
                         <div className="flex flex-col items-center">
                             <div className="h-52 w-52 mb-4">
                                 <Pie
+                                    key="cs-maintenanceConsult"
                                     data={generatePieData(
                                         satisfactionStore.dashboardData?.maintenanceConsult || [0, 0, 0, 0]
                                     )}
@@ -387,6 +385,7 @@ const CommunitySatisfactionDashboard = observer(
                         <div className="flex flex-col items-center">
                             <div className="h-52 w-52 mb-4">
                                 <Pie
+                                    key="cs-incomeProject"
                                     data={generatePieData(
                                         satisfactionStore.dashboardData?.incomeProject || [0, 0, 0, 0]
                                     )}
