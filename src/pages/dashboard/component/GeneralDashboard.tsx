@@ -1,26 +1,26 @@
-import { FaStar, FaRegStar } from "react-icons/fa";
 import { ChartOptions } from "chart.js";
-import { Doughnut, Bar, Line, Pie } from "react-chartjs-2";
-import DashboardTable, { DashboardTableColumn } from "../table/DashboardTable";
-import { Observer, observer } from "mobx-react-lite";
-import { dashboardStore as DashboardStore } from "../store/dashboardStore";
-import { useContext, createContext, useCallback, useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
 import dayjs from "dayjs";
-import { IConflictView } from "../../conflict/types/interface";
+import { Observer, observer } from "mobx-react-lite";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { Bar, Doughnut, Line, Pie } from "react-chartjs-2";
+import { FaRegStar, FaStar } from "react-icons/fa";
+import { useSearchParams } from "react-router-dom";
 import IMG from "../../../assets/svgs/dashboardConflictNotFound.svg";
 import { economicImpactStore as EconomicImpactStore } from "../../EconomicImpact/store/economicImpactStore";
 import { satisfactionStore as SatisfactionStore } from "../../communitySatisfaction/store/satisfactionStore";
 import { conflictStore as ConflictStore } from "../../conflict/store/conflictStore";
+import { IConflictView } from "../../conflict/types/interface";
 import { projectStore as ProjectStore } from "../../project/store/projectStore";
+import { dashboardStore as DashboardStore } from "../store/dashboardStore";
+import DashboardTable, { DashboardTableColumn } from "../table/DashboardTable";
 // import { IConflictResolutionOverTime } from "../types/interface";
-import { year } from "../../../utils/data";
-import { trustStore as TrustStore } from "../../trust/store/trustStore";
-import { ISettlor } from "../../Settings/types/interface";
-import { settingStore as SettingStore } from "../../Settings/store/settingStore";
 import ChartDataLabels from "chartjs-plugin-datalabels";
-import FloatingStepper from "./FloatingStepper";
+import { year } from "../../../utils/data";
+import { settingStore as SettingStore } from "../../Settings/store/settingStore";
+import { ISettlor } from "../../Settings/types/interface";
+import { trustStore as TrustStore } from "../../trust/store/trustStore";
 import { ITrustList } from "../../trust/types/interface";
+import FloatingStepper from "./FloatingStepper";
 
 const dashboardStoreCTX = createContext(DashboardStore);
 const settingStoreCTX = createContext(SettingStore);
@@ -514,6 +514,18 @@ const GeneralDashboard: React.FC = observer(() => {
       },
     ],
   };
+  const pieData4 = {
+    labels: ["Very True", "Slightly", "Not True"],
+    datasets: [
+      {
+        data: (
+          economicImpactStore?.dashboardData?.communityPeaceAndSecurity ?? [0, 0, 0]
+        ).map((v: any) => Number(v) || 0),
+        backgroundColor: ["#22C55E", "#FACC15", "#EF4444"],
+        hoverBackgroundColor: ["#16A34A", "#EAB308", "#DC2626"],
+      },
+    ],
+  };
 
   // Data for the line chart
   const lineData = {
@@ -592,13 +604,13 @@ const GeneralDashboard: React.FC = observer(() => {
 
   const generateGroupedBarData = (data: number[][]) => ({
     labels: [
-      "We feel well-informed about Trust projects.",
-      "There has been enough community consultation on Trust projects.",
-      "The community has had fair opportunities to take part in HCDT projects.",
-      "A clear system exists to report and address concerns.",
-      "The actions of governing structures have reduced conflict in my community.",
-      // "Communities Satisfaction with the the Settlor's.",
-      // "Communities Satisfaction with the the NUPRC’s"
+      "We feel well-informed about the implemented projects by the Trust leaderships.",
+      "We feel our community has been sufficiently consulted on projects by the Trust leaderships.",
+      "We feel suffient opportunities have been given to local community members to participate in the implemented HCDT projec.",
+      "There is a clear and effective mechnism in place to report community concerns to the Trust leadership.",
+      "The way the Trust leadership (BoT, MC and AC) have acted has minimized the potential conflicts in the host communities",
+      "The Trust processes and actions have shown good level of transparency and accountability with the host communities",
+      "We feel the Trust has fairly considered women, young people, and person with disability (PwDs) in their engagements and project delivery"
     ],
 
     datasets: [
@@ -1316,253 +1328,253 @@ const GeneralDashboard: React.FC = observer(() => {
           <h2 className="font-semibold text-xl text-gray-900 mb-4">
             Trust Establishment and Governance
           </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-stretch">
-        {/* Left Column */}
-        <div className="flex flex-col gap-5 h-full">
-          {/* HCDT Establishment and Governance */}
-          <div className="bg-white rounded-xl p-4 shadow flex flex-col gap-2">
-            <div className="text-xs text-gray-700 mb-1">
-              Number of HCDTs incorporated by the Nigerian Upstream Petroleum
-              Regulatory Commission (NUPRC)
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="flex-1 h-2 bg-[#E5E7EB] rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-[#22C55E]"
-                  style={{
-                    width: `${dashboardStore.dashboardData?.FIELDS_COMPLETION}%`,
-                  }}></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-stretch">
+            {/* Left Column */}
+            <div className="flex flex-col gap-5 h-full">
+              {/* HCDT Establishment and Governance */}
+              <div className="bg-white rounded-xl p-4 shadow flex flex-col gap-2">
+                <div className="text-xs text-gray-700 mb-1">
+                  Number of HCDTs incorporated by the Nigerian Upstream Petroleum
+                  Regulatory Commission (NUPRC)
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="flex-1 h-2 bg-[#E5E7EB] rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-[#22C55E]"
+                      style={{
+                        width: `${dashboardStore.dashboardData?.FIELDS_COMPLETION}%`,
+                      }}></div>
+                  </div>
+                  <span className="text-xs text-gray-700 font-semibold">
+                    {dashboardStore.dashboardData?.FIELDS_COMPLETION}%
+                  </span>
+                </div>
+                <div className="text-sm font-bold text-gray-900 mt-2">
+                  {calculateEstablishedTrusts(
+                    dashboardStore.dashboardData?.FIELDS_COMPLETION as number,
+                    dashboardStore.dashboardData?.COMPLETION_STATUS
+                      .totalTrust as number
+                  )}{" "}
+                  out of{" "}
+                  {dashboardStore.dashboardData?.COMPLETION_STATUS.totalTrust}{" "}
+                  Trusts is fully Incoroporated
+                </div>
               </div>
-              <span className="text-xs text-gray-700 font-semibold">
-                {dashboardStore.dashboardData?.FIELDS_COMPLETION}%
-              </span>
+              {/* Communities benefiting by state */}
+              <div className="bg-white rounded-xl p-6 shadow flex flex-col gap-4 flex-1 justify-between">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-sm text-gray-700 font-medium">
+                    Total number of host communities delineated to benefit from the
+                    Host Community Development Trust Fund
+                  </span>
+                  <span className="text-xs text-gray-500 font-medium">
+                    Total Number of all Benefiting Communities |{" "}
+                    {dashboardStore.dashboardData?.COMMUNITY_BENEFIT.numberOfTrustCommunities.reduce(
+                      (sum: any, num: any) => sum + num,
+                      0
+                    )}
+                  </span>
+                </div>
+                <div className="w-full h-56 flex items-end">
+                  <Bar
+                    data={barData}
+                    options={barOptions}
+                    plugins={[ChartDataLabels]}
+                  />
+                </div>
+              </div>
             </div>
-            <div className="text-sm font-bold text-gray-900 mt-2">
-              {calculateEstablishedTrusts(
-                dashboardStore.dashboardData?.FIELDS_COMPLETION as number,
-                dashboardStore.dashboardData?.COMPLETION_STATUS
-                  .totalTrust as number
-              )}{" "}
-              out of{" "}
-              {dashboardStore.dashboardData?.COMPLETION_STATUS.totalTrust}{" "}
-              Trusts is fully Incoroporated
+            {/* Right Column */}
+            <div className="flex flex-col h-full">
+              {/* Number of Trust with Compliance */}
+              <div className="bg-white rounded-xl p-4 shadow flex flex-col items-center gap-2 relative h-full justify-center">
+                <div className="font-semibold text-base text-gray-900 mb-2">
+                  Number of HCDTs with approved Community Development Plans
+                </div>
+                <div className="relative flex items-center justify-center w-44 h-44 my-4">
+                  <Doughnut data={doughnutData} options={doughnutOptions} />
+                  <span className="absolute text-3xl font-bold text-gray-900">
+                    {
+                      dashboardStore.dashboardData?.COMPLETION_STATUS
+                        .percentFullyEstablished
+                    }
+                    %
+                  </span>
+                </div>
+                <div className="flex justify-between w-full mt-2 text-xs text-gray-500">
+                  <div className="flex flex-col items-center flex-1">
+                    <span className="font-semibold text-lg text-gray-900">
+                      {
+                        dashboardStore.dashboardData?.COMPLETION_STATUS
+                          .totalCompleteTrust
+                      }
+                    </span>
+                    <span>Completed Development plan</span>
+                  </div>
+
+                  <div className="flex flex-col items-center flex-1">
+                    <span className="font-semibold text-lg text-gray-900">
+                      {dashboardStore.dashboardData?.COMPLETION_STATUS.totalTrust}
+                    </span>
+                    <span>Total number of Trust</span>
+                  </div>
+                </div>
+                {/* <div className="w-full mt-4 flex justify-center">
+              <span className="text-xs text-gray-500 bg-[#FFF6F0] px-2 py-1 rounded font-medium">
+                <span className="text-[#FF6B00] font-semibold">62 Companies</span> available & assessment distribution
+              </span>
+            </div> */}
+              </div>
             </div>
           </div>
-          {/* Communities benefiting by state */}
-          <div className="bg-white rounded-xl p-6 shadow flex flex-col gap-4 flex-1 justify-between">
+
+          {/* Number of Incorporated Trust by State */}
+          <div className="bg-white rounded-xl p-6 shadow mt-6 mb-6">
             <div className="flex items-center justify-between mb-4">
-              <span className="text-sm text-gray-700 font-medium">
-                Total number of host communities delineated to benefit from the
-                Host Community Development Trust Fund
+              <span className="text-sm text-gray-700 font-medium uppercase">
+                NUMBER OF INCORPORATED TRUST BY STATE
               </span>
               <span className="text-xs text-gray-500 font-medium">
-                Total Number of all Benefiting Communities |{" "}
-                {dashboardStore.dashboardData?.COMMUNITY_BENEFIT.numberOfTrustCommunities.reduce(
-                  (sum: any, num: any) => sum + num,
-                  0
-                )}
+                Total Number of Incorporated Trusts |{" "}
+                {(
+                  dashboardStore.dashboardData?.STATE_WISE_TRUST_COUNT
+                    ?.trustCount ?? []
+                ).reduce((sum: any, num: any) => sum + num, 0)}
               </span>
             </div>
-            <div className="w-full h-56 flex items-end">
+            <div className="w-full h-80 flex items-end justify-center">
               <Bar
-                data={barData}
+                data={stateWiseTrustData}
                 options={barOptions}
                 plugins={[ChartDataLabels]}
               />
             </div>
           </div>
-        </div>
-        {/* Right Column */}
-        <div className="flex flex-col h-full">
-          {/* Number of Trust with Compliance */}
-          <div className="bg-white rounded-xl p-4 shadow flex flex-col items-center gap-2 relative h-full justify-center">
-            <div className="font-semibold text-base text-gray-900 mb-2">
-              Number of HCDTs with approved Community Development Plans
-            </div>
-            <div className="relative flex items-center justify-center w-44 h-44 my-4">
-              <Doughnut data={doughnutData} options={doughnutOptions} />
-              <span className="absolute text-3xl font-bold text-gray-900">
-                {
-                  dashboardStore.dashboardData?.COMPLETION_STATUS
-                    .percentFullyEstablished
-                }
-                %
-              </span>
-            </div>
-            <div className="flex justify-between w-full mt-2 text-xs text-gray-500">
-              <div className="flex flex-col items-center flex-1">
-                <span className="font-semibold text-lg text-gray-900">
-                  {
-                    dashboardStore.dashboardData?.COMPLETION_STATUS
-                      .totalCompleteTrust
-                  }
-                </span>
-                <span>Completed Development plan</span>
-              </div>
 
-              <div className="flex flex-col items-center flex-1">
-                <span className="font-semibold text-lg text-gray-900">
-                  {dashboardStore.dashboardData?.COMPLETION_STATUS.totalTrust}
+          {/* Statistics and Expenditure Row */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+            {/* HCDT Statistics */}
+            {/* Settlors Operational Expenditure */}
+            <div className="bg-white rounded-xl p-8 shadow flex flex-col justify-center min-h-[220px]">
+              <span className="font-semibold text-base text-gray-900 mb-4">
+                Number of HCDTs with Settlor-approved distribution matrix
+              </span>
+              <div>
+                <span className="font-bold text-3xl text-gray-900 align-middle">
+                  {dashboardStore.dashboardData?.DISTRIBUTION_MATRIX.total_complete}
                 </span>
-                <span>Total number of Trust</span>
+                <span className="text-base text-gray-700 ml-2 align-middle">
+                  Trust with agreed distribution matrix
+                </span>
               </div>
             </div>
-            {/* <div className="w-full mt-4 flex justify-center">
-              <span className="text-xs text-gray-500 bg-[#FFF6F0] px-2 py-1 rounded font-medium">
-                <span className="text-[#FF6B00] font-semibold">62 Companies</span> available & assessment distribution
+            <div className="bg-white rounded-xl p-8 shadow">
+              <div className="font-semibold text-base text-gray-900 mb-4">
+                Percentage of HCDTs that have received their annual funding (3% OPEX)
+              </div>
+              <div
+                className="w-full max-w-4xl mx-auto"
+                style={{ minHeight: "220px" }}>
+                <Bar data={FundsData} options={conflictBarOptions} />
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 min-h-[220px]">
+            <div className="bg-white rounded-xl p-8 shadow">
+              <div className="font-semibold text-base text-gray-900 mb-4">
+                Gender composition of HCDT committees
+              </div>
+              <div
+                className="w-full max-w-4xl mx-auto"
+                style={{ minHeight: "220px" }}>
+                <Bar data={BoTData} options={conflictBarOptions} />
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl p-6 shadow flex flex-col items-center ">
+              <span className="font-semibold text-base text-gray-900 mb-4 self-start">
+                Percentage of HCDTs that have established a Board of Trustees, Management Committee, and Advisory Committee.
               </span>
-            </div> */}
-          </div>
-        </div>
-      </div>
-
-      {/* Number of Incorporated Trust by State */}
-      <div className="bg-white rounded-xl p-6 shadow mt-6 mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <span className="text-sm text-gray-700 font-medium uppercase">
-            NUMBER OF INCORPORATED TRUST BY STATE
-          </span>
-          <span className="text-xs text-gray-500 font-medium">
-            Total Number of Incorporated Trusts |{" "}
-            {(
-              dashboardStore.dashboardData?.STATE_WISE_TRUST_COUNT
-                ?.trustCount ?? []
-            ).reduce((sum: any, num: any) => sum + num, 0)}
-          </span>
-        </div>
-        <div className="w-full h-80 flex items-end justify-center">
-          <Bar
-            data={stateWiseTrustData}
-            options={barOptions}
-            plugins={[ChartDataLabels]}
-          />
-        </div>
-      </div>
-
-      {/* Statistics and Expenditure Row */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-        {/* HCDT Statistics */}
-        {/* Settlors Operational Expenditure */}
-        <div className="bg-white rounded-xl p-8 shadow flex flex-col justify-center min-h-[220px]">
-          <span className="font-semibold text-base text-gray-900 mb-4">
-            Number of HCDTs with Settlor-approved distribution matrix
-          </span>
-          <div>
-            <span className="font-bold text-3xl text-gray-900 align-middle">
-              {dashboardStore.dashboardData?.DISTRIBUTION_MATRIX.total_complete}
-            </span>
-            <span className="text-base text-gray-700 ml-2 align-middle">
-              Trust with agreed distribution matrix
-            </span>
-          </div>
-        </div>
-        <div className="bg-white rounded-xl p-8 shadow">
-          <div className="font-semibold text-base text-gray-900 mb-4">
-            Percentage of HCDTs that have received their annual funding (3% OPEX) 
-          </div>
-          <div
-            className="w-full max-w-4xl mx-auto"
-            style={{ minHeight: "220px" }}>
-            <Bar data={FundsData} options={conflictBarOptions} />
-          </div>
-        </div>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 min-h-[220px]">
-        <div className="bg-white rounded-xl p-8 shadow">
-          <div className="font-semibold text-base text-gray-900 mb-4">
-            Gender composition of HCDT committees
-          </div>
-          <div
-            className="w-full max-w-4xl mx-auto"
-            style={{ minHeight: "220px" }}>
-            <Bar data={BoTData} options={conflictBarOptions} />
-          </div>
-        </div>
-
-        <div className="bg-white rounded-xl p-6 shadow flex flex-col items-center ">
-          <span className="font-semibold text-base text-gray-900 mb-4 self-start">
-           Percentage of HCDTs that have established a Board of Trustees, Management Committee, and Advisory Committee.
-          </span>
-          <Bar
-            data={{
-              labels: [
-                "BoT Committee",
-                "Management Committee",
-                "Advisory Committee",
-              ],
-              datasets: [
-                {
-                  label: "Percentage",
-                  data: [
-                    dashboardStore.dashboardData?.BOT_INAUGURATION_CHECK
-                      .botYesPercentage,
-                    dashboardStore.dashboardData?.BOT_INAUGURATION_CHECK
-                      .managementYesPercentage,
-                    dashboardStore.dashboardData?.BOT_INAUGURATION_CHECK
-                      .advisoryYesPercentage,
+              <Bar
+                data={{
+                  labels: [
+                    "BoT Committee",
+                    "Management Committee",
+                    "Advisory Committee",
                   ],
-                  backgroundColor: [
-                    doughnutColors[0],
-                    doughnutColors[1],
-                    doughnutColors[2],
+                  datasets: [
+                    {
+                      label: "Percentage",
+                      data: [
+                        dashboardStore.dashboardData?.BOT_INAUGURATION_CHECK
+                          .botYesPercentage,
+                        dashboardStore.dashboardData?.BOT_INAUGURATION_CHECK
+                          .managementYesPercentage,
+                        dashboardStore.dashboardData?.BOT_INAUGURATION_CHECK
+                          .advisoryYesPercentage,
+                      ],
+                      backgroundColor: [
+                        doughnutColors[0],
+                        doughnutColors[1],
+                        doughnutColors[2],
+                      ],
+                      borderRadius: 8,
+                      barPercentage: 0.5,
+                      categoryPercentage: 0.5,
+                    },
                   ],
-                  borderRadius: 8,
-                  barPercentage: 0.5,
-                  categoryPercentage: 0.5,
-                },
-              ],
-            }}
-            options={{
-              indexAxis: "y",
-              plugins: {
-                legend: { display: false },
-                tooltip: { enabled: true },
-                datalabels: {
-                  anchor: "center" as const,
-                  align: "center" as const,
-                  formatter: function (value) {
-                    return `${value}%`;
-                  },
-                  color: "#222",
-                  font: {
-                    weight: "bold",
-                  },
-                },
-              },
-              scales: {
-                x: {
-                  min: 0,
-                  max: 100,
-                  ticks: {
-                    callback: function (tickValue) {
-                      return `${tickValue}%`;
+                }}
+                options={{
+                  indexAxis: "y",
+                  plugins: {
+                    legend: { display: false },
+                    tooltip: { enabled: true },
+                    datalabels: {
+                      anchor: "center" as const,
+                      align: "center" as const,
+                      formatter: function (value) {
+                        return `${value}%`;
+                      },
+                      color: "#222",
+                      font: {
+                        weight: "bold",
+                      },
                     },
                   },
-                  title: {
-                    display: false,
+                  scales: {
+                    x: {
+                      min: 0,
+                      max: 100,
+                      ticks: {
+                        callback: function (tickValue) {
+                          return `${tickValue}%`;
+                        },
+                      },
+                      title: {
+                        display: false,
+                      },
+                    },
+                    y: {
+                      title: {
+                        display: false,
+                      },
+                    },
                   },
-                },
-                y: {
-                  title: {
-                    display: false,
-                  },
-                },
-              },
-            }}
-          />
-        </div>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 min-h-[220px]">
-        <div className="bg-white rounded-xl p-6 shadow flex flex-col items-center ">
-          <span className="font-semibold text-base text-gray-900 mb-4 self-start">
-            Percentage of HCDTs that consulted with community leaders, women, youth, and PwDs during the needs assessment – <i>disaggregate by process of consultation</i>
-          </span>
-          <div
-            className="w-full max-w-4xl mx-auto"
-            style={{ minHeight: "220px" }}>
-            <Bar data={BoTData2} options={conflictBarOptions} />
+                }}
+              />
+            </div>
           </div>
-          {/* <Bar
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 min-h-[220px]">
+            <div className="bg-white rounded-xl p-6 shadow flex flex-col items-center ">
+              <span className="font-semibold text-base text-gray-900 mb-4 self-start">
+                Percentage of HCDTs that consulted with community leaders, women, youth, and PwDs during the needs assessment – <i>disaggregate by process of consultation</i>
+              </span>
+              <div
+                className="w-full max-w-4xl mx-auto"
+                style={{ minHeight: "220px" }}>
+                <Bar data={BoTData2} options={conflictBarOptions} />
+              </div>
+              {/* <Bar
                         data={{
                             labels: [
                                 "Leadership consulted",
@@ -1629,123 +1641,175 @@ const GeneralDashboard: React.FC = observer(() => {
                             }
                         }}
                     /> */}
-        </div>
-        <div className="bg-white rounded-xl p-8 shadow flex flex-col md:flex-row items-center min-h-[320px]">
-          <div className="flex flex-col items-center ">
-            <span className="font-semibold text-base text-gray-900 mb-4 self-start">
-              Percentage of HCDTs whose needs assessments have been undertaken by the Settlor
-            </span>
-            <div className="flex flex-row items-center ">
-              <div className="w-40 h-40">
-                <Doughnut
-                  data={{
-                    labels: ["Completed", "In progress", "Yet to be conducted"],
-                    // labels: dashboardStore.dashboardData?.QUALITY_RATINGS.map(e => e.qualityRating),
-                    datasets: [
-                      {
-                        data: [
-                          dashboardStore.dashboardData
-                            ?.NEEDS_ASSESSMENT_PERCENTAGE?.percentage_status_1,
-                          dashboardStore.dashboardData
-                            ?.NEEDS_ASSESSMENT_PERCENTAGE?.percentage_status_2,
-                          dashboardStore.dashboardData
-                            ?.NEEDS_ASSESSMENT_PERCENTAGE?.percentage_status_3,
+            </div>
+            <div className="bg-white rounded-xl p-8 shadow flex flex-col md:flex-row items-center min-h-[320px]">
+              <div className="flex flex-col items-center ">
+                <span className="font-semibold text-base text-gray-900 mb-4 self-start">
+                  Percentage of HCDTs whose needs assessments have been undertaken by the Settlor
+                </span>
+                <div className="flex flex-row items-center ">
+                  <div className="w-40 h-40">
+                    <Doughnut
+                      data={{
+                        labels: ["Completed", "In progress", "Yet to be conducted"],
+                        // labels: dashboardStore.dashboardData?.QUALITY_RATINGS.map(e => e.qualityRating),
+                        datasets: [
+                          {
+                            data: [
+                              dashboardStore.dashboardData
+                                ?.NEEDS_ASSESSMENT_PERCENTAGE?.percentage_status_1,
+                              dashboardStore.dashboardData
+                                ?.NEEDS_ASSESSMENT_PERCENTAGE?.percentage_status_2,
+                              dashboardStore.dashboardData
+                                ?.NEEDS_ASSESSMENT_PERCENTAGE?.percentage_status_3,
+                            ],
+                            backgroundColor: [
+                              doughnutColors[0],
+                              doughnutColors[1],
+                              doughnutColors[2],
+                            ],
+                            borderWidth: 0,
+                          },
                         ],
-                        backgroundColor: [
-                          doughnutColors[0],
-                          doughnutColors[1],
-                          doughnutColors[2],
-                        ],
-                        borderWidth: 0,
-                      },
-                    ],
-                  }}
-                  options={{
-                    plugins: {
-                      legend: { display: false },
-                      tooltip: { enabled: false },
-                    },
-                    cutout: "60%",
-                  }}
-                />
-              </div>
-              <div className="ml-6 flex flex-col gap-2">
-                {dataM.map((e, i) => (
-                  <div key={i}>
-                    <div className="flex items-center text-sm text-gray-700 gap-2">
-                      <span
-                        className="inline-block w-3 h-3 rounded-full"
-                        style={{ background: e.color }}></span>
-                      {e.name}
-                      <span className="ml-2 text-gray-500">
-                        {e.percentage}%
-                      </span>
-                    </div>
+                      }}
+                      options={{
+                        plugins: {
+                          legend: { display: false },
+                          tooltip: { enabled: false },
+                        },
+                        cutout: "60%",
+                      }}
+                    />
                   </div>
-                ))}
+                  <div className="ml-6 flex flex-col gap-2">
+                    {dataM.map((e, i) => (
+                      <div key={i}>
+                        <div className="flex items-center text-sm text-gray-700 gap-2">
+                          <span
+                            className="inline-block w-3 h-3 rounded-full"
+                            style={{ background: e.color }}></span>
+                          {e.name}
+                          <span className="ml-2 text-gray-500">
+                            {e.percentage}%
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      </>
-    )}
+        </>
+      )}
 
       {/* Step 1: Project implementation and quality assessment */}
       {currentStep === 1 && (
         <>
           {/* Project */}
-      <div
-        id="project"
-        className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
-        {/* <div className="p-6 bg-gray-100 min-h-screen"> */}
-        <h2 className="font-semibold text-xl text-gray-900 mb-4 mt-10">
-          Project implementation and quality assessment
-        </h2>
-        {/* Project Overview */}
-        <div className="pb-6 ">
-          <DashboardTable
-            header="Top completed Project Details"
-            data={dashboardStore.dashboardData?.PROJECT_DETAILS}
-            columns={projectDetailsColumns}
-            emptyText="No data available"
-            loading={false}
-          />
-        </div>
-        <div className="pb-6 ">
-          <DashboardTable
-            header={"Top community workers per project"}
-            data={dashboardStore.dashboardData?.TOTAL_WORKER_IN_PROJECT}
-            columns={communityColumns}
-            emptyText={"No data available"}
-            loading={false}
-          />
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-6">
-          {/* Project Quality Ratings */}
-          <div className="bg-white rounded-xl p-8 shadow flex flex-col md:flex-row items-center min-h-[320px]">
-            <div className="flex flex-col items-center w-full">
-              <span className="font-semibold text-base text-gray-900 mb-4 self-start">
-                Project quality ratings
-              </span>
-              <div className="flex flex-row items-center w-full">
-                <div className="w-40 h-40">
-                  <Doughnut
+          <div
+            id="project"
+            className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
+            {/* <div className="p-6 bg-gray-100 min-h-screen"> */}
+            <h2 className="font-semibold text-xl text-gray-900 mb-4 mt-10">
+              Project implementation and quality assessment
+            </h2>
+            {/* Project Overview */}
+            <div className="pb-6 ">
+              <DashboardTable
+                header="Top completed Project Details"
+                data={dashboardStore.dashboardData?.PROJECT_DETAILS}
+                columns={projectDetailsColumns}
+                emptyText="No data available"
+                loading={false}
+              />
+            </div>
+            <div className="pb-6 ">
+              <DashboardTable
+                header={"Top community workers per project"}
+                data={dashboardStore.dashboardData?.TOTAL_WORKER_IN_PROJECT}
+                columns={communityColumns}
+                emptyText={"No data available"}
+                loading={false}
+              />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-6">
+              {/* Project Quality Ratings */}
+              <div className="bg-white rounded-xl p-8 shadow flex flex-col md:flex-row items-center min-h-[320px]">
+                <div className="flex flex-col items-center w-full">
+                  <span className="font-semibold text-base text-gray-900 mb-4 self-start">
+                    Project quality ratings
+                  </span>
+                  <div className="flex flex-row items-center w-full">
+                    <div className="w-40 h-40">
+                      <Doughnut
+                        data={{
+                          // labels: ["Worse", "Good", "Fair", "Excellent", "Bad"],
+                          labels: dashboardStore.dashboardData?.QUALITY_RATINGS.map(
+                            (e) => e.qualityRating
+                          ),
+                          datasets: [
+                            {
+                              data: dashboardStore.dashboardData?.QUALITY_RATINGS.map(
+                                (e) => e.percentage
+                              ),
+                              backgroundColor:
+                                dashboardStore.dashboardData?.QUALITY_RATINGS.map(
+                                  (e) => e.color
+                                ),
+                              borderWidth: 0,
+                            },
+                          ],
+                        }}
+                        options={{
+                          plugins: {
+                            legend: { display: false },
+                            tooltip: { enabled: false },
+                          },
+                          cutout: "60%",
+                        }}
+                      />
+                    </div>
+                    <div className="ml-6 flex flex-col gap-2">
+                      {dashboardStore.dashboardData?.QUALITY_RATINGS.map((e, i) => (
+                        <div key={i}>
+                          <div className="flex items-center text-sm text-gray-700 gap-2">
+                            <span
+                              className="inline-block w-3 h-3 rounded-full"
+                              style={{ background: e.color }}></span>
+                            {e.qualityRating}
+                            <span className="ml-2 text-gray-500">
+                              {e.percentage}%
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {/* Project Completion over time */}
+              <div className="bg-white rounded-xl p-8 shadow flex flex-col min-h-[320px]">
+                <span className="font-semibold text-base text-gray-900 mb-4">
+                  Project completion over time
+                </span>
+                <div className="w-full h-64">
+                  <Line
                     data={{
-                      // labels: ["Worse", "Good", "Fair", "Excellent", "Bad"],
-                      labels: dashboardStore.dashboardData?.QUALITY_RATINGS.map(
-                        (e) => e.qualityRating
-                      ),
+                      labels:
+                        dashboardStore.dashboardData?.COMPLETION_OVER_MONTH
+                          .monthName,
                       datasets: [
                         {
-                          data: dashboardStore.dashboardData?.QUALITY_RATINGS.map(
-                            (e) => e.percentage
-                          ),
-                          backgroundColor:
-                            dashboardStore.dashboardData?.QUALITY_RATINGS.map(
-                              (e) => e.color
-                            ),
-                          borderWidth: 0,
+                          label: "Completion",
+                          data: dashboardStore.dashboardData?.COMPLETION_OVER_MONTH
+                            .total,
+                          borderColor: "#3366CC",
+                          backgroundColor: "#3366CC",
+                          tension: 0.4,
+                          fill: false,
+                          pointRadius: 0,
+                          borderWidth: 2,
                         },
                       ],
                     }}
@@ -1754,228 +1818,176 @@ const GeneralDashboard: React.FC = observer(() => {
                         legend: { display: false },
                         tooltip: { enabled: false },
                       },
-                      cutout: "60%",
+                      scales: {
+                        x: {
+                          grid: { display: false },
+                          ticks: { color: "#8C94A6" },
+                        },
+                        y: {
+                          grid: { color: "#F3F5F7" },
+                          ticks: { color: "#8C94A6", stepSize: 5 },
+                          beginAtZero: true,
+                          min: 0,
+                          max: 30,
+                        },
+                      },
                     }}
                   />
                 </div>
-                <div className="ml-6 flex flex-col gap-2">
-                  {dashboardStore.dashboardData?.QUALITY_RATINGS.map((e, i) => (
-                    <div key={i}>
-                      <div className="flex items-center text-sm text-gray-700 gap-2">
-                        <span
-                          className="inline-block w-3 h-3 rounded-full"
-                          style={{ background: e.color }}></span>
-                        {e.qualityRating}
-                        <span className="ml-2 text-gray-500">
-                          {e.percentage}%
-                        </span>
-                      </div>
-                    </div>
-                  ))}
+              </div>
+            </div>
+
+            {/* Charts */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Line Chart 1 */}
+              <div className="bg-white p-3 rounded-md shadow-sm">
+                <h3 className="font-semibold text-lg text-gray-600 mb-2">
+                  Number of host community members benefitting from livelihood/ human capacity development initiatives implemented by HCDTs
+                </h3>
+                <div className="h-80 flex items-center justify-center">
+                  <Line options={chartOptions} data={data1} />
+                </div>
+              </div>
+
+              {/* Pie Chart 1 */}
+              <div className="bg-white p-3 rounded-md shadow-sm">
+                <h3 className="font-semibold  text-lg text-gray-600 mb-2">
+                  Trust Projects by Category
+                </h3>
+                <div className="h-80 flex items-center justify-center">
+                  <Pie
+                    options={{
+                      plugins: {
+                        datalabels: {
+                          color: "#222",
+                          font: { weight: "bold" },
+                          formatter: (value: number, context: any) => {
+                            const dataArr =
+                              context?.chart?.data?.datasets?.[0]?.data ?? [];
+                            const total = Array.isArray(dataArr)
+                              ? dataArr.reduce(
+                                (a: number, b: any) => a + (Number(b) || 0),
+                                0
+                              )
+                              : 0;
+                            const percent = total
+                              ? ((Number(value) / total) * 100).toFixed(0)
+                              : 0;
+                            return `${percent}%`;
+                          },
+                        },
+                        legend: { display: true },
+                      },
+                    }}
+                    plugins={[ChartDataLabels]}
+                    data={pieChartData1}
+                  />
+                </div>
+              </div>
+
+              {/* Line Chart 2 */}
+              <div className="bg-white p-3 rounded-md shadow-sm">
+                <h3 className="font-semibold text-lg text-gray-600 mb-2">
+                  {" "}
+                  Number of host community members employed by HCDT project contractors
+                </h3>
+                <div className="h-80 flex items-center justify-center">
+                  <Line options={chartOptions} data={data2} />
+                </div>
+              </div>
+
+              {/* Pie Chart 2 */}
+              <div className="bg-white p-3 rounded-md shadow-sm">
+                <h3 className="font-semibold text-lg text-gray-600 mb-2">
+                  Trust Projects by Status
+                </h3>
+                <div className="h-80 flex items-center justify-center">
+                  <Pie
+                    options={{
+                      plugins: {
+                        datalabels: {
+                          color: "#222",
+                          font: { weight: "bold" },
+                          formatter: (value: number, context: any) => {
+                            const dataArr =
+                              context?.chart?.data?.datasets?.[0]?.data ?? [];
+                            const total = Array.isArray(dataArr)
+                              ? dataArr.reduce(
+                                (a: number, b: any) => a + (Number(b) || 0),
+                                0
+                              )
+                              : 0;
+                            const percent = total
+                              ? ((Number(value) / total) * 100).toFixed(0)
+                              : 0;
+                            return `${percent}%`;
+                          },
+                        },
+                        legend: { display: true },
+                      },
+                    }}
+                    plugins={[ChartDataLabels]}
+                    data={pieChartData2}
+                  />
                 </div>
               </div>
             </div>
-          </div>
-          {/* Project Completion over time */}
-          <div className="bg-white rounded-xl p-8 shadow flex flex-col min-h-[320px]">
-            <span className="font-semibold text-base text-gray-900 mb-4">
-              Project completion over time
-            </span>
-            <div className="w-full h-64">
-              <Line
-                data={{
-                  labels:
-                    dashboardStore.dashboardData?.COMPLETION_OVER_MONTH
-                      .monthName,
-                  datasets: [
-                    {
-                      label: "Completion",
-                      data: dashboardStore.dashboardData?.COMPLETION_OVER_MONTH
-                        .total,
-                      borderColor: "#3366CC",
-                      backgroundColor: "#3366CC",
-                      tension: 0.4,
-                      fill: false,
-                      pointRadius: 0,
-                      borderWidth: 2,
-                    },
-                  ],
-                }}
-                options={{
-                  plugins: {
-                    legend: { display: false },
-                    tooltip: { enabled: false },
-                  },
-                  scales: {
-                    x: {
-                      grid: { display: false },
-                      ticks: { color: "#8C94A6" },
-                    },
-                    y: {
-                      grid: { color: "#F3F5F7" },
-                      ticks: { color: "#8C94A6", stepSize: 5 },
-                      beginAtZero: true,
-                      min: 0,
-                      max: 30,
-                    },
-                  },
-                }}
-              />
+            {/* </div> */}
+            <div className="bg-white rounded-xl p-8 shadow mt-10 w-full">
+              <div className="font-semibold text-base text-gray-900 mb-4">
+                Local employment by gender and social inclusion
+              </div>
+              <div
+                className="w-full max-w-4xl mx-auto"
+                style={{ minHeight: "320px" }}>
+                <Bar data={localEmploymentBarData} options={conflictBarOptions} />
+              </div>
             </div>
           </div>
-        </div>
-
-        {/* Charts */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Line Chart 1 */}
-          <div className="bg-white p-3 rounded-md shadow-sm">
-            <h3 className="font-semibold text-lg text-gray-600 mb-2">
-              Number of host community members benefitting from livelihood/ human capacity development initiatives implemented by HCDTs
-            </h3>
-            <div className="h-80 flex items-center justify-center">
-              <Line options={chartOptions} data={data1} />
-            </div>
-          </div>
-
-          {/* Pie Chart 1 */}
-          <div className="bg-white p-3 rounded-md shadow-sm">
-            <h3 className="font-semibold  text-lg text-gray-600 mb-2">
-              Trust Projects by Category
-            </h3>
-            <div className="h-80 flex items-center justify-center">
-              <Pie
-                options={{
-                  plugins: {
-                    datalabels: {
-                      color: "#222",
-                      font: { weight: "bold" },
-                      formatter: (value: number, context: any) => {
-                        const dataArr =
-                          context?.chart?.data?.datasets?.[0]?.data ?? [];
-                        const total = Array.isArray(dataArr)
-                          ? dataArr.reduce(
-                              (a: number, b: any) => a + (Number(b) || 0),
-                              0
-                            )
-                          : 0;
-                        const percent = total
-                          ? ((Number(value) / total) * 100).toFixed(0)
-                          : 0;
-                        return `${percent}%`;
-                      },
-                    },
-                    legend: { display: true },
-                  },
-                }}
-                plugins={[ChartDataLabels]}
-                data={pieChartData1}
-              />
-            </div>
-          </div>
-
-          {/* Line Chart 2 */}
-          <div className="bg-white p-3 rounded-md shadow-sm">
-            <h3 className="font-semibold text-lg text-gray-600 mb-2">
-              {" "}
-              Number of host community members employed by HCDT project contractors
-            </h3>
-            <div className="h-80 flex items-center justify-center">
-              <Line options={chartOptions} data={data2} />
-            </div>
-          </div>
-
-          {/* Pie Chart 2 */}
-          <div className="bg-white p-3 rounded-md shadow-sm">
-            <h3 className="font-semibold text-lg text-gray-600 mb-2">
-              Trust Projects by Status
-            </h3>
-            <div className="h-80 flex items-center justify-center">
-              <Pie
-                options={{
-                  plugins: {
-                    datalabels: {
-                      color: "#222",
-                      font: { weight: "bold" },
-                      formatter: (value: number, context: any) => {
-                        const dataArr =
-                          context?.chart?.data?.datasets?.[0]?.data ?? [];
-                        const total = Array.isArray(dataArr)
-                          ? dataArr.reduce(
-                              (a: number, b: any) => a + (Number(b) || 0),
-                              0
-                            )
-                          : 0;
-                        const percent = total
-                          ? ((Number(value) / total) * 100).toFixed(0)
-                          : 0;
-                        return `${percent}%`;
-                      },
-                    },
-                    legend: { display: true },
-                  },
-                }}
-                plugins={[ChartDataLabels]}
-                data={pieChartData2}
-              />
-            </div>
-          </div>
-        </div>
-        {/* </div> */}
-        <div className="bg-white rounded-xl p-8 shadow mt-10 w-full">
-          <div className="font-semibold text-base text-gray-900 mb-4">
-            Local employment by gender and social inclusion
-          </div>
-          <div
-            className="w-full max-w-4xl mx-auto"
-            style={{ minHeight: "320px" }}>
-            <Bar data={localEmploymentBarData} options={conflictBarOptions} />
-          </div>
-        </div>
-      </div>
-      </>
-    )}
+        </>
+      )}
 
       {/* Step 2: Conflict Resolution */}
       {currentStep === 2 && (
         <>
           {/* Conflict Resolution */}
-      <div
-        id="conflict"
-        className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
-        <h2 className="font-semibold text-xl text-gray-900 mb-4 mt-10">
-          Conflict Resolution
-        </h2>
-        {/* Summary Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-          {[
-            {
-              title: "All Conflict Reported",
-              count: conflictStore.dashboardData?.ALL_CONFLICT_REPORT,
-            },
-            {
-              title: "Conflicts Resolved",
-              count: conflictStore.dashboardData?.RESOLVED_CONFLICT,
-            },
-            {
-              title: "Conflicts Pending Resolution",
-              count: conflictStore.dashboardData?.PENDING_CONFLICT,
-            },
-            {
-              title: "Conflicts in Court",
-              count: conflictStore.dashboardData?.CONFLICTS_IN_COURT,
-            },
-          ].map((item, index) => (
-            <div
-              key={index}
-              className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center">
-              <h3 className="text-sm font-medium text-gray-600">
-                {item.title}
-              </h3>
-              <p className="text-2xl font-bold text-gray-800">{item.count}</p>
+          <div
+            id="conflict"
+            className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
+            <h2 className="font-semibold text-xl text-gray-900 mb-4 mt-10">
+              Conflict Resolution
+            </h2>
+            {/* Summary Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+              {[
+                {
+                  title: "All Conflict Reported",
+                  count: conflictStore.dashboardData?.ALL_CONFLICT_REPORT,
+                },
+                {
+                  title: "Conflicts Resolved",
+                  count: conflictStore.dashboardData?.RESOLVED_CONFLICT,
+                },
+                {
+                  title: "Conflicts Pending Resolution",
+                  count: conflictStore.dashboardData?.PENDING_CONFLICT,
+                },
+                {
+                  title: "Conflicts in Court",
+                  count: conflictStore.dashboardData?.CONFLICTS_IN_COURT,
+                },
+              ].map((item, index) => (
+                <div
+                  key={index}
+                  className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center">
+                  <h3 className="text-sm font-medium text-gray-600">
+                    {item.title}
+                  </h3>
+                  <p className="text-2xl font-bold text-gray-800">{item.count}</p>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-        {/* <div className="bg-white rounded-xl p-8 shadow flex flex-col md:flex-row items-center min-h-[320px]">
+            {/* <div className="bg-white rounded-xl p-8 shadow flex flex-col md:flex-row items-center min-h-[320px]">
                     <div className="flex flex-col items-center w-full">
                         <span className="font-semibold text-base text-gray-900 mb-4 self-start">Percentage of issues being addressed by the different stakeholder</span>
                         <div className="flex flex-row items-center justify-center w-full">
@@ -2012,486 +2024,287 @@ const GeneralDashboard: React.FC = observer(() => {
                     </div>
                 </div> */}
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10 pb-6">
-          {/* Conflict resolution status chart */}
-          <div className="bg-white rounded-xl p-6 shadow flex flex-col items-center  w-full md:max-w-xs">
-            <span className="font-semibold text-base text-gray-900 mb-4">
-              Conflict resolution status
-            </span>
-            <div className="w-32 h-32 mb-4">
-              <Doughnut
-                data={conflictStatusData}
-                options={conflictStatusOptions}
-              />
-            </div>
-            <div className="flex flex-col gap-2 w-full mt-2">
-              <div className="flex items-center justify-between text-sm">
-                <span className="flex items-center">
-                  <span
-                    className="inline-block w-3 h-3 rounded-full mr-2"
-                    style={{ background: "#22C55E" }}></span>
-                  Resolved
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10 pb-6">
+              {/* Conflict resolution status chart */}
+              <div className="bg-white rounded-xl p-6 shadow flex flex-col items-center  w-full md:max-w-xs">
+                <span className="font-semibold text-base text-gray-900 mb-4">
+                  Conflict resolution status
                 </span>
-                <span className="font-semibold text-gray-900">
-                  {
-                    dashboardStore.dashboardData?.CONFLICT_RESOLUTION_PERCENTAGE
-                      .resolvedPercentage
-                  }
-                </span>
-              </div>
-              <div className="flex items-center justify-between text-sm">
-                <span className="flex items-center">
-                  <span
-                    className="inline-block w-3 h-3 rounded-full mr-2"
-                    style={{ background: "#EA580C" }}></span>
-                  Unresolved
-                </span>
-                <span className="font-semibold text-gray-900">
-                  {
-                    dashboardStore.dashboardData?.CONFLICT_RESOLUTION_PERCENTAGE
-                      .unresolvedPercentage
-                  }
-                </span>
-              </div>
-            </div>
-          </div>
-          {/* Conflict Details Table - take more space */}
-          <div className="md:col-span-2 flex flex-col min-w-0 w-full overflow-hidden">
-            <DashboardTable
-              header="Conflict Details"
-              data={dashboardStore.dashboardData?.CONFLICT_RESOLUTION_DETAILS}
-              columns={conflictDetailsColumns}
-              emptyText="No data available"
-              loading={false}
-            />
-          </div>
-        </div>
-
-        {/* Charts Section */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mb-4">
-          <div className="bg-white p-3 rounded-md shadow-sm">
-            <h3 className="text-xs font-medium text-gray-600 mb-2">
-              Status of conflict
-            </h3>
-            <div className="h-80 flex items-center justify-center">
-              <Pie
-                data={pieDataStatusOfConflict}
-                options={{
-                  plugins: {
-                    datalabels: {
-                      color: "#222",
-                      font: { weight: "bold" },
-                      formatter: (value: number, context: any) => {
-                        const dataArr =
-                          context?.chart?.data?.datasets?.[0]?.data ?? [];
-                        const total = Array.isArray(dataArr)
-                          ? dataArr.reduce(
-                              (a: number, b: any) => a + (Number(b) || 0),
-                              0
-                            )
-                          : 0;
-                        const percent = total
-                          ? ((Number(value) / total) * 100).toFixed(0)
-                          : 0;
-                        return `${percent}%`;
-                      },
-                    },
-                    legend: { display: true },
-                  },
-                }}
-                plugins={[ChartDataLabels]}
-              />
-            </div>
-          </div>
-          <div className="bg-white p-3 rounded-md shadow-sm">
-            <h3 className="text-xs font-medium text-gray-600 mb-2">
-              Status of Court litigation
-            </h3>
-            <div className="h-80 flex items-center justify-center">
-              <Pie
-                data={pieDataCourtLitigation}
-                options={{
-                  plugins: {
-                    datalabels: {
-                      color: "#222",
-                      font: { weight: "bold" },
-                      formatter: (value: number, context: any) => {
-                        const dataArr =
-                          context?.chart?.data?.datasets?.[0]?.data ?? [];
-                        const total = Array.isArray(dataArr)
-                          ? dataArr.reduce(
-                              (a: number, b: any) => a + (Number(b) || 0),
-                              0
-                            )
-                          : 0;
-                        const percent = total
-                          ? ((Number(value) / total) * 100).toFixed(0)
-                          : 0;
-                        return `${percent}%`;
-                      },
-                    },
-                    legend: { display: true },
-                  },
-                }}
-                plugins={[ChartDataLabels]}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Report Frequency and Major Causes */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6 ">
-          <div className="bg-white p-4 rounded-lg shadow-md">
-            <h3 className="text-sm font-medium text-gray-600 mb-4">
-              Report frequency
-            </h3>
-            <Line data={lineDataReportFrequency} />
-          </div>
-          <div className="bg-white p-9 rounded-lg shadow-md">
-            <h3 className="text-sm font-medium text-gray-600 mb-4">
-              Major causes of conflict
-            </h3>
-            {(conflictStore.dashboardData?.CAUSE_OF_CONFLICT ?? []).length >
-            0 ? (
-              <ul className="space-y-2">
-                {conflictStore.dashboardData?.CAUSE_OF_CONFLICT.map(
-                  (cause, index) => (
-                    <li
-                      key={index}
-                      className="flex justify-between text-sm text-gray-600">
-                      <span className="font-bold text-lg">
-                        {removeUnderscores(cause.label)}
-                      </span>
-                      <span className="font-bold text-lg">{cause.value}</span>
-                    </li>
-                  )
-                )}
-              </ul>
-            ) : (
-              <div className="mt-8 h-[40vh] text-center flex items-center justify-center border border-grey-500 rounded-lg">
-                <div>
-                  <img
-                    className="mx-auto"
-                    src={IMG}
-                    alt="No data available"
-                    style={{ width: "200px" }}
+                <div className="w-32 h-32 mb-4">
+                  <Doughnut
+                    data={conflictStatusData}
+                    options={conflictStatusOptions}
                   />
-                  <div className="mt-2">
-                    <h3 className="text-base lg:text-lg font-semibold text-grey-500">
-                      No major cause of conflict
-                    </h3>
+                </div>
+                <div className="flex flex-col gap-2 w-full mt-2">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="flex items-center">
+                      <span
+                        className="inline-block w-3 h-3 rounded-full mr-2"
+                        style={{ background: "#22C55E" }}></span>
+                      Resolved
+                    </span>
+                    <span className="font-semibold text-gray-900">
+                      {
+                        dashboardStore.dashboardData?.CONFLICT_RESOLUTION_PERCENTAGE
+                          .resolvedPercentage
+                      }
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="flex items-center">
+                      <span
+                        className="inline-block w-3 h-3 rounded-full mr-2"
+                        style={{ background: "#EA580C" }}></span>
+                      Unresolved
+                    </span>
+                    <span className="font-semibold text-gray-900">
+                      {
+                        dashboardStore.dashboardData?.CONFLICT_RESOLUTION_PERCENTAGE
+                          .unresolvedPercentage
+                      }
+                    </span>
                   </div>
                 </div>
               </div>
-            )}
-          </div>
-        </div>
+              {/* Conflict Details Table - take more space */}
+              <div className="md:col-span-2 flex flex-col min-w-0 w-full overflow-hidden">
+                <DashboardTable
+                  header="Conflict Details"
+                  data={dashboardStore.dashboardData?.CONFLICT_RESOLUTION_DETAILS}
+                  columns={conflictDetailsColumns}
+                  emptyText="No data available"
+                  loading={false}
+                />
+              </div>
+            </div>
 
-        {/* Resolved and Unresolved Conflicts */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-white p-4 rounded-lg shadow-md">
-            <DashboardTable
-              header={"Top Resolved Conflict"}
-              data={conflictStore?.dashboardData?.RESOLVED_CONFLICTS.map(
-                (conflict: IConflictView) => {
-                  return {
-                    trustName: conflict.trustName,
-                    causeOfConflictName: conflict.causeOfConflictName,
-                    createAt: conflict.createAt,
-                  };
-                }
-              )}
-              columns={conflictDetailsColumnsR}
-              emptyText={"No data available"}
-              loading={false}
-            />
+            {/* Charts Section */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mb-4">
+              <div className="bg-white p-3 rounded-md shadow-sm">
+                <h3 className="text-xs font-medium text-gray-600 mb-2">
+                  Status of conflict
+                </h3>
+                <div className="h-80 flex items-center justify-center">
+                  <Pie
+                    data={pieDataStatusOfConflict}
+                    options={{
+                      plugins: {
+                        datalabels: {
+                          color: "#222",
+                          font: { weight: "bold" },
+                          formatter: (value: number, context: any) => {
+                            const dataArr =
+                              context?.chart?.data?.datasets?.[0]?.data ?? [];
+                            const total = Array.isArray(dataArr)
+                              ? dataArr.reduce(
+                                (a: number, b: any) => a + (Number(b) || 0),
+                                0
+                              )
+                              : 0;
+                            const percent = total
+                              ? ((Number(value) / total) * 100).toFixed(0)
+                              : 0;
+                            return `${percent}%`;
+                          },
+                        },
+                        legend: { display: true },
+                      },
+                    }}
+                    plugins={[ChartDataLabels]}
+                  />
+                </div>
+              </div>
+              <div className="bg-white p-3 rounded-md shadow-sm">
+                <h3 className="text-xs font-medium text-gray-600 mb-2">
+                  Status of Court litigation
+                </h3>
+                <div className="h-80 flex items-center justify-center">
+                  <Pie
+                    data={pieDataCourtLitigation}
+                    options={{
+                      plugins: {
+                        datalabels: {
+                          color: "#222",
+                          font: { weight: "bold" },
+                          formatter: (value: number, context: any) => {
+                            const dataArr =
+                              context?.chart?.data?.datasets?.[0]?.data ?? [];
+                            const total = Array.isArray(dataArr)
+                              ? dataArr.reduce(
+                                (a: number, b: any) => a + (Number(b) || 0),
+                                0
+                              )
+                              : 0;
+                            const percent = total
+                              ? ((Number(value) / total) * 100).toFixed(0)
+                              : 0;
+                            return `${percent}%`;
+                          },
+                        },
+                        legend: { display: true },
+                      },
+                    }}
+                    plugins={[ChartDataLabels]}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Report Frequency and Major Causes */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6 ">
+              <div className="bg-white p-4 rounded-lg shadow-md">
+                <h3 className="text-sm font-medium text-gray-600 mb-4">
+                  Report frequency
+                </h3>
+                <Line data={lineDataReportFrequency} />
+              </div>
+              <div className="bg-white p-9 rounded-lg shadow-md">
+                <h3 className="text-sm font-medium text-gray-600 mb-4">
+                  Major causes of conflict
+                </h3>
+                {(conflictStore.dashboardData?.CAUSE_OF_CONFLICT ?? []).length >
+                  0 ? (
+                  <ul className="space-y-2">
+                    {conflictStore.dashboardData?.CAUSE_OF_CONFLICT.map(
+                      (cause, index) => (
+                        <li
+                          key={index}
+                          className="flex justify-between text-sm text-gray-600">
+                          <span className="font-bold text-lg">
+                            {removeUnderscores(cause.label)}
+                          </span>
+                          <span className="font-bold text-lg">{cause.value}</span>
+                        </li>
+                      )
+                    )}
+                  </ul>
+                ) : (
+                  <div className="mt-8 h-[40vh] text-center flex items-center justify-center border border-grey-500 rounded-lg">
+                    <div>
+                      <img
+                        className="mx-auto"
+                        src={IMG}
+                        alt="No data available"
+                        style={{ width: "200px" }}
+                      />
+                      <div className="mt-2">
+                        <h3 className="text-base lg:text-lg font-semibold text-grey-500">
+                          No major cause of conflict
+                        </h3>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Resolved and Unresolved Conflicts */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="bg-white p-4 rounded-lg shadow-md">
+                <DashboardTable
+                  header={"Top Resolved Conflict"}
+                  data={conflictStore?.dashboardData?.RESOLVED_CONFLICTS.map(
+                    (conflict: IConflictView) => {
+                      return {
+                        trustName: conflict.trustName,
+                        causeOfConflictName: conflict.causeOfConflictName,
+                        createAt: conflict.createAt,
+                      };
+                    }
+                  )}
+                  columns={conflictDetailsColumnsR}
+                  emptyText={"No data available"}
+                  loading={false}
+                />
+              </div>
+              <div className="bg-white p-4 rounded-lg shadow-md">
+                <DashboardTable
+                  header={"Top Unresolved Conflict"}
+                  data={conflictStore?.dashboardData?.UNRESOLVED_CONFLICTS.map(
+                    (conflict: IConflictView) => {
+                      return {
+                        trustName: conflict.trustName,
+                        causeOfConflictName: conflict.causeOfConflictName,
+                        createAt: conflict.createAt,
+                      };
+                    }
+                  )}
+                  columns={conflictDetailsColumnsR}
+                  emptyText={"No data available"}
+                  loading={false}
+                />
+              </div>
+            </div>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow-md">
-            <DashboardTable
-              header={"Top Unresolved Conflict"}
-              data={conflictStore?.dashboardData?.UNRESOLVED_CONFLICTS.map(
-                (conflict: IConflictView) => {
-                  return {
-                    trustName: conflict.trustName,
-                    causeOfConflictName: conflict.causeOfConflictName,
-                    createAt: conflict.createAt,
-                  };
-                }
-              )}
-              columns={conflictDetailsColumnsR}
-              emptyText={"No data available"}
-              loading={false}
-            />
-          </div>
-        </div>
-      </div>
-      </>
-    )}
+        </>
+      )}
 
       {/* Step 3: Community Satisfaction */}
       {currentStep === 3 && (
         <>
           {/* Community Satisfaction */}
-      <div
-        id="community-satisfaction"
-        className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
-        <h2 className="font-semibold text-xl text-gray-900 mb-4 mt-10">
-          Average community satisfaction with the process, inclusion, approach
-          and management of the HCDTs by the government structure (BoT, MC & AC)
-        </h2>
-        <div className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
-          <div className="h-[400px] sm:h-[500px]">
-            <Bar
-              data={generateGroupedBarData([
-                satisfactionStore.dashboardData?.infoProjects || [
-                  0, 0, 0, 0, 0,
-                ],
-                satisfactionStore.dashboardData?.communityConsult || [
-                  0, 0, 0, 0, 0,
-                ],
-                satisfactionStore.dashboardData?.localParticipation || [
-                  0, 0, 0, 0, 0,
-                ],
-                satisfactionStore.dashboardData?.reportMechanism || [
-                  0, 0, 0, 0, 0,
-                ],
-                satisfactionStore.dashboardData?.conflictMinimization || [
-                  0, 0, 0, 0, 0,
-                ],
-                // satisfactionStore.dashboardData?.settlorAction || [0, 0, 0, 0, 0],
-                // satisfactionStore.dashboardData?.nuprcAction || [0, 0, 0, 0, 0],
-              ])}
-              options={groupedBarOptions}
-              plugins={[ChartDataLabels]}
-            />
-          </div>
-        </div>
-
-        {/* Pie Charts Section */}
-        {/* <br /> */}
-        <br />
-        <br />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mb-4">
-          <div className="bg-white p-3 rounded-md shadow-sm">
-            <h3 className="text-s font-medium text-gray-800 mb-2">
-              The way the Settlor has acted has minimized conflict and improved
-              their relationship with the host communities.
-            </h3>
-            <div className="h-80 flex items-center justify-center">
-              <Pie
-                data={pieDataForSettlorSatisfaction}
-                options={{
-                  plugins: {
-                    datalabels: {
-                      color: "#222",
-                      font: { weight: "bold" },
-                      formatter: (value: number, context: any) => {
-                        const dataArr =
-                          context?.chart?.data?.datasets?.[0]?.data ?? [];
-                        const total = Array.isArray(dataArr)
-                          ? dataArr.reduce(
-                              (a: number, b: any) => a + (Number(b) || 0),
-                              0
-                            )
-                          : 0;
-                        const percent = total
-                          ? ((Number(value) / total) * 100).toFixed(0)
-                          : 0;
-                        return `${percent}%`;
-                      },
-                    },
-                    legend: {
-                      position: "bottom" as const,
-                      align: "center" as const, // Align legend to the end
-                    },
-                  },
-                }}
-                plugins={[ChartDataLabels]}
-              />
-            </div>
-          </div>
-          <div className="bg-white p-3 rounded-md shadow-sm">
-            <h3 className="text-s font-medium text-gray-800 mb-2">
-              The way NUPRC is regulating and responding is effectively
-              addressing disputes emanating from the implementation of the HCDT,
-              and promoting improved relationships between host communities and
-              Settlor's.
-            </h3>
-            <div className="h-80 flex items-center justify-center">
-              <Pie
-                data={pieDataForNUPRCSatisfaction}
-                options={{
-                  plugins: {
-                    datalabels: {
-                      color: "#222",
-                      font: { weight: "bold" },
-                      formatter: (value: number, context: any) => {
-                        const dataArr =
-                          context?.chart?.data?.datasets?.[0]?.data ?? [];
-                        const total = Array.isArray(dataArr)
-                          ? dataArr.reduce(
-                              (a: number, b: any) => a + (Number(b) || 0),
-                              0
-                            )
-                          : 0;
-                        const percent = total
-                          ? ((Number(value) / total) * 100).toFixed(0)
-                          : 0;
-                        return `${percent}%`;
-                      },
-                    },
-                    legend: {
-                      position: "bottom" as const,
-                      align: "center" as const, // Align legend to the end
-                    },
-                  },
-                }}
-                plugins={[ChartDataLabels]}
-              />
-            </div>
-          </div>
-        </div>
-        <br />
-        <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4">
-            Existence, and activeness of sustainability management
-            structure/committees established by the Trust
-          </h1>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
- 
-            <div className="bg-white shadow-md rounded-lg p-4 sm:p-6 flex flex-col items-center">
-              <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4 text-center">
-                The Trust commissioned and handed over completed projects in our
-                community to the community leadership?
-              </h3>
-              <div className="flex flex-col items-center">
-                <div className="h-52 w-52 mb-4">
-                  <Pie
-                    data={generatePieData(
-                      satisfactionStore.dashboardData?.projectHandover || [
-                        0, 0, 0, 0,
-                      ]
-                    )}
-                    options={{
-                      plugins: {
-                        datalabels: {
-                          color: "#222",
-                          font: { weight: "bold", size: 16 },
-                          formatter: (value: number, context: any) => {
-                            const dataArr =
-                              context?.chart?.data?.datasets?.[0]?.data ?? [];
-                            const total = Array.isArray(dataArr)
-                              ? dataArr.reduce(
-                                  (a: number, b: any) => a + (Number(b) || 0),
-                                  0
-                                )
-                              : 0;
-                            const percent = total
-                              ? ((Number(value) / total) * 100).toFixed(0)
-                              : 0;
-                            return `${percent}%`;
-                          },
-                        },
-                        legend: {
-                          display: true,
-                          position: "bottom" as const,
-                          align: "center" as const,
-                          labels: {
-                            boxWidth: 18,
-                            boxHeight: 18,
-                            padding: 10,
-                            font: { size: 9 },
-                          },
-                        },
-                      },
-                    }}
-                    plugins={[ChartDataLabels]}
-                    height={260}
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
-              <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
-                The Trust has consulted our community leadership to discuss or
-                develop maintenance plans for all the completed projects
-                implemented in our community.
-              </h3>
-              <div className="flex flex-col items-center">
-                <div className="h-52 w-52 mb-4">
-                  <Pie
-                    data={generatePieData(
-                      satisfactionStore.dashboardData?.maintenanceConsult || [
-                        0, 0, 0, 0,
-                      ]
-                    )}
-                    options={{
-                      plugins: {
-                        datalabels: {
-                          color: "#222",
-                          font: { weight: "bold", size: 16 },
-                          formatter: (value: number, context: any) => {
-                            const dataArr =
-                              context?.chart?.data?.datasets?.[0]?.data ?? [];
-                            const total = Array.isArray(dataArr)
-                              ? dataArr.reduce(
-                                  (a: number, b: any) => a + (Number(b) || 0),
-                                  0
-                                )
-                              : 0;
-                            const percent = total
-                              ? ((Number(value) / total) * 100).toFixed(0)
-                              : 0;
-                            return `${percent}%`;
-                          },
-                        },
-                        legend: {
-                          display: true,
-                          position: "bottom" as const,
-                          align: "center" as const,
-                          labels: {
-                            boxWidth: 18,
-                            boxHeight: 18,
-                            padding: 10,
-                            font: { size: 9 },
-                          },
-                        },
-                      },
-                    }}
-                    plugins={[ChartDataLabels]}
-                    height={260}
-                  />
-                </div>
+          <div
+            id="community-satisfaction"
+            className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
+            <h2 className="font-semibold text-xl text-gray-900 mb-4 mt-10">
+              Average community satisfaction with the process, inclusion, approach
+              and management of the HCDTs by the government structure (BoT, MC & AC)
+            </h2>
+            <div className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
+              <div className="h-[400px] sm:h-[500px]">
+                <Bar
+                  data={generateGroupedBarData([
+                    satisfactionStore.dashboardData?.infoProjects || [
+                      0, 0, 0, 0, 0,
+                    ],
+                    satisfactionStore.dashboardData?.communityConsult || [
+                      0, 0, 0, 0, 0,
+                    ],
+                    satisfactionStore.dashboardData?.localParticipation || [
+                      0, 0, 0, 0, 0,
+                    ],
+                    satisfactionStore.dashboardData?.reportMechanism || [
+                      0, 0, 0, 0, 0,
+                    ],
+                    satisfactionStore.dashboardData?.conflictMinimization || [
+                      0, 0, 0, 0, 0,
+                    ],
+                    // satisfactionStore.dashboardData?.settlorAction || [0, 0, 0, 0, 0],
+                    // satisfactionStore.dashboardData?.nuprcAction || [0, 0, 0, 0, 0],
+                  ])}
+                  options={groupedBarOptions}
+                  plugins={[ChartDataLabels]}
+                />
               </div>
             </div>
 
-            {/* Question 3 */}
-            <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
-              <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
-                The Trust implemented or is implementing at least one
-                income-generating project for the host communities.
-              </h3>
-              <div className="flex flex-col items-center">
-                <div className="h-52 w-52 mb-4">
+            {/* Pie Charts Section */}
+            {/* <br /> */}
+            <br />
+            <br />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mb-4">
+              <div className="bg-white p-3 rounded-md shadow-sm">
+                <h3 className="text-s font-medium text-gray-800 mb-2">
+                  The way the Settlor has acted has minimized conflict and improved
+                  their relationship with the host communities.
+                </h3>
+                <div className="h-80 flex items-center justify-center">
                   <Pie
-                    data={generatePieData(
-                      satisfactionStore.dashboardData?.incomeProject || [
-                        0, 0, 0, 0,
-                      ]
-                    )}
+                    data={pieDataForSettlorSatisfaction}
                     options={{
                       plugins: {
                         datalabels: {
                           color: "#222",
-                          font: { weight: "bold", size: 16 },
+                          font: { weight: "bold" },
                           formatter: (value: number, context: any) => {
                             const dataArr =
                               context?.chart?.data?.datasets?.[0]?.data ?? [];
                             const total = Array.isArray(dataArr)
                               ? dataArr.reduce(
-                                  (a: number, b: any) => a + (Number(b) || 0),
-                                  0
-                                )
+                                (a: number, b: any) => a + (Number(b) || 0),
+                                0
+                              )
                               : 0;
                             const percent = total
                               ? ((Number(value) / total) * 100).toFixed(0)
@@ -2500,230 +2313,473 @@ const GeneralDashboard: React.FC = observer(() => {
                           },
                         },
                         legend: {
-                          display: true,
                           position: "bottom" as const,
-                          align: "center" as const,
-                          labels: {
-                            boxWidth: 18,
-                            boxHeight: 18,
-                            padding: 10,
-                            font: { size: 9 },
-                          },
+                          align: "center" as const, // Align legend to the end
                         },
                       },
                     }}
                     plugins={[ChartDataLabels]}
-                    height={260}
+                  />
+                </div>
+              </div>
+              <div className="bg-white p-3 rounded-md shadow-sm">
+                <h3 className="text-s font-medium text-gray-800 mb-2">
+                  The way NUPRC is regulating and responding is effectively
+                  addressing disputes emanating from the implementation of the HCDT,
+                  and promoting improved relationships between host communities and
+                  Settlor's.
+                </h3>
+                <div className="h-80 flex items-center justify-center">
+                  <Pie
+                    data={pieDataForNUPRCSatisfaction}
+                    options={{
+                      plugins: {
+                        datalabels: {
+                          color: "#222",
+                          font: { weight: "bold" },
+                          formatter: (value: number, context: any) => {
+                            const dataArr =
+                              context?.chart?.data?.datasets?.[0]?.data ?? [];
+                            const total = Array.isArray(dataArr)
+                              ? dataArr.reduce(
+                                (a: number, b: any) => a + (Number(b) || 0),
+                                0
+                              )
+                              : 0;
+                            const percent = total
+                              ? ((Number(value) / total) * 100).toFixed(0)
+                              : 0;
+                            return `${percent}%`;
+                          },
+                        },
+                        legend: {
+                          position: "bottom" as const,
+                          align: "center" as const, // Align legend to the end
+                        },
+                      },
+                    }}
+                    plugins={[ChartDataLabels]}
                   />
                 </div>
               </div>
             </div>
+            <br />
+            <div>
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4">
+                Existence, and activeness of sustainability management
+                structure/committees established by the Trust
+              </h1>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                <div className="bg-white shadow-md rounded-lg p-4 sm:p-6 flex flex-col items-center">
+                  <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4 text-center">
+                    The Trust commissioned and handed over completed projects in our
+                    community to the community leadership?
+                  </h3>
+                  <div className="flex flex-col items-center">
+                    <div className="h-52 w-52 mb-4">
+                      <Pie
+                        data={generatePieData(
+                          satisfactionStore.dashboardData?.projectHandover || [
+                            0, 0, 0, 0,
+                          ]
+                        )}
+                        options={{
+                          plugins: {
+                            datalabels: {
+                              color: "#222",
+                              font: { weight: "bold", size: 16 },
+                              formatter: (value: number, context: any) => {
+                                const dataArr =
+                                  context?.chart?.data?.datasets?.[0]?.data ?? [];
+                                const total = Array.isArray(dataArr)
+                                  ? dataArr.reduce(
+                                    (a: number, b: any) => a + (Number(b) || 0),
+                                    0
+                                  )
+                                  : 0;
+                                const percent = total
+                                  ? ((Number(value) / total) * 100).toFixed(0)
+                                  : 0;
+                                return `${percent}%`;
+                              },
+                            },
+                            legend: {
+                              display: true,
+                              position: "bottom" as const,
+                              align: "center" as const,
+                              labels: {
+                                boxWidth: 18,
+                                boxHeight: 18,
+                                padding: 10,
+                                font: { size: 9 },
+                              },
+                            },
+                          },
+                        }}
+                        plugins={[ChartDataLabels]}
+                        height={260}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
+                  <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
+                    The Trust has consulted our community leadership to discuss or
+                    develop maintenance plans for all the completed projects
+                    implemented in our community.
+                  </h3>
+                  <div className="flex flex-col items-center">
+                    <div className="h-52 w-52 mb-4">
+                      <Pie
+                        data={generatePieData(
+                          satisfactionStore.dashboardData?.maintenanceConsult || [
+                            0, 0, 0, 0,
+                          ]
+                        )}
+                        options={{
+                          plugins: {
+                            datalabels: {
+                              color: "#222",
+                              font: { weight: "bold", size: 16 },
+                              formatter: (value: number, context: any) => {
+                                const dataArr =
+                                  context?.chart?.data?.datasets?.[0]?.data ?? [];
+                                const total = Array.isArray(dataArr)
+                                  ? dataArr.reduce(
+                                    (a: number, b: any) => a + (Number(b) || 0),
+                                    0
+                                  )
+                                  : 0;
+                                const percent = total
+                                  ? ((Number(value) / total) * 100).toFixed(0)
+                                  : 0;
+                                return `${percent}%`;
+                              },
+                            },
+                            legend: {
+                              display: true,
+                              position: "bottom" as const,
+                              align: "center" as const,
+                              labels: {
+                                boxWidth: 18,
+                                boxHeight: 18,
+                                padding: 10,
+                                font: { size: 9 },
+                              },
+                            },
+                          },
+                        }}
+                        plugins={[ChartDataLabels]}
+                        height={260}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Question 3 */}
+                <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
+                  <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
+                    The Trust implemented or is implementing at least one
+                    income-generating project for the host communities.
+                  </h3>
+                  <div className="flex flex-col items-center">
+                    <div className="h-52 w-52 mb-4">
+                      <Pie
+                        data={generatePieData(
+                          satisfactionStore.dashboardData?.incomeProject || [
+                            0, 0, 0, 0,
+                          ]
+                        )}
+                        options={{
+                          plugins: {
+                            datalabels: {
+                              color: "#222",
+                              font: { weight: "bold", size: 16 },
+                              formatter: (value: number, context: any) => {
+                                const dataArr =
+                                  context?.chart?.data?.datasets?.[0]?.data ?? [];
+                                const total = Array.isArray(dataArr)
+                                  ? dataArr.reduce(
+                                    (a: number, b: any) => a + (Number(b) || 0),
+                                    0
+                                  )
+                                  : 0;
+                                const percent = total
+                                  ? ((Number(value) / total) * 100).toFixed(0)
+                                  : 0;
+                                return `${percent}%`;
+                              },
+                            },
+                            legend: {
+                              display: true,
+                              position: "bottom" as const,
+                              align: "center" as const,
+                              labels: {
+                                boxWidth: 18,
+                                boxHeight: 18,
+                                padding: 10,
+                                font: { size: 9 },
+                              },
+                            },
+                          },
+                        }}
+                        plugins={[ChartDataLabels]}
+                        height={260}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {/* Pie Charts Section */}
+            </div>
           </div>
-          {/* Pie Charts Section */}
-        </div>
-      </div>
-      </>
-    )}
+        </>
+      )}
 
       {/* Step 4: Economic Impact */}
       {currentStep === 4 && (
         <>
           {/* Economic impact */}
-      <div
-        id="economic-impact"
-        className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
-        <h2 className="font-semibold text-xl text-gray-900 mb-4 mt-10">
-          Economic impact: Percentage of community members who reported that
-          their income and livelihood have improved as a result of thr
-          implementation of the HCDT project & initiatives
-        </h2>
-        <div className=" mx-auto space-y-8">
-          {/* Pie Charts */}
-          <Observer>
-            {() => (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
-                  <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
-                    My business is generating more money since they implemented
-                    some of the HCDT projects in my community.
-                  </h3>
-                  <div className="h-48 sm:h-56">
-                    <Pie
-                      data={pieData1}
-                      options={{
-                        plugins: {
-                          datalabels: {
-                            color: "#222",
-                            font: { weight: "bold" },
-                            formatter: (value: number, context: any) => {
-                              const dataArr =
-                                context?.chart?.data?.datasets?.[0]?.data ?? [];
-                              const total = Array.isArray(dataArr)
-                                ? dataArr.reduce(
-                                    (a: number, b: any) => a + (Number(b) || 0),
-                                    0
-                                  )
-                                : 0;
-                              const percent = total
-                                ? ((Number(value) / total) * 100).toFixed(0)
-                                : 0;
-                              return `${percent}%`;
+          <div
+            id="economic-impact"
+            className="bg-white rounded-xl p-8 shadow mb-6 mt-6 w-full">
+            <h2 className="font-semibold text-xl text-gray-900 mb-4 mt-10">
+              Economic impact: Percentage of community members who reported that
+              their income and livelihood have improved as a result of thr
+              implementation of the HCDT project & initiatives
+            </h2>
+            <div className=" mx-auto space-y-8">
+              {/* Pie Charts */}
+              <Observer>
+                {() => (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
+                      <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
+                        My business is generating more money since they implemented
+                        some of the HCDT projects in my community.
+                      </h3>
+                      <div className="h-64 sm:h-72">
+                        <Pie
+                          data={pieData1}
+                          options={{
+                            maintainAspectRatio: false,
+                            plugins: {
+                              datalabels: {
+                                color: "#222",
+                                font: { weight: "bold" },
+                                formatter: (value: number, context: any) => {
+                                  const dataArr =
+                                    context?.chart?.data?.datasets?.[0]?.data ?? [];
+                                  const total = Array.isArray(dataArr)
+                                    ? dataArr.reduce(
+                                      (a: number, b: any) => a + (Number(b) || 0),
+                                      0
+                                    )
+                                    : 0;
+                                  const percent = total
+                                    ? ((Number(value) / total) * 100).toFixed(0)
+                                    : 0;
+                                  return `${percent}%`;
+                                },
+                              },
+                              legend: {
+                                display: true,
+                                position: "right" as const,
+                                labels: {
+                                  boxWidth: 14,
+                                  boxHeight: 14,
+                                  padding: 12,
+                                  font: { size: 11 },
+                                },
+                              },
                             },
-                          },
-                          legend: {
-                            display: true,
-                            position: "bottom" as const,
-                            align: "center" as const,
-                            labels: {
-                              boxWidth: 18,
-                              boxHeight: 18,
-                              padding: 10,
-                              font: { size: 9 },
+                          }}
+                          plugins={[ChartDataLabels]}
+                        />
+                      </div>
+                    </div>
+                    <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
+                      <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
+                        My income has increased since the implementation of some of
+                        the HCDT projects in my community.
+                      </h3>
+                      <div className="h-64 sm:h-72">
+                        <Pie
+                          data={pieData2}
+                          options={{
+                            maintainAspectRatio: false,
+                            plugins: {
+                              datalabels: {
+                                color: "#222",
+                                font: { weight: "bold" },
+                                formatter: (value: number, context: any) => {
+                                  const dataArr =
+                                    context?.chart?.data?.datasets?.[0]?.data ?? [];
+                                  const total = Array.isArray(dataArr)
+                                    ? dataArr.reduce(
+                                      (a: number, b: any) => a + (Number(b) || 0),
+                                      0
+                                    )
+                                    : 0;
+                                  const percent = total
+                                    ? ((Number(value) / total) * 100).toFixed(0)
+                                    : 0;
+                                  return `${percent}%`;
+                                },
+                              },
+                              legend: {
+                                display: true,
+                                position: "right" as const,
+                                labels: {
+                                  boxWidth: 14,
+                                  boxHeight: 14,
+                                  padding: 12,
+                                  font: { size: 11 },
+                                },
+                              },
                             },
-                          },
-                        },
-                      }}
-                      plugins={[ChartDataLabels]}
-                    />
+                          }}
+                          plugins={[ChartDataLabels]}
+                        />
+                      </div>
+                    </div>
+                    <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
+                      <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
+                        The implemented HCDT projects have bettered my livelihood
+                        and quality of lives.
+                      </h3>
+                      <div className="h-64 sm:h-72">
+                        <Pie
+                          data={pieData3}
+                          options={{
+                            maintainAspectRatio: false,
+                            plugins: {
+                              datalabels: {
+                                color: "#222",
+                                font: { weight: "bold" },
+                                formatter: (value: number, context: any) => {
+                                  const dataArr =
+                                    context?.chart?.data?.datasets?.[0]?.data ?? [];
+                                  const total = Array.isArray(dataArr)
+                                    ? dataArr.reduce(
+                                      (a: number, b: any) => a + (Number(b) || 0),
+                                      0
+                                    )
+                                    : 0;
+                                  const percent = total
+                                    ? ((Number(value) / total) * 100).toFixed(0)
+                                    : 0;
+                                  return `${percent}%`;
+                                },
+                              },
+                              legend: {
+                                display: true,
+                                position: "right" as const,
+                                labels: {
+                                  boxWidth: 14,
+                                  boxHeight: 14,
+                                  padding: 12,
+                                  font: { size: 11 },
+                                },
+                              },
+                            },
+                          }}
+                          plugins={[ChartDataLabels]}
+                        />
+                      </div>
+                    </div>
+                    <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
+                      <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
+                        As a result of the HCDT projects, our host communities are now experiencing relative peace and security.
+                      </h3>
+                      <div className="h-64 sm:h-72">
+                        <Pie
+                          data={pieData4}
+                          options={{
+                            maintainAspectRatio: false,
+                            plugins: {
+                              datalabels: {
+                                color: "#222",
+                                font: { weight: "bold" },
+                                formatter: (value: number, context: any) => {
+                                  const dataArr =
+                                    context?.chart?.data?.datasets?.[0]?.data ?? [];
+                                  const total = Array.isArray(dataArr)
+                                    ? dataArr.reduce(
+                                      (a: number, b: any) => a + (Number(b) || 0),
+                                      0
+                                    )
+                                    : 0;
+                                  const percent = total
+                                    ? ((Number(value) / total) * 100).toFixed(0)
+                                    : 0;
+                                  return `${percent}%`;
+                                },
+                              },
+                              legend: {
+                                display: true,
+                                position: "right" as const,
+                                labels: {
+                                  boxWidth: 14,
+                                  boxHeight: 14,
+                                  padding: 12,
+                                  font: { size: 11 },
+                                },
+                              },
+                            },
+                          }}
+                          plugins={[ChartDataLabels]}
+                        />
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
-                  <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
-                    My income has increased since the implementation of some of
-                    the HCDT projects in my community.
-                  </h3>
-                  <div className="h-48 sm:h-56">
-                    <Pie
-                      data={pieData2}
-                      options={{
-                        plugins: {
-                          datalabels: {
-                            color: "#222",
-                            font: { weight: "bold" },
-                            formatter: (value: number, context: any) => {
-                              const dataArr =
-                                context?.chart?.data?.datasets?.[0]?.data ?? [];
-                              const total = Array.isArray(dataArr)
-                                ? dataArr.reduce(
-                                    (a: number, b: any) => a + (Number(b) || 0),
-                                    0
-                                  )
-                                : 0;
-                              const percent = total
-                                ? ((Number(value) / total) * 100).toFixed(0)
-                                : 0;
-                              return `${percent}%`;
-                            },
-                          },
-                          legend: {
-                            display: true,
-                            position: "bottom" as const,
-                            align: "center" as const,
-                            labels: {
-                              boxWidth: 18,
-                              boxHeight: 18,
-                              padding: 10,
-                              font: { size: 9 },
-                            },
-                          },
-                        },
-                      }}
-                      plugins={[ChartDataLabels]}
-                    />
-                  </div>
-                </div>
-                <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
-                  <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
-                    The implemented HCDT projects have bettered my livelihood
-                    and quality of lives.
-                  </h3>
-                  <div className="h-48 sm:h-56">
-                    <Pie
-                      data={pieData3}
-                      options={{
-                        plugins: {
-                          datalabels: {
-                            color: "#222",
-                            font: { weight: "bold" },
-                            formatter: (value: number, context: any) => {
-                              const dataArr =
-                                context?.chart?.data?.datasets?.[0]?.data ?? [];
-                              const total = Array.isArray(dataArr)
-                                ? dataArr.reduce(
-                                    (a: number, b: any) => a + (Number(b) || 0),
-                                    0
-                                  )
-                                : 0;
-                              const percent = total
-                                ? ((Number(value) / total) * 100).toFixed(0)
-                                : 0;
-                              return `${percent}%`;
-                            },
-                          },
-                          legend: {
-                            display: true,
-                            position: "bottom" as const,
-                            align: "center" as const,
-                            labels: {
-                              boxWidth: 18,
-                              boxHeight: 18,
-                              padding: 10,
-                              font: { size: 9 },
-                            },
-                          },
-                        },
-                      }}
-                      plugins={[ChartDataLabels]}
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
-          </Observer>
+                )}
+              </Observer>
 
-          {/* Line Chart */}
+              {/* Line Chart */}
 
-          <Observer>
-            {() => (
-              <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
-                <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
-                  As a result of the HCDT projects, my household/I now have
-                  access to these basic amenities than before.
-                </h3>
-                <div className="h-64 sm:h-80">
-                  <Line
-                    data={lineData}
-                    options={{
-                      maintainAspectRatio: false,
-                      plugins: {
-                        datalabels: {
-                          align: "top",
-                          anchor: "end",
-                          color: "#222",
-                          font: { weight: "bold" },
-                          formatter: (value) => `${value}%`,
-                        },
-                      },
-                      scales: {
-                        y: {
-                          ticks: {
-                            callback: function (value) {
-                              return `${value}%`;
+              <Observer>
+                {() => (
+                  <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
+                    <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
+                      As a result of the HCDT projects, my household/I now have
+                      access to these basic amenities than before.
+                    </h3>
+                    <div className="h-64 sm:h-80">
+                      <Line
+                        data={lineData}
+                        options={{
+                          maintainAspectRatio: false,
+                          plugins: {
+                            datalabels: {
+                              align: "top",
+                              anchor: "end",
+                              color: "#222",
+                              font: { weight: "bold" },
+                              formatter: (value) => `${value}%`,
                             },
                           },
-                          min: 0,
-                          max: 100,
-                        },
-                      },
-                    }}
-                    plugins={[ChartDataLabels]}
-                  />
-                </div>
-              </div>
-            )}
-          </Observer>
-        </div>
-      </div>
+                          scales: {
+                            y: {
+                              ticks: {
+                                callback: function (value) {
+                                  return `${value}%`;
+                                },
+                              },
+                              min: 0,
+                              max: 100,
+                            },
+                          },
+                        }}
+                        plugins={[ChartDataLabels]}
+                      />
+                    </div>
+                  </div>
+                )}
+              </Observer>
+            </div>
+          </div>
         </>
       )}
       {/* // Place this at the root of your dashboard page (outside your main content) */}

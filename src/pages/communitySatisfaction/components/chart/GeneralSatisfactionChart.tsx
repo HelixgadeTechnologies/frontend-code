@@ -1,18 +1,18 @@
+import {
+    BarElement,
+    CategoryScale,
+    Chart as ChartJS,
+    Legend,
+    LinearScale,
+    Tooltip,
+} from "chart.js";
+import ChartDataLabels from "chartjs-plugin-datalabels";
+import { observer } from "mobx-react-lite";
 import { createContext, useCallback, useContext, useEffect } from "react";
 import { Bar, Pie } from "react-chartjs-2";
-import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    Tooltip,
-    Legend,
-} from "chart.js";
-import { observer } from "mobx-react-lite";
-import { ISatisfactionStore } from "../../types/interface";
-import ChartDataLabels from "chartjs-plugin-datalabels";
 import GoBackT from "../../../../components/elements/GoBackT";
 import { dashboardStore as DashboardStore } from "../../../dashboard/store/dashboardStore";
+import { ISatisfactionStore } from "../../types/interface";
 import { GeneralSatisfactionTable } from "../table/GeneralSatisfactionTable";
 
 // Register Chart.js components
@@ -101,13 +101,13 @@ const GeneralSatisfactionChart = observer(
         // Add this function to generate grouped horizontal stacked bar data
         const generateGroupedBarData = (data: number[][]) => ({
             labels: [
-                "We feel well-informed about Trust projects.",
-                "There has been enough community consultation on Trust projects.",
-                "The community has had fair opportunities to take part in HCDT projects.",
-                "A clear system exists to report and address concerns.",
-                "The actions of governing structures have reduced conflict in my community.",
-                // "Communities Satisfaction with the the Settlor's.",
-                // "Communities Satisfaction with the the NUPRC’s"
+                "We feel well-informed about the implemented projects by the Trust leaderships.",
+                "We feel our community has been sufficiently consulted on projects by the Trust leaderships.",
+                "We feel suffient opportunities have been given to local community members to participate in the implemented HCDT projec.",
+                "There is a clear and effective mechnism in place to report community concerns to the Trust leadership.",
+                "The way the Trust leadership (BoT, MC and AC) have acted has minimized the potential conflicts in the host communities",
+                "The Trust processes and actions have shown good level of transparency and accountability with the host communities",
+                "We feel the Trust has fairly considered women, young people, and person with disability (PwDs) in their engagements and project delivery"
             ],
             datasets: [
                 {

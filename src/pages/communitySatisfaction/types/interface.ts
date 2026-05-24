@@ -45,6 +45,8 @@ export interface ISatisfactionPayloadData {
     conflictMinimization?: number,
     settlorAction?: number,
     nuprcAction?: number,
+    trustTransparencyAndAccountability?: number,
+    fairInvolvement?: number,
     projectHandover?: number,
     maintenanceConsult?: number,
     incomeProject?: number,
@@ -63,6 +65,8 @@ export interface IAverageCommunitySatisfaction {
     reportMechanism?: number | null;
     conflictMinimization?: number | null;
     settlorAction?: number | null;
+    trustTransparencyAndAccountability?: number | null;
+    fairInvolvement?: number | null;
     nuprcAction?: number | null;
     projectHandover?: number | null;
     maintenanceConsult?: number | null;
@@ -82,6 +86,8 @@ export interface IAverageCommunitySatisfactionView extends BaseItem {
     conflictMinimization?: number | null;
     settlorAction?: number | null;
     nuprcAction?: number | null;
+    trustTransparencyAndAccountability?: number | null;
+    fairInvolvement?: number | null;
 
     infoProjectsStatus?: string | null;
     communityConsultStatus?: string | null;
@@ -90,6 +96,8 @@ export interface IAverageCommunitySatisfactionView extends BaseItem {
     conflictMinimizationStatus?: string | null;
     settlorActionStatus?: string | null;
     nuprcActionStatus?: string | null;
+    trustTransparencyAndAccountabilityStatus?: string | null;
+    fairInvolvementStatus?: string | null;
 
     projectHandover?: number | null;
     maintenanceConsult?: number | null;
@@ -143,6 +151,9 @@ export interface IAverageCommunitySatisfactionDashboardData {
     conflictMinimization: Array<IAverageCommunitySatisfactionDashboardDataOne>;
     settlorAction: Array<IAverageCommunitySatisfactionDashboardDataOne>;
     nuprcAction: Array<IAverageCommunitySatisfactionDashboardDataOne>;
+    trustTransparencyAndAccountability: Array<IAverageCommunitySatisfactionDashboardDataOne>;
+    fairInvolvement: Array<IAverageCommunitySatisfactionDashboardDataOne>;
+
 
     projectHandover: Array<IAverageCommunitySatisfactionDashboardDataTwo>;
     maintenanceConsult: Array<IAverageCommunitySatisfactionDashboardDataTwo>;
@@ -156,7 +167,8 @@ export interface ISatisfactionDashboardData {
     conflictMinimization: Array<number>;
     settlorAction: Array<number>;
     nuprcAction: Array<number>;
-
+    trustTransparencyAndAccountability: Array<number>;
+    fairInvolvement: Array<number>;
 
     projectHandover: Array<number>;
     maintenanceConsult: Array<number>;

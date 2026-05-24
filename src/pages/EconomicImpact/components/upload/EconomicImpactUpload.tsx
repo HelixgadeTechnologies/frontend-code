@@ -17,6 +17,7 @@ const economicImpactKeys = [
     "businessGrowth",
     "incomeIncrease",
     "livelihoodImprove",
+    "communityPeaceAndSecurity",
     "accessAmenities",
 ];
 
@@ -185,6 +186,7 @@ const EconomicImpactUpload = observer(({ onBack }: UploadProps) => {
                                 businessGrowth: 1,
                                 incomeIncrease: 1,
                                 livelihoodImprove: 1,
+                                communityPeaceAndSecurity: 1,
                                 accessAmenities: 1,
                             },
                             {
@@ -192,6 +194,7 @@ const EconomicImpactUpload = observer(({ onBack }: UploadProps) => {
                                 businessGrowth: 2,
                                 incomeIncrease: 2,
                                 livelihoodImprove: 2,
+                                communityPeaceAndSecurity: 2,
                                 accessAmenities: 3,
                             },
                             {
@@ -199,6 +202,7 @@ const EconomicImpactUpload = observer(({ onBack }: UploadProps) => {
                                 businessGrowth: 3,
                                 incomeIncrease: 3,
                                 livelihoodImprove: 3,
+                                communityPeaceAndSecurity: 3,
                                 accessAmenities: 5,
                             }
                         ];

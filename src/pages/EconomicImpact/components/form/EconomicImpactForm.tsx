@@ -16,6 +16,7 @@ const EconomicImpactForm = observer(({ close, economicImpactStore, trustStore }:
         businessGrowth: Number(data.businessGrowth),
         incomeIncrease: Number(data.incomeIncrease),
         livelihoodImprove: Number(data.livelihoodImprove),
+        communityPeaceAndSecurity: Number(data.communityPeaceAndSecurity),
         accessAmenities: Number(data.accessAmenities),
         trustId: trustStore.selectedTrustId
       };
@@ -97,6 +98,19 @@ const EconomicImpactForm = observer(({ close, economicImpactStore, trustStore }:
                 control={control}
                 rules={{ required: "This field is required" }}
                 label="iii. The implemented HCDT projects have bettered my livelihood and quality of lives."
+                options={[
+                  { value: "1", label: "Very True" },
+                  { value: "2", label: "Slightly" },
+                  { value: "3", label: "Not True" },
+                ]}
+              />
+            </div>
+            <div className="mb-4">
+              <CustomRadio
+                name="communityPeaceAndSecurity"
+                control={control}
+                rules={{ required: "This field is required" }}
+                label="iv. As a result of the HCDT projects, our host communities are now experiencing relative peace and security."
                 options={[
                   { value: "1", label: "Very True" },
                   { value: "2", label: "Slightly" },

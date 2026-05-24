@@ -123,6 +123,8 @@ class SatisfactionStore implements ISatisfactionStore {
             conflictMinimization: mapOptionOneResponse(dashboard.conflictMinimization),
             settlorAction: mapOptionOneResponse(dashboard.settlorAction),
             nuprcAction: mapOptionOneResponse(dashboard.nuprcAction),
+            trustTransparencyAndAccountability: mapOptionOneResponse(dashboard.trustTransparencyAndAccountability),
+            fairInvolvement: mapOptionOneResponse(dashboard.fairInvolvement),
 
             projectHandover: mapOptionTwoResponse(dashboard.projectHandover),
             maintenanceConsult: mapOptionTwoResponse(dashboard.maintenanceConsult),

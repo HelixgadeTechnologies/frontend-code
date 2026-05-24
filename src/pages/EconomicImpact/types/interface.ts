@@ -39,6 +39,7 @@ export interface IEconomicImpactPayloadData {
     incomeIncrease?: number | null;
     livelihoodImprove?: number | null;
     accessAmenities?: number | null;
+    communityPeaceAndSecurity?: number | null;
     trustId?: string | null;
 }
 export interface IEconomicImpactPayload {
@@ -52,6 +53,7 @@ export interface IEconomicImpact {
     incomeIncrease?: number | null;
     livelihoodImprove?: number | null;
     accessAmenities?: number | null;
+    communityPeaceAndSecurity?: number | null;
     trustId?: string | null;
 }
 interface BaseItem {
@@ -67,6 +69,8 @@ export interface IEconomicImpactView extends BaseItem {
     livelihoodImproveStatus?: string | null;
     accessAmenities?: number | null;
     accessAmenitiesStatus?: string | null;
+    communityPeaceAndSecurity?: number | null;
+    communityPeaceAndSecurityStatus?: string | null;
     trustId?: string | null;
     trustName?: string | null;
     createAt?: string | null;
@@ -86,6 +90,7 @@ export interface IEconomicImpactDashboardData {
     businessGrowth: number[];
     incomeIncrease: number[];
     livelihoodImprove: number[];
+    communityPeaceAndSecurity: number[];
     accessAmenities: number[];
 }
 interface IEconomicImpactDashboardOptionOneResponse {
@@ -117,6 +122,7 @@ export interface IEconomicImpactDashboard {
     businessGrowth: Array<IEconomicImpactDashboardOptionOneData>;
     incomeIncrease: Array<IEconomicImpactDashboardOptionOneData>;
     livelihoodImprove: Array<IEconomicImpactDashboardOptionOneData>;
+    communityPeaceAndSecurity: Array<IEconomicImpactDashboardOptionOneData>;
     accessAmenities: Array<IEconomicImpactDashboardOptionTwoData>;
 }
 

@@ -134,6 +134,7 @@ class EconomicImpactStore implements IEconomicImpactStore {
             businessGrowth: mapOptionOneResponse(dashboard.businessGrowth),
             incomeIncrease: mapOptionOneResponse(dashboard.incomeIncrease),
             livelihoodImprove: mapOptionOneResponse(dashboard.livelihoodImprove),
+            communityPeaceAndSecurity: mapOptionOneResponse(dashboard.communityPeaceAndSecurity),
             accessAmenities: mapOptionTwoResponse(dashboard.accessAmenities)
         };
     }

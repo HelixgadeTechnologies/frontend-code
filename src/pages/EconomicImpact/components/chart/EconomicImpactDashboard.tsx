@@ -75,6 +75,16 @@ const EconomicImpactDashboard = observer(({ economicImpactStore }: { economicImp
             },
         ],
     };
+    const pieData4 = {
+        labels: ["Very True", "Slightly", "Not True"],
+        datasets: [
+            {
+                data: (economicImpactStore?.dashboardData?.communityPeaceAndSecurity ?? [0, 0, 0]).map((v: any) => Number(v) || 0),
+                backgroundColor: ["#22C55E", "#FACC15", "#EF4444"],
+                hoverBackgroundColor: ["#16A34A", "#EAB308", "#DC2626"],
+            },
+        ],
+    };
 
     // Data for the line chart
     const lineData = {
@@ -192,6 +202,44 @@ const EconomicImpactDashboard = observer(({ economicImpactStore }: { economicImp
                                 <div className="relative h-[250px] w-full flex items-center justify-center">
                                     <Pie
                                         data={pieData3}
+                                        options={{
+                                            maintainAspectRatio: false,
+                                            plugins: {
+                                                datalabels: {
+                                                    color: "#222",
+                                                    font: { weight: "bold" },
+                                                    formatter: (value: number, context: any) => {
+                                                        if (!value || Number(value) === 0) return null;
+                                                        const dataArr = context?.chart?.data?.datasets?.[0]?.data ?? [];
+                                                        const total = Array.isArray(dataArr) ? dataArr.reduce((a: number, b: any) => a + (Number(b) || 0), 0) : 0;
+                                                        const percent = total ? ((Number(value) / total) * 100).toFixed(0) : 0;
+                                                        return percent === "0" ? null : `${percent}%`;
+                                                    },
+                                                },
+                                                legend: {
+                                                    display: true,
+                                                    position: "bottom" as const,
+                                                    align: "center" as const,
+                                                    labels: {
+                                                        boxWidth: 18,
+                                                        boxHeight: 18,
+                                                        padding: 10,
+                                                        font: { size: 9 },
+                                                    },
+                                                },
+                                            },
+                                        }}
+                                        plugins={[ChartDataLabels]}
+                                    />
+                                </div>
+                            </div>
+                            <div className="bg-white shadow-md rounded-lg p-4 sm:p-6 flex flex-col justify-between h-full">
+                                <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
+                                   As a result of the HCDT projects, our host communities are now experiencing relative peace and security.
+                                </h3>
+                                <div className="relative h-[250px] w-full flex items-center justify-center">
+                                    <Pie
+                                        data={pieData4}
                                         options={{
                                             maintainAspectRatio: false,
                                             plugins: {
