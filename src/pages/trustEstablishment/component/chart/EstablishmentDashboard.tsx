@@ -360,7 +360,7 @@ const EstablishmentDashboard = observer(() => {
             <Line options={chartOptions} data={data1} />
           </div>
         </div> */}
-         <div className="rounded-xl mt-6 lg:col-span-2 overflow-hidden">
+        <div className="rounded-xl mt-6 lg:col-span-2 overflow-hidden">
 
           <div className="bg-[#F3F5F7] flex items-center justify-between px-6 py-4">
             <div>
@@ -407,7 +407,7 @@ const EstablishmentDashboard = observer(() => {
 
         {/* Trust Development Plan & Budget */}
         <div className="bg-white rounded-lg p-5 shadow mt-6 flex flex-col items-center justify-center">
-          <h3 className="font-semibold text-lg mb-2">Trust Development Plan & Budget</h3>
+          <h3 className="font-semibold text-lg mb-2">Status of Trust Development Plan & Budget</h3>
           {/* Replace this with your actual progress component */}
           <div className="relative flex items-center justify-center w-44 h-44 my-4">
             <Doughnut data={data} options={options} />
@@ -422,10 +422,18 @@ const EstablishmentDashboard = observer(() => {
             <span>{trustEstablishmentStore.dashboardData?.YEAR_START}<br /><span className="text-xs">Year Started</span></span>
             <span>{trustEstablishmentStore.dashboardData?.YEAR_EXPIRED}<br /><span className="text-xs">End Year</span></span>
           </div>
+          <div className="flex items-center justify-between">
+            <span>Status of Community Development Plan (CDP)</span>
+            <span className={classColors(trustEstablishmentStore.dashboardData?.STATUS_OF_COMMUNITY_DEVELOPMENT_PLAN!)}>{translator3(trustEstablishmentStore.dashboardData?.STATUS_OF_COMMUNITY_DEVELOPMENT_PLAN!)}</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span>Status of Trust Development Plan Budget</span>
+            <span className={classColors(trustEstablishmentStore.dashboardData?.STATUS_OF_TRUST_DEVELOPMENT_PLAN_BUDGET!)}>{translator3(trustEstablishmentStore.dashboardData?.STATUS_OF_TRUST_DEVELOPMENT_PLAN_BUDGET!)}</span>
+          </div>
         </div>
 
 
-       
+
 
         {/* Trust Compliance & Distribution Matrix */}
         {/* <div className="bg-white rounded-lg p-5 shadow mt-6 flex-1">
@@ -454,13 +462,13 @@ const EstablishmentDashboard = observer(() => {
       </div> */}
         <div className="bg-white rounded-xl p-6 shadow mt-6 flex-1">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="font-semibold text-lg">Trust Compliance</h3>
+            <h3 className="font-semibold text-lg">Trust Distribution Matrix</h3>
           </div>
           <div>
             <div className="flex items-center justify-between mb-2">
-              <span className="text-gray-700">Trust Distribution Matrix Upload</span>
-              <span className={classColors(trustEstablishmentStore.dashboardData?.DISTRIBUTION_MATRIX! ? 1 : undefined)}>
-                {translator2(trustEstablishmentStore.dashboardData?.DISTRIBUTION_MATRIX! ? 1 : 3)}
+              <span className="text-gray-700">Trust has a distribution matrix developed by settlor</span>
+              <span className={classColors(trustEstablishmentStore.dashboardData?.distributionMatrixDevelopedBySettlor)}>
+                {translator1(trustEstablishmentStore.dashboardData?.distributionMatrixDevelopedBySettlor)}
               </span>
             </div>
             <div className="flex items-center">
@@ -476,9 +484,14 @@ const EstablishmentDashboard = observer(() => {
                     />
                   </div>
                 </div>
-              ) : (
-                <span className="text-gray-400">No Distribution Matrix Uploaded</span>
-              )}
+              ) : (<>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-gray-700">Trust Distribution Matrix Upload</span>
+                  <span className={classColors(trustEstablishmentStore.dashboardData?.DISTRIBUTION_MATRIX! ? 1 : undefined)}>
+                    {translator2(trustEstablishmentStore.dashboardData?.DISTRIBUTION_MATRIX! ? 1 : 3)}
+                  </span>
+                </div>
+              </>)}
             </div>
           </div>
 

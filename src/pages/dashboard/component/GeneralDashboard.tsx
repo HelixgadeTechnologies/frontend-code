@@ -1491,90 +1491,90 @@ const GeneralDashboard: React.FC = observer(() => {
               </div>
             </div>
 
-            <div className="bg-white rounded-xl p-6 shadow flex flex-col items-center ">
-              <span className="font-semibold text-base text-gray-900 mb-4 self-start">
-                Percentage of HCDTs that have established a Board of Trustees, Management Committee, and Advisory Committee.
-              </span>
-              <Bar
-                data={{
-                  labels: [
-                    "BoT Committee",
-                    "Management Committee",
-                    "Advisory Committee",
+        <div className="bg-white rounded-xl p-6 shadow flex flex-col items-center ">
+          <span className="font-semibold text-base text-gray-900 mb-4 self-start">
+           Percentage of HCDTs that have established a Board of Trustees, Management Committee, and Advisory Committee.
+          </span>
+          <Bar
+            data={{
+              labels: [
+                "BoT Committee",
+                "Management Committee",
+                "Advisory Committee",
+              ],
+              datasets: [
+                {
+                  label: "Percentage",
+                  data: [
+                    dashboardStore.dashboardData?.BOT_INAUGURATION_CHECK
+                      .botYesPercentage,
+                    dashboardStore.dashboardData?.BOT_INAUGURATION_CHECK
+                      .managementYesPercentage,
+                    dashboardStore.dashboardData?.BOT_INAUGURATION_CHECK
+                      .advisoryYesPercentage,
                   ],
-                  datasets: [
-                    {
-                      label: "Percentage",
-                      data: [
-                        dashboardStore.dashboardData?.BOT_INAUGURATION_CHECK
-                          .botYesPercentage,
-                        dashboardStore.dashboardData?.BOT_INAUGURATION_CHECK
-                          .managementYesPercentage,
-                        dashboardStore.dashboardData?.BOT_INAUGURATION_CHECK
-                          .advisoryYesPercentage,
-                      ],
-                      backgroundColor: [
-                        doughnutColors[0],
-                        doughnutColors[1],
-                        doughnutColors[2],
-                      ],
-                      borderRadius: 8,
-                      barPercentage: 0.5,
-                      categoryPercentage: 0.5,
-                    },
+                  backgroundColor: [
+                    doughnutColors[0],
+                    doughnutColors[1],
+                    doughnutColors[2],
                   ],
-                }}
-                options={{
-                  indexAxis: "y",
-                  plugins: {
-                    legend: { display: false },
-                    tooltip: { enabled: true },
-                    datalabels: {
-                      anchor: "center" as const,
-                      align: "center" as const,
-                      formatter: function (value) {
-                        return `${value}%`;
-                      },
-                      color: "#222",
-                      font: {
-                        weight: "bold",
-                      },
+                  borderRadius: 8,
+                  barPercentage: 0.5,
+                  categoryPercentage: 0.5,
+                },
+              ],
+            }}
+            options={{
+              indexAxis: "y",
+              plugins: {
+                legend: { display: false },
+                tooltip: { enabled: true },
+                datalabels: {
+                  anchor: "center" as const,
+                  align: "center" as const,
+                  formatter: function (value) {
+                    return `${value}%`;
+                  },
+                  color: "#222",
+                  font: {
+                    weight: "bold",
+                  },
+                },
+              },
+              scales: {
+                x: {
+                  min: 0,
+                  max: 100,
+                  ticks: {
+                    callback: function (tickValue) {
+                      return `${tickValue}%`;
                     },
                   },
-                  scales: {
-                    x: {
-                      min: 0,
-                      max: 100,
-                      ticks: {
-                        callback: function (tickValue) {
-                          return `${tickValue}%`;
-                        },
-                      },
-                      title: {
-                        display: false,
-                      },
-                    },
-                    y: {
-                      title: {
-                        display: false,
-                      },
-                    },
+                  title: {
+                    display: false,
                   },
-                }}
-              />
-            </div>
+                },
+                y: {
+                  title: {
+                    display: false,
+                  },
+                },
+              },
+            }}
+          />
+        </div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 min-h-[220px]">
+        <div className="bg-white rounded-xl p-6 shadow flex flex-col items-center ">
+          <span className="font-semibold text-base text-gray-900 mb-4 self-start">
+            Percentage of HCDTs where the settlors consulted with community leaders, women, youth, and PwDs during the needs assessment –  <i>disaggregate by process of consultation</i>
+          </span>
+          <div
+            className="w-full max-w-4xl mx-auto"
+            style={{ minHeight: "220px" }}>
+            <Bar data={BoTData2} options={conflictBarOptions} />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 min-h-[220px]">
-            <div className="bg-white rounded-xl p-6 shadow flex flex-col items-center ">
-              <span className="font-semibold text-base text-gray-900 mb-4 self-start">
-                Percentage of HCDTs that consulted with community leaders, women, youth, and PwDs during the needs assessment – <i>disaggregate by process of consultation</i>
-              </span>
-              <div
-                className="w-full max-w-4xl mx-auto"
-                style={{ minHeight: "220px" }}>
-                <Bar data={BoTData2} options={conflictBarOptions} />
-              </div>
-              {/* <Bar
+          {/* <Bar
                         data={{
                             labels: [
                                 "Leadership consulted",
