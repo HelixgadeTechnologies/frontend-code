@@ -222,7 +222,7 @@ const GeneralSatisfactionChart = observer(
                                     There is a clear and effective mechanism in place to report community concerns to the Trust leadership.
                                 </h3>
                                 <div className="h-[320px]">
-                                    <Pie key="gs-reportMechanism" data={generateSatisfactionPieData(satisfactionStore.dashboardData?.reportMechanism || [0, 0, 0, 0, 0])} options={satisfactionPieOptions} plugins={[ChartDataLabels]} />
+                                    <Pie key="cs-reportMechanism" data={generateSatisfactionPieData(satisfactionStore.dashboardData?.reportMechanism || [0, 0, 0, 0, 0])} options={satisfactionPieOptions} plugins={[ChartDataLabels]} />
                                 </div>
                             </div>
                             <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
@@ -230,10 +230,29 @@ const GeneralSatisfactionChart = observer(
                                     The way the Trust leadership (BoT, MC and AC) have acted has minimized the potential conflicts in the host communities.
                                 </h3>
                                 <div className="h-[320px]">
-                                    <Pie key="gs-conflictMinimization" data={generateSatisfactionPieData(satisfactionStore.dashboardData?.conflictMinimization || [0, 0, 0, 0, 0])} options={satisfactionPieOptions} plugins={[ChartDataLabels]} />
+                                    <Pie key="cs-conflictMinimization" data={generateSatisfactionPieData(satisfactionStore.dashboardData?.conflictMinimization || [0, 0, 0, 0, 0])} options={satisfactionPieOptions} plugins={[ChartDataLabels]} />
+                                </div>
+                            </div>
+                            <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
+                                <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
+                                    The Trust processes and actions have shown good level of transparency and accountability with the host communities.
+                                </h3>
+                                <div className="h-[320px]">
+                                    <Pie key="cs-trustTransparency" data={generateSatisfactionPieData(satisfactionStore.dashboardData?.trustTransparencyAndAccountability || [0, 0, 0, 0, 0])} options={satisfactionPieOptions} plugins={[ChartDataLabels]} />
+                                </div>
+                            </div>
+                            <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
+                                <h3 className="text-sm sm:text-base font-semibold text-gray-700 mb-4">
+                                    We feel the Trust has fairly considered women, young people, and persons with disability (PwDs) in their engagements and project delivery.
+                                </h3>
+                                <div className="h-[320px]">
+                                    <Pie key="cs-fairInvolvement" data={generateSatisfactionPieData(satisfactionStore.dashboardData?.fairInvolvement || [0, 0, 0, 0, 0])} options={satisfactionPieOptions} plugins={[ChartDataLabels]} />
                                 </div>
                             </div>
                         </div>
+                        <h1 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4">
+                            Community Satisfaction with Settlors and NUPRC
+                        </h1>
                         <br />
                         <br />
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mb-4">

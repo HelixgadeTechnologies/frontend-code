@@ -1,10 +1,10 @@
-import { useState, useEffect, createContext, useContext } from "react";
+import { useState, useEffect} from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { useCookies } from "react-cookie";
 import { observer } from "mobx-react-lite";
-import { settingStore } from "../../pages/Settings/store/settingStore";
-import { trustStore } from "../../pages/trust/store/trustStore";
+// import { settingStore } from "../../pages/Settings/store/settingStore";
+// import { trustStore } from "../../pages/trust/store/trustStore";
 
 const ACTIVE_CLS = "text-[#003B99] font-bold text-lg lg:text-xl transition-colors";
 const INACTIVE_CLS = "text-gray-600 hover:text-[#003B99] font-bold text-lg lg:text-xl transition-colors";
@@ -14,11 +14,11 @@ const MOBILE_INACTIVE_CLS = "block text-gray-600 font-bold text-lg";
 interface EntryDashboardHeaderProps {
   onMenuClick?: () => void;
 }
-const settingsStoreCtx = createContext(settingStore);
-const trustStoreCtx = createContext(trustStore);
+// const settingsStoreCtx = createContext(settingStore);
+// const trustStoreCtx = createContext(trustStore);
 const EntryDashboardHeader = observer(({ onMenuClick }: EntryDashboardHeaderProps = {}) => {
-  const settingStore = useContext(settingsStoreCtx);
-  const trustStore = useContext(trustStoreCtx);
+  // const settingStore = useContext(settingsStoreCtx);
+  // const trustStore = useContext(trustStoreCtx);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
   // const navigate = useNavigate();
@@ -33,12 +33,12 @@ const EntryDashboardHeader = observer(({ onMenuClick }: EntryDashboardHeaderProp
   }, []);
 
   // Access data from stores
-  const roles = Array.from(settingStore.allRole.values());
-  const trusts = Array.from(trustStore.allTrust.values());
+  // const roles = Array.from(settingStore.allRole.values());
+  // const trusts = Array.from(trustStore.allTrust.values());
 
   // Log for verification (can be removed later)
-  console.log("Roles fetched in Header:", roles);
-  console.log("Trusts fetched in Header:", trusts);
+  // console.log("Roles fetched in Header:", roles);
+  // console.log("Trusts fetched in Header:", trusts);
 
   const handleLogout = () => {
     removeCookie("hcdt_admin", null, { path: "/auth/1" });

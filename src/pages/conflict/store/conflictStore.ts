@@ -259,7 +259,7 @@ class ConflictStore implements IConflictStore {
 
     async getConflictDashboardByTrustId(trustId: string, selectedYear: number, selectedState: string,settlor:string): Promise<void> {
         try {
-            if (this.isDashboardLoading || this.dashboardData) return; // Prevent duplicate calls
+            //if (this.isDashboardLoading || this.dashboardData) return; // Prevent duplicate calls
             this.isDashboardLoading = true;
             let data = await conflictService.getConflictDashboardByTrustId(trustId, selectedYear, selectedState,settlor);
             if (data.success) {

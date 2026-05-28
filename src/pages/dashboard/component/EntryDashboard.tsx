@@ -1,27 +1,27 @@
+import { observer } from "mobx-react-lite";
 import React, { createContext, ReactNode, useCallback, useContext, useEffect, useState } from "react";
-import { NavLink, Link, useLocation, useSearchParams } from "react-router-dom";
+import { Link, NavLink, useLocation, useSearchParams } from "react-router-dom";
+import BiggerSkeleton from "../../../components/elements/BiggerSkeleton";
 import EntryDashboardHeader from "../../../components/layouts/EntryDashboardHeader";
-import { dashboardStore as DashboardStore } from "./../store/dashboardStore"
-import { economicImpactStore as EconomicImpactStore } from "../../EconomicImpact/store/economicImpactStore";
 import { satisfactionStore as SatisfactionStore } from "../../communitySatisfaction/store/satisfactionStore";
 import { conflictStore as ConflictStore } from "../../conflict/store/conflictStore";
+import { economicImpactStore as EconomicImpactStore } from "../../EconomicImpact/store/economicImpactStore";
 import { projectStore as ProjectStore } from "../../project/store/projectStore";
-import { trustStore as TrustStore } from "../../trust/store/trustStore";
 import { settingStore as SettingStore } from "../../Settings/store/settingStore";
-import { observer } from "mobx-react-lite";
-import BiggerSkeleton from "../../../components/elements/BiggerSkeleton";
+import { trustStore as TrustStore } from "../../trust/store/trustStore";
+import { dashboardStore as DashboardStore } from "./../store/dashboardStore";
 // import GeneralProjectTable from "../../project/components/table/GeneralProjectTable";
-import { IProjectView } from "../../project/types/interface";
-import GeneralProjectView from "../../project/components/modal/GeneralProjectView";
-import GeneralTrust from "../../trust/components/table/GeneralTrust";
-import GeneralProjectDashboard from "../../project/components/chat/GeneralProjectDashboard";
 import { INavData, routes2, routes2T } from "../../../utils/data";
-import GeneralTEstablishment from "../../trustEstablishment/component/chart/GeneralTEstablishment";
-import GeneralConflict from "../../conflict/components/chart/GeneralConflict";
-import GeneralConflictView from "../../conflict/components/modal/GeneralConflictView";
 import GeneralSatisfactionChart from "../../communitySatisfaction/components/chart/GeneralSatisfactionChart";
 import GeneralSatisfactionModel from "../../communitySatisfaction/components/modal/GeneralSatisfactionModel";
+import GeneralConflict from "../../conflict/components/chart/GeneralConflict";
+import GeneralConflictView from "../../conflict/components/modal/GeneralConflictView";
 import GeneralImpact from "../../EconomicImpact/components/chart/GeneralImpact";
+import GeneralProjectDashboard from "../../project/components/chat/GeneralProjectDashboard";
+import GeneralProjectView from "../../project/components/modal/GeneralProjectView";
+import { IProjectView } from "../../project/types/interface";
+import GeneralTrust from "../../trust/components/table/GeneralTrust";
+import GeneralTEstablishment from "../../trustEstablishment/component/chart/GeneralTEstablishment";
 
 interface LayoutProps {
   children?: ReactNode;
@@ -121,39 +121,44 @@ const EntryDashboard: React.FC<LayoutProps> = observer(({ children }) => {
           searchParams={searchParams}
           setSearchParams={setSearchParams}
           navData={dashboardStore.selectedTab > 1 ? routes2T : routes2}
+          trustStore={trustStore}
+          satisfactionStore={satisfactionStore}
+          economicImpactStore={economicImpactStore}
+          conflictStore={conflictStore}
+          projectStore={projectStore}
         />
 
         {/* Main content wrapper */}
         <div className="flex-1 flex flex-col overflow-y-auto w-full min-w-0 overflow-x-hidden">
           {/* Main Content */}
           <main className="flex-1 w-full px-2 sm:px-6 py-4">
-          {dashboardStore.selectedTab === 0 && (
-            <>
-              {dashboardStore.isLoading || settingStore.isLoading ? (
-                <BiggerSkeleton />
-              ) : (
-                <>{children}</>
-              )}
-            </>
-          )}
-          {dashboardStore.selectedTab === 1 && <GeneralTrust />}
-          {dashboardStore.selectedTab === 2 && <GeneralTEstablishment />}
-          {dashboardStore.selectedTab === 3 && (<GeneralProjectDashboard />)}
-          {dashboardStore.selectedTab === 33 && (
-            <GeneralProjectView
-              dashboardStore={dashboardStore}
-              projectData={projectStore.selectedProject as IProjectView}
-            />
-          )}
-          {dashboardStore.selectedTab === 4 && (<GeneralConflict />)}
-          {dashboardStore.selectedTab === 44 && (<GeneralConflictView />)}
+            {dashboardStore.selectedTab === 0 && (
+              <>
+                {dashboardStore.isLoading || settingStore.isLoading ? (
+                  <BiggerSkeleton />
+                ) : (
+                  <>{children}</>
+                )}
+              </>
+            )}
+            {dashboardStore.selectedTab === 1 && <GeneralTrust />}
+            {dashboardStore.selectedTab === 2 && <GeneralTEstablishment />}
+            {dashboardStore.selectedTab === 3 && (<GeneralProjectDashboard />)}
+            {dashboardStore.selectedTab === 33 && (
+              <GeneralProjectView
+                dashboardStore={dashboardStore}
+                projectData={projectStore.selectedProject as IProjectView}
+              />
+            )}
+            {dashboardStore.selectedTab === 4 && (<GeneralConflict />)}
+            {dashboardStore.selectedTab === 44 && (<GeneralConflictView />)}
 
 
-          {dashboardStore.selectedTab === 5 && (<GeneralSatisfactionChart satisfactionStore={satisfactionStore} />)}
-          {dashboardStore.selectedTab === 55 && (<GeneralSatisfactionModel satisfactionStore={satisfactionStore} />)}
+            {dashboardStore.selectedTab === 5 && (<GeneralSatisfactionChart satisfactionStore={satisfactionStore} />)}
+            {dashboardStore.selectedTab === 55 && (<GeneralSatisfactionModel satisfactionStore={satisfactionStore} />)}
 
-          {dashboardStore.selectedTab === 6 && (<GeneralImpact economicImpactStore={economicImpactStore} />)}
-        </main>
+            {dashboardStore.selectedTab === 6 && (<GeneralImpact economicImpactStore={economicImpactStore} />)}
+          </main>
         </div>
       </div>
 
@@ -180,9 +185,14 @@ interface SidebarProps {
   searchParams: any;
   setSearchParams: any;
   navData: Array<INavData>
+  trustStore: any;
+  satisfactionStore: any;
+  economicImpactStore: any;
+  conflictStore: any;
+  projectStore: any;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({
+const Sidebar: React.FC<SidebarProps> = observer(({
   sidebarOpen,
   setSidebarOpen,
   dashboardStore,
@@ -192,9 +202,22 @@ const Sidebar: React.FC<SidebarProps> = ({
   location,
   searchParams,
   setSearchParams,
-  navData
-}) => (
-  <aside
+  navData,
+  trustStore,
+  satisfactionStore,
+  economicImpactStore,
+  conflictStore,
+  projectStore
+}) => {
+  const getRouteLoading = (link: number): boolean => {
+    if (link === 3) return projectStore.isDashboardLoading;
+    if (link === 4) return conflictStore.isDashboardLoading;
+    if (link === 5) return satisfactionStore.isDashboardLoading;
+    if (link === 6) return economicImpactStore.isDashboardLoading;
+    return false;
+  };
+
+  return (<aside
     className={`
       fixed inset-y-0 left-0 z-50 bg-white border-r border-gray-200 w-64
       transform transition-transform duration-300 ease-in-out
@@ -270,13 +293,42 @@ const Sidebar: React.FC<SidebarProps> = ({
                     ? "flex items-center px-4 py-2.5 rounded-lg bg-blue-50 text-blue-700 font-semibold transition-all duration-200 shadow-sm border border-blue-100"
                     : "flex items-center px-4 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-blue-600 transition-all duration-200"
                 }
-                onClick={() => {
-                  selectTab(route.link);
-                  setSidebarOpen(false);
-                  setOpen(open === route.id ? null : route.id);
+                onClick={async () => {
+                  if (route.link === 5) {
+                    await satisfactionStore.getSatisfactionDashboardByTrustId(trustStore.selectedTrustIdG, 0, "ALL", "ALL");
+                    selectTab(route.link);
+                    setSidebarOpen(false);
+                    setOpen(open === route.id ? null : route.id);
+                  } else if (route.link === 6) {
+                    await economicImpactStore.getEconomicImpactDashboardByTrustId(trustStore.selectedTrustIdG, 0, "ALL", "ALL");
+                    selectTab(route.link);
+                    setSidebarOpen(false);
+                    setOpen(open === route.id ? null : route.id);
+                  } else if (route.link === 4) {
+                    await conflictStore.getConflictDashboardByTrustId(trustStore.selectedTrustIdG, 0, "ALL", "ALL");
+                    selectTab(route.link);
+                    setSidebarOpen(false);
+                    setOpen(open === route.id ? null : route.id);
+                  } else if (route.link === 3) {
+                    await projectStore.getProjectDashboardByTrustId(trustStore.selectedTrustIdG, 0, "ALL", "ALL");
+                    selectTab(route.link);
+                    setSidebarOpen(false);
+                    setOpen(open === route.id ? null : route.id);
+                  } else {
+                    selectTab(route.link);
+                    setSidebarOpen(false);
+                    setOpen(open === route.id ? null : route.id);
+                  }
+
                 }}
               >
                 <span className="text-sm font-medium">{route.name}</span>
+                {getRouteLoading(route.link) && (
+                  <svg className="ml-2 w-4 h-4 animate-spin text-blue-500 shrink-0" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                )}
                 {route.children && route.children.length > 0 && (
                   <svg
                     className={`ml-auto w-4 h-4 transition-transform duration-200 ${open === route.id ? "rotate-90" : ""}`}
@@ -320,7 +372,8 @@ const Sidebar: React.FC<SidebarProps> = ({
       </div>
     </div>
   </aside>
-);
+  );
+});
 
 
 

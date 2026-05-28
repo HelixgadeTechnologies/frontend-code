@@ -326,7 +326,7 @@ class ProjectStore implements IProjectStore {
 
     async getProjectDashboardByTrustId(trustId: string, selectedYear: number, selectedState: string, settlor: string): Promise<void> {
         try {
-            if (this.isDashboardLoading || this.dashboardData) return; // Prevent duplicate calls
+            // if (this.isDashboardLoading || this.dashboardData) return; // Prevent duplicate calls
             this.isDashboardLoading = true;
             let data = await projectService.getDashboard(trustId, selectedYear, selectedState, settlor);
             if (data.success) {

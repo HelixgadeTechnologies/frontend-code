@@ -133,7 +133,7 @@ class SatisfactionStore implements ISatisfactionStore {
     }
     async getSatisfactionDashboardByTrustId(trustId: string, selectedYear: number, selectedState: string, settlor: string): Promise<void> {
         try {
-            if (this.isDashboardLoading || this.dashboardData) return; // Prevent duplicate calls
+            //if (this.isDashboardLoading || this.dashboardData) return; // Prevent duplicate calls
             this.isDashboardLoading = true;
             let data = await satisfactionService.getSatisfactionDashboardByTrustId(trustId, selectedYear, selectedState, settlor);
             if (data.success) {

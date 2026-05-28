@@ -1,21 +1,21 @@
-import { useState, useEffect, useMemo, useCallback, createContext, useContext } from "react";
-import { Link } from "react-router-dom";
-import {
-  Table,
-  EmptyTable,
-  LoadingTable,
-} from "../../../../components/elements";
 import { RowSelectionState } from "@tanstack/react-table";
 import { observer } from "mobx-react-lite";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
+import {
+  EmptyTable,
+  LoadingTable,
+  Table,
+} from "../../../../components/elements";
 import { trustStore as TrustStore } from "../../store/trustStore";
 import { ITrustList } from "../../types/interface";
 // import { settingStore as SettingStore } from "../../../Settings/store/settingStore";
 // import { DeleteTrust } from "../forms/DeleteTrust";
 import { trustEstablishmentStore as TrustEstablishmentStore } from "../../../trustEstablishment/store/trustEstablishmentStore";
 // import { authStore as AuthStore } from "../../../auth/store/authStore";
-import { projectStore as ProjectStore } from "../../../project/store/projectStore";
-import { dashboardStore as DashboardStore } from "../../../dashboard/store/dashboardStore";
 import { FiSearch } from "react-icons/fi";
+import { dashboardStore as DashboardStore } from "../../../dashboard/store/dashboardStore";
+import { projectStore as ProjectStore } from "../../../project/store/projectStore";
 
 
 const projectStoreCTX = createContext(ProjectStore);
@@ -34,6 +34,7 @@ const GeneralTrust = observer(() => {
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [loadingTrustId, setLoadingTrustId] = useState<string | null>(null);
   const pageSize = 20;
 
   useEffect(() => {
@@ -45,17 +46,18 @@ const GeneralTrust = observer(() => {
 
   const trustAction = useCallback((trustId: string) => {
     async function loadRequests() {
-      trustStore.selectedTrustIdG = trustId; // Set selected trust ID in the store
-      sessionStorage.setItem("selectedTrustIdG", trustId); // Store selected trust ID in sessionStorage
+      setLoadingTrustId(trustId);
+      trustStore.selectedTrustIdG = trustId;
+      sessionStorage.setItem("selectedTrustIdG", trustId);
       projectStore.dashboardData = null;
-      await projectStore.getProjectDashboardByTrustId(trustId, 0, "ALL", "ALL")
       await trustEstablishmentStore.getFundsDashboardByTrustIdAndYear(trustId, 0)
       trustEstablishmentStore.dashboardData = null;
       await trustEstablishmentStore.getEstablishmentDashboardByTrustId(trustId)
+      setLoadingTrustId(null);
       dashboardStore.selectedTab = 2;
     }
     loadRequests();
-  }, [projectStore, trustEstablishmentStore]);
+  }, [projectStore, trustEstablishmentStore, dashboardStore]);
 
   // Define columns with memoization
   const columns = useMemo(
@@ -67,17 +69,23 @@ const GeneralTrust = observer(() => {
         cell: ({ row }: { row: { original: ITrustList } }) => {
           const trust = row.original;
           const trustName = `${trust.trustName}`;
-          // const formattedName = trustName.toLowerCase().replace(/\s+/g, "-");
+          const isLoading = loadingTrustId === trust.trustId;
           return (
             <Link
-              className="hover:underline"
+              className="hover:underline inline-flex items-center gap-1.5"
               to={`#`}
-              onClick={async (e) => {
-                e.stopPropagation(); // Prevent row click event
-                trustAction(trust.trustId)
+              onClick={(e) => {
+                e.stopPropagation();
+                trustAction(trust.trustId);
               }}
             >
               {trustName}
+              {isLoading && (
+                <svg className="w-3.5 h-3.5 animate-spin text-blue-500 shrink-0" viewBox="0 0 24 24" fill="none">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                </svg>
+              )}
             </Link>
           );
         },
@@ -92,7 +100,7 @@ const GeneralTrust = observer(() => {
         header: "Community",
         accessorKey: "numberOfTrustCommunities",
       },
-        {
+      {
         id: "completionStatus",
         header: "Status",
         accessorKey: "completionStatus",
@@ -106,7 +114,7 @@ const GeneralTrust = observer(() => {
         },
       },
     ],
-    [],
+    [loadingTrustId, trustAction],
   );
 
   const filteredData = useMemo(() => {
