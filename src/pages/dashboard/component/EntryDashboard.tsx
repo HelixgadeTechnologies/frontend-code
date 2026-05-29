@@ -352,10 +352,34 @@ const Sidebar: React.FC<SidebarProps> = observer(({
                             ? "bg-blue-50 text-blue-700 font-semibold"
                             : "hover:bg-gray-50 text-gray-600"
                             }`}
-                          onClick={() => {
-                            selectTab(0);
-                            setSearchParams({ section: child.link });
-                            setSidebarOpen(false);
+                          onClick={async () => {
+                            if (child.link === "trust-establishment") {
+                              await dashboardStore.getDashboard("ALL", 0, "ALL", "ALL")
+                              selectTab(0);
+                              setSearchParams({ section: child.link });
+                              setSidebarOpen(false);
+                            } else if (child.link === "project") {
+                              await projectStore.getProjectDashboardByTrustId("ALL", 0, "ALL", "ALL");
+                              selectTab(0);
+                              setSearchParams({ section: child.link });
+                              setSidebarOpen(false);
+                            } else if (child.link === "conflict") {
+                              await conflictStore.getConflictDashboardByTrustId("ALL", 0, "ALL", "ALL");
+                              selectTab(0);
+                              setSearchParams({ section: child.link });
+                              setSidebarOpen(false);
+                            } else if (child.link === "community-satisfaction") {
+                              await satisfactionStore.getSatisfactionDashboardByTrustId("ALL", 0, "ALL", "ALL");
+                              selectTab(0);
+                              setSearchParams({ section: child.link });
+                              setSidebarOpen(false);
+                            } else if (child.link === "economic-impact") {
+                              await economicImpactStore.getEconomicImpactDashboardByTrustId("ALL", 0, "ALL", "ALL");
+                              selectTab(0);
+                              setSearchParams({ section: child.link });
+                              setSidebarOpen(false);
+                            }
+
                           }}
                           type="button"
                         >
