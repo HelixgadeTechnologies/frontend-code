@@ -105,7 +105,7 @@ class DashboardStore implements IDashboardStore {
 
     async getDashboard(trustId: string, year: number, state: string, settlor: string): Promise<void> {
         try {
-            // if (this.isLoading || this.dashboardData) return; // Prevent duplicate calls
+            if (this.isLoading || this.dashboardData) return; // Prevent duplicate calls
             this.isLoading = true;
             let data = await dashboardService.generalDashboard(trustId, year, state, settlor);
             if (data.success) {

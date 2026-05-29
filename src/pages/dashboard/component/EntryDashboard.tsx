@@ -295,21 +295,25 @@ const Sidebar: React.FC<SidebarProps> = observer(({
                 }
                 onClick={async () => {
                   if (route.link === 5) {
+                    satisfactionStore.dashboardData = null;
                     await satisfactionStore.getSatisfactionDashboardByTrustId(trustStore.selectedTrustIdG, 0, "ALL", "ALL");
                     selectTab(route.link);
                     setSidebarOpen(false);
                     setOpen(open === route.id ? null : route.id);
                   } else if (route.link === 6) {
+                    economicImpactStore.dashboardData = null;
                     await economicImpactStore.getEconomicImpactDashboardByTrustId(trustStore.selectedTrustIdG, 0, "ALL", "ALL");
                     selectTab(route.link);
                     setSidebarOpen(false);
                     setOpen(open === route.id ? null : route.id);
                   } else if (route.link === 4) {
+                    conflictStore.dashboardData = null;
                     await conflictStore.getConflictDashboardByTrustId(trustStore.selectedTrustIdG, 0, "ALL", "ALL");
                     selectTab(route.link);
                     setSidebarOpen(false);
                     setOpen(open === route.id ? null : route.id);
                   } else if (route.link === 3) {
+                    projectStore.dashboardData = null;
                     await projectStore.getProjectDashboardByTrustId(trustStore.selectedTrustIdG, 0, "ALL", "ALL");
                     selectTab(route.link);
                     setSidebarOpen(false);
@@ -354,27 +358,38 @@ const Sidebar: React.FC<SidebarProps> = observer(({
                             }`}
                           onClick={async () => {
                             if (child.link === "trust-establishment") {
+                              dashboardStore.dashboardData = null;
                               await dashboardStore.getDashboard("ALL", 0, "ALL", "ALL")
                               selectTab(0);
                               setSearchParams({ section: child.link });
                               setSidebarOpen(false);
                             } else if (child.link === "project") {
+                              projectStore.dashboardData = null;
                               await projectStore.getProjectDashboardByTrustId("ALL", 0, "ALL", "ALL");
                               selectTab(0);
                               setSearchParams({ section: child.link });
                               setSidebarOpen(false);
                             } else if (child.link === "conflict") {
+                              conflictStore.dashboardData = null;
                               await conflictStore.getConflictDashboardByTrustId("ALL", 0, "ALL", "ALL");
                               selectTab(0);
                               setSearchParams({ section: child.link });
                               setSidebarOpen(false);
                             } else if (child.link === "community-satisfaction") {
+                              satisfactionStore.dashboardData = null;
                               await satisfactionStore.getSatisfactionDashboardByTrustId("ALL", 0, "ALL", "ALL");
                               selectTab(0);
                               setSearchParams({ section: child.link });
                               setSidebarOpen(false);
                             } else if (child.link === "economic-impact") {
+                              economicImpactStore.dashboardData = null;
                               await economicImpactStore.getEconomicImpactDashboardByTrustId("ALL", 0, "ALL", "ALL");
+                              selectTab(0);
+                              setSearchParams({ section: child.link });
+                              setSidebarOpen(false);
+                            }else{
+                              dashboardStore.dashboardData = null;
+                              await dashboardStore.getDashboard("ALL", 0, "ALL", "ALL");
                               selectTab(0);
                               setSearchParams({ section: child.link });
                               setSidebarOpen(false);
